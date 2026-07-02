@@ -44,25 +44,33 @@ Route::prefix('public')->group(function () {
 });
 
 // ───── Cart + Checkout + Orders (public, no auth, pakai cookie) ─────
-Route::get('/cart', [CartController::class, 'index']);
-Route::post('/cart/items', [CartController::class, 'storeItem']);
-Route::patch('/cart/items/{productId}', [CartController::class, 'updateItem']);
-Route::delete('/cart/items/{productId}', [CartController::class, 'destroyItem']);
+Route::middleware('throttle:cart')->group(function () {
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart/items', [CartController::class, 'storeItem']);
+    Route::patch('/cart/items/{productId}', [CartController::class, 'updateItem']);
+    Route::delete('/cart/items/{productId}', [CartController::class, 'destroyItem']);
+});
 
-Route::get('/checkout', [CheckoutController::class, 'preview']);
-Route::post('/checkout', [CheckoutController::class, 'store']);
+Route::get('/checkout', [CheckoutController::class, 'preview']); // preview low-risk, no throttle
+Route::post('/checkout', [CheckoutController::class, 'store'])
+    ->middleware('throttle:checkout');
 
-Route::get('/orders/{kodeOrder}/status', [OrderController::class, 'status']);
+Route::middleware('throttle:order-status')->group(function () {
+    Route::get('/orders/{kodeOrder}/status', [OrderController::class, 'status']);
+    Route::post('/orders/check', [OrderController::class, 'check']);
+});
+
 Route::get('/orders/{kodeOrder}/public', [OrderController::class, 'showPublic']);
 Route::get('/orders/{kodeOrder}', [OrderController::class, 'show']);
-Route::post('/orders/check', [OrderController::class, 'check']);
 
-// Tripay callback (public, signature-verified)
+// Tripay callback (public, signature-verified — no throttle; signature
+// verification itself prevents abuse. Kalau production butuh, tambah IP allowlist.)
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle']);
 
-// Public download endpoint (token-based, no auth)
+// Public download endpoint (token-based, no auth, throttled per token)
 Route::get('/download/{token}', [DownloadController::class, 'show'])
-    ->where('token', '[a-f0-9]+');
+    ->where('token', '[a-f0-9]+')
+    ->middleware('throttle:download');
 
 // ───── Admin auth (login/logout publik; me butuh token) ─────
 Route::prefix('admin')->group(function () {

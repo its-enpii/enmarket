@@ -22,8 +22,8 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 const SIZES: Record<'sm' | 'md', string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-5 py-2.5 text-base',
+  sm: 'px-3 py-1.5 text-sm min-h-[40px]',
+  md: 'px-5 py-2.5 text-base min-h-[44px]',
 };
 
 export function Button({

@@ -10,6 +10,9 @@ use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\GoogleDriveEnStorage;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Tripay\TripayClient;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -67,6 +70,39 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->configureRateLimiters();
+    }
+
+    /**
+     * Define named rate limiters untuk throttle middleware.
+     * Counter disimpan di cache (default file driver, OK single-container).
+     */
+    private function configureRateLimiters(): void
+    {
+        // Checkout: strict, per-IP, custom JSON response
+        RateLimiter::for('checkout', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip())->response(function () {
+                return response()->json([
+                    'message' => 'Terlalu banyak percobaan checkout. Coba lagi dalam 1 menit.',
+                    'code' => 'rate_limited',
+                ], 429);
+            });
+        });
+
+        // Download: per-token (biar browser normal gak ke-throttle kalau IP shared)
+        RateLimiter::for('download', function (Request $request) {
+            $token = (string) $request->route('token');
+            return Limit::perMinute(30)->by("download:{$token}");
+        });
+
+        // Cart: lenient, per-IP
+        RateLimiter::for('cart', function (Request $request) {
+            return Limit::perMinute(60)->by('cart:' . $request->ip());
+        });
+
+        // Order status polling: moderate, per-IP
+        RateLimiter::for('order-status', function (Request $request) {
+            return Limit::perMinute(10)->by('order:' . $request->ip());
+        });
     }
 }
