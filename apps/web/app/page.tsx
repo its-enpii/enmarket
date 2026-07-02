@@ -1,26 +1,40 @@
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-zinc-50 to-zinc-100 px-6 py-24 font-sans dark:from-zinc-950 dark:to-black">
-      <div className="max-w-2xl text-center">
-        <p className="mb-4 text-sm font-medium uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-          enpiistudio Store
-        </p>
-        <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-50">
-          Toko digital sedang dalam persiapan.
-        </h1>
-        <p className="mt-6 text-pretty text-lg leading-8 text-zinc-600 dark:text-zinc-300">
-          Segera hadir produk-produk digital enpiistudio: source code,
-          lisensi, dan assets. Untuk saat ini, sistem backend &amp; frontend
-          sudah berjalan — tinggal isi katalog.
-        </p>
+    <main className="min-h-screen bg-surface text-ink flex items-center justify-center p-6">
+      <div className="max-w-2xl w-full">
+        <div className="bg-surface border-4 border-ink p-8 shadow-[8px_8px_0_0_var(--color-ink)]">
+          <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-primary">
+            enpiistudio Store
+          </p>
+          <h1 className="text-balance text-4xl sm:text-5xl font-bold leading-tight tracking-tight text-ink">
+            Toko digital sedang dalam persiapan.
+          </h1>
+          <p className="mt-6 text-base sm:text-lg leading-relaxed text-ink/80">
+            Segera hadir produk-produk digital enpiistudio: source code,
+            lisensi, dan assets. Untuk saat ini, sistem backend &amp;
+            frontend sudah berjalan.
+          </p>
 
-        <div className="mt-12 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-500 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-          </span>
-          Fase 0 — Fondasi &amp; Infrastruktur
+          <div className="mt-10 flex flex-wrap gap-3">
+            <a
+              href="/login"
+              className="inline-flex items-center gap-2 bg-primary text-surface border-2 border-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0_0_var(--color-ink)] transition-all"
+            >
+              Login Admin →
+            </a>
+            <span className="inline-flex items-center gap-2 bg-accent text-ink border-2 border-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)]">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ink opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-ink"></span>
+              </span>
+              Fase 0 — Fondasi
+            </span>
+          </div>
         </div>
+
+        <p className="mt-6 text-center text-sm text-ink/60">
+          © enpiistudio — Self-hosted digital store
+        </p>
       </div>
     </main>
   );

@@ -3,6 +3,12 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Build-time env — NEXT_PUBLIC_* di-bake ke bundle oleh Next.js
+ARG NEXT_PUBLIC_API_URL=http://api:8000
+ARG NEXT_PUBLIC_SITE_NAME="enpiistudio Store"
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SITE_NAME=$NEXT_PUBLIC_SITE_NAME
+
 # Copy manifests dulu untuk cache layer
 COPY package.json package-lock.json* ./
 RUN npm ci --no-audit --no-fund

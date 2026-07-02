@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Middleware\VerifyAdminToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,7 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // CORS — handle preflight + add headers ke semua response API
+        $middleware->prepend(HandleCors::class);
+
+        // Alias untuk admin routes
+        $middleware->alias([
+            'admin' => VerifyAdminToken::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

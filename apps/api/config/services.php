@@ -35,4 +35,20 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | EnStorage (orchestrator Google Drive enpiistudio)
+    |--------------------------------------------------------------------------
+    |
+    | - mock=true: pakai LocalMockEnStorage (simpan di storage/app/private/)
+    | - mock=false: pakai GoogleDriveEnStorage (Fase 4, butuh ENSTORAGE_BASE_URL+API_KEY)
+    |
+    */
+
+    'enstorage' => [
+        'mock' => (bool) env('ENSTORAGE_MOCK', true),
+        'base_url' => env('ENSTORAGE_BASE_URL'),
+        'api_key' => env('ENSTORAGE_API_KEY'),
+    ],
+
 ];

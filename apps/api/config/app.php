@@ -107,6 +107,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin Token (Fase 1)
+    |--------------------------------------------------------------------------
+    |
+    | Static token untuk akses dashboard admin. Single-user: cocokkan dengan
+    | nilai di .env via middleware VerifyAdminToken.
+    |
+    */
+
+    'admin_token' => env('ADMIN_TOKEN', ''),
+
+    /*
+    |--------------------------------------------------------------------------
     | Maintenance Mode Driver
     |--------------------------------------------------------------------------
     |
