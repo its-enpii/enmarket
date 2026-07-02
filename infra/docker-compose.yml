@@ -1,0 +1,110 @@
+# ───── enmarket — local development stack ─────
+# Usage:
+#   docker compose -f infra/docker-compose.yml up -d --build
+#   docker compose -f infra/docker-compose.yml down
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: enmarket-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+      MYSQL_DATABASE: ${DB_DATABASE:-enmarket}
+      MYSQL_USER: ${DB_USERNAME:-enmarket}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    networks:
+      - enmarket
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/docker/api/Dockerfile
+    container_name: enmarket-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: "enmarket API"
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: "true"
+      APP_URL: ${APP_URL:-http://localhost:8000}
+      LOG_CHANNEL: stack
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-enmarket}
+      DB_USERNAME: ${DB_USERNAME:-enmarket}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+      # Tripay (mock di Fase 3)
+      TRIPAY_MODE: ${TRIPAY_MODE:-sandbox}
+      TRIPAY_API_KEY: ${TRIPAY_API_KEY:-}
+      TRIPAY_PRIVATE_KEY: ${TRIPAY_PRIVATE_KEY:-}
+      TRIPAY_MERCHANT_CODE: ${TRIPAY_MERCHANT_CODE:-}
+      # EnStorage (mock di Fase 4)
+      ENSTORAGE_MOCK: "true"
+      ENSTORAGE_BASE_URL: ${ENSTORAGE_BASE_URL:-}
+      ENSTORAGE_API_KEY: ${ENSTORAGE_API_KEY:-}
+      # n8n
+      N8N_WEBHOOK_KIRIM_PRODUK: ${N8N_WEBHOOK_KIRIM_PRODUK:-}
+      # Evolution API
+      EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
+      EVOLUTION_API_KEY: ${EVOLUTION_API_KEY:-}
+      EVOLUTION_INSTANCE: ${EVOLUTION_INSTANCE:-enpiistudio}
+      # Mail
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-noreply@enpiistudio.com}
+      # Admin token (Fase 1)
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ../apps/api:/var/www/html
+      - api_storage:/var/www/html/storage
+    networks:
+      - enmarket
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: ../../infra/docker/web/Dockerfile
+    container_name: enmarket-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-enpiistudio Store}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    networks:
+      - enmarket
+
+networks:
+  enmarket:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+  api_storage:
+    driver: local

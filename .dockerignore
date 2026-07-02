@@ -1,0 +1,47 @@
+# ───── Files excluded from Docker build context ─────
+# This speeds up builds and prevents weird symlink errors
+
+# Git
+.git
+.gitignore
+.github
+
+# Docs (not needed at runtime)
+.docs
+
+# IDE
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Docker artifacts
+docker-compose*.yml
+Dockerfile
+
+# Laravel-specific
+apps/api/storage/logs/*
+apps/api/storage/framework/cache/data/*
+apps/api/storage/framework/sessions/*
+apps/api/storage/framework/views/*
+apps/api/bootstrap/cache/*.php
+apps/api/public/storage
+apps/api/.phpunit.cache
+apps/api/.phpunit.result.cache
+apps/api/auth.json
+apps/api/vendor
+
+# Next.js
+apps/web/.next
+apps/web/out
+apps/web/build
+apps/web/node_modules
+
+# Infra volumes
+infra/docker/db/data
+infra/docker/db/logs

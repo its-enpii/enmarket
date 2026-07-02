@@ -1,0 +1,81 @@
+name: API CI (Laravel)
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "apps/api/**"
+      - "infra/docker/api/**"
+      - ".github/workflows/api-ci.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "apps/api/**"
+      - "infra/docker/api/**"
+      - ".github/workflows/api-ci.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apps/api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo, pdo_sqlite, mbstring, gd, zip, bcmath
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: apps/api/vendor
+          key: composer-${{ runner.os }}-php8.4-${{ hashFiles('apps/api/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-php8.4-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Setup SQLite
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Copy .env untuk testing
+        run: |
+          cp .env.example .env 2>/dev/null || cp .env .env.bak
+          echo "APP_KEY=base64:${{ secrets.APP_KEY_TEST }}" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+
+      - name: Generate APP_KEY (fallback)
+        run: php artisan key:generate --force
+
+      - name: Lint (Pint)
+        run: |
+          if [ -f vendor/bin/pint ]; then
+            vendor/bin/pint --test
+          else
+            echo "Pint not installed — skipping"
+          fi
+
+      - name: Migrate
+        run: php artisan migrate --force
+
+      # ───── Deploy step (placeholder, diaktifkan saat remote repo siap) ─────
+      # - name: Deploy to VPS
+      #   if: github.ref == 'refs/heads/main'
+      #   uses: appleboy/ssh-action@v1
+      #   with:
+      #     host: ${{ secrets.VPS_HOST }}
+      #     username: ${{ secrets.VPS_USER }}
+      #     key: ${{ secrets.VPS_SSH_KEY }}
+      #     script: |
+      #       cd /opt/enmarket
+      #       git pull
+      #       docker compose -f infra/docker-compose.yml up -d --build api
