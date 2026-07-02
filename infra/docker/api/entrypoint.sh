@@ -98,6 +98,10 @@ MAIL_PASSWORD=${MAIL_PASSWORD:-}
 # Admin (Fase 1)
 ADMIN_TOKEN=${ADMIN_TOKEN:-dev-admin-token-12345}
 CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+
+# Next.js on-demand revalidation (Fase 2)
+NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://web:3000}
+REVALIDATE_SECRET=${REVALIDATE_SECRET:-dev-revalidate-secret}
 EOF
 
 # Cache clear

@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
+use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +19,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// ───── Public ─────
+// ───── Public (read-only) ─────
 Route::get('/health', [HealthController::class, 'index']);
+
+Route::prefix('public')->group(function () {
+    // Catalog publik
+    Route::get('products/featured', [PublicProductController::class, 'featured']);
+    Route::get('products/latest', [PublicProductController::class, 'latest']);
+    Route::get('products', [PublicProductController::class, 'index']);
+    Route::get('products/slugs', [PublicProductController::class, 'slugs']);
+    Route::get('products/{slug}', [PublicProductController::class, 'show']);
+
+    // Kategori publik (untuk filter katalog & sitemap)
+    Route::get('categories', [PublicCategoryController::class, 'index']);
+    Route::get('categories/slugs', [PublicCategoryController::class, 'slugs']);
+});
 
 // ───── Admin auth (login/logout publik; me butuh token) ─────
 Route::prefix('admin')->group(function () {

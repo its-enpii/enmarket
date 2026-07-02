@@ -28,6 +28,7 @@ class ProductResource extends JsonResource
             'preview_images' => $this->preview_images ?? [],
             'fitur' => $this->fitur ?? [],
             'status' => $this->status,
+            'is_featured' => (bool) $this->is_featured,
             'needs_license_key' => $this->needsLicenseKey(),
             'has_downloadable_file' => $this->hasDownloadableFile(),
             'created_at' => $this->created_at?->toIso8601String(),

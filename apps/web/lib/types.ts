@@ -31,6 +31,7 @@ export interface Product {
   preview_images: string[];
   fitur: string[];
   status: StatusProduct;
+  is_featured: boolean;
   needs_license_key: boolean;
   has_downloadable_file: boolean;
   created_at: string | null;

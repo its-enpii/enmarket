@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\NextRevalidator;
 use App\Services\Storage\EnStorageClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,8 +13,10 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function __construct(private readonly EnStorageClient $storage)
-    {
+    public function __construct(
+        private readonly EnStorageClient $storage,
+        private readonly NextRevalidator $revalidator,
+    ) {
     }
 
     /**
@@ -100,6 +103,9 @@ class ProductController extends Controller
 
         $product = Product::create($data);
 
+        // Trigger ISR revalidation untuk halaman yang menampilkan produk ini
+        $this->revalidator->revalidateProduct($product->slug);
+
         return response()->json([
             'data' => new ProductResource($product->load('category:id,nama,slug')),
             'message' => 'Produk berhasil dibuat.',
@@ -147,6 +153,9 @@ class ProductController extends Controller
 
         $product->update($data);
 
+        // Revalidate slug baru + (kalau slug berubah) slug lama
+        $this->revalidator->revalidateProduct($product->slug);
+
         return response()->json([
             'data' => new ProductResource($product->load('category:id,nama,slug')),
             'message' => 'Produk berhasil diperbarui.',
@@ -172,7 +181,11 @@ class ProductController extends Controller
             $this->storage->delete($product->file_url);
         }
 
+        $slug = $product->slug;
         $product->delete();
+
+        // Halaman /produk/{slug} sudah tidak ada — revalidate list
+        $this->revalidator->revalidateProduct($slug);
 
         return response()->json([
             'message' => 'Produk berhasil dihapus.',
@@ -200,6 +213,7 @@ class ProductController extends Controller
             'preview_images' => ['nullable'],
             'fitur' => ['nullable'],
             'status' => ['required', 'in:aktif,draft,tidak_dijual'],
+            'is_featured' => ['nullable', 'boolean'],
             'file' => ['nullable', 'file', 'max:512000'], // 500MB max
             'remove_file' => ['nullable', 'boolean'],
         ]);

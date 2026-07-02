@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\NextRevalidator;
 use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\GoogleDriveEnStorage;
 use App\Services\Storage\LocalMockEnStorage;
@@ -23,6 +24,14 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return new GoogleDriveEnStorage();
+        });
+
+        // Bind NextRevalidator untuk on-demand ISR revalidation webhook
+        $this->app->singleton(NextRevalidator::class, function () {
+            return new NextRevalidator(
+                webhookSecret: (string) config('services.next.webhook_secret', ''),
+                nextBaseUrl: (string) config('services.next.base_url', ''),
+            );
         });
     }
 

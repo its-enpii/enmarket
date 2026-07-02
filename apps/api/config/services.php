@@ -51,4 +51,19 @@ return [
         'api_key' => env('ENSTORAGE_API_KEY'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Next.js (on-demand revalidation webhook)
+    |--------------------------------------------------------------------------
+    |
+    | Laravel panggil endpoint /api/revalidate di Next.js container setelah
+    | admin CRUD produk/kategori. Secret diverifikasi di route handler Next.
+    |
+    */
+
+    'next' => [
+        'base_url' => env('NEXT_PUBLIC_SITE_URL', 'http://web:3000'),
+        'webhook_secret' => env('REVALIDATE_SECRET'),
+    ],
+
 ];

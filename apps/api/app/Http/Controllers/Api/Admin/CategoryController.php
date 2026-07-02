@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Services\NextRevalidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function __construct(private readonly NextRevalidator $revalidator)
+    {
+    }
+
     /**
      * GET /api/admin/categories
      * List semua kategori, diurutkan berdasarkan nama.
@@ -38,6 +43,9 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::create($data);
+
+        // Trigger ISR revalidation — slug mungkin baru dibuat
+        $this->revalidator->revalidateCategory($category->slug);
 
         return response()->json([
             'data' => new CategoryResource($category->loadCount('products')),
@@ -68,6 +76,9 @@ class CategoryController extends Controller
 
         $category->update($data);
 
+        // Slug bisa berubah — revalidate slug baru DAN lama (kalau beda)
+        $this->revalidator->revalidateCategory($category->slug);
+
         return response()->json([
             'data' => new CategoryResource($category->loadCount('products')),
             'message' => 'Kategori berhasil diperbarui.',
@@ -88,7 +99,11 @@ class CategoryController extends Controller
             ], 409);
         }
 
+        $slug = $category->slug;
         $category->delete();
+
+        // Halaman /c/{slug} sudah tidak relevan
+        $this->revalidator->revalidateCategory($slug);
 
         return response()->json([
             'message' => 'Kategori berhasil dihapus.',

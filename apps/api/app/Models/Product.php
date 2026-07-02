@@ -26,6 +26,7 @@ class Product extends Model
         'preview_images',
         'fitur',
         'status',
+        'is_featured',
     ];
 
     protected $casts = [
@@ -33,6 +34,7 @@ class Product extends Model
         'preview_images' => 'array',
         'fitur' => 'array',
         'download_expiry_days' => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     /**
@@ -77,6 +79,14 @@ class Product extends Model
     public function scopeActive($query)
     {
         return $query->where('status', 'aktif');
+    }
+
+    /**
+     * Scope: hanya produk yang ditandai featured untuk halaman utama.
+     */
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
     }
 
     /**

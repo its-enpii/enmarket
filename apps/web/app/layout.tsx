@@ -13,8 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "enpiistudio Store",
-  description: "Toko digital personal enpiistudio — source code, lisensi, dan aset digital.",
+  title: {
+    default: 'enpiistudio Store — Produk Digital Karya enpii',
+    template: '%s',
+  },
+  description: 'Beli produk digital karya enpiistudio: source code, lisensi, dan aset siap pakai. Sekali bayar, langsung dipakai.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  openGraph: {
+    siteName: 'enpiistudio Store',
+    type: 'website',
+    locale: 'id_ID',
+  },
 };
 
 export default function RootLayout({
