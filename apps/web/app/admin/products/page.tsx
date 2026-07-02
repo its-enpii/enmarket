@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { DeleteButton } from '@/components/admin/DeleteButton';
+import { LiveFilterBar } from '@/components/admin/LiveFilterBar';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -12,7 +13,6 @@ import type {
   PaginatedResponse,
   Product,
   SingleResponse,
-  StatusProduct,
 } from '@/lib/types';
 
 import { deleteProduct } from './actions';
@@ -23,6 +23,8 @@ interface Props {
     category_id?: string;
     q?: string;
     page?: string;
+    sort?: string;
+    dir?: 'asc' | 'desc';
   }>;
 }
 
@@ -36,6 +38,8 @@ async function loadProducts(params: Awaited<Props['searchParams']>) {
       status: params.status,
       category_id: params.category_id,
       q: params.q,
+      sort: params.sort,
+      dir: params.dir,
       page: params.page ?? 1,
       per_page: 10,
     });
@@ -65,6 +69,8 @@ export default async function ProductsPage({ searchParams }: Props) {
 
   const rows = productsRes.data ?? [];
   const meta = productsRes.meta;
+  const currentSort = params.sort ?? 'updated_at';
+  const currentDir: 'asc' | 'desc' = params.dir === 'asc' ? 'asc' : 'desc';
 
   const columns: Column<Product>[] = [
     {
@@ -123,71 +129,45 @@ export default async function ProductsPage({ searchParams }: Props) {
     },
   ];
 
-  const STATUS_OPTIONS: { value: StatusProduct | ''; label: string }[] = [
-    { value: '', label: 'Semua Status' },
-    { value: 'aktif', label: 'Aktif' },
-    { value: 'draft', label: 'Draft' },
-    { value: 'tidak_dijual', label: 'Tidak Dijual' },
+  const filters = [
+    {
+      key: 'status',
+      label: 'Status',
+      options: [
+        { value: '', label: 'Semua Status' },
+        { value: 'aktif', label: 'Aktif' },
+        { value: 'draft', label: 'Draft' },
+        { value: 'tidak_dijual', label: 'Tidak Dijual' },
+      ],
+    },
+    {
+      key: 'category_id',
+      label: 'Kategori',
+      options: [
+        { value: '', label: 'Semua Kategori' },
+        ...categories.map((c) => ({ value: String(c.id), label: c.nama })),
+      ],
+    },
   ];
 
   return (
     <>
       <Topbar title="Produk" subtitle={`${meta.total} produk terdaftar.`} />
 
-      <div className="p-8 space-y-6">
-        {/* Filter bar */}
-        <form className="flex flex-wrap gap-3 items-end bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)]">
-          <div className="flex-1 min-w-[200px]">
-            <label htmlFor="q" className="block text-xs font-bold uppercase tracking-wide mb-1">Cari</label>
-            <input
-              id="q"
-              name="q"
-              defaultValue={params.q ?? ''}
-              placeholder="Nama atau slug…"
-              className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="status" className="block text-xs font-bold uppercase tracking-wide mb-1">Status</label>
-            <select
-              id="status"
-              name="status"
-              defaultValue={params.status ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            >
-              {STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="category_id" className="block text-xs font-bold uppercase tracking-wide mb-1">Kategori</label>
-            <select
-              id="category_id"
-              name="category_id"
-              defaultValue={params.category_id ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            >
-              <option value="">Semua Kategori</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.nama}</option>
-              ))}
-            </select>
-          </div>
-
-          <Button type="submit" variant="primary" size="sm">Filter</Button>
-          <Link href="/admin/products">
-            <Button type="button" variant="ghost" size="sm">Reset</Button>
+      <div className="p-6 sm:p-8 space-y-6">
+        {/* Header action bar */}
+        <div className="flex items-center justify-between gap-3">
+          <LiveFilterBar
+            q={params.q ?? ''}
+            sort={currentSort}
+            dir={currentDir}
+            filters={filters}
+            placeholder="Cari nama atau slug…"
+          />
+          <Link href="/admin/products/new" className="shrink-0">
+            <Button variant="primary" size="sm">+ Produk Baru</Button>
           </Link>
-
-          <div className="ml-auto">
-            <Link href="/admin/products/new">
-              <Button variant="primary" size="sm">+ Produk Baru</Button>
-            </Link>
-          </div>
-        </form>
+        </div>
 
         <DataTable
           columns={columns}
@@ -196,7 +176,6 @@ export default async function ProductsPage({ searchParams }: Props) {
           emptyMessage="Belum ada produk. Tambah satu."
         />
 
-        {/* Pagination */}
         {meta.last_page > 1 && (
           <Pagination
             currentPage={meta.current_page}

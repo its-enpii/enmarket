@@ -3,6 +3,9 @@
 import { useTransition } from 'react';
 
 import { Button } from '@/components/admin/Button';
+import { confirmDialog } from '@/components/ui/dialog-store';
+import { toast } from '@/components/ui/toast-store';
+
 import { regenerateDownloadToken } from './[kodeOrder]/actions';
 
 interface Props {
@@ -17,14 +20,20 @@ interface Props {
 export function RegenerateTokenForm({ kodeOrder, orderItemId }: Props) {
   const [pending, startTransition] = useTransition();
 
-  function handleClick() {
-    if (!confirm('Generate token download baru? Token lama akan tidak valid lagi.')) return;
+  async function handleClick() {
+    const ok = await confirmDialog({
+      title: 'Generate Token Baru',
+      message: 'Generate token download baru? Token lama akan tidak valid lagi.',
+      confirmLabel: 'Generate',
+      danger: true,
+    });
+    if (!ok) return;
     startTransition(async () => {
       const res = await regenerateDownloadToken(kodeOrder, orderItemId);
       if (res.error) {
-        alert(res.error);
+        toast.error(res.error);
       } else {
-        alert(res.message ?? 'Token baru telah dibuat.');
+        toast.success(res.message ?? 'Token baru telah dibuat.');
       }
     });
   }

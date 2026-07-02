@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
+import { LiveFilterBar } from '@/components/admin/LiveFilterBar';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -25,6 +26,8 @@ interface Props {
     status?: string;
     q?: string;
     page?: string;
+    sort?: string;
+    dir?: 'asc' | 'desc';
   }>;
 }
 
@@ -38,6 +41,8 @@ async function loadKeys(params: Awaited<Props['searchParams']>) {
       product_id: params.product_id,
       status: params.status,
       q: params.q,
+      sort: params.sort,
+      dir: params.dir,
       page: params.page ?? 1,
       per_page: 20,
     });
@@ -165,54 +170,24 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
     <>
       <Topbar title="License Keys" subtitle={`${meta.total} key di pool.`} />
 
-      <div className="p-8 space-y-6">
-        {/* Filter bar */}
-        <form className="flex flex-wrap gap-3 items-end bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)]">
-          <div className="flex-1 min-w-[200px]">
-            <label htmlFor="q" className="block text-xs font-bold uppercase tracking-wide mb-1">Cari Key</label>
-            <input
-              id="q"
-              name="q"
-              defaultValue={params.q ?? ''}
-              placeholder="EPS-XXXX-…"
-              className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm font-mono focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="product_id" className="block text-xs font-bold uppercase tracking-wide mb-1">Produk</label>
-            <select
-              id="product_id"
-              name="product_id"
-              defaultValue={params.product_id ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            >
-              <option value="">Semua Produk</option>
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>{p.nama}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="status" className="block text-xs font-bold uppercase tracking-wide mb-1">Status</label>
-            <select
-              id="status"
-              name="status"
-              defaultValue={params.status ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            >
-              {STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <Button type="submit" variant="primary" size="sm">Filter</Button>
-          <Link href="/admin/license-keys">
-            <Button type="button" variant="ghost" size="sm">Reset</Button>
-          </Link>
-        </form>
+      <div className="p-6 sm:p-8 space-y-6">
+        <LiveFilterBar
+          q={params.q ?? ''}
+          sort={params.sort ?? 'id'}
+          dir={params.dir === 'asc' ? 'asc' : 'desc'}
+          filters={[
+            {
+              key: 'product_id',
+              label: 'Produk',
+              options: [
+                { value: '', label: 'Semua Produk' },
+                ...products.map((p) => ({ value: String(p.id), label: p.nama })),
+              ],
+            },
+            { key: 'status', label: 'Status', options: STATUS_OPTIONS },
+          ]}
+          placeholder="EPS-XXXX-…"
+        />
 
         {/* Insert form + table */}
         <LicenseKeyForm products={products} />

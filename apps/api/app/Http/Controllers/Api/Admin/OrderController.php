@@ -54,6 +54,16 @@ class OrderController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
 
+        // Sort — whitelist field untuk cegah SQL injection via sort param
+        $sort = $request->input('sort', 'created_at');
+        $dir = strtolower((string) $request->input('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $allowedSorts = ['kode_order', 'nama_pembeli', 'total_harga', 'status', 'created_at', 'paid_at'];
+        if (in_array($sort, $allowedSorts, true)) {
+            $query->orderBy($sort, $dir);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
         $paginator = $query->paginate($perPage);
 
         return response()->json([

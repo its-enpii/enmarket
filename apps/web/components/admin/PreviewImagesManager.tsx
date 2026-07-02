@@ -9,6 +9,9 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { confirmDialog } from '@/components/ui/dialog-store';
+import { toast } from '@/components/ui/toast-store';
+
 interface Props {
   productId: number;
   initial: string[];
@@ -59,7 +62,13 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
   }
 
   async function removeImage(index: number) {
-    if (!confirm('Hapus preview image ini?')) return;
+    const ok = await confirmDialog({
+      title: 'Hapus Preview Image',
+      message: 'Hapus preview image ini?',
+      confirmLabel: 'Hapus',
+      danger: true,
+    });
+    if (!ok) return;
     setError(null);
 
     startTransition(async () => {
@@ -77,8 +86,9 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
         const data = await res.json();
         setImages(data.data.preview_images);
         router.refresh();
+        toast.success('Image dihapus.');
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Gagal hapus');
+        toast.error(err instanceof Error ? err.message : 'Gagal hapus');
       }
     });
   }

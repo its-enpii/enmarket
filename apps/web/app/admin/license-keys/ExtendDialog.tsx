@@ -3,6 +3,9 @@
 import { useState, useTransition } from 'react';
 
 import { Button } from '@/components/admin/Button';
+import { confirmDialog } from '@/components/ui/dialog-store';
+import { toast } from '@/components/ui/toast-store';
+
 import { extendLicenseKey } from './actions';
 
 interface Props {
@@ -18,14 +21,19 @@ export function ExtendDialog({ id }: Props) {
   const [days, setDays] = useState('30');
   const [pending, startTransition] = useTransition();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const n = Number(days);
     if (!Number.isFinite(n) || n < 1 || n > 365) {
-      alert('Hari harus antara 1–365.');
+      toast.error('Hari harus antara 1–365.');
       return;
     }
-    if (!confirm(`Perpanjang expired_at ${n} hari?`)) return;
+    const ok = await confirmDialog({
+      title: 'Perpanjang Expired',
+      message: `Perpanjang expired_at ${n} hari?`,
+      confirmLabel: 'Perpanjang',
+    });
+    if (!ok) return;
 
     const fd = new FormData();
     fd.append('id', String(id));
@@ -34,9 +42,9 @@ export function ExtendDialog({ id }: Props) {
     startTransition(async () => {
       const res = await extendLicenseKey(fd);
       if (res.error) {
-        alert(res.error);
+        toast.error(res.error);
       } else {
-        alert(res.message ?? 'Expired diperpanjang.');
+        toast.success(res.message ?? 'Expired diperpanjang.');
         setOpen(false);
       }
     });

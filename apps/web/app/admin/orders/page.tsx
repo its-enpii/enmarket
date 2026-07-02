@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
+import { LiveFilterBar } from '@/components/admin/LiveFilterBar';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -9,7 +10,6 @@ import { formatDateTime, formatRupiah } from '@/lib/format';
 import {
   ORDER_STATUS_LABEL,
   type Order,
-  type OrderStatus,
   type PaginatedResponse,
 } from '@/lib/types';
 
@@ -20,6 +20,8 @@ interface Props {
     date_from?: string;
     date_to?: string;
     page?: string;
+    sort?: string;
+    dir?: 'asc' | 'desc';
   }>;
 }
 
@@ -34,6 +36,8 @@ async function loadOrders(params: Awaited<Props['searchParams']>) {
       q: params.q,
       date_from: params.date_from,
       date_to: params.date_to,
+      sort: params.sort,
+      dir: params.dir,
       page: params.page ?? 1,
       per_page: 15,
     });
@@ -112,7 +116,7 @@ export default async function OrdersPage({ searchParams }: Props) {
     },
   ];
 
-  const STATUS_OPTIONS: { value: OrderStatus | ''; label: string }[] = [
+  const STATUS_OPTIONS = [
     { value: '', label: 'Semua Status' },
     { value: 'pending', label: 'Pending' },
     { value: 'paid', label: 'Paid' },
@@ -125,33 +129,21 @@ export default async function OrdersPage({ searchParams }: Props) {
     <>
       <Topbar title="Pesanan" subtitle={`${meta.total} pesanan terdaftar.`} />
 
-      <div className="p-8 space-y-6">
+      <div className="p-6 sm:p-8 space-y-6">
+        <LiveFilterBar
+          q={params.q ?? ''}
+          sort={params.sort ?? 'created_at'}
+          dir={params.dir === 'asc' ? 'asc' : 'desc'}
+          filters={[{ key: 'status', label: 'Status', options: STATUS_OPTIONS }]}
+          passthrough={{
+            ...(params.date_from ? { date_from: params.date_from } : {}),
+            ...(params.date_to ? { date_to: params.date_to } : {}),
+          }}
+          placeholder="Cari kode / nama / email…"
+        />
+
+        {/* Date range — di luar LiveFilterBar (rarely used, keep visible) */}
         <form className="flex flex-wrap gap-3 items-end bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)]">
-          <div className="flex-1 min-w-[220px]">
-            <label htmlFor="q" className="block text-xs font-bold uppercase tracking-wide mb-1">Cari</label>
-            <input
-              id="q"
-              name="q"
-              defaultValue={params.q ?? ''}
-              placeholder="Kode order / nama / email…"
-              className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="status" className="block text-xs font-bold uppercase tracking-wide mb-1">Status</label>
-            <select
-              id="status"
-              name="status"
-              defaultValue={params.status ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            >
-              {STATUS_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
-
           <div>
             <label htmlFor="date_from" className="block text-xs font-bold uppercase tracking-wide mb-1">Dari</label>
             <input
@@ -162,7 +154,6 @@ export default async function OrdersPage({ searchParams }: Props) {
               className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
             />
           </div>
-
           <div>
             <label htmlFor="date_to" className="block text-xs font-bold uppercase tracking-wide mb-1">Sampai</label>
             <input
@@ -173,11 +164,7 @@ export default async function OrdersPage({ searchParams }: Props) {
               className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
             />
           </div>
-
-          <Button type="submit" variant="primary" size="sm">Filter</Button>
-          <Link href="/admin/orders">
-            <Button type="button" variant="ghost" size="sm">Reset</Button>
-          </Link>
+          <Button type="submit" variant="primary" size="sm">Filter Tanggal</Button>
         </form>
 
         <DataTable

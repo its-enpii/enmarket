@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/admin/Button';
 import { FormField } from '@/components/admin/FormField';
+import { toast } from '@/components/ui/toast-store';
 
 import { insertLicenseKey, type ActionResult } from './actions';
 
@@ -23,9 +24,8 @@ export function LicenseKeyForm({ products }: Props) {
     async (prev, fd) => {
       const res = await insertLicenseKey(prev, fd);
       if (res.ok) {
-        // Reset form state dengan membuka form
         setOpen(false);
-        if (res.message) alert(res.message);
+        if (res.message) toast.success(res.message);
       }
       return res;
     },

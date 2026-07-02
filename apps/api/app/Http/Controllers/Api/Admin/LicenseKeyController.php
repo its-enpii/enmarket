@@ -44,6 +44,16 @@ class LicenseKeyController extends Controller
             $query->where('key', 'like', "%{$q}%");
         }
 
+        // Sort
+        $sort = $request->input('sort', 'id');
+        $dir = strtolower((string) $request->input('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $allowedSorts = ['id', 'key', 'status', 'activated_at', 'expired_at', 'created_at'];
+        if (in_array($sort, $allowedSorts, true)) {
+            $query->orderBy($sort, $dir);
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
         $paginator = $query->paginate($perPage);
 
         return response()->json([

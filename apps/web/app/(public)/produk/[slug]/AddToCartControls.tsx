@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useTransition } from 'react';
 
+import { toast } from '@/components/ui/toast-store';
+
 import { addToCartAction, addToCartAndGoAction } from './actions';
 
 interface Props {
@@ -19,7 +21,9 @@ export function AddToCartControls({ productId }: Props) {
     startTransition(async () => {
       const res = await addToCartAction(productId, 1);
       if (!res.ok && res.error) {
-        alert(res.error);
+        toast.error(res.error);
+      } else {
+        toast.success('Ditambahkan ke keranjang.');
       }
     });
   }
@@ -30,7 +34,7 @@ export function AddToCartControls({ productId }: Props) {
         await addToCartAndGoAction(productId, 1);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Gagal';
-        alert(msg);
+        toast.error(msg);
       }
     });
   }

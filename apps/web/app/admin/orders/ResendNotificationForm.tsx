@@ -3,6 +3,9 @@
 import { useTransition } from 'react';
 
 import { Button } from '@/components/admin/Button';
+import { confirmDialog } from '@/components/ui/dialog-store';
+import { toast } from '@/components/ui/toast-store';
+
 import { resendOrder } from './[kodeOrder]/actions';
 
 interface Props {
@@ -16,14 +19,19 @@ interface Props {
 export function ResendNotificationForm({ kodeOrder }: Props) {
   const [pending, startTransition] = useTransition();
 
-  function submit(channel: 'email' | 'wa' | 'all') {
-    if (!confirm(`Kirim ulang notifikasi via ${channel}?`)) return;
+  async function submit(channel: 'email' | 'wa' | 'all') {
+    const ok = await confirmDialog({
+      title: 'Kirim Ulang Notifikasi',
+      message: `Kirim ulang notifikasi via ${channel}?`,
+      confirmLabel: 'Kirim',
+    });
+    if (!ok) return;
     startTransition(async () => {
       const res = await resendOrder(kodeOrder, channel);
       if (res.error) {
-        alert(res.error);
+        toast.error(res.error);
       } else {
-        alert(res.message ?? 'Notifikasi terkirim.');
+        toast.success(res.message ?? 'Notifikasi terkirim.');
       }
     });
   }

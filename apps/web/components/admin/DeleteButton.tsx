@@ -7,8 +7,11 @@
 
 import { useTransition } from 'react';
 
+import { confirmDialog } from '@/components/ui/dialog-store';
+import { toast } from '@/components/ui/toast-store';
+
 interface Props {
-  action: (formData: FormData) => Promise<void>;
+  action: (formData: FormData) => Promise<{ error?: string; ok?: boolean; message?: string } | void>;
   confirmMessage?: string;
   itemId: number | string;
   itemName?: string;
@@ -24,14 +27,27 @@ export function DeleteButton({
 }: Props) {
   const [pending, startTransition] = useTransition();
 
-  function handleClick() {
+  async function handleClick() {
     const msg = confirmMessage ?? `Hapus${itemName ? ` "${itemName}"` : ''}? Tindakan ini tidak bisa dibatalkan.`;
-    if (!confirm(msg)) return;
+    const ok = await confirmDialog({
+      title: 'Konfirmasi Hapus',
+      message: msg,
+      confirmLabel: 'Hapus',
+      danger: true,
+    });
+    if (!ok) return;
 
     const fd = new FormData();
     fd.append('id', String(itemId));
-    startTransition(() => {
-      action(fd);
+    startTransition(async () => {
+      const res = await action(fd);
+      if (res && 'error' in res && res.error) {
+        toast.error(res.error);
+      } else if (res && 'message' in res && res.message) {
+        toast.success(res.message);
+      } else {
+        toast.success('Berhasil dihapus.');
+      }
     });
   }
 
