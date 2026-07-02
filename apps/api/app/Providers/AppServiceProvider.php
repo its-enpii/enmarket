@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Services\Cart\CartService;
+use App\Services\Delivery\NotificationDispatcher;
+use App\Services\Delivery\OrderDeliveryService;
 use App\Services\NextRevalidator;
 use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\GoogleDriveEnStorage;
@@ -48,6 +50,16 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind CartService (stateless, bisa singleton)
         $this->app->singleton(CartService::class, fn () => new CartService());
+
+        // Bind NotificationDispatcher — null webhook kalau belum dikonfigurasi = dev log mode
+        $this->app->singleton(NotificationDispatcher::class, function () {
+            return new NotificationDispatcher(
+                n8nWebhookUrl: config('services.n8n.webhook_kirim_produk') ?: null,
+            );
+        });
+
+        // Bind OrderDeliveryService (orchestrator)
+        $this->app->singleton(OrderDeliveryService::class);
     }
 
     /**

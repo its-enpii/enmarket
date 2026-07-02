@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\OrderResendController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\CheckoutController;
+use App\Http\Controllers\Api\Public\DownloadController;
 use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
@@ -56,6 +58,10 @@ Route::post('/orders/check', [OrderController::class, 'check']);
 // Tripay callback (public, signature-verified)
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle']);
 
+// Public download endpoint (token-based, no auth)
+Route::get('/download/{token}', [DownloadController::class, 'show'])
+    ->where('token', '[a-f0-9]+');
+
 // ───── Admin auth (login/logout publik; me butuh token) ─────
 Route::prefix('admin')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -74,5 +80,8 @@ Route::prefix('admin')->group(function () {
         // Preview image sub-resource (append/remove)
         Route::post('products/{product}/preview-images', [ProductImageController::class, 'store']);
         Route::delete('products/{product}/preview-images', [ProductImageController::class, 'destroy']);
+
+        // Order resend notification (manual retry email/WA)
+        Route::post('orders/{kodeOrder}/resend', [OrderResendController::class, 'resend']);
     });
 });

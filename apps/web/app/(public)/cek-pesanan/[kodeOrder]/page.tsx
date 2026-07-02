@@ -111,23 +111,52 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
       {order.items && order.items.length > 0 && (
         <div className="bg-surface border-2 border-ink p-5 shadow-[4px_4px_0_0_var(--color-ink)] mb-6">
           <h2 className="text-lg font-bold text-ink mb-3">Produk</h2>
-          <ul className="space-y-2">
-            {order.items.map((item) => (
-              <li
-                key={item.id}
-                className="flex items-center justify-between gap-3 border-b-2 border-dashed border-ink/20 pb-2 last:border-b-0"
-              >
-                <div className="min-w-0">
-                  <p className="font-bold text-ink truncate">{item.nama_produk}</p>
-                  <p className="text-xs text-ink/60">
-                    {TIPE_LABEL[item.tipe_produk] ?? item.tipe_produk}
-                  </p>
-                </div>
-                <p className="font-bold text-primary shrink-0">
-                  {item.harga_saat_beli_formatted}
-                </p>
-              </li>
-            ))}
+          <ul className="space-y-3">
+            {order.items.map((item) => {
+              const delivery = item.delivery;
+              const hasDownload = delivery?.download_url && delivery.download_url.length > 0;
+              const hasLicense = delivery?.license_key && delivery.license_key.length > 0;
+              const expired = delivery?.token_expired_at && new Date(delivery.token_expired_at) < new Date();
+              const showDelivery = order.status === 'paid' && (hasDownload || hasLicense);
+
+              return (
+                <li
+                  key={item.id}
+                  className="border-b-2 border-dashed border-ink/20 pb-3 last:border-b-0 last:pb-0"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-bold text-ink truncate">{item.nama_produk}</p>
+                      <p className="text-xs text-ink/60">
+                        {TIPE_LABEL[item.tipe_produk] ?? item.tipe_produk}
+                      </p>
+                    </div>
+                    <p className="font-bold text-primary shrink-0">
+                      {item.harga_saat_beli_formatted}
+                    </p>
+                  </div>
+
+                  {showDelivery && hasDownload && !expired && (
+                    <a
+                      href={delivery!.download_url!}
+                      className="mt-2 inline-flex items-center gap-2 bg-accent text-ink border-2 border-ink px-3 py-1.5 text-xs font-bold shadow-[2px_2px_0_0_var(--color-ink)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
+                    >
+                      ↓ Download
+                    </a>
+                  )}
+                  {showDelivery && hasDownload && expired && (
+                    <p className="mt-2 text-xs text-ink/60">
+                      ⏰ Link kadaluarsa. Hubungi admin.
+                    </p>
+                  )}
+                  {showDelivery && hasLicense && (
+                    <p className="mt-2 text-xs font-mono bg-ink text-surface px-2 py-1 inline-block break-all">
+                      {delivery!.license_key}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

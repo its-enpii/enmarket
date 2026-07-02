@@ -88,4 +88,19 @@ return [
             : 'https://tripay.co.id/api-sandbox',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | n8n orchestrator (Fase 4)
+    |--------------------------------------------------------------------------
+    |
+    | Laravel POST ke webhook ini setelah order paid; n8n workflow yang
+    | mengirim email + WhatsApp ke pembeli. Kalau kosong, Notifier jalan di
+    | dev log mode (payload di-log, sent_at timestamp auto-diisi).
+    |
+    */
+
+    'n8n' => [
+        'webhook_kirim_produk' => env('N8N_WEBHOOK_KIRIM_PRODUK'),
+    ],
+
 ];

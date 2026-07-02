@@ -136,24 +136,64 @@ export default async function PesananSuksesPage({ params }: PageProps) {
       {/* Items */}
       {order.items && order.items.length > 0 && (
         <div className="bg-surface border-2 border-ink p-6 shadow-[4px_4px_0_0_var(--color-ink)] mb-6">
-          <h2 className="text-lg font-bold text-ink mb-3">Produk</h2>
-          <ul className="space-y-2">
-            {order.items.map((item) => (
-              <li
-                key={item.id}
-                className="flex items-center justify-between gap-3 border-b-2 border-dashed border-ink/20 pb-2 last:border-b-0"
-              >
-                <div className="min-w-0">
-                  <p className="font-bold text-ink truncate">{item.nama_produk}</p>
-                  <p className="text-xs text-ink/60">
-                    {TIPE_LABEL[item.tipe_produk] ?? item.tipe_produk}
-                  </p>
-                </div>
-                <p className="font-bold text-primary shrink-0">
-                  {item.harga_saat_beli_formatted}
-                </p>
-              </li>
-            ))}
+          <h2 className="text-lg font-bold text-ink mb-3">Produk &amp; Link Download</h2>
+          <ul className="space-y-3">
+            {order.items.map((item) => {
+              const delivery = item.delivery;
+              const hasDownload = delivery?.download_url && delivery.download_url.length > 0;
+              const hasLicense = delivery?.license_key && delivery.license_key.length > 0;
+              const expired = delivery?.token_expired_at && new Date(delivery.token_expired_at) < new Date();
+
+              return (
+                <li
+                  key={item.id}
+                  className="border-b-2 border-dashed border-ink/20 pb-3 last:border-b-0 last:pb-0"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-bold text-ink truncate">{item.nama_produk}</p>
+                      <p className="text-xs text-ink/60">
+                        {TIPE_LABEL[item.tipe_produk] ?? item.tipe_produk}
+                      </p>
+                    </div>
+                    <p className="font-bold text-primary shrink-0">
+                      {item.harga_saat_beli_formatted}
+                    </p>
+                  </div>
+
+                  {hasDownload && !expired && (
+                    <a
+                      href={delivery!.download_url!}
+                      className="mt-2 inline-flex items-center gap-2 bg-accent text-ink border-2 border-ink px-3 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
+                    >
+                      ↓ Download File
+                    </a>
+                  )}
+                  {hasDownload && expired && (
+                    <p className="mt-2 text-xs text-ink/60">
+                      ⏰ Link download kadaluarsa. Hubungi admin untuk regenerate.
+                    </p>
+                  )}
+
+                  {hasLicense && (
+                    <div className="mt-2 bg-ink text-surface border-2 border-ink p-2.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+                        License Key
+                      </p>
+                      <p className="font-mono font-bold text-sm break-all select-all">
+                        {delivery!.license_key}
+                      </p>
+                    </div>
+                  )}
+
+                  {!hasDownload && !hasLicense && (
+                    <p className="mt-2 text-xs text-ink/60 italic">
+                      Item tanpa file download / license key (bundle opsional).
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
@@ -163,11 +203,11 @@ export default async function PesananSuksesPage({ params }: PageProps) {
         <p className="text-sm font-bold mb-2">📦 Apa selanjutnya?</p>
         <ul className="text-sm space-y-1 ml-4 list-disc">
           <li>
-            Link download &amp; license key akan dikirim ke{' '}
-            <strong>{order.email_pembeli}</strong>.
+            Link download &amp; license key sudah tersedia di atas dan juga sudah
+            dikirim ke <strong>{order.email_pembeli}</strong>.
           </li>
           <li>
-            Notifikasi juga akan dikirim via WhatsApp ke{' '}
+            Notifikasi juga sudah dikirim via WhatsApp ke{' '}
             <strong>{order.wa_pembeli}</strong>.
           </li>
           <li>

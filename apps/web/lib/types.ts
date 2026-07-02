@@ -92,6 +92,16 @@ export interface Cart {
 export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded';
 export type TipeOrder = 'download' | 'license' | 'bundle';
 
+export interface OrderDeliveryInfo {
+  has_download: boolean;
+  download_token: string | null;
+  download_url: string | null;
+  token_expired_at: string | null;
+  license_key: string | null;
+  email_sent_at: string | null;
+  wa_sent_at: string | null;
+}
+
 export interface OrderItem {
   id: number;
   product_id: number;
@@ -99,6 +109,7 @@ export interface OrderItem {
   harga_saat_beli: string;
   harga_saat_beli_formatted: string;
   tipe_produk: TipeOrder;
+  delivery?: OrderDeliveryInfo | null;
 }
 
 export interface Order {

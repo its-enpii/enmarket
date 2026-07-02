@@ -31,6 +31,16 @@ class ProductResource extends JsonResource
             'is_featured' => (bool) $this->is_featured,
             'needs_license_key' => $this->needsLicenseKey(),
             'has_downloadable_file' => $this->hasDownloadableFile(),
+            'license_key_stats' => $this->whenLoaded('licenseKeys', function () {
+                $all = $this->licenseKeys;
+                return [
+                    'total' => $all->count(),
+                    'aktif' => $all->where('status', 'aktif')->count(),
+                    'digunakan' => $all->where('status', 'digunakan')->count(),
+                    'kadaluarsa' => $all->where('status', 'kadaluarsa')->count(),
+                    'dicabut' => $all->where('status', 'dicabut')->count(),
+                ];
+            }),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

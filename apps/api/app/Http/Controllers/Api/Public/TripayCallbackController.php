@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\Delivery\OrderDeliveryService;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,8 +18,10 @@ use Illuminate\Support\Facades\Log;
  */
 class TripayCallbackController extends Controller
 {
-    public function __construct(private readonly TripayClient $tripay)
-    {
+    public function __construct(
+        private readonly TripayClient $tripay,
+        private readonly OrderDeliveryService $deliveryService,
+    ) {
     }
 
     public function handle(Request $request): JsonResponse
@@ -69,12 +72,28 @@ class TripayCallbackController extends Controller
         $update = ['status' => $newStatus];
         if ($newStatus === 'paid' && $order->status !== 'paid') {
             $update['paid_at'] = now();
+            $order->update($update);
 
-            Log::info("Order {$order->kode_order} paid — delivery generation akan di Fase 4");
-            // TODO Fase 4: generate license_keys, order_deliveries, trigger n8n webhook
+            // Trigger delivery generation (idempotent via OrderDeliveryService)
+            try {
+                $deliveries = $this->deliveryService->generateForOrder($order);
+                Log::info("Order {$order->kode_order} paid — {$this->countDeliveries($deliveries)} deliveries created");
+            } catch (\Throwable $e) {
+                // Jangan fail callback kalau delivery gagal — bisa di-retry manual
+                Log::error("Order {$order->kode_order} paid but delivery failed", [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+        } else {
+            $order->update($update);
         }
-        $order->update($update);
 
         return response()->json(['success' => true]);
+    }
+
+    private function countDeliveries(array $deliveries): int
+    {
+        return count($deliveries);
     }
 }

@@ -40,4 +40,28 @@ class LicenseKey extends Model
     {
         return $this->status === 'aktif';
     }
+
+    /**
+     * Scope: hanya key yang berstatus aktif (siap diklaim).
+     * Urutkan paling lama dibuat (FIFO claim).
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'aktif')->orderBy('id', 'asc');
+    }
+
+    /**
+     * Claim key ini: set status, activated_at. Idempotent check sebelum update.
+     */
+    public function markUsed(): bool
+    {
+        if ($this->status !== 'aktif') {
+            return false;
+        }
+
+        return (bool) $this->forceFill([
+            'status' => 'digunakan',
+            'activated_at' => now(),
+        ])->save();
+    }
 }

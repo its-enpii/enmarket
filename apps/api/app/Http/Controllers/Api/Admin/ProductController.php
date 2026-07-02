@@ -107,7 +107,7 @@ class ProductController extends Controller
         $this->revalidator->revalidateProduct($product->slug);
 
         return response()->json([
-            'data' => new ProductResource($product->load('category:id,nama,slug')),
+            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys'])),
             'message' => 'Produk berhasil dibuat.',
         ], 201);
     }
@@ -118,7 +118,7 @@ class ProductController extends Controller
     public function show(Product $product): JsonResponse
     {
         return response()->json([
-            'data' => new ProductResource($product->load('category:id,nama,slug')),
+            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys'])),
         ]);
     }
 
@@ -157,7 +157,7 @@ class ProductController extends Controller
         $this->revalidator->revalidateProduct($product->slug);
 
         return response()->json([
-            'data' => new ProductResource($product->load('category:id,nama,slug')),
+            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys'])),
             'message' => 'Produk berhasil diperbarui.',
         ]);
     }
