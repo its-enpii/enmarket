@@ -138,3 +138,49 @@ export interface OrderStatusSummary {
   total_harga_formatted: string;
   item_count?: number;
 }
+
+// ───── Admin: Order stats & License keys ─────
+
+export type LicenseStatus = 'aktif' | 'digunakan' | 'kadaluarsa' | 'dicabut';
+
+export interface AdminOrderStats {
+  total: number;
+  pending: number;
+  paid: number;
+  failed: number;
+  expired: number;
+  refunded: number;
+  /** Raw number (decimal), frontend format pakai formatRupiah */
+  revenue_month: number;
+  paid_month: number;
+}
+
+export interface AdminLicenseKey {
+  id: number;
+  product_id: number;
+  product: { id: number; nama: string; slug: string } | null;
+  key: string;
+  status: LicenseStatus;
+  activated_at: string | null;
+  expired_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  deliveries_count?: number;
+}
+
+/** Status label Indonesia untuk Order. */
+export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+  pending: 'Pending',
+  paid: 'Paid',
+  failed: 'Failed',
+  expired: 'Expired',
+  refunded: 'Refunded',
+};
+
+/** Status label Indonesia untuk LicenseKey. */
+export const LICENSE_STATUS_LABEL: Record<LicenseStatus, string> = {
+  aktif: 'Aktif',
+  digunakan: 'Digunakan',
+  kadaluarsa: 'Kadaluarsa',
+  dicabut: 'Dicabut',
+};

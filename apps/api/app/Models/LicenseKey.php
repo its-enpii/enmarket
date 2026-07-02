@@ -64,4 +64,25 @@ class LicenseKey extends Model
             'activated_at' => now(),
         ])->save();
     }
+
+    /**
+     * Generate satu license key string.
+     * Format: PREFIX-XXXX-XXXX-XXXX-XXXX (4 groups of 4 uppercase alnum, minus I/O/0/1).
+     * Dipakai oleh seeder + admin manual insert.
+     */
+    public static function generateKey(string $prefix = 'EPS'): string
+    {
+        $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // exclude I, O, 0, 1
+        $groups = [];
+
+        for ($g = 0; $g < 4; $g++) {
+            $group = '';
+            for ($c = 0; $c < 4; $c++) {
+                $group .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+            }
+            $groups[] = $group;
+        }
+
+        return $prefix . '-' . implode('-', $groups);
+    }
 }

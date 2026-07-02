@@ -4,6 +4,8 @@ const NAV = [
   { href: '/admin', label: 'Beranda', icon: '◆' },
   { href: '/admin/products', label: 'Produk', icon: '▤' },
   { href: '/admin/categories', label: 'Kategori', icon: '◧' },
+  { href: '/admin/orders', label: 'Pesanan', icon: '◊' },
+  { href: '/admin/license-keys', label: 'Lisensi', icon: '⚷' },
 ];
 
 interface Props {

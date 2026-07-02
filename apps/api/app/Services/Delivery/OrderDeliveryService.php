@@ -70,6 +70,27 @@ class OrderDeliveryService
     }
 
     /**
+     * Issue token baru + extend expiry 7 hari. Reset email_sent_at supaya
+     * notifikasi ulang di-trigger. Idempotent: token baru selalu beda.
+     */
+    public function regenerateToken(OrderDelivery $delivery): OrderDelivery
+    {
+        $delivery->loadMissing('orderItem.order');
+
+        $delivery->forceFill([
+            'download_token' => $this->generateUniqueToken(),
+            'token_expired_at' => now()->addDays(self::TOKEN_EXPIRY_DAYS),
+            'email_sent_at' => null,
+            'wa_sent_at' => null,
+        ])->save();
+
+        // Re-dispatch notifikasi email/WA untuk delivery ini saja
+        $this->dispatchNotifications($delivery->orderItem->order, [$delivery]);
+
+        return $delivery;
+    }
+
+    /**
      * @param  array<int, OrderDelivery>  $deliveries
      */
     private function dispatchNotifications(Order $order, array $deliveries): void

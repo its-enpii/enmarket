@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\LicenseKeyController;
+use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\OrderResendController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
@@ -83,5 +85,24 @@ Route::prefix('admin')->group(function () {
 
         // Order resend notification (manual retry email/WA)
         Route::post('orders/{kodeOrder}/resend', [OrderResendController::class, 'resend']);
+
+        // Order regenerate token (issue token baru + extend 7 hari + re-email)
+        Route::post('orders/{kodeOrder}/regenerate-token', [OrderResendController::class, 'regenerateToken']);
+
+        // Order re-trigger delivery generation (untuk paid order yang belum ada delivery rows)
+        Route::post('orders/{kodeOrder}/generate-deliveries', [OrderResendController::class, 'generateDeliveries']);
+
+        // Order list + detail + stats — stats HARUS sebelum orders/{kodeOrder}
+        // kalau tidak, "stats" akan dicocokkan sebagai kode_order.
+        Route::get('orders/stats', [AdminOrderController::class, 'stats']);
+        Route::get('orders', [AdminOrderController::class, 'index']);
+        Route::get('orders/{kodeOrder}', [AdminOrderController::class, 'show']);
+
+        // License key pool management
+        Route::post('license-keys/{id}/revoke', [LicenseKeyController::class, 'revoke']);
+        Route::post('license-keys/{id}/extend', [LicenseKeyController::class, 'extend']);
+        Route::post('license-keys', [LicenseKeyController::class, 'store']);
+        Route::get('license-keys/{id}', [LicenseKeyController::class, 'show']);
+        Route::get('license-keys', [LicenseKeyController::class, 'index']);
     });
 });

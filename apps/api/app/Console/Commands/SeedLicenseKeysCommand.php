@@ -54,7 +54,7 @@ class SeedLicenseKeysCommand extends Command
         $batch = [];
 
         for ($i = 0; $i < $count; $i++) {
-            $key = $this->generateKey($prefix);
+            $key = LicenseKey::generateKey($prefix);
             $batch[] = [
                 'product_id' => $productId,
                 'key' => $key,
@@ -82,24 +82,5 @@ class SeedLicenseKeysCommand extends Command
         $this->info("✓ {$generated} keys berhasil di-generate.");
 
         return self::SUCCESS;
-    }
-
-    /**
-     * Format: PREFIX-XXXX-XXXX-XXXX-XXXX (4 groups of 4 uppercase alnum, minus O/0/I/1).
-     */
-    private function generateKey(string $prefix): string
-    {
-        $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // exclude I, O, 0, 1
-        $groups = [];
-
-        for ($g = 0; $g < 4; $g++) {
-            $group = '';
-            for ($c = 0; $c < 4; $c++) {
-                $group .= $alphabet[random_int(0, strlen($alphabet) - 1)];
-            }
-            $groups[] = $group;
-        }
-
-        return $prefix . '-' . implode('-', $groups);
     }
 }
