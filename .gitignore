@@ -1,0 +1,77 @@
+# ───── Env & secrets ─────
+.env
+.env.*
+!.env.example
+.env.local
+.env.*.local
+
+# ───── Laravel (apps/api) ─────
+apps/api/vendor/
+apps/api/node_modules/
+apps/api/storage/logs/*
+apps/api/storage/framework/cache/data/*
+apps/api/storage/framework/sessions/*
+apps/api/storage/framework/views/*
+apps/api/storage/app/private/
+apps/api/storage/app/public/
+apps/api/bootstrap/cache/*.php
+apps/api/public/storage
+apps/api/public/hot
+apps/api/.phpunit.cache/
+apps/api/.phpunit.result.cache
+apps/api/auth.json
+apps/api/.env
+apps/api/.env.backup
+apps/api/.env.production
+apps/api/Homestead.json
+apps/api/Homestead.yaml
+apps/api/.vagrant/
+
+# ───── Next.js (apps/web) ─────
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/build/
+apps/web/dist/
+apps/web/.turbo/
+apps/web/.vercel
+apps/web/coverage/
+apps/web/storybook-static/
+
+# ───── Docker ─────
+infra/docker/db/data/
+infra/docker/db/logs/
+infra/docker/api/storage/
+
+# ───── IDE / Editor ─────
+.idea/
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ───── Logs & temp ─────
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+tmp/
+temp/
+.cache/
+
+# ───── Testing & coverage ─────
+junit.xml
+.nyc_output
+coverage/
+
+# ───── Misc ─────
+.history/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test/
