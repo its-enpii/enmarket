@@ -107,6 +107,9 @@ export const apiPost = <T = unknown>(path: string, body?: unknown) =>
 export const apiPostForm = <T = unknown>(path: string, formData: FormData) =>
   apiFetch<T>(path, { method: 'POST', formData });
 
+export const apiPatch = <T = unknown>(path: string, body?: unknown) =>
+  apiFetch<T>(path, { method: 'PATCH', body });
+
 export const apiPut = <T = unknown>(path: string, body?: unknown) =>
   apiFetch<T>(path, { method: 'PUT', body });
 

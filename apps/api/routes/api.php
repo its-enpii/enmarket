@@ -5,8 +5,12 @@ use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
+use App\Http\Controllers\Api\Public\CheckoutController;
+use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
+use App\Http\Controllers\Api\Public\TripayCallbackController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +38,23 @@ Route::prefix('public')->group(function () {
     Route::get('categories', [PublicCategoryController::class, 'index']);
     Route::get('categories/slugs', [PublicCategoryController::class, 'slugs']);
 });
+
+// ───── Cart + Checkout + Orders (public, no auth, pakai cookie) ─────
+Route::get('/cart', [CartController::class, 'index']);
+Route::post('/cart/items', [CartController::class, 'storeItem']);
+Route::patch('/cart/items/{productId}', [CartController::class, 'updateItem']);
+Route::delete('/cart/items/{productId}', [CartController::class, 'destroyItem']);
+
+Route::get('/checkout', [CheckoutController::class, 'preview']);
+Route::post('/checkout', [CheckoutController::class, 'store']);
+
+Route::get('/orders/{kodeOrder}/status', [OrderController::class, 'status']);
+Route::get('/orders/{kodeOrder}/public', [OrderController::class, 'showPublic']);
+Route::get('/orders/{kodeOrder}', [OrderController::class, 'show']);
+Route::post('/orders/check', [OrderController::class, 'check']);
+
+// Tripay callback (public, signature-verified)
+Route::post('/tripay/callback', [TripayCallbackController::class, 'handle']);
 
 // ───── Admin auth (login/logout publik; me butuh token) ─────
 Route::prefix('admin')->group(function () {

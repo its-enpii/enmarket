@@ -8,6 +8,8 @@ import { formatDate, TIPE_LABEL } from '@/lib/format';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { Product } from '@/lib/types';
 
+import { AddToCartControls } from './AddToCartControls';
+
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -133,19 +135,9 @@ export default async function ProductPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Beli — disabled, badge coming soon */}
+          {/* Beli */}
           <div className="mt-8">
-            <button
-              type="button"
-              disabled
-              className="w-full sm:w-auto bg-ink/40 text-surface border-2 border-ink px-6 py-4 font-bold text-base cursor-not-allowed"
-              aria-disabled
-            >
-              Beli Sekarang →
-              <span className="block text-xs font-normal mt-1 opacity-80">
-                Coming soon — Fase 3
-              </span>
-            </button>
+            <AddToCartControls productId={product.id} />
           </div>
 
           {/* Fitur */}

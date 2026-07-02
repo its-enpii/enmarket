@@ -66,4 +66,26 @@ return [
         'webhook_secret' => env('REVALIDATE_SECRET'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Tripay payment gateway (Fase 3)
+    |--------------------------------------------------------------------------
+    |
+    | - mode=sandbox: pakai staging API untuk testing
+    | - mode=production: pakai API live
+    | - HMAC-SHA256 signature via private_key (sama untuk create + callback)
+    |
+    */
+
+    'tripay' => [
+        'mode' => env('TRIPAY_MODE', 'sandbox'),
+        'api_key' => env('TRIPAY_API_KEY'),
+        'private_key' => env('TRIPAY_PRIVATE_KEY'),
+        'merchant_code' => env('TRIPAY_MERCHANT_CODE'),
+        'callback_url' => env('TRIPAY_CALLBACK_URL'),
+        'base_url' => env('TRIPAY_MODE') === 'production'
+            ? 'https://api.tripay.co.id/api/v2'
+            : 'https://tripay.co.id/api-sandbox',
+    ],
+
 ];

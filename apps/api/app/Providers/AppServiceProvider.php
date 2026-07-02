@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Services\Cart\CartService;
 use App\Services\NextRevalidator;
 use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\GoogleDriveEnStorage;
 use App\Services\Storage\LocalMockEnStorage;
+use App\Services\Tripay\TripayClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +35,19 @@ class AppServiceProvider extends ServiceProvider
                 nextBaseUrl: (string) config('services.next.base_url', ''),
             );
         });
+
+        // Bind Tripay client (singleton — koneksi ringan, immutable config)
+        $this->app->singleton(TripayClient::class, function () {
+            return new TripayClient(
+                apiKey: (string) config('services.tripay.api_key', ''),
+                privateKey: (string) config('services.tripay.private_key', ''),
+                merchantCode: (string) config('services.tripay.merchant_code', ''),
+                baseUrl: (string) config('services.tripay.base_url', ''),
+            );
+        });
+
+        // Bind CartService (stateless, bisa singleton)
+        $this->app->singleton(CartService::class, fn () => new CartService());
     }
 
     /**
