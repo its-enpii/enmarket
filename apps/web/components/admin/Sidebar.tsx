@@ -34,10 +34,13 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
         />
       )}
 
-      {/* Sidebar — drawer di mobile, fixed di lg+ */}
+      {/* Sidebar — fixed position.
+          - mobile: drawer overlay (translate-x animate)
+          - lg+:    fixed left, tetap di tempat saat main scroll (mencegah
+                    sidebar ikut scroll, terutama long page tabel) */}
       <aside
         className={
-          'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-primary border-r-4 border-ink ' +
+          'fixed inset-y-0 left-0 z-50 w-64 bg-primary border-r-4 border-ink ' +
           'flex flex-col transform transition-transform duration-200 ' +
           (open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0')
         }

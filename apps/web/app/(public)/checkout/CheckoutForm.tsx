@@ -2,6 +2,9 @@
 
 import { useActionState } from 'react';
 
+import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
+
 import { checkoutAction } from './actions';
 
 interface State {
@@ -28,28 +31,25 @@ export function CheckoutForm({ defaultEmail }: Props) {
   return (
     <form action={formAction} className="space-y-5">
       <div>
-        <label htmlFor="nama" className="block text-sm font-bold mb-1.5 text-ink uppercase tracking-wide">
+        <label htmlFor="nama" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
           Nama Lengkap
         </label>
-        <input
+        <Input
           id="nama"
           name="nama"
           type="text"
           required
           autoComplete="name"
           placeholder="Nama kamu"
-          className="w-full bg-surface border-2 border-ink px-3 py-2.5 text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
         />
-        {state?.fieldErrors?.nama?.[0] && (
-          <p className="mt-1 text-xs text-accent">{state.fieldErrors.nama[0]}</p>
-        )}
+        <FormError>{state?.fieldErrors?.nama?.[0]}</FormError>
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-bold mb-1.5 text-ink uppercase tracking-wide">
+        <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
           Email
         </label>
-        <input
+        <Input
           id="email"
           name="email"
           type="email"
@@ -57,41 +57,29 @@ export function CheckoutForm({ defaultEmail }: Props) {
           autoComplete="email"
           defaultValue={defaultEmail}
           placeholder="kamu@email.com"
-          className="w-full bg-surface border-2 border-ink px-3 py-2.5 text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
         />
-        <p className="mt-1 text-xs text-ink/50">
-          Untuk kirim link download & license key.
-        </p>
-        {state?.fieldErrors?.email?.[0] && (
-          <p className="mt-1 text-xs text-accent">{state.fieldErrors.email[0]}</p>
-        )}
+        <FormHint>Untuk kirim link download & license key.</FormHint>
+        <FormError>{state?.fieldErrors?.email?.[0]}</FormError>
       </div>
 
       <div>
-        <label htmlFor="wa" className="block text-sm font-bold mb-1.5 text-ink uppercase tracking-wide">
+        <label htmlFor="wa" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
           Nomor WhatsApp
         </label>
-        <input
+        <Input
           id="wa"
           name="wa"
           type="tel"
           required
           autoComplete="tel"
           placeholder="08123456789"
-          className="w-full bg-surface border-2 border-ink px-3 py-2.5 text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
         />
-        <p className="mt-1 text-xs text-ink/50">
-          Untuk notifikasi status pesanan.
-        </p>
-        {state?.fieldErrors?.wa?.[0] && (
-          <p className="mt-1 text-xs text-accent">{state.fieldErrors.wa[0]}</p>
-        )}
+        <FormHint>Untuk notifikasi status pesanan.</FormHint>
+        <FormError>{state?.fieldErrors?.wa?.[0]}</FormError>
       </div>
 
       {state?.error && !state.fieldErrors && (
-        <div className="bg-accent border-2 border-ink px-3 py-2 text-sm font-medium text-ink shadow-[2px_2px_0_0_var(--color-ink)]">
-          {state.error}
-        </div>
+        <FormError variant="box">{state.error}</FormError>
       )}
 
       <button

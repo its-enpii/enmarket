@@ -1,9 +1,11 @@
 import Link from 'next/link';
 
+import { AdminListProvider } from '@/components/admin/AdminListProvider';
+import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
+import { DataTableArea } from '@/components/admin/DataTableArea';
 import { DeleteButton } from '@/components/admin/DeleteButton';
-import { Topbar } from '@/components/admin/Topbar';
 import { apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import type { Category, SingleResponse } from '@/lib/types';
@@ -14,13 +16,29 @@ export const metadata = {
   title: 'Kategori — Admin',
 };
 
+interface Props {
+  searchParams: Promise<{ q?: string }>;
+}
+
 async function loadCategories() {
   const res = await apiGet<SingleResponse<Category[]>>('/api/admin/categories');
   return res.data ?? [];
 }
 
-export default async function CategoriesPage() {
-  const categories = await loadCategories();
+export default async function CategoriesPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const all = await loadCategories();
+
+  // Filter client-side (backend tidak support q di /api/admin/categories).
+  // Cocok untuk kategori karena jumlah row kecil.
+  const q = (params.q ?? '').trim().toLowerCase();
+  const categories = q
+    ? all.filter(
+        (c) =>
+          c.nama.toLowerCase().includes(q) ||
+          (c.slug ?? '').toLowerCase().includes(q),
+      )
+    : all;
 
   const columns: Column<Category>[] = [
     { key: 'nama', header: 'Nama', render: (c) => <span className="font-bold">{c.nama}</span> },
@@ -62,26 +80,37 @@ export default async function CategoriesPage() {
   ];
 
   return (
-    <>
-      <Topbar
-        title="Kategori"
-        subtitle={`${categories.length} kategori terdaftar.`}
-      />
+    <AdminListProvider>
+      <div className="p-6 sm:p-8 space-y-6">
+          <AdminTableHeader
+            q={params.q ?? ''}
+            sort="id"
+            dir="asc"
+            placeholder="Cari nama atau slug…"
+            action={
+              <Link href="/admin/categories/new">
+                <Button variant="primary" size="md" flat>+ Kategori Baru</Button>
+              </Link>
+            }
+          />
 
-      <div className="p-8 space-y-6">
-        <div className="flex justify-end">
-          <Link href="/admin/categories/new">
-            <Button variant="primary">+ Kategori Baru</Button>
-          </Link>
-        </div>
-
-        <DataTable
-          columns={columns}
-          rows={categories}
-          rowKey={(c) => c.id}
-          emptyMessage="Belum ada kategori. Tambah satu untuk mulai."
-        />
+          <DataTableArea
+            columnCount={columns.length}
+            columnWidths={columns.map((c) => c.width)}
+            skeletonCount={10}
+          >
+            <DataTable
+              columns={columns}
+              rows={categories}
+              rowKey={(c) => c.id}
+              emptyMessage={
+                q
+                  ? `Tidak ada kategori yang cocok dengan "${q}".`
+                  : 'Belum ada kategori. Tambah satu untuk mulai.'
+              }
+            />
+          </DataTableArea>
       </div>
-    </>
+    </AdminListProvider>
   );
 }

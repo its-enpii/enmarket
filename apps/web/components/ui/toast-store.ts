@@ -2,6 +2,15 @@
  * Toast store — module-level emitter + subscriber list.
  * Pattern: imperatif API (toast.success/error) + React subscription via useSyncExternalStore.
  *
+ * PENTING: getSnapshot return **copy array** tiap kali dipanggil.
+ * useSyncExternalStore cache snapshot pakai Object.is — kalau return
+ * reference yang sama tiap call, React bail out dan tidak detect perubahan.
+ *
+ * Catatan: kalau return [...toasts] setiap render dan component
+ * re-render setiap subscribe fire, bisa terjadi infinite loop.
+ * Solusi: track lastSeen version, return cached snapshot kecuali
+ * array berubah.
+ *
  * Usage:
  *   import { toast } from '@/components/ui/toast';
  *   toast.success('Disimpan');
@@ -19,15 +28,25 @@ export interface Toast {
 }
 
 let nextId = 1;
-const toasts: Toast[] = [];
+let toasts: Toast[] = [];
+let lastSnapshot: Toast[] = [];
 const subscribers = new Set<() => void>();
 
 function notify() {
   for (const s of subscribers) s();
 }
 
+function snapshot(): Toast[] {
+  // Buat snapshot baru hanya kalau array backing storage berubah.
+  // Bandingkan length + reference identity cukup untuk detect.
+  if (lastSnapshot.length !== toasts.length || lastSnapshot === toasts) {
+    lastSnapshot = [...toasts];
+  }
+  return lastSnapshot;
+}
+
 export const toastStore = {
-  getSnapshot: (): Toast[] => toasts,
+  getSnapshot: snapshot,
   getServerSnapshot: (): Toast[] => [],
   subscribe(cb: () => void): () => void {
     subscribers.add(cb);
@@ -37,26 +56,17 @@ export const toastStore = {
 
 function push(message: string, variant: ToastVariant, duration = 4000): number {
   const id = nextId++;
-  toasts.push({ id, message, variant, duration });
+  // Replace backing array reference (immutable update).
+  toasts = [...toasts, { id, message, variant, duration }];
   notify();
-  if (duration > 0) {
-    setTimeout(() => {
-      const i = toasts.findIndex((t) => t.id === id);
-      if (i >= 0) {
-        toasts.splice(i, 1);
-        notify();
-      }
-    }, duration);
-  }
   return id;
 }
 
 function dismiss(id: number) {
-  const i = toasts.findIndex((t) => t.id === id);
-  if (i >= 0) {
-    toasts.splice(i, 1);
-    notify();
-  }
+  const next = toasts.filter((t) => t.id !== id);
+  if (next.length === toasts.length) return; // not found
+  toasts = next;
+  notify();
 }
 
 export const toast = {

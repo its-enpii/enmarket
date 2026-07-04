@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 
-import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import type { Category, SingleResponse } from '@/lib/types';
 
@@ -27,21 +26,17 @@ export default async function EditCategoryPage({ params }: Props) {
   if (!category) notFound();
 
   return (
-    <>
-      <Topbar title={`Edit: ${category.nama}`} subtitle={`Slug: ${category.slug}`} />
-
-      <div className="p-8 max-w-2xl">
-        <div className="bg-surface border-2 border-ink p-6 shadow-[4px_4px_0_0_var(--color-ink)]">
-          <CategoryForm
-            initial={{
-              id: category.id,
-              nama: category.nama,
-              slug: category.slug,
-              deskripsi: category.deskripsi,
-            }}
-          />
-        </div>
+    <div className="p-8 max-w-2xl">
+      <div className="bg-surface border-2 border-ink p-6 shadow-[4px_4px_0_0_var(--color-ink)]">
+        <CategoryForm
+          initial={{
+            id: category.id,
+            nama: category.nama,
+            slug: category.slug,
+            deskripsi: category.deskripsi,
+          }}
+        />
       </div>
-    </>
+    </div>
   );
 }

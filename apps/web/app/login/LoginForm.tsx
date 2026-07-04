@@ -7,6 +7,9 @@
 
 import { useActionState } from 'react';
 
+import { FormError } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
+
 interface State {
   error?: string;
 }
@@ -28,11 +31,11 @@ export function LoginForm({ action }: Props) {
       <div>
         <label
           htmlFor="token"
-          className="block text-sm font-bold mb-1.5 text-ink uppercase tracking-wide"
+          className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5"
         >
           Admin Token
         </label>
-        <input
+        <Input
           id="token"
           name="token"
           type="password"
@@ -40,14 +43,11 @@ export function LoginForm({ action }: Props) {
           autoComplete="off"
           autoFocus
           placeholder="dev-admin-token-…"
-          className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
         />
       </div>
 
       {state?.error && (
-        <div className="bg-accent border-2 border-ink px-3 py-2 text-sm font-medium text-ink shadow-[2px_2px_0_0_var(--color-ink)]">
-          {state.error}
-        </div>
+        <FormError variant="box">{state.error}</FormError>
       )}
 
       <button

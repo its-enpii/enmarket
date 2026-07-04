@@ -2,6 +2,9 @@
 
 import { useActionState } from 'react';
 
+import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
+
 import { checkOrderAction } from './actions';
 
 interface State {
@@ -27,10 +30,10 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="kode_order" className="block text-sm font-bold mb-1.5 text-ink uppercase tracking-wide">
+        <label htmlFor="kode_order" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
           Kode Order
         </label>
-        <input
+        <Input
           id="kode_order"
           name="kode_order"
           type="text"
@@ -38,38 +41,29 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
           defaultValue={defaultKode}
           placeholder="EPS-20240701-A3KX"
           autoComplete="off"
-          className="w-full bg-surface border-2 border-ink px-3 py-2.5 text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all font-mono"
+          className="font-mono"
         />
-        {state?.fieldErrors?.kode_order?.[0] && (
-          <p className="mt-1 text-xs text-accent">{state.fieldErrors.kode_order[0]}</p>
-        )}
+        <FormError>{state?.fieldErrors?.kode_order?.[0]}</FormError>
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-bold mb-1.5 text-ink uppercase tracking-wide">
+        <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
           Email Pembeli
         </label>
-        <input
+        <Input
           id="email"
           name="email"
           type="email"
           required
           placeholder="email@yang-digunakan-saat-checkout.com"
           autoComplete="email"
-          className="w-full bg-surface border-2 border-ink px-3 py-2.5 text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
         />
-        <p className="mt-1 text-xs text-ink/50">
-          Email yang kamu pakai saat checkout.
-        </p>
-        {state?.fieldErrors?.email?.[0] && (
-          <p className="mt-1 text-xs text-accent">{state.fieldErrors.email[0]}</p>
-        )}
+        <FormHint>Email yang kamu pakai saat checkout.</FormHint>
+        <FormError>{state?.fieldErrors?.email?.[0]}</FormError>
       </div>
 
       {state?.error && !state.fieldErrors && (
-        <div className="bg-accent border-2 border-ink px-3 py-2 text-sm font-medium text-ink shadow-[2px_2px_0_0_var(--color-ink)]">
-          {state.error}
-        </div>
+        <FormError variant="box">{state.error}</FormError>
       )}
 
       <button

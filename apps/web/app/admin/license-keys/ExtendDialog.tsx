@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 
 import { Button } from '@/components/admin/Button';
 import { confirmDialog } from '@/components/ui/dialog-store';
+import { Input } from '@/components/ui/Input';
 import { toast } from '@/components/ui/toast-store';
 
 import { extendLicenseKey } from './actions';
@@ -60,15 +61,16 @@ export function ExtendDialog({ id }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-1 items-center">
-      <input
+      <Input
         type="number"
+        variant="sm"
         min={1}
         max={365}
         value={days}
         onChange={(e) => setDays(e.target.value)}
-        className="w-20 bg-surface border-2 border-ink px-2 py-1 text-sm"
         placeholder="hari"
         autoFocus
+        className="w-20"
       />
       <Button type="submit" variant="primary" size="sm" disabled={pending}>
         {pending ? '…' : 'OK'}

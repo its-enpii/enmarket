@@ -1,10 +1,11 @@
 import Link from 'next/link';
 
+import { AdminListProvider } from '@/components/admin/AdminListProvider';
+import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
-import { LiveFilterBar } from '@/components/admin/LiveFilterBar';
+import { DataTableArea } from '@/components/admin/DataTableArea';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import {
@@ -167,48 +168,50 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
   ];
 
   return (
-    <>
-      <Topbar title="License Keys" subtitle={`${meta.total} key di pool.`} />
-
+    <AdminListProvider>
       <div className="p-6 sm:p-8 space-y-6">
-        <LiveFilterBar
-          q={params.q ?? ''}
-          sort={params.sort ?? 'id'}
-          dir={params.dir === 'asc' ? 'asc' : 'desc'}
-          filters={[
-            {
-              key: 'product_id',
-              label: 'Produk',
-              options: [
-                { value: '', label: 'Semua Produk' },
-                ...products.map((p) => ({ value: String(p.id), label: p.nama })),
-              ],
-            },
-            { key: 'status', label: 'Status', options: STATUS_OPTIONS },
-          ]}
-          placeholder="EPS-XXXX-…"
-        />
-
-        {/* Insert form + table */}
-        <LicenseKeyForm products={products} />
-
-        <DataTable
-          columns={columns}
-          rows={rows}
-          rowKey={(k) => k.id}
-          emptyMessage="Belum ada license key."
-        />
-
-        {meta.last_page > 1 && (
-          <Pagination
-            currentPage={meta.current_page}
-            lastPage={meta.last_page}
-            basePath="/admin/license-keys"
-            queryParams={params}
+          <AdminTableHeader
+            q={params.q ?? ''}
+            sort={params.sort ?? 'id'}
+            dir={params.dir === 'asc' ? 'asc' : 'desc'}
+            filters={[
+              {
+                key: 'product_id',
+                label: 'Produk',
+                options: [
+                  { value: '', label: 'Semua Produk' },
+                  ...products.map((p) => ({ value: String(p.id), label: p.nama })),
+                ],
+              },
+              { key: 'status', label: 'Status', options: STATUS_OPTIONS },
+            ]}
+            placeholder="EPS-XXXX-…"
+            secondary={<LicenseKeyForm products={products} />}
           />
-        )}
-      </div>
-    </>
+
+          <DataTableArea
+            columnCount={columns.length}
+            columnWidths={columns.map((c) => c.width)}
+            skeletonCount={meta.per_page ?? 20}
+          >
+            <DataTable
+              columns={columns}
+              rows={rows}
+              rowKey={(k) => k.id}
+              emptyMessage="Belum ada license key."
+            />
+          </DataTableArea>
+
+          {meta.last_page > 1 && (
+            <Pagination
+              currentPage={meta.current_page}
+              lastPage={meta.last_page}
+              basePath="/admin/license-keys"
+              queryParams={params}
+            />
+          )}
+    </div>
+    </AdminListProvider>
   );
 }
 

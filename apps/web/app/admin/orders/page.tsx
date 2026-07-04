@@ -1,12 +1,13 @@
 import Link from 'next/link';
 
+import { AdminListProvider } from '@/components/admin/AdminListProvider';
+import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
-import { LiveFilterBar } from '@/components/admin/LiveFilterBar';
+import { DataTableArea } from '@/components/admin/DataTableArea';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
-import { formatDateTime, formatRupiah } from '@/lib/format';
+import { formatDateTime } from '@/lib/format';
 import {
   ORDER_STATUS_LABEL,
   type Order,
@@ -126,64 +127,40 @@ export default async function OrdersPage({ searchParams }: Props) {
   ];
 
   return (
-    <>
-      <Topbar title="Pesanan" subtitle={`${meta.total} pesanan terdaftar.`} />
-
+    <AdminListProvider>
       <div className="p-6 sm:p-8 space-y-6">
-        <LiveFilterBar
-          q={params.q ?? ''}
-          sort={params.sort ?? 'created_at'}
-          dir={params.dir === 'asc' ? 'asc' : 'desc'}
-          filters={[{ key: 'status', label: 'Status', options: STATUS_OPTIONS }]}
-          passthrough={{
-            ...(params.date_from ? { date_from: params.date_from } : {}),
-            ...(params.date_to ? { date_to: params.date_to } : {}),
-          }}
-          placeholder="Cari kode / nama / email…"
-        />
-
-        {/* Date range — di luar LiveFilterBar (rarely used, keep visible) */}
-        <form className="flex flex-wrap gap-3 items-end bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)]">
-          <div>
-            <label htmlFor="date_from" className="block text-xs font-bold uppercase tracking-wide mb-1">Dari</label>
-            <input
-              id="date_from"
-              name="date_from"
-              type="date"
-              defaultValue={params.date_from ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            />
-          </div>
-          <div>
-            <label htmlFor="date_to" className="block text-xs font-bold uppercase tracking-wide mb-1">Sampai</label>
-            <input
-              id="date_to"
-              name="date_to"
-              type="date"
-              defaultValue={params.date_to ?? ''}
-              className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-            />
-          </div>
-          <Button type="submit" variant="primary" size="sm">Filter Tanggal</Button>
-        </form>
-
-        <DataTable
-          columns={columns}
-          rows={rows}
-          rowKey={(o) => o.kode_order}
-          emptyMessage="Belum ada pesanan."
-        />
-
-        {meta.last_page > 1 && (
-          <Pagination
-            currentPage={meta.current_page}
-            lastPage={meta.last_page}
-            basePath="/admin/orders"
-            queryParams={params}
+          <AdminTableHeader
+            q={params.q ?? ''}
+            sort={params.sort ?? 'created_at'}
+            dir={params.dir === 'asc' ? 'asc' : 'desc'}
+            filters={[{ key: 'status', label: 'Status', options: STATUS_OPTIONS }]}
+            placeholder="Cari kode / nama / email…"
+            dateRange={{ from: params.date_from, to: params.date_to }}
           />
-        )}
+
+          <DataTableArea
+            columnCount={columns.length}
+            columnWidths={columns.map((c) => c.width)}
+            skeletonCount={meta.per_page ?? 15}
+          >
+            <DataTable
+              columns={columns}
+              rows={rows}
+              rowKey={(o) => o.kode_order}
+              emptyMessage="Belum ada pesanan."
+            />
+          </DataTableArea>
+
+          {meta.last_page > 1 && (
+            <Pagination
+              currentPage={meta.current_page}
+              lastPage={meta.last_page}
+              basePath="/admin/orders"
+              queryParams={params}
+            />
+          )}
       </div>
-    </>
+    </AdminListProvider>
   );
 }
 

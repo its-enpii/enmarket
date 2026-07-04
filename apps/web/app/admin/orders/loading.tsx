@@ -1,12 +1,10 @@
 /**
  * Skeleton untuk halaman daftar pesanan admin.
+ * Topbar sudah di-handle oleh layout (sticky AdminTopbar).
  */
 export default function OrdersLoading() {
   return (
     <div className="p-6 sm:p-8 space-y-6">
-      {/* Topbar skeleton */}
-      <div className="h-16 bg-surface border-2 border-ink animate-pulse" />
-
       {/* Filter bar skeleton */}
       <div className="bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)] animate-pulse flex gap-3">
         <div className="flex-1 h-10 bg-ink/10" />

@@ -4,6 +4,9 @@ import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/admin/Button';
 import { FormField } from '@/components/admin/FormField';
+import { FormError } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
+import { SelectSearch } from '@/components/ui/SelectSearch';
 import { toast } from '@/components/ui/toast-store';
 
 import { insertLicenseKey, type ActionResult } from './actions';
@@ -50,31 +53,22 @@ export function LicenseKeyForm({ products }: Props) {
       </div>
 
       <form action={formAction} className="space-y-3">
-        {state.error && (
-          <div className="bg-ink text-surface border-2 border-ink p-3 text-sm font-bold">
-            {state.error}
-          </div>
-        )}
+        <FormError variant="box">{state.error}</FormError>
 
-        <FormField label="Produk" htmlFor="product_id" error={state.fieldErrors?.product_id?.[0]}>
-          <select
-            id="product_id"
-            name="product_id"
-            required
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-          >
-            <option value="">— Pilih produk —</option>
-            {products.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.nama}
-              </option>
-            ))}
-          </select>
-        </FormField>
+        <SelectSearch
+          name="product_id"
+          label="Produk"
+          required
+          placeholder="— Pilih produk —"
+          defaultValue=""
+          showAllOption={{ value: '', label: '— Pilih produk —' }}
+          options={products.map((p) => ({ value: String(p.id), label: p.nama }))}
+          error={state.fieldErrors?.product_id?.[0]}
+        />
 
         <div className="grid grid-cols-2 gap-3">
           <FormField label="Jumlah" htmlFor="count" error={state.fieldErrors?.count?.[0]}>
-            <input
+            <Input
               id="count"
               name="count"
               type="number"
@@ -82,7 +76,6 @@ export function LicenseKeyForm({ products }: Props) {
               max={500}
               defaultValue={10}
               required
-              className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
             />
           </FormField>
 
@@ -92,14 +85,14 @@ export function LicenseKeyForm({ products }: Props) {
             error={state.fieldErrors?.prefix?.[0]}
             hint="Default: ADMIN. Huruf besar + angka, 2–10 char."
           >
-            <input
+            <Input
               id="prefix"
               name="prefix"
               type="text"
               pattern="[A-Z0-9]{2,10}"
               maxLength={10}
               placeholder="ADMIN"
-              className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm uppercase font-mono focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
+              className="uppercase font-mono"
             />
           </FormField>
         </div>

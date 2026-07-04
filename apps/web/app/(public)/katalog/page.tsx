@@ -63,9 +63,9 @@ export default async function CatalogPage({ searchParams }: PageProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-6">
         <div className="space-y-4">
-          <SearchBar defaultValue={q ?? ''} />
+          <SearchBar defaultValue={q ?? ''} variant="compact" />
           <CategoryFilter categories={categoriesData} activeSlug={category} />
         </div>
 

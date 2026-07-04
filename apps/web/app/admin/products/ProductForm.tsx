@@ -10,6 +10,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/admin/Button';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { FormField } from '@/components/admin/FormField';
+import { Checkbox } from '@/components/ui/Checkbox';
+import { Input } from '@/components/ui/Input';
+import { SelectSearch } from '@/components/ui/SelectSearch';
+import { Textarea } from '@/components/ui/Textarea';
 import { slugify } from '@/lib/format';
 import type { Category, Product, StatusProduct, TipeProduct } from '@/lib/types';
 
@@ -66,14 +70,13 @@ export function ProductForm({ categories, initial }: Props) {
       {/* ───── Basic info ───── */}
       <div className="grid md:grid-cols-2 gap-5">
         <FormField label="Nama" htmlFor="nama" required error={fieldErr('nama')}>
-          <input
+          <Input
             id="nama"
             name="nama"
             required
             maxLength={200}
             defaultValue={initial?.nama}
             onBlur={autoSlug}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
           />
         </FormField>
 
@@ -83,31 +86,32 @@ export function ProductForm({ categories, initial }: Props) {
           hint="URL-friendly identifier. Huruf kecil, angka, strip."
           error={fieldErr('slug')}
         >
-          <input
+          <Input
             id="slug"
             name="slug"
             defaultValue={initial?.slug ?? ''}
             pattern="[a-z0-9-]+"
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink font-mono text-sm focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
+            className="font-mono"
           />
         </FormField>
 
         <FormField label="Kategori" htmlFor="category_id" error={fieldErr('category_id')}>
-          <select
-            id="category_id"
+          <SelectSearch
             name="category_id"
-            defaultValue={initial?.category_id ?? ''}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
-          >
-            <option value="">— Tanpa Kategori —</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>{c.nama}</option>
-            ))}
-          </select>
+            options={categories.map((c) => ({
+              value: String(c.id),
+              label: c.nama,
+              hint: c.slug ?? undefined,
+            }))}
+            defaultValue={initial?.category_id ? String(initial.category_id) : ''}
+            placeholder="— Tanpa Kategori —"
+            clearable
+            showAllOption={{ value: '', label: '— Tanpa Kategori —' }}
+          />
         </FormField>
 
         <FormField label="Harga (Rp)" htmlFor="harga" required error={fieldErr('harga')}>
-          <input
+          <Input
             id="harga"
             name="harga"
             type="number"
@@ -115,36 +119,35 @@ export function ProductForm({ categories, initial }: Props) {
             step="1000"
             required
             defaultValue={initial?.harga ?? ''}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
           />
         </FormField>
 
         <FormField label="Tipe" htmlFor="tipe" required error={fieldErr('tipe')}>
-          <select
-            id="tipe"
+          <SelectSearch
             name="tipe"
             required
             defaultValue={initial?.tipe ?? 'download'}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
-          >
-            <option value="download">Download — hanya file</option>
-            <option value="license">License — hanya key</option>
-            <option value="bundle">Bundle — file + key</option>
-          </select>
+            placeholder="Pilih tipe…"
+            options={[
+              { value: 'download', label: 'Download — hanya file' },
+              { value: 'license', label: 'License — hanya key' },
+              { value: 'bundle', label: 'Bundle — file + key' },
+            ]}
+          />
         </FormField>
 
         <FormField label="Status" htmlFor="status" required error={fieldErr('status')}>
-          <select
-            id="status"
+          <SelectSearch
             name="status"
             required
             defaultValue={initial?.status ?? 'draft'}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
-          >
-            <option value="draft">Draft — belum dijual</option>
-            <option value="aktif">Aktif — tampil di toko</option>
-            <option value="tidak_dijual">Tidak Dijual</option>
-          </select>
+            placeholder="Pilih status…"
+            options={[
+              { value: 'draft', label: 'Draft — belum dijual' },
+              { value: 'aktif', label: 'Aktif — tampil di toko' },
+              { value: 'tidak_dijual', label: 'Tidak Dijual' },
+            ]}
+          />
         </FormField>
 
         <FormField
@@ -153,27 +156,25 @@ export function ProductForm({ categories, initial }: Props) {
           hint="Untuk tipe download/bundle. Berapa hari link download berlaku."
           error={fieldErr('download_expiry_days')}
         >
-          <input
+          <Input
             id="download_expiry_days"
             name="download_expiry_days"
             type="number"
             min="1"
             max="365"
             defaultValue={initial?.download_expiry_days ?? 7}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
           />
         </FormField>
       </div>
 
       {/* ───── Deskripsi ───── */}
       <FormField label="Deskripsi" htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
-        <textarea
+        <Textarea
           id="deskripsi"
           name="deskripsi"
           rows={5}
           required
           defaultValue={initial?.deskripsi ?? ''}
-          className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all resize-y"
         />
       </FormField>
 
@@ -198,7 +199,7 @@ export function ProductForm({ categories, initial }: Props) {
             </div>
           ))}
           <div className="flex gap-2">
-            <input
+            <Input
               value={newFitur}
               onChange={(e) => setNewFitur(e.target.value)}
               onKeyDown={(e) => {
@@ -208,7 +209,8 @@ export function ProductForm({ categories, initial }: Props) {
                 }
               }}
               placeholder="Tulis fitur lalu Enter / klik +"
-              className="flex-1 bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
+              className="flex-1"
+              variant="flat"
             />
             <button
               type="button"
@@ -230,10 +232,7 @@ export function ProductForm({ categories, initial }: Props) {
       >
         <FileUpload name="file" accept=".zip,.rar,.7z,.pdf,.apk,.exe,.tar.gz" maxSizeMB={500} />
         {isEdit && initial?.file_url && (
-          <label className="mt-2 flex items-center gap-2 text-xs">
-            <input type="checkbox" name="remove_file" value="1" />
-            <span>Hapus file terlampir saat simpan</span>
-          </label>
+          <Checkbox name="remove_file" value="1" label="Hapus file terlampir saat simpan" className="mt-2" />
         )}
       </FormField>
 

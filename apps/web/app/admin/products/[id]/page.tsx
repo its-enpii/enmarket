@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
-import { Topbar } from '@/components/admin/Topbar';
 import { PreviewImagesManager } from '@/components/admin/PreviewImagesManager';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -49,13 +48,7 @@ export default async function EditProductPage({ params }: Props) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   return (
-    <>
-      <Topbar
-        title={`Edit: ${product.nama}`}
-        subtitle={`Slug: ${product.slug} • Update terakhir ${formatDateTime(product.updated_at)}`}
-      />
-
-      <div className="p-8 max-w-4xl space-y-6">
+    <div className="p-8 max-w-4xl space-y-6">
         {/* Quick info */}
         <div className="bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)] flex flex-wrap items-center gap-3">
           <StatusBadge status={product.status} />
@@ -92,7 +85,6 @@ export default async function EditProductPage({ params }: Props) {
             apiUrl={apiUrl}
           />
         </div>
-      </div>
-    </>
+    </div>
   );
 }

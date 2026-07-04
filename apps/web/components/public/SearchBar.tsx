@@ -3,11 +3,22 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
+import { Button } from '@/components/admin/Button';
+import { Input } from '@/components/ui/Input';
+
 /**
  * Search bar — submit GET form ke /katalog?q=...
  * Pertahankan category filter kalau ada.
+ *
+ * Pakai variant default (horizontal) untuk area lebar.
+ * Pakai compact (stack vertical) untuk sidebar sempit.
  */
-export function SearchBar({ defaultValue = '' }: { defaultValue?: string }) {
+interface Props {
+  defaultValue?: string;
+  variant?: 'default' | 'compact';
+}
+
+export function SearchBar({ defaultValue = '', variant = 'default' }: Props) {
   const router = useRouter();
   const params = useSearchParams();
   const [q, setQ] = useState(defaultValue);
@@ -25,22 +36,28 @@ export function SearchBar({ defaultValue = '' }: { defaultValue?: string }) {
     router.push(qs ? `/katalog?${qs}` : '/katalog');
   }
 
+  const isCompact = variant === 'compact';
+
   return (
-    <form onSubmit={onSubmit} className="flex gap-2">
-      <input
+    <form onSubmit={onSubmit} className={isCompact ? 'flex flex-col gap-2' : 'flex gap-2'}>
+      <Input
         type="search"
         name="q"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Cari produk…"
-        className="flex-1 bg-surface border-2 border-ink px-3 py-2 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
+        variant={isCompact ? 'default' : 'sm'}
+        className={isCompact ? 'w-full' : 'flex-1'}
       />
-      <button
+      <Button
         type="submit"
-        className="bg-primary text-surface border-2 border-ink px-4 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
+        variant="primary"
+        size={isCompact ? 'md' : 'sm'}
+        flat={isCompact ? true : false}
+        className={isCompact ? 'w-full' : ''}
       >
-        Cari
-      </button>
+        {isCompact ? '🔍 Cari' : 'Cari'}
+      </Button>
     </form>
   );
 }

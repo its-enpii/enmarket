@@ -75,3 +75,5 @@ coverage/
 .dynamodb/
 .tern-port
 .vscode-test/
+# Claude auto-generated local state
+.claude/scheduled_tasks.lock

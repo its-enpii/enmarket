@@ -49,6 +49,27 @@ export async function apiFetch<T = unknown>(
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
+
+    // Forward semua cookie lain (mis. cart_session) supaya backend bisa
+    // resolve session by cookie. Laravel baca via $request->cookie('name').
+    //
+    // Cookie value harus ASCII (RFC 6265). Cookie yang value-nya Unicode/emoji
+    // akan throw "Cannot convert argument to a ByteString" — skip cookie
+    // seperti itu biar tidak fail semua request.
+    const allCookies = cookieStore.getAll();
+    if (allCookies.length > 0) {
+      const cookieParts: string[] = [];
+      for (const c of allCookies) {
+        if (!/^[\x20-\x7E]*$/.test(c.value)) {
+          // Cookie value punya karakter non-ASCII — skip biar tidak crash.
+          continue;
+        }
+        cookieParts.push(`${c.name}=${c.value}`);
+      }
+      if (cookieParts.length > 0) {
+        headers['Cookie'] = cookieParts.join('; ');
+      }
+    }
   }
 
   let body: BodyInit | undefined;

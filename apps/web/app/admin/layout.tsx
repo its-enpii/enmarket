@@ -2,13 +2,13 @@
  * Layout untuk /admin/*.
  * - Server Component, verifikasi token ke Laravel /api/admin/me
  * - Render AdminShell (client component) untuk drawer state + Sidebar
+ *   + baca pathname via usePathname() (headers() tidak expose path di App Router).
  *
  * Catatan: tidak boleh modify cookie dari Server Component.
  * Middleware (middleware.ts) sudah redirect ke /login kalau tidak ada cookie.
  * Layout cukup check ke API; kalau gagal, redirect saja.
  */
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { AdminShell } from '@/components/admin/AdminShell';
@@ -28,8 +28,5 @@ export default async function AdminLayout({
     throw err;
   }
 
-  const h = await headers();
-  const currentPath = h.get('x-invoke-path') ?? h.get('next-url') ?? '/admin';
-
-  return <AdminShell currentPath={currentPath}>{children}</AdminShell>;
+  return <AdminShell>{children}</AdminShell>;
 }

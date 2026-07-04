@@ -1,11 +1,13 @@
 import Link from 'next/link';
 
+import { AdminListProvider } from '@/components/admin/AdminListProvider';
+import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
 import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
+import { DataTableArea } from '@/components/admin/DataTableArea';
 import { DeleteButton } from '@/components/admin/DeleteButton';
-import { LiveFilterBar } from '@/components/admin/LiveFilterBar';
+import { SortableHeader } from '@/components/admin/LiveFilterBar';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Topbar } from '@/components/admin/Topbar';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { TIPE_LABEL, formatDate, formatRupiah } from '@/lib/format';
 import type {
@@ -75,7 +77,11 @@ export default async function ProductsPage({ searchParams }: Props) {
   const columns: Column<Product>[] = [
     {
       key: 'nama',
-      header: 'Nama',
+      header: (
+        <SortableHeader field="nama" currentSort={currentSort} currentDir={currentDir}>
+          Nama
+        </SortableHeader>
+      ),
       render: (p) => (
         <Link
           href={`/admin/products/${p.id}`}
@@ -92,7 +98,11 @@ export default async function ProductsPage({ searchParams }: Props) {
     },
     {
       key: 'harga',
-      header: 'Harga',
+      header: (
+        <SortableHeader field="harga" currentSort={currentSort} currentDir={currentDir}>
+          Harga
+        </SortableHeader>
+      ),
       width: '140px',
       render: (p) => <span className="font-bold">{formatRupiah(p.harga)}</span>,
     },
@@ -104,13 +114,21 @@ export default async function ProductsPage({ searchParams }: Props) {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: (
+        <SortableHeader field="status" currentSort={currentSort} currentDir={currentDir}>
+          Status
+        </SortableHeader>
+      ),
       width: '120px',
       render: (p) => <StatusBadge status={p.status} />,
     },
     {
       key: 'updated',
-      header: 'Update',
+      header: (
+        <SortableHeader field="updated_at" currentSort={currentSort} currentDir={currentDir}>
+          Update
+        </SortableHeader>
+      ),
       width: '120px',
       render: (p) => <span className="text-ink/60 text-xs">{formatDate(p.updated_at)}</span>,
     },
@@ -151,41 +169,44 @@ export default async function ProductsPage({ searchParams }: Props) {
   ];
 
   return (
-    <>
-      <Topbar title="Produk" subtitle={`${meta.total} produk terdaftar.`} />
-
+    <AdminListProvider>
       <div className="p-6 sm:p-8 space-y-6">
-        {/* Header action bar */}
-        <div className="flex items-center justify-between gap-3">
-          <LiveFilterBar
+          <AdminTableHeader
             q={params.q ?? ''}
             sort={currentSort}
             dir={currentDir}
             filters={filters}
             placeholder="Cari nama atau slug…"
+            action={
+              <Link href="/admin/products/new">
+                <Button variant="primary" size="md" flat>+ Produk Baru</Button>
+              </Link>
+            }
           />
-          <Link href="/admin/products/new" className="shrink-0">
-            <Button variant="primary" size="sm">+ Produk Baru</Button>
-          </Link>
+
+          <DataTableArea
+            columnCount={columns.length}
+            columnWidths={columns.map((c) => c.width)}
+            skeletonCount={meta.per_page ?? 10}
+          >
+            <DataTable
+              columns={columns}
+              rows={rows}
+              rowKey={(p) => p.id}
+              emptyMessage="Belum ada produk. Tambah satu."
+            />
+          </DataTableArea>
+
+          {meta.last_page > 1 && (
+            <Pagination
+              currentPage={meta.current_page}
+              lastPage={meta.last_page}
+              basePath="/admin/products"
+              queryParams={params}
+            />
+          )}
         </div>
-
-        <DataTable
-          columns={columns}
-          rows={rows}
-          rowKey={(p) => p.id}
-          emptyMessage="Belum ada produk. Tambah satu."
-        />
-
-        {meta.last_page > 1 && (
-          <Pagination
-            currentPage={meta.current_page}
-            lastPage={meta.last_page}
-            basePath="/admin/products"
-            queryParams={params}
-          />
-        )}
-      </div>
-    </>
+    </AdminListProvider>
   );
 }
 

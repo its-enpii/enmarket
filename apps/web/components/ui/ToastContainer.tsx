@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { toast, toastStore, type Toast } from './toast-store';
 
@@ -43,12 +43,34 @@ const VARIANT_ICON: Record<Toast['variant'], string> = {
 };
 
 function ToastItem({ toast: t }: { toast: Toast }) {
+  const [exiting, setExiting] = useState(false);
+
+  // Auto-dismiss dengan animasi exit.
+  useEffect(() => {
+    if (t.duration <= 0) return;
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      setExiting(true);
+      // Animasi exit 200ms sebelum hapus dari store.
+      setTimeout(() => {
+        if (!cancelled) toast.dismiss(t.id);
+      }, 200);
+    }, t.duration);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [t.id, t.duration]);
+
   return (
     <div
       role={t.variant === 'error' ? 'alert' : 'status'}
       className={
         'pointer-events-auto border-2 border-ink px-4 py-3 shadow-[4px_4px_0_0_var(--color-ink)] ' +
-        'flex items-start gap-3 ' +
+        'flex items-start gap-3 transition-all duration-200 ' +
+        (exiting ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0') +
+        ' ' +
         VARIANT_BG[t.variant]
       }
     >
@@ -60,7 +82,10 @@ function ToastItem({ toast: t }: { toast: Toast }) {
       </p>
       <button
         type="button"
-        onClick={() => toast.dismiss(t.id)}
+        onClick={() => {
+          setExiting(true);
+          setTimeout(() => toast.dismiss(t.id), 200);
+        }}
         aria-label="Dismiss"
         className="shrink-0 w-7 h-7 inline-flex items-center justify-center font-bold opacity-80 hover:opacity-100"
       >

@@ -37,7 +37,6 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
     await apiPost('/api/cart/items', {
       product_id: productId,
       qty,
-      session_id: sessionId,
     });
     revalidatePath('/keranjang');
     return { ok: true };
@@ -54,10 +53,9 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
  */
 export async function addToCartAndGoAction(productId: number, qty = 1) {
   const cookieStore = await cookies();
-  let sessionId = cookieStore.get('cart_session')?.value;
-  if (!sessionId || sessionId.length < 16) {
-    sessionId = randomUUID();
-    cookieStore.set('cart_session', sessionId, {
+  const existingSession = cookieStore.get('cart_session')?.value;
+  if (!existingSession || existingSession.length < 16) {
+    cookieStore.set('cart_session', randomUUID(), {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
@@ -69,7 +67,6 @@ export async function addToCartAndGoAction(productId: number, qty = 1) {
     await apiPost('/api/cart/items', {
       product_id: productId,
       qty,
-      session_id: sessionId,
     });
   } catch (err) {
     if (err instanceof ApiRequestError) {

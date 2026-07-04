@@ -1,0 +1,37 @@
+/**
+ * Footer admin — branding enpiistudio + link public store.
+ * Konsisten dengan public Footer (border-t-4 ink, surface bg) tapi lebih ringkas.
+ */
+export function AdminFooter() {
+  return (
+    <footer className="border-t-4 border-ink bg-surface mt-auto">
+      <div className="px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-ink/60">
+        <p>
+          <span className="bg-primary text-surface border-2 border-ink px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide mr-1.5">
+            enpii
+          </span>
+          <span className="font-bold text-ink">Admin Panel</span>
+          <span className="ml-2">— enpiistudio Store</span>
+        </p>
+        <div className="flex gap-3">
+          <a
+            href="https://github.com/enpiistudio/enmarket"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-ink font-bold"
+          >
+            GitHub
+          </a>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-ink font-bold"
+          >
+            ← Lihat Toko
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}

@@ -1,9 +1,14 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+import { Input } from '@/components/ui/Input';
+import { SelectSearch } from '@/components/ui/SelectSearch';
+import { DatePicker } from '@/components/ui/DatePicker';
+import { BUTTON_VARIANT_CLS, BUTTON_LINK_BASE_CLS, BUTTON_LINK_SIZE_SM } from './Button';
+import { useAdminList } from './AdminListProvider';
 import { useDebouncedValue } from '@/lib/hooks';
 
 /**
@@ -27,6 +32,16 @@ export interface FilterConfig {
   options: FilterOption[];
 }
 
+interface DateRange {
+  /** ISO date string (yyyy-mm-dd) untuk kolom "dari". */
+  from?: string;
+  /** ISO date string (yyyy-mm-dd) untuk kolom "sampai". */
+  to?: string;
+  /** Nama parameter URL. Default 'date_from' & 'date_to'. */
+  paramFrom?: string;
+  paramTo?: string;
+}
+
 interface Props {
   q: string;
   sort: string;
@@ -37,6 +52,12 @@ interface Props {
   placeholder?: string;
   /** Custom debounce delay (ms). Default 300. */
   debounceMs?: number;
+  /** Primary action slot — dirender di akhir baris, di dalam shadow box.
+   *  Pakai untuk tombol "+ Produk Baru" dll yang harus menyatu visual dengan filter. */
+  action?: React.ReactNode;
+  /** Optional date range filter — render 2 input date di dalam shadow box,
+   *  sejajar dengan search/filter. Submit on change (live). */
+  dateRange?: DateRange;
 }
 
 export function LiveFilterBar({
@@ -47,11 +68,13 @@ export function LiveFilterBar({
   passthrough = {},
   placeholder = 'Cari…',
   debounceMs = 300,
+  action,
+  dateRange,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [pending, startTransition] = useTransition();
+  const { pending, startTransition } = useAdminList();
 
   const [input, setInput] = useState(q);
   const debounced = useDebouncedValue(input, debounceMs);
@@ -89,61 +112,88 @@ export function LiveFilterBar({
   }
 
   return (
-    <div className="bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)]">
-      <div className="flex flex-wrap gap-3 items-end">
+    <div className="bg-surface border-2 border-ink p-3 shadow-[3px_3px_0_0_var(--color-ink)]">
+      <div className="flex flex-wrap gap-2 items-end">
         {/* Live search */}
         <div className="flex-1 min-w-[200px]">
           <label htmlFor="live-search" className="block text-xs font-bold uppercase tracking-wide mb-1">
             Cari
             {pending && <span className="ml-2 text-primary normal-case font-normal">⟳ memuat…</span>}
           </label>
-          <input
+          <Input
             id="live-search"
+            variant="flat"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={placeholder}
-            className="w-full bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
           />
         </div>
 
         {/* Filters */}
         {filters.map((f) => {
           const current = searchParams.get(f.key) ?? '';
+          const placeholder = f.options.find((o) => o.value === current)?.label ?? f.label;
           return (
-            <div key={f.key}>
-              <label htmlFor={`filter-${f.key}`} className="block text-xs font-bold uppercase tracking-wide mb-1">
-                {f.label}
-              </label>
-              <select
-                id={`filter-${f.key}`}
+            <div key={f.key} className="w-44">
+              <SelectSearch
+                name={f.key}
+                label={f.label}
                 value={current}
-                onChange={(e) => pushFilter(f.key, e.target.value)}
-                className="bg-surface border-2 border-ink px-3 py-2 text-sm focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
-              >
-                {f.options.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
+                placeholder={placeholder}
+                options={f.options}
+                onChange={(v) => pushFilter(f.key, v)}
+                clearable={current !== ''}
+              />
             </div>
           );
         })}
 
-        {/* Sort indicator */}
-        <div className="flex items-center gap-2 text-xs text-ink/60 ml-auto">
-          {sort !== 'created_at' && sort !== 'id' && (
-            <span>Sort: {sort} {dir}</span>
-          )}
-        </div>
-
-        {/* Reset link */}
-        {(q || searchParams.toString() !== '') && (
-          <Link href={pathname} className="border-2 border-ink bg-surface text-ink px-3 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] hover:bg-accent hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all min-h-[44px] inline-flex items-center">
-            Reset
-          </Link>
+        {/* Date range — pakai router.replace via pushFilter biar soft navigation
+            (tidak full reload, sama seperti search & filter lain). */}
+        {dateRange && (
+          <div className="flex gap-2 items-end">
+            <DatePicker
+              label="Dari"
+              name={dateRange.paramFrom ?? 'date_from'}
+              defaultValue={dateRange.from ?? ''}
+              placeholder="Dari"
+              className="w-48"
+              onChange={(v) => pushFilter(dateRange.paramFrom ?? 'date_from', v)}
+            />
+            <DatePicker
+              label="Sampai"
+              name={dateRange.paramTo ?? 'date_to'}
+              defaultValue={dateRange.to ?? ''}
+              placeholder="Sampai"
+              align="right"
+              className="w-48"
+              onChange={(v) => pushFilter(dateRange.paramTo ?? 'date_to', v)}
+            />
+          </div>
         )}
+
+        {/* Reset link — selalu tampil, no-op kalau tidak ada filter aktif.
+            Pakai BUTTON_LINK_BASE_CLS + BUTTON_LINK_SIZE_SM agar sizing match
+            dengan SelectSearch trigger (py-2.5 + font-medium), dan shadow default
+            identik dengan <Button variant="ghost">. Hover pakai bg-accent
+            supaya ada feedback visual beda dari tombol navigasi. */}
+        <Link
+          href={pathname}
+          className={
+            BUTTON_LINK_BASE_CLS +
+            ' ' +
+            BUTTON_VARIANT_CLS.ghost +
+            ' ' +
+            BUTTON_LINK_SIZE_SM +
+            ' hover:bg-accent'
+          }
+        >
+          Reset
+        </Link>
+
+        {/* Primary action — di dalam kotak, di akhir baris */}
+        {action && <div className="ml-auto">{action}</div>}
       </div>
     </div>
   );
@@ -164,12 +214,13 @@ export function SortableHeader({ field, currentSort, currentDir, children }: Hea
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [, startTransition] = useTransition();
+  const { pending, startTransition } = useAdminList();
 
   const active = currentSort === field;
   const nextDir = active && currentDir === 'asc' ? 'desc' : 'asc';
 
   function push() {
+    if (pending) return; // ignore kalau masih loading
     const sp = new URLSearchParams(searchParams.toString());
     sp.set('sort', field);
     sp.set('dir', nextDir);
@@ -183,10 +234,11 @@ export function SortableHeader({ field, currentSort, currentDir, children }: Hea
     <button
       type="button"
       onClick={push}
+      disabled={pending}
       className={
-        'inline-flex items-center gap-1 font-bold uppercase tracking-wide text-xs ' +
-        (active ? 'text-accent' : 'text-surface hover:text-accent') +
-        ' transition-colors'
+        'inline-flex items-center gap-1 font-bold uppercase tracking-wide text-xs transition-colors ' +
+        (pending ? 'cursor-wait opacity-50 ' : 'cursor-pointer ') +
+        (active ? 'text-accent' : 'text-surface hover:text-accent')
       }
       aria-label={`Sort by ${field}`}
     >

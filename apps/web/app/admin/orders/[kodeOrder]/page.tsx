@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Button } from '@/components/admin/Button';
-import { Topbar } from '@/components/admin/Topbar';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import {
@@ -49,13 +48,7 @@ export default async function OrderDetailPage({ params }: Props) {
   const itemsWithoutDelivery = items.filter((it) => !it.delivery).length;
 
   return (
-    <>
-      <Topbar
-        title={`Order ${order.kode_order}`}
-        subtitle={`Dibuat ${formatDateTime(order.created_at)}${order.paid_at ? ` • Paid ${formatDateTime(order.paid_at)}` : ''}`}
-      />
-
-      <div className="p-8 max-w-6xl space-y-6">
+    <div className="p-8 max-w-6xl space-y-6">
         {/* Quick info + actions */}
         <div className="bg-surface border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)] flex flex-wrap items-center gap-3">
           <StatusBadge status={order.status} labelMap={ORDER_STATUS_LABEL} />
@@ -245,7 +238,6 @@ export default async function OrderDetailPage({ params }: Props) {
             </details>
           </div>
         )}
-      </div>
-    </>
+    </div>
   );
 }
