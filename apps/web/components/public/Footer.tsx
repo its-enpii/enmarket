@@ -1,5 +1,5 @@
 /**
- * Footer publik — branding enpiistudio + link admin.
+ * Footer publik — branding enpiistudio.
  */
 export function Footer() {
   return (
@@ -10,10 +10,10 @@ export function Footer() {
             <span className="bg-primary text-surface border-2 border-ink px-2 py-0.5 text-sm mr-2">
               enpii
             </span>
-            enpiistudio Store
+            enpiistudio
           </p>
           <p className="mt-2 text-xs text-ink/60">
-            © {new Date().getFullYear()} enpiistudio — Self-hosted digital store
+            © {new Date().getFullYear()} enpiistudio — Discover · Develop · Display
           </p>
         </div>
         <div className="flex gap-3 text-xs text-ink/60">

@@ -11,19 +11,32 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Katalog — enpiistudio Store',
-  description: 'Jelajahi semua produk digital enpiistudio. Filter berdasarkan kategori atau cari produk spesifik.',
+  title: 'Karya — enpiistudio',
+  description: 'Jelajahi karya enpiistudio. Filter berdasarkan tipe atau cari karya spesifik.',
   alternates: { canonical: '/katalog' },
 };
 
 interface PageProps {
-  searchParams: Promise<{ category?: string; q?: string; page?: string }>;
+  searchParams: Promise<{ category?: string; q?: string; tipe?: string; page?: string }>;
 }
+
+const VALID_TIPE = ['download', 'license', 'bundle'] as const;
+type Tipe = (typeof VALID_TIPE)[number];
+
+const TIPE_LABEL: Record<Tipe, string> = {
+  download: 'Source Code',
+  license: 'Lisensi',
+  bundle: 'Bundle',
+};
 
 export default async function CatalogPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const category = typeof sp.category === 'string' ? sp.category : undefined;
   const q = typeof sp.q === 'string' ? sp.q : undefined;
+  const tipe: Tipe | undefined =
+    typeof sp.tipe === 'string' && VALID_TIPE.includes(sp.tipe as Tipe)
+      ? (sp.tipe as Tipe)
+      : undefined;
   const pageNum = Math.max(1, parseInt(sp.page ?? '1', 10) || 1);
 
   let catalogData: Awaited<ReturnType<typeof publicApi.catalog>> | null = null;
@@ -31,7 +44,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
 
   try {
     const [catalog, categories] = await Promise.all([
-      publicApi.catalog({ category, q, page: pageNum }),
+      publicApi.catalog({ category, q, tipe, page: pageNum }),
       publicApi.categories(),
     ]);
     catalogData = catalog;
@@ -52,14 +65,16 @@ export default async function CatalogPage({ searchParams }: PageProps) {
     ? `Kategori: ${categoriesData.find((c) => c.slug === category)?.nama ?? category}`
     : q
       ? `Hasil pencarian: "${q}"`
-      : 'Semua Produk';
+      : tipe
+        ? `Karya: ${TIPE_LABEL[tipe]}`
+        : 'Semua Karya';
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8 sm:py-12">
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-ink">Katalog</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-ink">Karya</h1>
         <p className="mt-2 text-sm sm:text-base text-ink/70">
-          {heading} {meta.total > 0 && <span className="text-ink/50">· {meta.total} produk</span>}
+          {heading} {meta.total > 0 && <span className="text-ink/50">· {meta.total} karya</span>}
         </p>
       </div>
 
@@ -72,14 +87,14 @@ export default async function CatalogPage({ searchParams }: PageProps) {
         <div>
           {products.length === 0 ? (
             <EmptyState
-              title={q ? `Tidak ada hasil untuk "${q}"` : 'Belum ada produk'}
+              title={q ? `Tidak ada hasil untuk "${q}"` : 'Belum ada karya'}
               message={
-                q || category
+                q || category || tipe
                   ? 'Coba ubah filter atau kata kunci pencarian.'
-                  : 'Tambahkan produk dari dashboard admin untuk memulai.'
+                  : 'Tambahkan karya dari dashboard admin untuk memulai.'
               }
               cta={
-                q || category
+                q || category || tipe
                   ? { href: '/katalog', label: 'Reset Filter' }
                   : { href: '/login', label: 'Login Admin' }
               }
@@ -93,6 +108,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
                 searchParams={{
                   ...(category ? { category } : {}),
                   ...(q ? { q } : {}),
+                  ...(tipe ? { tipe } : {}),
                 }}
               />
             </>

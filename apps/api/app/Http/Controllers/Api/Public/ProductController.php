@@ -59,6 +59,12 @@ class ProductController extends Controller
             $query->whereHas('category', fn ($q) => $q->where('slug', $categorySlug));
         }
 
+        if ($tipe = $request->input('tipe')) {
+            if (in_array($tipe, ['download', 'license', 'bundle'], true)) {
+                $query->where('tipe', $tipe);
+            }
+        }
+
         if ($q = trim((string) $request->input('q', ''))) {
             $query->where(function ($sub) use ($q) {
                 $sub->where('nama', 'like', "%{$q}%")

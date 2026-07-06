@@ -14,7 +14,7 @@ interface Props {
  */
 export function TopNav({ children }: Props) {
   const [open, setOpen] = useState(false);
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio Store';
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
 
   return (
     <header className="border-b-4 border-ink bg-surface relative">
@@ -35,7 +35,7 @@ export function TopNav({ children }: Props) {
             href="/katalog"
             className="px-3 py-2 text-sm font-bold text-ink hover:text-primary transition-colors min-h-[44px] inline-flex items-center"
           >
-            Katalog
+            Karya
           </Link>
           {children}
           <Link
@@ -67,7 +67,7 @@ export function TopNav({ children }: Props) {
               onClick={() => setOpen(false)}
               className="block px-3 py-3 text-base font-bold text-ink hover:bg-accent border-2 border-transparent hover:border-ink transition-all min-h-[44px]"
             >
-              Katalog
+              Karya
             </Link>
             <Link
               href="/keranjang"

@@ -63,11 +63,20 @@ export const publicApi = {
     publicFetch<{ data: Product[] }>('/api/public/products/latest'),
 
   /** Katalog publik dengan filter + pagination. */
-  catalog: (params: { category?: string; q?: string; page?: number }) =>
+  catalog: (params: { category?: string; q?: string; tipe?: 'download' | 'license' | 'bundle'; page?: number }) =>
     publicFetch<PaginatedResponse<Product>>('/api/public/products', {
       category: params.category,
       q: params.q,
+      tipe: params.tipe,
       page: params.page,
+    }),
+
+  /** Homepage: produk berdasarkan tipe (download = source code, license/bundle = karya jadi). */
+  productsByType: (params: { tipe: 'download' | 'license' | 'bundle'; per_page?: number }) =>
+    publicFetch<PaginatedResponse<Product>>('/api/public/products', {
+      tipe: params.tipe,
+      per_page: params.per_page ?? 3,
+      page: 1,
     }),
 
   /** Detail produk by slug. 404 → throw PublicFetchError dengan status 404. */
