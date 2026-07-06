@@ -7,8 +7,8 @@ use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Delivery\OrderDeliveryService;
 use App\Services\NextRevalidator;
 use App\Services\Storage\EnStorageClient;
-use App\Services\Storage\GoogleDriveEnStorage;
 use App\Services\Storage\LocalMockEnStorage;
+use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -22,15 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Bind EnStorageClient — pilih mock atau Google Drive sesuai env
+        // Bind EnStorageClient — auto-select berdasarkan ENSTORAGE_BASE_URL
         $this->app->singleton(EnStorageClient::class, function ($app) {
-            $useMock = (bool) config('services.enstorage.mock', true);
+            $baseUrl = (string) config('services.enstorage.base_url', '');
+            $apiKey = (string) config('services.enstorage.api_key', '');
 
-            if ($useMock) {
-                return new LocalMockEnStorage();
+            if ($baseUrl !== '') {
+                return new RemoteEnStorage($baseUrl, $apiKey);
             }
 
-            return new GoogleDriveEnStorage();
+            return new LocalMockEnStorage();
         });
 
         // Bind NextRevalidator untuk on-demand ISR revalidation webhook

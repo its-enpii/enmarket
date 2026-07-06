@@ -7,8 +7,10 @@ use Illuminate\Http\UploadedFile;
 /**
  * Abstraction untuk EnStorage (orchestrator Google Drive enpiistudio).
  *
- * Fase 1-3: pakai LocalMockEnStorage (simpan ke disk lokal).
- * Fase 4: swap ke GoogleDriveEnStorage dengan real API.
+ * Implementasi dipilih otomatis oleh AppServiceProvider berdasarkan
+ * `services.enstorage.base_url`:
+ *   - kosong → LocalMockEnStorage  (simpan ke storage/app/private/enstorage/)
+ *   - terisi → RemoteEnStorage     (HTTP API call ke EnStorage eksternal)
  *
  * Path yang dikembalikan harus URL-friendly dan bisa dipakai
  * sebagai referensi di DB (field file_url, preview_images[]).
