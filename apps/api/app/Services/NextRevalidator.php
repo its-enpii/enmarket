@@ -60,7 +60,7 @@ class NextRevalidator
     private function call(array $paths): void
     {
         if ($this->nextBaseUrl === '') {
-            Log::warning('NextRevalidator: NEXT_PUBLIC_SITE_URL kosong, skip revalidation.');
+            Log::warning('NextRevalidator: APP_NEXT_INTERNAL_URL kosong, skip revalidation.');
             return;
         }
 

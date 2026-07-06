@@ -62,7 +62,11 @@ return [
     */
 
     'next' => [
-        'base_url' => env('NEXT_PUBLIC_SITE_URL', 'http://web:3000'),
+        // URL publik Next.js (dipakai Next.js sendiri untuk sitemap/robots/metadata)
+        'public_url' => env('NEXT_PUBLIC_SITE_URL'),
+        // URL internal yang dipakai Laravel untuk call webhook /api/revalidate
+        // dari dalam Docker network ke container Next.js
+        'internal_url' => env('APP_NEXT_INTERNAL_URL') ?: env('NEXT_PUBLIC_SITE_URL', 'http://web:3000'),
         'webhook_secret' => env('REVALIDATE_SECRET'),
     ],
 

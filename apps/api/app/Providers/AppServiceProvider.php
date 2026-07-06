@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(NextRevalidator::class, function () {
             return new NextRevalidator(
                 webhookSecret: (string) config('services.next.webhook_secret', ''),
-                nextBaseUrl: (string) config('services.next.base_url', ''),
+                nextBaseUrl: (string) config('services.next.internal_url', ''),
             );
         });
 
