@@ -1,0 +1,352 @@
+{
+  "common": {
+    "site": {
+      "title": "enpiistudio — Discover, develop, display",
+      "description": "Studio solo · Karya digital dan catatan proses. Dibangun dengan presisi programming dan intentional design craft."
+    },
+    "buttons": {
+      "back": "← Kembali",
+      "retry": "Coba Lagi",
+      "save": "Simpan",
+      "cancel": "Batal",
+      "delete": "Hapus",
+      "edit": "Edit",
+      "viewAll": "Lihat Semua",
+      "viewMore": "Lihat Selengkapnya",
+      "loadMore": "Muat Lebih Banyak",
+      "submit": "Kirim",
+      "confirm": "Konfirmasi",
+      "close": "Tutup",
+      "reset": "Reset",
+      "filter": "Filter"
+    },
+    "pagination": {
+      "prev": "← Sebelumnya",
+      "next": "Berikutnya →"
+    },
+    "empty": {
+      "title": "Belum ada apa-apa di sini",
+      "action": "Kembali ke Beranda"
+    },
+    "search": {
+      "placeholder": "Cari…",
+      "submitAria": "Kirim pencarian"
+    },
+    "language": {
+      "switchTo": "Ganti bahasa",
+      "id": "ID",
+      "en": "EN"
+    }
+  },
+  "errors": {
+    "title500": "500 — Terjadi Kesalahan",
+    "subtitle500": "Waduh, ada yang error. Coba lagi sebentar, ya.",
+    "title404": "404 — Halaman Tidak Ditemukan",
+    "subtitle404": "Waduh, halaman ini nggak ada. Mungkin sudah dipindah atau dihapus.",
+    "viewCatalog": "← Lihat Katalog",
+    "goHome": "Beranda",
+    "retry": "Coba Lagi"
+  },
+  "nav": {
+    "discover": "Discover",
+    "develop": "Develop",
+    "display": "Display",
+    "admin": "Admin",
+    "search": "Cari",
+    "menu": "Menu"
+  },
+  "footer": {
+    "brandTitle": "enpiistudio",
+    "tagline": "Studio solo · Karya digital & catatan proses",
+    "subscribeTitle": "Ikuti Catatan Terbaru",
+    "emailPlaceholder": "email@domain.com",
+    "subscribeAria": "Daftar newsletter",
+    "connectTitle": "Hubungi",
+    "links": {
+      "contact": "Kontak",
+      "instagram": "Instagram",
+      "arena": "Arena",
+      "twitter": "Twitter"
+    },
+    "studioTitle": "Studio",
+    "studioLinks": {
+      "catalog": "Katalog",
+      "journal": "Jurnal",
+      "orders": "Cek Pesanan",
+      "admin": "Admin"
+    },
+    "copyright": "© {year} enpiistudio. Karya di sini dibuat dengan sengaja.",
+    "poweredBy": "Dibuat dengan Next.js"
+  },
+  "cart": {
+    "badge": {
+      "viewCart": "Lihat Keranjang",
+      "items": "{count, plural, =0 {Kosong} one {# item} other {# item}}"
+    }
+  },
+  "home": {
+    "heroEyebrow": "✎ Studio Enpii",
+    "heroTitle": "Discover, develop, display.",
+    "heroSubtitle": "Tiga kata, satu alur kerja. Marketplace karya digital dari studio solo yang menggabungkan programming precision dengan intentional design craft.",
+    "heroCta": "Lihat Karya Develop →",
+    "pillarsTitle": "Tiga Pilar",
+    "pillarsSubtitle": "Cara kami berpikir, membuat, dan berbagi.",
+    "pillarDiscover": "Discover",
+    "pillarDiscoverBody": "Riset singkat, banyak prototype yang dibuang. Yang tersisa adalah yang paling jujur.",
+    "pillarDevelop": "Develop",
+    "pillarDevelopBody": "Source code, lisensi, dan bundle. Ditulis dengan sengaja — bukan framework yang numpang lewat.",
+    "pillarDisplay": "Display",
+    "pillarDisplayBody": "Jurnal pikiran dan proses. Catatan yang masih menunjukkan cara pembuatannya.",
+    "pillarExplore": "Explore {title} →",
+    "featuredTitle": "Featured Developments",
+    "featuredSubtitle": "Pilihan terbaru dari Develop — sudah jadi, siap dipakai.",
+    "viewAllDevelop": "Lihat Semua Develop →",
+    "journalTitle": "Latest / Display",
+    "journalSubtitle": "Catatan singkat dari meja kerja.",
+    "viewAllJournal": "Lihat Semua Catatan →"
+  },
+  "discover": {
+    "eyebrow": "✎ Discover",
+    "title": "Discover",
+    "subtitle": "Kerja yang dimulai dari rasa penasaran, bukan dari brief klien.",
+    "storyTitle": "“Code is a material, not a delivery mechanism.”",
+    "storyBody1": "enpiistudio dimulai sebagai ruang pribadi — tempat saya menyimpan eksperimen yang terlalu spesifik untuk dimasukkan ke portofolio klien, terlalu jujur untuk disembunyikan di balik polish yang palsu.",
+    "storyBody2": "Saya percaya bahwa programming dan design bukan dua disiplin yang berbeda, melainkan satu kebiasaan yang sama: memilih dengan sengaja, menolak default, dan membaca dokumentasi sampai baris terakhir.",
+    "storyBody3": "Karya yang ada di sini adalah snapshot dari proses itu — bukan produk akhir, melainkan artefak yang masih menunjukkan cara pembuatannya.",
+    "signature": "— e° / solo studio",
+    "pillarsHeading": "What we do",
+    "pillarsTitle": "Tiga kata, satu alur kerja.",
+    "pillarDiscoverTitle": "Discover",
+    "pillarDiscoverBody": "Eksplorasi bentuk dan fungsi. Riset singkat, banyak prototype yang dibuang — yang tersisa adalah yang paling jujur.",
+    "pillarDevelopTitle": "Develop",
+    "pillarDevelopBody": "Artefak teknis dan alat digital. Kode yang ditulis dengan sengaja — bukan framework yang numpang lewat.",
+    "pillarDisplayTitle": "Display",
+    "pillarDisplayBody": "Jurnal pikiran dan proses. Catatan yang masih menunjukkan cara pembuatannya — bukan portofolio yang sudah dipoles ulang.",
+    "valuesHeading": "Process / Values",
+    "valuesSubtitle": "Tujuh stempel yang nempel di meja kerja. Tidak semua projek cocok untuk semuanya — tapi ini cara kami bekerja saat kami bekerja.",
+    "ctaEyebrow": "✎ Next step",
+    "ctaTitle1": "Manifesto cukup dibaca.",
+    "ctaTitle2": "Karya yang bicara.",
+    "ctaBody": "Lihat katalog Develop — source code, lisensi, dan bundle yang sudah dirilis. Unduh, pakai, atau biarkan jadi referensi.",
+    "ctaViewDevelop": "View Develop →",
+    "ctaViewJournal": "Atau baca catatan"
+  },
+  "develop": {
+    "listTitle": "Semua Develop",
+    "listSubtitle": "Source code, lisensi, dan bundle yang sudah dirilis.",
+    "filterAll": "Semua",
+    "empty": "Belum ada karya Develop yang dipublikasikan."
+  },
+  "developDetail": {
+    "addToCart": "Tambah ke Keranjang",
+    "license": "Lisensi",
+    "download": "Unduh",
+    "from": "Mulai",
+    "free": "Gratis",
+    "share": "Bagikan",
+    "relatedTitle": "Karya Terkait"
+  },
+  "display": {
+    "listTitle": "Display",
+    "listSubtitle": "Catatan singkat dari meja kerja.",
+    "empty": "Belum ada catatan."
+  },
+  "displayList": {
+    "title": "Display",
+    "subtitle": "Catatan singkat dari meja kerja.",
+    "subtitleLong": "Catatan dari meja kerja — proses, pikiran, dan hal yang sedang berjalan. Bukan release notes. Bukan newsletter mingguan. Ini buku catatan kerja yang kebetulan dipublikasi.",
+    "eyebrow": "✎ Display",
+    "tagsLabel": "Tags →",
+    "itemsSuffix": "catatan",
+    "noResultsFor": "Tidak ada catatan untuk",
+    "hintNoResults": "Coba kata kunci lain, atau lihat semua catatan.",
+    "hintEmpty": "Catatan pertama akan muncul di sini begitu dipublikasi dari dashboard admin. Sabar — atau balik ke develop dulu.",
+    "minutesShort": "mnt baca",
+    "readEntry": "Baca catatan ini",
+    "readShort": "Baca",
+    "footerEyebrow": "✎ More stories coming soon",
+    "footerTitle1": "Catatan baru keluar",
+    "footerTitleHighlight": "setiap kali",
+    "footerTitle2": "ada yang worth ditulis.",
+    "footerBody": "Tidak ada jadwal tetap. Tidak ada kalender editorial. Kalau lagi ada proses yang menarik, ditulis di sini — kalau tidak, ya tidak.",
+    "footerCta": "← Lihat karya di Develop"
+  },
+  "displayPost": {
+    "backToJournal": "← Kembali ke Jurnal",
+    "publishedOn": "Dipublikasikan",
+    "readMore": "Baca selengkapnya",
+    "share": "Bagikan",
+    "readEntry": "Baca catatan ini"
+  },
+  "katalog": {
+    "title": "Katalog",
+    "subtitle": "Semua karya Develop yang tersedia.",
+    "filterAll": "Semua Tipe",
+    "tipe": {
+      "download": "Source Code",
+      "license": "Lisensi",
+      "bundle": "Bundle"
+    },
+    "empty": "Belum ada karya di kategori ini.",
+    "from": "Mulai",
+    "categoryLabel": "Kategori",
+    "searchLabel": "Hasil pencarian",
+    "itemsSuffix": "karya",
+    "noResults": "tidak ditemukan",
+    "resetFilterHint": "Coba ubah filter atau kata kunci pencarian.",
+    "adminHint": "Tambahkan karya dari dashboard admin untuk memulai.",
+    "loginAdmin": "Login Admin"
+  },
+  "product": {
+    "card": {
+      "addToCart": "Tambah",
+      "view": "Lihat"
+    },
+    "price": {
+      "free": "Gratis",
+      "from": "Mulai"
+    }
+  },
+  "post": {
+    "reactions": {
+      "like": "Suka",
+      "helpful": "Membantu",
+      "inspired": "Menginspirasi"
+    }
+  },
+  "keranjang": {
+    "title": "Keranjang",
+    "subtitle": "Tinjau karya sebelum checkout.",
+    "empty": "Keranjang kosong.",
+    "remove": "Hapus",
+    "subtotal": "Subtotal",
+    "checkout": "Lanjut ke Pembayaran",
+    "continueShopping": "← Lanjut Belanja",
+    "selectedWorks": "Karya yang dipilih",
+    "itemsSuffix": "item",
+    "summary": "Ringkasan",
+    "trustNoteTitle": "Handcrafted & delivered digitally.",
+    "trustNoteBody": "Karya di sini dibuat tangan — bukan template massal. Setelah bayar, link unduhan & license key (kalau ada) langsung dikirim ke email & WhatsApp yang kamu isi di checkout.",
+    "emptyEyebrow": "✎ Empty",
+    "emptyTitle1": "Nothing here yet —",
+    "emptyTitle2": "go",
+    "emptyTitle3": "something.",
+    "emptyBody": "Rak karya masih kosong. Jalan-jalan sebentar di Develop — pilih yang menarik, bawa pulang.",
+    "emptyCtaDevelop": "Browse Develop →",
+    "emptyCtaDisplay": "Or read Display",
+    "errorTitle": "Gagal memuat keranjang."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Isi detail pemesan.",
+    "name": "Nama Lengkap",
+    "email": "Email",
+    "phone": "Nomor WhatsApp",
+    "notes": "Catatan (opsional)",
+    "placeOrder": "Buat Pesanan",
+    "backToCart": "← Kembali ke Keranjang",
+    "errorRequired": "Wajib diisi",
+    "errorEmail": "Format email tidak valid",
+    "errorPhone": "Nomor WhatsApp tidak valid",
+    "buyerInfo": "Data Pembeli",
+    "orderSummary": "Ringkasan",
+    "total": "Total",
+    "paymentMethod": "Metode pembayaran: QRIS via Tripay",
+    "errorLoad": "Gagal memuat keranjang"
+  },
+  "payment": {
+    "title": "Pembayaran",
+    "waitingPayment": "Menunggu Pembayaran",
+    "instruction": "Selesaikan pembayaran dalam {minutes} menit.",
+    "checkStatus": "Cek Status Pembayaran",
+    "expiredTitle": "Pesanan Kedaluwarsa",
+    "expiredBody": "Pesanan ini sudah tidak bisa dibayar. Silakan buat pesanan baru.",
+    "payWithin": "Bayar dalam"
+  },
+  "orderSuccess": {
+    "title": "Pesanan Diterima",
+    "subtitle": "Order {code} berhasil dibuat.",
+    "viewPayment": "Lanjut ke Pembayaran →",
+    "viewOrders": "Cek Pesanan"
+  },
+  "checkOrder": {
+    "title": "Cek Pesanan",
+    "subtitle": "Masukkan kode order untuk melihat status.",
+    "placeholder": "Kode Order (mis. ORD-XXXXX)",
+    "submit": "Cek Status",
+    "errorNotFound": "Pesanan tidak ditemukan. Periksa kembali kode order.",
+    "statusPending": "Menunggu Pembayaran",
+    "statusPaid": "Sudah Dibayar",
+    "statusExpired": "Kedaluwarsa",
+    "statusFailed": "Gagal",
+    "downloadFile": "Unduh Berkas"
+  },
+  "login": {
+    "title": "Login Dashboard",
+    "subtitle": "Masuk untuk mengelola katalog.",
+    "tokenLabel": "Token Admin",
+    "tokenPlaceholder": "Tempel token di sini",
+    "submit": "Masuk",
+    "errorInvalid": "Token tidak valid atau sudah kedaluwarsa.",
+    "backToHome": "← Kembali ke Beranda"
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "categories": "Kategori",
+      "products": "Produk",
+      "posts": "Catatan",
+      "orders": "Pesanan",
+      "licenseKeys": "License Keys",
+      "media": "Media",
+      "settings": "Pengaturan"
+    },
+    "topbar": {
+      "viewSite": "Lihat Situs",
+      "logout": "Keluar"
+    },
+    "common": {
+      "search": "Cari…",
+      "all": "Semua",
+      "active": "Aktif",
+      "draft": "Draft",
+      "yes": "Ya",
+      "no": "Tidak",
+      "confirmDelete": "Yakin ingin menghapus?",
+      "saved": "Tersimpan",
+      "deleted": "Terhapus",
+      "errorGeneric": "Terjadi kesalahan. Coba lagi."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Ringkasan singkat toko.",
+      "statTotalProducts": "Total Produk",
+      "statActiveProducts": "Produk Aktif",
+      "statDraftProducts": "Produk Draft",
+      "statTotalOrders": "Total Pesanan",
+      "statPendingOrders": "Menunggu",
+      "statPaidOrders": "Selesai",
+      "statRevenueMonth": "Pendapatan Bulan Ini"
+    },
+    "statuses": {
+      "aktif": "Aktif",
+      "draft": "Draft",
+      "tidak_dijual": "Tidak Dijual",
+      "pending": "Menunggu",
+      "paid": "Dibayar",
+      "failed": "Gagal",
+      "expired": "Kedaluwarsa",
+      "refunded": "Dikembalikan"
+    },
+    "tipe": {
+      "download": "Source Code",
+      "license": "Lisensi",
+      "bundle": "Bundle"
+    },
+    "errors": {
+      "title404": "Halaman admin tidak ditemukan",
+      "title500": "Terjadi kesalahan",
+      "backToDashboard": "← Kembali ke Dashboard"
+    }
+  }
+}

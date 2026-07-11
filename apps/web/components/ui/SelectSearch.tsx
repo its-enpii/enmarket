@@ -2,10 +2,11 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { BUTTON_LINK_BASE_CLS } from '@/components/ui/neobrutal';
+
 interface Option {
   value: string;
   label: string;
-  /** Optional secondary text shown dimmer (mis. slug, jumlah produk) */
   hint?: string;
 }
 
@@ -16,27 +17,16 @@ interface Props {
   defaultValue?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  /** Field label ditampilkan di atas trigger */
   label?: string;
   required?: boolean;
   disabled?: boolean;
-  /** Tampilkan tombol clear (×) saat ada value */
   clearable?: boolean;
-  /** Tampilkan opsi "Semua…" sebagai value kosong di paling atas */
   showAllOption?: Option;
-  /** Pesan error di bawah field */
   error?: string;
 }
 
 /**
  * Combobox — searchable select.
- * Trigger menampilkan label value aktif, klik → panel dropdown dengan
- * input search di atas + list opsi yang di-filter.
- *
- * Pakai untuk dropdown panjang (kategori, produk) di mana native <select>
- * tidak punya filter. Untuk list pendek (< 8 opsi), pakai <Select> saja.
- *
- * Mengirim value via hidden input `name`, kompatibel dengan FormData server action.
  */
 export function SelectSearch({
   name,
@@ -71,7 +61,6 @@ export function SelectSearch({
       )
     : allOptions;
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     function onDown(e: MouseEvent) {
@@ -85,12 +74,10 @@ export function SelectSearch({
     return () => document.removeEventListener('mousedown', onDown);
   }, [open]);
 
-  // Auto-focus search saat panel terbuka
   useEffect(() => {
     if (open) searchRef.current?.focus();
   }, [open]);
 
-  // Escape close
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -125,7 +112,6 @@ export function SelectSearch({
         </label>
       )}
 
-      {/* Hidden input untuk submit FormData */}
       <input type="hidden" name={name} value={value} required={required} />
 
       <button
@@ -137,11 +123,10 @@ export function SelectSearch({
         aria-haspopup="listbox"
         aria-expanded={open}
         className={
-          'flex items-center justify-between gap-2 w-full text-left ' +
-          'bg-surface border-2 border-ink px-3 py-2.5 text-sm font-medium text-ink ' +
-          'hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)] ' +
-          'focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] ' +
-          'transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+          BUTTON_LINK_BASE_CLS +
+          ' justify-between gap-2 w-full text-left bg-surface px-3 py-2.5 text-sm font-medium text-ink ' +
+          'focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] ' +
+          'focus:shadow-[4px_4px_0_0_var(--color-ink)]'
         }
       >
         <span className={selected ? 'text-ink' : 'text-ink/40'}>

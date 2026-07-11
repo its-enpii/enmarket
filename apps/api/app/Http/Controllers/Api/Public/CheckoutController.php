@@ -113,7 +113,7 @@ class CheckoutController extends Controller
             ])->toArray();
 
             $dto = new CreateTransactionDto(
-                method: 'QRIS',
+                method: 'QRIS2',
                 merchantRef: $kodeOrder,
                 amount: $total,
                 customerName: $request->nama,

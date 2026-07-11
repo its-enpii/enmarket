@@ -2,10 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\LicenseKey;
+use App\Models\Order;
+use App\Models\Post;
+use App\Models\Product;
+use App\Models\SiteSetting;
+use App\Observers\ActivityLogger;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Delivery\OrderDeliveryService;
 use App\Services\NextRevalidator;
+use App\Services\SiteSettings;
 use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Storage\RemoteEnStorage;
@@ -64,6 +71,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind OrderDeliveryService (orchestrator)
         $this->app->singleton(OrderDeliveryService::class);
+
+        // Bind SiteSettings service (cached key/value accessor)
+        $this->app->singleton(SiteSettings::class, fn () => new SiteSettings());
     }
 
     /**
@@ -72,6 +82,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiters();
+
+        // Register ActivityLogger observer untuk audit trail.
+        // Append-only — semua created/updated/deleted masuk activity_logs table.
+        $observer = new ActivityLogger();
+        Product::observe($observer);
+        Post::observe($observer);
+        Order::observe($observer);
+        LicenseKey::observe($observer);
+        SiteSetting::observe($observer);
     }
 
     /**

@@ -36,6 +36,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - ../.env
     environment:
       APP_NAME: "enmarket API"
       APP_ENV: ${APP_ENV:-local}
@@ -51,32 +53,14 @@ services:
       CACHE_STORE: database
       SESSION_DRIVER: database
       QUEUE_CONNECTION: database
-      # Tripay (mock di Fase 3)
+      # Tripay (mock di Fase 3) — values supplied via env_file: ../.env
       TRIPAY_MODE: ${TRIPAY_MODE:-sandbox}
-      TRIPAY_API_KEY: ${TRIPAY_API_KEY:-}
-      TRIPAY_PRIVATE_KEY: ${TRIPAY_PRIVATE_KEY:-}
-      TRIPAY_MERCHANT_CODE: ${TRIPAY_MERCHANT_CODE:-}
       # EnStorage (mock di Fase 4)
       ENSTORAGE_BASE_URL: ${ENSTORAGE_BASE_URL:-}
-      ENSTORAGE_API_KEY: ${ENSTORAGE_API_KEY:-}
-      # n8n
-      N8N_WEBHOOK_KIRIM_PRODUK: ${N8N_WEBHOOK_KIRIM_PRODUK:-}
-      # Evolution API
-      EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
-      EVOLUTION_API_KEY: ${EVOLUTION_API_KEY:-}
-      EVOLUTION_INSTANCE: ${EVOLUTION_INSTANCE:-enpiistudio}
-      # Mail
-      MAIL_MAILER: ${MAIL_MAILER:-log}
-      MAIL_HOST: ${MAIL_HOST:-}
-      MAIL_PORT: ${MAIL_PORT:-}
-      MAIL_USERNAME: ${MAIL_USERNAME:-}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
-      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-noreply@enpiistudio.com}
-      # Admin token (Fase 1)
-      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+      # Admin token (Fase 1) — fallback kalau tidak di root .env
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev-admin-token-12345}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       # Next.js on-demand revalidation webhook (Fase 2)
-      # NEXT_PUBLIC_SITE_URL → dipakai Next.js untuk URL publik (sitemap/robots)
-      # APP_NEXT_INTERNAL_URL → dipakai Laravel untuk hit Next dari dalam Docker network
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
       APP_NEXT_INTERNAL_URL: ${APP_NEXT_INTERNAL_URL:-http://web:3000}
       REVALIDATE_SECRET: ${REVALIDATE_SECRET:-dev-revalidate-secret}
@@ -100,8 +84,12 @@ services:
     restart: unless-stopped
     depends_on:
       - api
+    env_file:
+      - ../.env
     environment:
-      NODE_ENV: production
+      # Dev mode — NODE_ENV default 'development' saat pakai `npm run dev`.
+      # Biarkan kosong supaya Next.js auto-set ke 'development'.
+      NODE_ENV: ${WEB_NODE_ENV:-development}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:8000}
       NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-enpiistudio}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
@@ -109,6 +97,20 @@ services:
       REVALIDATE_SECRET: ${REVALIDATE_SECRET:-dev-revalidate-secret}
     ports:
       - "${WEB_PORT:-3000}:3000"
+    # ───── Bind mount untuk live coding ─────
+    # - ./apps/web (host) → /app (container): source code, Tailwind config,
+    #   public/ folder. Edit file di host → Next.js HMR langsung.
+    # - Anonymous vols untuk node_modules + .next: pakai versi ter-install
+    #   di image (hasil `npm ci` saat build). Tanpa ini, bind mount akan
+    #   menimpa dengan folder kosong dari host (host tidak punya deps yang
+    #   cocok untuk runtime image).
+    volumes:
+      - ../apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    # Override CMD: jalankan Next.js dev mode (HMR, Fast Refresh).
+    # Image sudah include node_modules + source, jadi `npm run dev` siap pakai.
+    command: ["npm", "run", "dev"]
     networks:
       - enmarket
 

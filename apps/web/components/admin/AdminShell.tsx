@@ -29,7 +29,7 @@ export function AdminShell({
         <Sidebar currentPath={currentPath} open={open} onClose={() => setOpen(false)} />
         <div className="flex flex-col min-h-screen lg:pl-64">
           <AdminTopbar />
-          <div className="flex-1">{children}</div>
+          <main className="flex-1">{children}</main>
           <AdminFooter />
         </div>
       </div>

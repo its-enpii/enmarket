@@ -88,7 +88,7 @@ return [
         'merchant_code' => env('TRIPAY_MERCHANT_CODE'),
         'callback_url' => env('TRIPAY_CALLBACK_URL'),
         'base_url' => env('TRIPAY_MODE') === 'production'
-            ? 'https://api.tripay.co.id/api/v2'
+            ? 'https://api.tripay.co.id/api'
             : 'https://tripay.co.id/api-sandbox',
     ],
 

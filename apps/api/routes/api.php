@@ -1,19 +1,25 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ActivityController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\LicenseKeyController;
+use App\Http\Controllers\Api\Admin\MaintenanceController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\OrderResendController;
+use App\Http\Controllers\Api\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
+use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\CheckoutController;
 use App\Http\Controllers\Api\Public\DownloadController;
 use App\Http\Controllers\Api\Public\OrderController;
+use App\Http\Controllers\Api\Public\PostController as PublicPostController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
+use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +47,16 @@ Route::prefix('public')->group(function () {
     // Kategori publik (untuk filter katalog & sitemap)
     Route::get('categories', [PublicCategoryController::class, 'index']);
     Route::get('categories/slugs', [PublicCategoryController::class, 'slugs']);
+
+    // Blog post publik — published only
+    Route::get('posts/latest', [PublicPostController::class, 'latest']);
+    Route::get('posts', [PublicPostController::class, 'index']);
+    Route::get('posts/slugs', [PublicPostController::class, 'slugs']);
+    Route::get('posts/{slug}', [PublicPostController::class, 'show']);
+
+    // Public site config (identity + social + footer). Payment secrets
+    // TIDAK di-expose di sini — hanya SiteSettings::all() yg masuk public.
+    Route::get('site-config', [SiteConfigController::class, 'show']);
 });
 
 // ───── Cart + Checkout + Orders (public, no auth, pakai cookie) ─────
@@ -100,6 +116,10 @@ Route::prefix('admin')->group(function () {
         // Order re-trigger delivery generation (untuk paid order yang belum ada delivery rows)
         Route::post('orders/{kodeOrder}/generate-deliveries', [OrderResendController::class, 'generateDeliveries']);
 
+        // Blog post admin CRUD (stats HARUS sebelum {post})
+        Route::get('posts/stats', [AdminPostController::class, 'stats']);
+        Route::apiResource('posts', AdminPostController::class);
+
         // Order list + detail + stats — stats HARUS sebelum orders/{kodeOrder}
         // kalau tidak, "stats" akan dicocokkan sebagai kode_order.
         Route::get('orders/stats', [AdminOrderController::class, 'stats']);
@@ -112,5 +132,17 @@ Route::prefix('admin')->group(function () {
         Route::post('license-keys', [LicenseKeyController::class, 'store']);
         Route::get('license-keys/{id}', [LicenseKeyController::class, 'show']);
         Route::get('license-keys', [LicenseKeyController::class, 'index']);
+
+        // Site settings (identity, social, footer, payment, channels)
+        Route::get('settings', [SettingsController::class, 'index']);
+        Route::patch('settings', [SettingsController::class, 'update']);
+        Route::post('settings/logo', [SettingsController::class, 'uploadLogo']);
+
+        // Maintenance mode toggle
+        Route::get('maintenance/status', [MaintenanceController::class, 'status']);
+        Route::post('maintenance/toggle', [MaintenanceController::class, 'toggle']);
+
+        // Recent activity log
+        Route::get('activity', [ActivityController::class, 'index']);
     });
 });

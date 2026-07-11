@@ -1,4 +1,8 @@
-import Link from 'next/link';
+'use client';
+
+import { useTranslations } from 'next-intl';
+
+import { Button } from '@/components/ui/neobrutal';
 
 interface Props {
   title: string;
@@ -7,13 +11,15 @@ interface Props {
 }
 
 /**
- * Empty state — blok warna dengan CTA. Dipakai saat katalog kosong / filter tidak ketemu.
+ * Empty state — blok warna dengan CTA.
+ * Translated via next-intl 'common.empty' namespace.
  */
 export function EmptyState({ title, message, cta }: Props) {
+  const t = useTranslations('common.empty');
   return (
     <div className="bg-surface border-2 border-ink p-8 sm:p-12 shadow-[4px_4px_0_0_var(--color-ink)] text-center">
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/60">
-        Belum Ada
+        {t('title')}
       </p>
       <h2 className="mt-2 text-2xl sm:text-3xl font-bold leading-tight text-ink">
         {title}
@@ -24,12 +30,9 @@ export function EmptyState({ title, message, cta }: Props) {
         </p>
       )}
       {cta && (
-        <Link
-          href={cta.href}
-          className="mt-6 inline-block bg-primary text-surface border-2 border-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] transition-all"
-        >
+        <Button href={cta.href} variant="primary" size="md" className="mt-6">
           {cta.label}
-        </Link>
+        </Button>
       )}
     </div>
   );

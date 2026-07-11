@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { NLink } from '@/components/ui/neobrutal';
 
 import type { Category } from '@/lib/types';
 
@@ -19,30 +19,32 @@ export function CategoryFilter({ categories, activeSlug }: Props) {
       </h2>
       <ul className="flex flex-col gap-2">
         <li>
-          <Link
+          <NLink
             href="/katalog"
-            className={
-              'block border-2 border-ink px-3 py-2 text-sm font-bold transition-all ' +
-              (!activeSlug
+            variant="default"
+            underline="none"
+            className={`block border-2 border-ink px-3 py-2 text-sm font-bold transition-all ${
+              !activeSlug
                 ? 'bg-primary text-surface shadow-[2px_2px_0_0_var(--color-ink)]'
-                : 'bg-surface text-ink hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]')
-            }
+                : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_var(--color-ink)]'
+            }`}
           >
             Semua
-          </Link>
+          </NLink>
         </li>
         {categories.map((cat) => {
           const isActive = cat.slug === activeSlug;
           return (
             <li key={cat.id}>
-              <Link
+              <NLink
                 href={`/katalog?category=${cat.slug}`}
-                className={
-                  'flex items-center justify-between gap-2 border-2 border-ink px-3 py-2 text-sm font-bold transition-all ' +
-                  (isActive
+                variant="default"
+                underline="none"
+                className={`flex items-center justify-between gap-2 border-2 border-ink px-3 py-2 text-sm font-bold transition-all ${
+                  isActive
                     ? 'bg-primary text-surface shadow-[2px_2px_0_0_var(--color-ink)]'
-                    : 'bg-surface text-ink hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]')
-                }
+                    : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_var(--color-ink)]'
+                }`}
               >
                 <span className="truncate">{cat.nama}</span>
                 {typeof cat.products_count === 'number' && (
@@ -54,7 +56,7 @@ export function CategoryFilter({ categories, activeSlug }: Props) {
                     {cat.products_count}
                   </span>
                 )}
-              </Link>
+              </NLink>
             </li>
           );
         })}

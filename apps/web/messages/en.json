@@ -1,0 +1,352 @@
+{
+  "common": {
+    "site": {
+      "title": "enpiistudio — Discover, develop, display",
+      "description": "Solo studio · Digital works and process notes. Built with programming precision and intentional design craft."
+    },
+    "buttons": {
+      "back": "← Back",
+      "retry": "Retry",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "viewAll": "View All",
+      "viewMore": "View More",
+      "loadMore": "Load More",
+      "submit": "Submit",
+      "confirm": "Confirm",
+      "close": "Close",
+      "reset": "Reset",
+      "filter": "Filter"
+    },
+    "pagination": {
+      "prev": "← Previous",
+      "next": "Next →"
+    },
+    "empty": {
+      "title": "Nothing here yet",
+      "action": "Back to Home"
+    },
+    "search": {
+      "placeholder": "Search…",
+      "submitAria": "Submit search"
+    },
+    "language": {
+      "switchTo": "Switch language",
+      "id": "ID",
+      "en": "EN"
+    }
+  },
+  "errors": {
+    "title500": "500 — Something Went Wrong",
+    "subtitle500": "Oops, something broke. Try again in a moment.",
+    "title404": "404 — Page Not Found",
+    "subtitle404": "Oops, this page doesn't exist. It may have been moved or removed.",
+    "viewCatalog": "← View Catalog",
+    "goHome": "Home",
+    "retry": "Retry"
+  },
+  "nav": {
+    "discover": "Discover",
+    "develop": "Develop",
+    "display": "Display",
+    "admin": "Admin",
+    "search": "Search",
+    "menu": "Menu"
+  },
+  "footer": {
+    "brandTitle": "enpiistudio",
+    "tagline": "Solo studio · Digital works & process notes",
+    "subscribeTitle": "Follow Latest Notes",
+    "emailPlaceholder": "email@domain.com",
+    "subscribeAria": "Subscribe to newsletter",
+    "connectTitle": "Connect",
+    "links": {
+      "contact": "Contact",
+      "instagram": "Instagram",
+      "arena": "Arena",
+      "twitter": "Twitter"
+    },
+    "studioTitle": "Studio",
+    "studioLinks": {
+      "catalog": "Catalog",
+      "journal": "Journal",
+      "orders": "Track Order",
+      "admin": "Admin"
+    },
+    "copyright": "© {year} enpiistudio. Every work here is made on purpose.",
+    "poweredBy": "Built with Next.js"
+  },
+  "cart": {
+    "badge": {
+      "viewCart": "View Cart",
+      "items": "{count, plural, =0 {Empty} one {# item} other {# items}}"
+    }
+  },
+  "home": {
+    "heroEyebrow": "✎ Studio Enpii",
+    "heroTitle": "Discover, develop, display.",
+    "heroSubtitle": "Three words, one workflow. A digital works marketplace from a solo studio that blends programming precision with intentional design craft.",
+    "heroCta": "View Develop Works →",
+    "pillarsTitle": "Three Pillars",
+    "pillarsSubtitle": "How we think, make, and share.",
+    "pillarDiscover": "Discover",
+    "pillarDiscoverBody": "Short research, many prototypes discarded. What remains is the most honest.",
+    "pillarDevelop": "Develop",
+    "pillarDevelopBody": "Source code, licenses, and bundles. Written on purpose — not frameworks passing through.",
+    "pillarDisplay": "Display",
+    "pillarDisplayBody": "A journal of thoughts and process. Notes that still show how they were made.",
+    "pillarExplore": "Explore {title} →",
+    "featuredTitle": "Featured Developments",
+    "featuredSubtitle": "Newest picks from Develop — finished, ready to use.",
+    "viewAllDevelop": "View All Develop →",
+    "journalTitle": "Latest / Display",
+    "journalSubtitle": "Brief notes from the workbench.",
+    "viewAllJournal": "View All Notes →"
+  },
+  "discover": {
+    "eyebrow": "✎ Discover",
+    "title": "Discover",
+    "subtitle": "Work that starts from curiosity, not a client brief.",
+    "storyTitle": "\"Code is a material, not a delivery mechanism.\"",
+    "storyBody1": "enpiistudio began as a private space — a place to keep experiments too specific for a client portfolio, too honest to hide behind false polish.",
+    "storyBody2": "I believe programming and design aren't two separate disciplines, but the same habit: choosing on purpose, rejecting defaults, reading documentation to the last line.",
+    "storyBody3": "The work here is a snapshot of that process — not a finished product, but artifacts that still show how they were made.",
+    "signature": "— e° / solo studio",
+    "pillarsHeading": "What we do",
+    "pillarsTitle": "Three words, one workflow.",
+    "pillarDiscoverTitle": "Discover",
+    "pillarDiscoverBody": "Exploration of form and function. Short research, many prototypes discarded — what remains is the most honest.",
+    "pillarDevelopTitle": "Develop",
+    "pillarDevelopBody": "Technical artifacts and digital tools. Code written on purpose — not frameworks passing through.",
+    "pillarDisplayTitle": "Display",
+    "pillarDisplayBody": "A journal of thoughts and process. Notes that still show how they were made — not a repolished portfolio.",
+    "valuesHeading": "Process / Values",
+    "valuesSubtitle": "Seven stamps on the workbench. Not every project fits all of them — but this is how we work when we work.",
+    "ctaEyebrow": "✎ Next step",
+    "ctaTitle1": "Manifestos are read.",
+    "ctaTitle2": "Works speak.",
+    "ctaBody": "Browse the Develop catalog — source code, licenses, and bundles already released. Download, use, or let them be a reference.",
+    "ctaViewDevelop": "View Develop →",
+    "ctaViewJournal": "Or read the notes"
+  },
+  "develop": {
+    "listTitle": "All Develop",
+    "listSubtitle": "Source code, licenses, and bundles already released.",
+    "filterAll": "All",
+    "empty": "No Develop works published yet."
+  },
+  "developDetail": {
+    "addToCart": "Add to Cart",
+    "license": "License",
+    "download": "Download",
+    "from": "From",
+    "free": "Free",
+    "share": "Share",
+    "relatedTitle": "Related Works"
+  },
+  "display": {
+    "listTitle": "Display",
+    "listSubtitle": "Brief notes from the workbench.",
+    "empty": "No notes yet."
+  },
+  "displayList": {
+    "title": "Display",
+    "subtitle": "Brief notes from the workbench.",
+    "subtitleLong": "Notes from the studio — process, thoughts, and things in progress. Not release notes. Not a weekly newsletter. This is a working notebook that happens to be published.",
+    "eyebrow": "✎ Display",
+    "tagsLabel": "Tags →",
+    "itemsSuffix": "notes",
+    "noResultsFor": "No notes for",
+    "hintNoResults": "Try another keyword, or browse all notes.",
+    "hintEmpty": "The first note will appear here once published from the admin dashboard. Be patient — or head back to develop first.",
+    "minutesShort": "min read",
+    "readEntry": "Read this entry",
+    "readShort": "Read",
+    "footerEyebrow": "✎ More stories coming soon",
+    "footerTitle1": "New notes come out",
+    "footerTitleHighlight": "whenever",
+    "footerTitle2": "something is worth writing about.",
+    "footerBody": "No fixed schedule. No editorial calendar. If there's something interesting in process, it's written here — if not, it isn't.",
+    "footerCta": "← Browse Develop works"
+  },
+  "displayPost": {
+    "backToJournal": "← Back to Journal",
+    "publishedOn": "Published",
+    "readMore": "Read more",
+    "share": "Share",
+    "readEntry": "Read this entry"
+  },
+  "katalog": {
+    "title": "Catalog",
+    "subtitle": "All available Develop works.",
+    "filterAll": "All Types",
+    "tipe": {
+      "download": "Source Code",
+      "license": "License",
+      "bundle": "Bundle"
+    },
+    "empty": "No works in this category.",
+    "from": "From",
+    "categoryLabel": "Category",
+    "searchLabel": "Search results",
+    "itemsSuffix": "works",
+    "noResults": "not found",
+    "resetFilterHint": "Try changing the filter or search keyword.",
+    "adminHint": "Add works from the admin dashboard to get started.",
+    "loginAdmin": "Admin Login"
+  },
+  "product": {
+    "card": {
+      "addToCart": "Add",
+      "view": "View"
+    },
+    "price": {
+      "free": "Free",
+      "from": "From"
+    }
+  },
+  "post": {
+    "reactions": {
+      "like": "Like",
+      "helpful": "Helpful",
+      "inspired": "Inspired"
+    }
+  },
+  "keranjang": {
+    "title": "Cart",
+    "subtitle": "Review your works before checkout.",
+    "empty": "Your cart is empty.",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "checkout": "Proceed to Checkout",
+    "continueShopping": "← Continue Shopping",
+    "selectedWorks": "Selected works",
+    "itemsSuffix": "items",
+    "summary": "Order summary",
+    "trustNoteTitle": "Handcrafted & delivered digitally.",
+    "trustNoteBody": "Works here are hand-made — not mass templates. After payment, download links & license keys (if any) are sent to the email & WhatsApp you provided at checkout.",
+    "emptyEyebrow": "✎ Empty",
+    "emptyTitle1": "Nothing here yet —",
+    "emptyTitle2": "go",
+    "emptyTitle3": "something.",
+    "emptyBody": "Your shelf is empty. Take a walk through Develop — pick what catches your eye, take it home.",
+    "emptyCtaDevelop": "Browse Develop →",
+    "emptyCtaDisplay": "Or read Display",
+    "errorTitle": "Failed to load cart."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Fill in your details.",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "WhatsApp Number",
+    "notes": "Notes (optional)",
+    "placeOrder": "Place Order",
+    "backToCart": "← Back to Cart",
+    "errorRequired": "Required",
+    "errorEmail": "Invalid email format",
+    "errorPhone": "Invalid WhatsApp number",
+    "buyerInfo": "Buyer Information",
+    "orderSummary": "Order Summary",
+    "total": "Total",
+    "paymentMethod": "Payment method: QRIS via Tripay",
+    "errorLoad": "Failed to load cart"
+  },
+  "payment": {
+    "title": "Payment",
+    "waitingPayment": "Awaiting Payment",
+    "instruction": "Complete payment within {minutes} minutes.",
+    "checkStatus": "Check Payment Status",
+    "expiredTitle": "Order Expired",
+    "expiredBody": "This order can no longer be paid. Please create a new order.",
+    "payWithin": "Pay within"
+  },
+  "orderSuccess": {
+    "title": "Order Received",
+    "subtitle": "Order {code} was created successfully.",
+    "viewPayment": "Continue to Payment →",
+    "viewOrders": "Track Order"
+  },
+  "checkOrder": {
+    "title": "Track Order",
+    "subtitle": "Enter the order code to see its status.",
+    "placeholder": "Order code (e.g. ORD-XXXXX)",
+    "submit": "Check Status",
+    "errorNotFound": "Order not found. Please check the order code.",
+    "statusPending": "Awaiting Payment",
+    "statusPaid": "Paid",
+    "statusExpired": "Expired",
+    "statusFailed": "Failed",
+    "downloadFile": "Download File"
+  },
+  "login": {
+    "title": "Admin Login",
+    "subtitle": "Sign in to manage the catalog.",
+    "tokenLabel": "Admin Token",
+    "tokenPlaceholder": "Paste token here",
+    "submit": "Sign In",
+    "errorInvalid": "Token is invalid or expired.",
+    "backToHome": "← Back to Home"
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "categories": "Categories",
+      "products": "Products",
+      "posts": "Notes",
+      "orders": "Orders",
+      "licenseKeys": "License Keys",
+      "media": "Media",
+      "settings": "Settings"
+    },
+    "topbar": {
+      "viewSite": "View Site",
+      "logout": "Sign Out"
+    },
+    "common": {
+      "search": "Search…",
+      "all": "All",
+      "active": "Active",
+      "draft": "Draft",
+      "yes": "Yes",
+      "no": "No",
+      "confirmDelete": "Are you sure you want to delete this?",
+      "saved": "Saved",
+      "deleted": "Deleted",
+      "errorGeneric": "Something went wrong. Try again."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "A quick overview of the shop.",
+      "statTotalProducts": "Total Products",
+      "statActiveProducts": "Active Products",
+      "statDraftProducts": "Draft Products",
+      "statTotalOrders": "Total Orders",
+      "statPendingOrders": "Pending",
+      "statPaidOrders": "Completed",
+      "statRevenueMonth": "Revenue This Month"
+    },
+    "statuses": {
+      "aktif": "Active",
+      "draft": "Draft",
+      "tidak_dijual": "Not For Sale",
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed",
+      "expired": "Expired",
+      "refunded": "Refunded"
+    },
+    "tipe": {
+      "download": "Source Code",
+      "license": "License",
+      "bundle": "Bundle"
+    },
+    "errors": {
+      "title404": "Admin page not found",
+      "title500": "Something went wrong",
+      "backToDashboard": "← Back to Dashboard"
+    }
+  }
+}

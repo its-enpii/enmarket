@@ -52,9 +52,14 @@ function notify() {
   for (const s of subscribers) s();
 }
 
+// Module-level constant untuk server snapshot — reference stabil agar
+// useSyncExternalStore tidak mendeteksi perubahan tiap render.
+// Object literal baru tiap call bikin React loop.
+const NONE_STATE: DialogState = { kind: 'none' };
+
 export const dialogStore = {
   getSnapshot: (): DialogState => state,
-  getServerSnapshot: (): DialogState => ({ kind: 'none' }),
+  getServerSnapshot: (): DialogState => NONE_STATE,
   subscribe(cb: () => void): () => void {
     subscribers.add(cb);
     return () => subscribers.delete(cb);

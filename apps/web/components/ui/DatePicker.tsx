@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { id as localeId } from 'date-fns/locale';
 
+import { BUTTON_LINK_BASE_CLS } from '@/components/ui/neobrutal';
+
 interface Props {
   /** Nama field form (untuk hidden input submit). */
   name: string;
@@ -19,8 +21,7 @@ interface Props {
   disabled?: boolean;
   /** Optional className untuk wrapper. */
   className?: string;
-  /** ISO date string output — dipanggil saat user pilih tanggal.
-   *  Parent bisa pakai untuk trigger form submit / state update. */
+  /** ISO date string output — dipanggil saat user pilih tanggal. */
   onChange?: (value: string) => void;
   /** Posisi popover relatif ke trigger. Default 'left'. */
   align?: 'left' | 'right';
@@ -48,10 +49,6 @@ function parseIsoDate(s: string | undefined): Date | undefined {
 /**
  * DatePicker — NeoBrutalism styled date picker berbasis react-day-picker.
  * Trigger button (border-2, shadow) → klik → popover calendar grid.
- * Selected value ditulis ke hidden input `name={name}` untuk form GET submit.
- *
- * Pakai pola yang sama dengan SelectSearch: trigger button + dropdown panel +
- * outside click close + Escape close.
  */
 export function DatePicker({
   name,
@@ -70,12 +67,10 @@ export function DatePicker({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Sync defaultValue jika berubah (mis. setelah navigation)
   useEffect(() => {
     setSelected(parseIsoDate(defaultValue));
   }, [defaultValue]);
 
-  // Outside click → close
   useEffect(() => {
     if (!open) return;
     function onDocClick(e: MouseEvent) {
@@ -88,7 +83,6 @@ export function DatePicker({
     return () => document.removeEventListener('mousedown', onDocClick);
   }, [open]);
 
-  // Escape → close
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -105,7 +99,6 @@ export function DatePicker({
     setSelected(d);
     const iso = toIsoDate(d);
     if (onChange) onChange(iso);
-    // Auto-close setelah pilih (UX native input date)
     setOpen(false);
     triggerRef.current?.focus();
   }
@@ -130,11 +123,10 @@ export function DatePicker({
         </label>
       )}
       <div ref={wrapperRef} className="relative">
-        {/* Hidden input untuk form submit (ISO date string) */}
         <input type="hidden" name={name} value={isoValue} />
 
-        {/* Trigger — styling seragam dengan SelectSearch trigger:
-            border-2 ink + py-2.5 + font-medium, shadow hard-offset muncul on hover/focus. */}
+        {/* Trigger button — pakai BUTTON_LINK_BASE_CLS untuk style neobrutal,
+            plus focus override tambahan (translate + shadow) untuk keyboard a11y. */}
         <button
           ref={triggerRef}
           id={`dp-trigger-${name}`}
@@ -144,11 +136,10 @@ export function DatePicker({
           aria-haspopup="dialog"
           aria-expanded={open}
           className={
-            'flex items-center justify-between gap-2 w-full text-left ' +
-            'bg-surface border-2 border-ink px-3 py-2.5 text-sm font-medium text-ink ' +
-            'hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)] ' +
-            'focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] ' +
-            'transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
+            BUTTON_LINK_BASE_CLS +
+            ' justify-between gap-2 w-full text-left bg-surface px-3 py-2.5 text-sm font-medium text-ink ' +
+            'focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] ' +
+            'focus:shadow-[4px_4px_0_0_var(--color-ink)]'
           }
         >
           <span className={'truncate ' + (isoValue ? 'text-ink' : 'text-ink/40')}>
@@ -157,7 +148,6 @@ export function DatePicker({
           <CalendarIcon />
         </button>
 
-        {/* Popover */}
         {open && (
           <div
             role="dialog"

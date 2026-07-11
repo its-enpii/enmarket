@@ -7,18 +7,37 @@ import { Button } from '@/components/admin/Button';
 import { Input } from '@/components/ui/Input';
 
 /**
- * Search bar — submit GET form ke /katalog?q=...
- * Pertahankan category filter kalau ada.
+ * Search bar — submit GET form ke basePath?q=...
+ * Preserve filter params existing (category/tipe) saat ada.
  *
- * Pakai variant default (horizontal) untuk area lebar.
- * Pakai compact (stack vertical) untuk sidebar sempit.
+ * Default basePath: `/katalog` (backward compat dengan halaman legacy).
+ * Untuk Develop page → set basePath="/develop".
+ *
+ * Variant:
+ *   - default : horizontal (untuk area lebar / header bar)
+ *   - compact : vertical stack (untuk sidebar sempit)
  */
 interface Props {
   defaultValue?: string;
   variant?: 'default' | 'compact';
+  /** Path tujuan submit. Default '/katalog'. */
+  basePath?: string;
+  /** Placeholder input. Default 'Cari produk…'. */
+  placeholder?: string;
+  /** Label tombol submit. Default 'Cari'. */
+  submitLabel?: string;
+  /** Show icon emoji di submit button. */
+  showIcon?: boolean;
 }
 
-export function SearchBar({ defaultValue = '', variant = 'default' }: Props) {
+export function SearchBar({
+  defaultValue = '',
+  variant = 'default',
+  basePath = '/katalog',
+  placeholder = 'Cari produk…',
+  submitLabel = 'Cari',
+  showIcon = true,
+}: Props) {
   const router = useRouter();
   const params = useSearchParams();
   const [q, setQ] = useState(defaultValue);
@@ -33,10 +52,11 @@ export function SearchBar({ defaultValue = '', variant = 'default' }: Props) {
     }
     sp.delete('page'); // reset pagination
     const qs = sp.toString();
-    router.push(qs ? `/katalog?${qs}` : '/katalog');
+    router.push(qs ? `${basePath}?${qs}` : basePath);
   }
 
   const isCompact = variant === 'compact';
+  const icon = showIcon ? '🔍 ' : '';
 
   return (
     <form onSubmit={onSubmit} className={isCompact ? 'flex flex-col gap-2' : 'flex gap-2'}>
@@ -45,7 +65,7 @@ export function SearchBar({ defaultValue = '', variant = 'default' }: Props) {
         name="q"
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Cari produk…"
+        placeholder={placeholder}
         variant={isCompact ? 'default' : 'sm'}
         className={isCompact ? 'w-full' : 'flex-1'}
       />
@@ -56,7 +76,7 @@ export function SearchBar({ defaultValue = '', variant = 'default' }: Props) {
         flat={isCompact ? true : false}
         className={isCompact ? 'w-full' : ''}
       >
-        {isCompact ? '🔍 Cari' : 'Cari'}
+        {isCompact ? `${icon}${submitLabel}` : submitLabel}
       </Button>
     </form>
   );

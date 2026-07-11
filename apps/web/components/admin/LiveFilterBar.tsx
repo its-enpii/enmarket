@@ -2,12 +2,11 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
+import { Button } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { DatePicker } from '@/components/ui/DatePicker';
-import { BUTTON_VARIANT_CLS, BUTTON_LINK_BASE_CLS, BUTTON_LINK_SIZE_SM } from './Button';
 import { useAdminList } from './AdminListProvider';
 import { useDebouncedValue } from '@/lib/hooks';
 
@@ -113,7 +112,7 @@ export function LiveFilterBar({
 
   return (
     <div className="bg-surface border-2 border-ink p-3 shadow-[3px_3px_0_0_var(--color-ink)]">
-      <div className="flex flex-wrap gap-2 items-end">
+      <div className="flex flex-wrap gap-3 items-end">
         {/* Live search */}
         <div className="flex-1 min-w-[200px]">
           <label htmlFor="live-search" className="block text-xs font-bold uppercase tracking-wide mb-1">
@@ -174,26 +173,19 @@ export function LiveFilterBar({
         )}
 
         {/* Reset link — selalu tampil, no-op kalau tidak ada filter aktif.
-            Pakai BUTTON_LINK_BASE_CLS + BUTTON_LINK_SIZE_SM agar sizing match
-            dengan SelectSearch trigger (py-2.5 + font-medium), dan shadow default
-            identik dengan <Button variant="ghost">. Hover pakai bg-accent
-            supaya ada feedback visual beda dari tombol navigasi. */}
-        <Link
+            Pakai <Button href variant="ghost" size="md"> + manual hover bg-accent
+            supaya sizing match dengan primary action button (44px min-h). */}
+        <Button
           href={pathname}
-          className={
-            BUTTON_LINK_BASE_CLS +
-            ' ' +
-            BUTTON_VARIANT_CLS.ghost +
-            ' ' +
-            BUTTON_LINK_SIZE_SM +
-            ' hover:bg-accent'
-          }
+          variant="ghost"
+          size="md"
+          className="hover:bg-accent"
         >
           Reset
-        </Link>
+        </Button>
 
         {/* Primary action — di dalam kotak, di akhir baris */}
-        {action && <div className="ml-auto">{action}</div>}
+        {action}
       </div>
     </div>
   );

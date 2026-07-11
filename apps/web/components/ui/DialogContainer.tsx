@@ -2,6 +2,8 @@
 
 import { useEffect, useSyncExternalStore } from 'react';
 
+import { Button } from '@/components/ui/neobrutal';
+
 import { dialogStore, type DialogState } from './dialog-store';
 
 /**
@@ -70,27 +72,24 @@ function Modal({ state }: { state: DialogState }) {
 
         <div className="flex flex-wrap gap-2 justify-end">
           {isConfirm && (
-            <button
+            <Button
+              variant="surface"
+              size="sm"
               type="button"
               onClick={() => close('cancel')}
-              className="border-2 border-ink bg-surface text-ink px-4 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all min-h-[44px]"
             >
               {cancelLabel}
-            </button>
+            </Button>
           )}
-          <button
+          <Button
+            variant={danger ? 'primary' : 'accent'}
+            size="sm"
             type="button"
             autoFocus
             onClick={() => close(true)}
-            className={
-              'border-2 border-ink px-4 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all min-h-[44px] ' +
-              (danger
-                ? 'bg-primary text-surface'
-                : 'bg-accent text-ink')
-            }
           >
             {confirmLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

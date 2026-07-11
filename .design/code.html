@@ -1,0 +1,305 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Anybody:wght@700;800;900&amp;family=Hanken+Grotesk:wght@400;700&amp;family=JetBrains+Mono:wght@700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e4dfff",
+                        "on-surface-variant": "#474551",
+                        "outline-variant": "#c8c4d3",
+                        "on-primary-fixed-variant": "#433a91",
+                        "secondary": "#7a5900",
+                        "on-secondary-fixed-variant": "#5c4200",
+                        "surface-variant": "#e8e1e0",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#150066",
+                        "on-tertiary-container": "#adaeae",
+                        "secondary-container": "#fdc342",
+                        "surface-container": "#f3ecec",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dfd8d8",
+                        "on-secondary-fixed": "#261900",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "tertiary-container": "#404242",
+                        "inverse-primary": "#c6c0ff",
+                        "error-container": "#ffdad6",
+                        "on-background": "#1e1b1b",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdea2",
+                        "primary-container": "#3d348b",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1e1b1b",
+                        "background": "#fff8f7",
+                        "primary": "#261a74",
+                        "tertiary-fixed": "#e2e2e2",
+                        "tertiary": "#2a2c2c",
+                        "secondary-fixed-dim": "#f6be3d",
+                        "on-secondary-container": "#705100",
+                        "surface-container-highest": "#e8e1e0",
+                        "inverse-surface": "#33302f",
+                        "on-error": "#ffffff",
+                        "outline": "#787582",
+                        "surface-bright": "#fff8f7",
+                        "surface": "#fff8f7",
+                        "on-primary-container": "#aba3ff",
+                        "surface-container-low": "#f9f2f1",
+                        "primary-fixed-dim": "#c6c0ff",
+                        "surface-container-high": "#eee7e6",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-tint": "#5b53aa",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f6efee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-page": "32px",
+                        "border-width": "4px",
+                        "shadow-offset": "6px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Anybody"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-xl": ["Anybody"],
+                        "headline-lg-mobile": ["Anybody"],
+                        "headline-md": ["Anybody"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-xl": ["80px", {"lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "label-sm": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-lg": ["20px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script></head><body class="font-body-md text-on-background selection:bg-secondary-container">
+    <!-- TopNavBar -->
+    <header class="bg-background sticky top-0 z-50 border-b-4 border-on-background neobrutal-shadow">
+        <div class="flex justify-between items-center w-full px-6 md:px-12 py-4 max-w-container-max mx-auto">
+            <div class="font-headline-md text-headline-md font-black tracking-tighter text-on-background uppercase">
+                enpiistudio
+            </div>
+            <nav class="hidden md:flex items-center gap-8"><a class="text-on-background font-bold border-b-4 border-primary pb-1 font-label-sm text-label-sm transition-all" href="#">Discover</a><a class="text-on-background font-bold hover:text-secondary-container hover:underline underline-offset-8 decoration-4 transition-all font-label-sm text-label-sm" href="#">Develop</a><a class="text-on-background font-bold hover:text-secondary-container hover:underline underline-offset-8 decoration-4 transition-all font-label-sm text-label-sm" href="#">Display</a><a class="text-on-background font-bold hover:text-secondary-container hover:underline underline-offset-8 decoration-4 transition-all font-label-sm text-label-sm" href="#">Cart</a></nav>
+            <button class="md:hidden">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-container-max mx-auto">
+        <!-- Hero Section: Monolithic & Centered -->
+        <section class="min-h-[80vh] flex flex-col items-center justify-center text-center px-6 md:px-12 py-24 border-b-4 border-on-background">
+            <div class="max-w-5xl">
+                <h1 class="font-headline-xl text-headline-xl text-primary-container leading-none mb-10">
+                    ENPIISTUDIO — <br>
+                    <span class="text-secondary-container bg-on-background px-6 py-2 inline-block transform -rotate-1">DISCOVER,</span><br>
+                    DEVELOP, DISPLAY
+                </h1>
+                <p class="font-body-lg text-body-lg max-w-2xl mx-auto text-on-surface-variant mb-12 italic border-x-4 border-secondary-container px-8">
+                    A solo creative studio merging programming precision with intentional design craft. We build digital artifacts that prioritize functional rawness and editorial clarity.
+                </p>
+                <div class="flex flex-col md:flex-row gap-6 justify-center">
+                    <a class="inline-block bg-secondary-container text-on-background neobrutal-border neobrutal-shadow px-12 py-5 font-label-sm text-label-sm font-black uppercase hover:neobrutal-shadow-active transition-all" href="#featured">
+                        View Works
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Three-pillar block: 2+1 Layout -->
+        <section class="grid grid-cols-1 md:grid-cols-2 border-b-4 border-on-background">
+            <div class="bg-background border-b-4 md:border-b-0 md:border-r-4 border-on-background p-12 md:p-20 flex flex-col gap-6 group">
+                <div class="w-16 h-16 bg-primary-container text-on-primary flex items-center justify-center neobrutal-border">
+                    <span class="material-symbols-outlined text-4xl">explore</span>
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-primary-container uppercase">Discover</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Exploration of form and function. Research-led design that breaks boundaries and traditional symmetry.</p>
+            </div>
+            <div class="bg-background p-12 md:p-20 flex flex-col gap-6 group">
+                <div class="w-16 h-16 bg-secondary-container text-on-background flex items-center justify-center neobrutal-border">
+                    <span class="material-symbols-outlined text-4xl">code</span>
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-primary-container uppercase">Develop</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Technical artifacts and digital tools. Precision engineering meet unapologetic neobrutalist aesthetics.</p>
+            </div>
+            <div class="md:col-span-2 bg-surface-container border-t-4 border-on-background p-12 md:p-24 flex flex-col items-center text-center gap-6 group">
+                <div class="w-16 h-16 bg-tertiary-container text-on-tertiary flex items-center justify-center neobrutal-border">
+                    <span class="material-symbols-outlined text-4xl">menu_book</span>
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-primary-container uppercase">Display</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">A journal of thoughts and process. Documenting the messy, honest path from concept to production.</p>
+            </div>
+        </section>
+
+        <!-- Featured Works: Full Width Focus -->
+        <section class="py-24 px-6 md:px-12 border-b-4 border-on-background" id="featured">
+            <div class="flex justify-between items-end mb-16">
+                <h2 class="font-headline-lg text-headline-lg text-on-background uppercase leading-none">Featured <br>Developments</h2>
+                <div class="hidden md:block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest pb-2">
+                    Artifacts / 001—004
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-24">
+                <!-- Large Item 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+                    <div class="md:col-span-8">
+                        <div class="relative bg-surface-container neobrutal-border neobrutal-shadow overflow-hidden">
+                            <img class="w-full aspect-video object-cover" data-alt="A high-contrast 3D rendering of a futuristic geometric interface component" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChRAKlzo5Q9FDYgQrXCRfpp95ZciJQKiF01XGiWMKdigVHWIZIhwI0L4JmOy-AougX0H539KHALuJtHTDU41cY7pACLORByg_d4s_VLQii-NbejxT4zA7IwJ8UALF-VblIx9D_L_uw_HkhbccXNpiHXSMWBpijiTleGtnvsbDtECr8ZmFzr1-Dn9qQWdf6Ska7OFS8Th_TG0LcYXZKSuLQoqBr3vOFdbaNDY7Hm132zwYMh2DaWFoDCorYE7W4u7C9K6EsFIPqr-s">
+                        </div>
+                    </div>
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <span class="bg-secondary-container text-on-background neobrutal-border px-4 py-1 font-label-sm text-label-sm font-black w-fit">$49.00</span>
+                        <h3 class="font-headline-md text-headline-md text-primary-container uppercase">Linear Flux UI Kit</h3>
+                        <p class="text-on-surface-variant text-body-md">A comprehensive design system for developers who value structural honesty and high-contrast precision.</p>
+                    </div>
+                </div>
+
+                <!-- Large Item 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+                    <div class="md:col-span-4 md:order-1 order-2 flex flex-col gap-4">
+                        <span class="bg-secondary-container text-on-background neobrutal-border px-4 py-1 font-label-sm text-label-sm font-black w-fit">$24.00</span>
+                        <h3 class="font-headline-md text-headline-md text-primary-container uppercase">Mono Terminal Theme</h3>
+                        <p class="text-on-surface-variant text-body-md">Optimal legibility for long coding sessions. Minimalist, focused, and unyielding.</p>
+                    </div>
+                    <div class="md:col-span-8 md:order-2 order-1">
+                        <div class="relative bg-surface-container neobrutal-border neobrutal-shadow overflow-hidden">
+                            <img class="w-full aspect-video object-cover" data-alt="Developer workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaCmDhEYgLXqOnk-8ZYr-TUbPVvsmRraf83Sp9f_BANHvLicG5g45aBV5wj2WRWThjgd5ecBiSoU4e5eoxvC4Jd6BNOtp-3ygcJfpzesopGXhO0epGfCINyNvZcsKr_ElapSub9PXbMOynYbMkXCQaMIwA0WSwZaSlNhBhR8lJnCoap_eOux3T_S80UHKLpt82vzT8EIjtff7utATlm_Ldcv_kkEycJ9zvIurHxjy2kyBWlyzbPA5IuE6slPaN8nbqHYk-fqvGuGs">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid of smaller items -->
+                <!-- Grid Break Wallpapers -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-8">
+<div class="relative bg-surface-container neobrutal-border neobrutal-shadow overflow-hidden">
+<img class="w-full aspect-video object-cover" data-alt="Abstract artwork" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChLOVLqiwSOR9UFDITW_4MPrIGwuNNRihw-D2Wibr1EiCIfOXpYHlaEfGZVLB9KSbYpU80JTw0_SqfMGHrHoTZG8rId8wxs-oqLuFtNKfvk8Ze2KReHQSXvZAtHWIrL8w6fakRSiDW_ZI9lgr6KoBFYTEQvAizXRLyPctcREQnxp9oSd5Hx2A98aso0mVUGnWdhx9CQEyh7JAr3DFNAZ9mLZaelk5Vw6o7j7htZISGPwHCN8_xGKaGyjAEk14y5fkTIhGxh4KZ480">
+</div>
+</div>
+<div class="md:col-span-4 flex flex-col gap-4">
+<span class="bg-secondary-container text-on-background neobrutal-border px-4 py-1 font-label-sm text-label-sm font-black w-fit">$15.00</span>
+<h3 class="font-headline-md text-headline-md text-primary-container uppercase">Grid Break Wallpapers</h3>
+<p class="text-on-surface-variant text-body-md">High-resolution desktop assets that challenge the standard 12-column constraint.</p>
+</div>
+</div>
+<!-- Process Artifacts Vol. 1 -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-4 md:order-1 order-2 flex flex-col gap-4">
+<span class="bg-secondary-container text-on-background neobrutal-border px-4 py-1 font-label-sm text-label-sm font-black w-fit">$35.00</span>
+<h3 class="font-headline-md text-headline-md text-primary-container uppercase">Process Artifacts Vol. 1</h3>
+<p class="text-on-surface-variant text-body-md">A 200-page digital publication detailing internal workflows.</p>
+</div>
+<div class="md:col-span-8 md:order-2 order-1">
+<div class="relative bg-surface-container neobrutal-border neobrutal-shadow overflow-hidden">
+<img class="w-full aspect-video object-cover" data-alt="Editorial layout" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW91zh4DTx0uA_HFSWhPt6x_xrtb_tKyhhjgifj6xgXM8shQrCgx-OtJMxeHMx4N2BiaTVJPq3qrNPdI21Sm8SIu4qBqi48NHc2E0zVjCKcBBb9IYSTr3_Gnm7cp801TNz8t_G_2V_60CGKlQ3mBy1AK3recu2-UTn3AKgioX4TEHJP7Eqpg3dYzU90h65PHHhricdAbSQqhbOVHMsKbqQJj_iZQf8LCa62WiymVKfur-t-_L88CMHnA5mabjbeYyPh-dBBtxLVnA">
+</div>
+</div>
+</div>
+            </div>
+        </section>
+
+        <!-- Latest from Display: Streamlined List -->
+        <section class="py-24 px-6 md:px-12 bg-background">
+            <div class="flex items-center gap-4 mb-20">
+                <h2 class="font-headline-lg text-headline-lg text-on-background uppercase shrink-0">Latest / Display</h2>
+                <div class="h-1 bg-on-background w-full"></div>
+            </div>
+            
+            <div class="flex flex-col gap-16">
+                <!-- Journal Entry 1: Streamlined -->
+                <article class="grid grid-cols-1 md:grid-cols-12 gap-12 group items-center">
+                    <div class="md:col-span-5">
+                        <div class="neobrutal-border neobrutal-shadow overflow-hidden aspect-[4/3]">
+                            <img class="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Brutalist concrete building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCatxF7xsKiXUYwrg6LHICMhbH3U4jhbdb8pnArFY6UZn6BLUdKbZi_f4fBe-l9cObp-sl2459-XJ9T-J6XmGKLuplyN8IUeSipU21CaJ3KABRuJF416lCCsk5DdFCdONAIDZsqVK82RmiVV24Wm_bjR9HQ0OZPsjnxo4KRCYvBM5TLspNmNNzKkf_nQSSek00ZSZruMoXA5XR0x3YhrbQeiXkPR5HhaCkzpZJtoul_rJIf2szXVPvt_CrRylpmTu8GcJhMUeKXSSc">
+                        </div>
+                    </div>
+                    <div class="md:col-span-7 flex flex-col gap-4">
+                        <div class="flex items-center gap-4">
+                            <span class="bg-primary-container text-on-primary px-3 py-1 font-label-sm text-label-sm uppercase">Journal</span>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant">OCT 24, 2023</span>
+                        </div>
+                        <h3 class="font-headline-lg text-headline-lg text-primary-container uppercase group-hover:underline underline-offset-8 decoration-4">The Honesty of Raw Concrete</h3>
+                        <p class="text-on-surface-variant font-body-lg">How architectural brutalism informs modern digital interface logic through hierarchy and material truth.</p>
+                        <a class="mt-4 flex items-center gap-3 font-label-sm text-label-sm font-black uppercase text-primary text-xl" href="#">
+                            Read Entry <span class="material-symbols-outlined text-[24px]">arrow_forward</span>
+                        </a>
+                    </div>
+                </article>
+
+                <div class="h-px bg-on-background opacity-20"></div>
+
+                <!-- Journal Entry 2: Streamlined -->
+                <article class="grid grid-cols-1 md:grid-cols-12 gap-12 group items-center">
+                    <div class="md:col-span-5 md:order-2">
+                        <div class="neobrutal-border neobrutal-shadow overflow-hidden aspect-[4/3]">
+                            <img class="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Vintage typography and circuit diagrams" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDioUps-YiwQz1RBocP0V4Qzf6DijGxx-5Q7RRviDI8qP61B_kQxXxVH8YFiNsmiI7mYJGaX7lSvoNJElc3LJUfC_brJRI70Ge5HQV3OUbR101WLvZY5XoqsZSZSe6g5uCNZwofGk6wbO1PtlIb3itlDWgZtVXTEUJscdkHKdJuL5Nk8bqvR-vqRtiwEGJRCBvyGeqtVeicBPalOTZQgasqXuVuW1b_hHrVys4gtZdQflTu4fd4jzVHmTuYqgS31GK0fe7aMm8L1zU">
+                        </div>
+                    </div>
+                    <div class="md:col-span-7 md:order-1 flex flex-col gap-4">
+                        <div class="flex items-center gap-4">
+                            <span class="bg-primary-container text-on-primary px-3 py-1 font-label-sm text-label-sm uppercase">Journal</span>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant">SEP 12, 2023</span>
+                        </div>
+                        <h3 class="font-headline-lg text-headline-lg text-primary-container uppercase group-hover:underline underline-offset-8 decoration-4">Coding with Intentional Flaws</h3>
+                        <p class="text-on-surface-variant font-body-lg">Embracing the glitch and the irregular to create digital spaces that feel human and crafted.</p>
+                        <a class="mt-4 flex items-center gap-3 font-label-sm text-label-sm font-black uppercase text-primary text-xl" href="#">
+                            Read Entry <span class="material-symbols-outlined text-[24px]">arrow_forward</span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-on-background text-background">
+        <div class="max-w-container-max mx-auto px-6 md:px-12 py-24">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
+                <div class="flex flex-col gap-8">
+                    <div class="font-headline-xl text-headline-xl font-black uppercase">
+                        ENPII<br>STUDIO
+                    </div>
+                    <p class="text-surface-container font-body-lg max-w-md">
+                        Merging programming precision with intentional design craft. Built for those who appreciate the raw edges of digital creation.
+                    </p>
+                    <div class="flex gap-6">
+                        <span class="w-8 h-8 bg-primary-container neobrutal-border border-background"></span>
+                        <span class="w-8 h-8 bg-secondary-container neobrutal-border border-background"></span>
+                        <span class="w-8 h-8 bg-background neobrutal-border border-background"></span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col gap-12">
+                    <div class="bg-background text-on-background neobrutal-border neobrutal-shadow p-8">
+                        <p class="font-label-sm text-label-sm font-black mb-4">SUBSCRIBE TO DISPATCH</p>
+                        <div class="flex border-4 border-on-background">
+                            <input class="bg-background px-4 py-4 w-full font-label-sm text-label-sm focus:ring-0 focus:outline-none border-none" placeholder="email@example.com" type="email">
+                            <button class="bg-on-background text-background px-6 py-4 border-l-4 border-on-background hover:bg-primary-container transition-colors">
+                                <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="flex flex-col gap-4">
+                            <h4 class="font-label-sm text-label-sm font-black uppercase mb-2">Connect</h4>
+                            <a class="text-surface-container font-medium hover:text-secondary-container transition-all" href="#">Contact</a>
+                            <a class="text-surface-container font-medium hover:text-secondary-container transition-all" href="#">Instagram</a>
+                            <a class="text-surface-container font-medium hover:text-secondary-container transition-all" href="#">Are.na</a>
+                            <a class="text-surface-container font-medium hover:text-secondary-container transition-all" href="#">Twitter</a>
+                        </div></div></div></div></div></footer></body></html>

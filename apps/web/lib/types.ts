@@ -68,6 +68,68 @@ export interface ApiError {
   errors?: Record<string, string[]>;
 }
 
+// ───── Admin: Site Settings, Maintenance, Activity ─────
+
+export interface SiteIdentity {
+  studio_name: string | null;
+  tagline: string | null;
+  logo_url: string | null;
+}
+
+export interface SocialLink {
+  label: string;
+  url: string;
+}
+
+export type SiteSocial = SocialLink[];
+
+export interface SiteFooter {
+  text: string | null;
+}
+
+export interface SitePayment {
+  tripay_merchant: string | null;
+  tripay_api_key_masked: string | null;
+  tripay_private_key_masked: string | null;
+  tripay_mode: 'sandbox' | 'production';
+}
+
+export interface SiteChannels {
+  qris: boolean;
+  va: boolean;
+  ewallet: boolean;
+  convenience_store: boolean;
+}
+
+export interface SiteMaintenanceConfig {
+  message: string | null;
+}
+
+export interface SiteSettings {
+  identity: SiteIdentity;
+  social: SiteSocial;
+  footer: SiteFooter;
+  payment: SitePayment;
+  channels: SiteChannels;
+  maintenance: SiteMaintenanceConfig;
+}
+
+export interface MaintenanceStatus {
+  enabled: boolean;
+  message: string | null;
+}
+
+export interface ActivityLog {
+  id: number;
+  action: 'created' | 'updated' | 'deleted' | 'status_changed' | 'maintenance_toggled';
+  subject_type: string;
+  subject_id: number | null;
+  subject_label: string | null;
+  changes: Record<string, unknown> | null;
+  actor: string;
+  created_at: string | null;
+}
+
 // ───── Cart ─────
 
 export interface CartItem {
@@ -183,4 +245,31 @@ export const LICENSE_STATUS_LABEL: Record<LicenseStatus, string> = {
   digunakan: 'Digunakan',
   kadaluarsa: 'Kadaluarsa',
   dicabut: 'Dicabut',
+};
+
+// ───── Blog post (Catatan) ─────
+
+export type PostStatus = 'draft' | 'published' | 'archived';
+
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  /** HTML dari Tiptap editor. Disertakan admin-only via flag, publik dapat via `post(slug)`. */
+  content?: string;
+  thumbnail: string | null;
+  status: PostStatus;
+  published_at: string | null;
+  /** Estimasi baca, dihitung di backend. Default 1. */
+  reading_time_minutes?: number;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+/** Status label Indonesia untuk Post. */
+export const POST_STATUS_LABEL: Record<PostStatus, string> = {
+  draft: 'Draft',
+  published: 'Published',
+  archived: 'Diarsipkan',
 };

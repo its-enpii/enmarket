@@ -22,15 +22,17 @@ class NextRevalidator
     /**
      * Revalidate halaman yang terpengaruh perubahan satu produk:
      *   - /                   (home — featured & latest grid)
-     *   - /katalog            (catalog list)
-     *   - /produk/{slug}      (detail page produk tsb)
+     *   - /katalog            (legacy catalog list)
+     *   - /develop            (new curated catalog list)
+     *   - /develop/{slug}     (case study detail page)
      */
     public function revalidateProduct(string $slug): void
     {
         $this->call([
             '/',
             '/katalog',
-            "/produk/{$slug}",
+            '/develop',
+            "/develop/{$slug}",
         ]);
     }
 
@@ -52,6 +54,21 @@ class NextRevalidator
     public function revalidateHome(): void
     {
         $this->call(['/', '/katalog']);
+    }
+
+    /**
+     * Revalidate halaman yang terpengaruh perubahan satu blog post:
+     *   - /           (home — Discover section fetch post terbaru)
+     *   - /display    (list post)
+     *   - /display/{slug} (detail post tsb)
+     */
+    public function revalidatePost(string $slug): void
+    {
+        $this->call([
+            '/',
+            '/display',
+            "/display/{$slug}",
+        ]);
     }
 
     /**

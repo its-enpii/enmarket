@@ -45,9 +45,16 @@ function snapshot(): Toast[] {
   return lastSnapshot;
 }
 
+// Module-level constant untuk server snapshot — harus reference stabil
+// agar useSyncExternalStore tidak mendeteksi perubahan tiap render.
+// Kalau return array literal `[]` tiap call, React akan loop.
+// Di-freeze supaya tidak dimutasi tidak sengaja (cast balik ke mutable
+// supaya tetap kompatibel dengan tipe Toast[] di component).
+const EMPTY_TOASTS: Toast[] = Object.freeze([]) as unknown as Toast[];
+
 export const toastStore = {
   getSnapshot: snapshot,
-  getServerSnapshot: (): Toast[] => [],
+  getServerSnapshot: (): Toast[] => EMPTY_TOASTS,
   subscribe(cb: () => void): () => void {
     subscribers.add(cb);
     return () => subscribers.delete(cb);

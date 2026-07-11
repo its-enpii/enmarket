@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Card } from '@/components/ui/neobrutal';
 
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
@@ -15,9 +15,11 @@ export function ProductCard({ product }: Props) {
   const kategoriNama = product.category?.nama ?? 'Tanpa kategori';
 
   return (
-    <Link
-      href={`/produk/${product.slug}`}
-      className="group block bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0_0_var(--color-ink)] transition-all"
+    <Card
+      href={`/develop/${product.slug}`}
+      variant="surface"
+      hoverable
+      className="overflow-hidden"
     >
       <div className="aspect-video bg-primary/10 border-b-2 border-ink overflow-hidden relative">
         {thumb ? (
@@ -56,6 +58,6 @@ export function ProductCard({ product }: Props) {
           {formatRupiah(product.harga)}
         </p>
       </div>
-    </Link>
+    </Card>
   );
 }

@@ -1,19 +1,20 @@
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
+import { Button } from '@/components/ui/neobrutal';
 import type { PaginationMeta } from '@/lib/types';
 
 interface Props {
   meta: PaginationMeta;
-  basePath: string; // mis. "/katalog"
-  /** Search params existing (selain page) — untuk preserve filter */
+  basePath: string;
   searchParams: Record<string, string | undefined>;
 }
 
 /**
- * Pagination — link prev/next + nomor halaman. Pakai query string page=N.
+ * Pagination — server component, translated.
  */
-export function Pagination({ meta, basePath, searchParams }: Props) {
+export async function Pagination({ meta, basePath, searchParams }: Props) {
   if (meta.last_page <= 1) return null;
+  const t = await getTranslations('common.pagination');
 
   function buildHref(page: number): string {
     const sp = new URLSearchParams();
@@ -32,50 +33,48 @@ export function Pagination({ meta, basePath, searchParams }: Props) {
 
   return (
     <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
-      <Link
+      <Button
+        size="sm"
+        variant="surface"
         href={buildHref(Math.max(1, meta.current_page - 1))}
         aria-disabled={isPrevDisabled}
-        className={
-          'border-2 border-ink px-3 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] transition-all ' +
-          (isPrevDisabled
-            ? 'bg-surface text-ink/40 pointer-events-none'
-            : 'bg-surface text-ink hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--color-ink)]')
-        }
+        className={`text-sm ${isPrevDisabled ? 'opacity-40 pointer-events-none' : ''}`}
       >
-        ← Prev
-      </Link>
+        {t('prev')}
+      </Button>
 
       {pages.map((p) => {
         const isActive = p === meta.current_page;
-        return (
-          <Link
+        return isActive ? (
+          <span
             key={p}
-            href={buildHref(p)}
-            aria-current={isActive ? 'page' : undefined}
-            className={
-              'border-2 border-ink px-3 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] transition-all ' +
-              (isActive
-                ? 'bg-primary text-surface pointer-events-none'
-                : 'bg-surface text-ink hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--color-ink)]')
-            }
+            aria-current="page"
+            className="border-2 border-ink px-3 py-1.5 text-sm font-bold bg-primary text-surface cursor-default min-h-[40px] inline-flex items-center"
           >
             {p}
-          </Link>
+          </span>
+        ) : (
+          <Button
+            key={p}
+            size="sm"
+            variant="surface"
+            href={buildHref(p)}
+            className="text-sm"
+          >
+            {p}
+          </Button>
         );
       })}
 
-      <Link
+      <Button
+        size="sm"
+        variant="surface"
         href={buildHref(Math.min(meta.last_page, meta.current_page + 1))}
         aria-disabled={isNextDisabled}
-        className={
-          'border-2 border-ink px-3 py-2 text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)] transition-all ' +
-          (isNextDisabled
-            ? 'bg-surface text-ink/40 pointer-events-none'
-            : 'bg-surface text-ink hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--color-ink)]')
-        }
+        className={`text-sm ${isNextDisabled ? 'opacity-40 pointer-events-none' : ''}`}
       >
-        Next →
-      </Link>
+        {t('next')}
+      </Button>
     </nav>
   );
 }

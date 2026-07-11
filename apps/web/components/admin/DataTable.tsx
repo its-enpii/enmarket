@@ -10,15 +10,27 @@ export interface Column<T> {
 interface Props<T> {
   columns: Column<T>[];
   rows: T[];
+  /** Plain text fallback saat rows kosong (backward compat). */
   emptyMessage?: string;
+  /**
+   * Ilustratif empty state — komponen kompleks dengan action button, dll.
+   * Prioritas lebih tinggi dari `emptyMessage`. Pakai `EmptyState` dari
+   * `@/components/admin/EmptyState` untuk konsistensi visual.
+   */
+  emptyState?: ReactNode;
   rowKey: (row: T) => string | number;
 }
 
-export function DataTable<T>({ columns, rows, emptyMessage = 'Tidak ada data.', rowKey }: Props<T>) {
+export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }: Props<T>) {
   if (rows.length === 0) {
+    if (emptyState) {
+      return <>{emptyState}</>;
+    }
     return (
       <div className="bg-surface border-2 border-ink px-6 py-12 text-center shadow-[4px_4px_0_0_var(--color-ink)]">
-        <p className="text-ink/60 font-medium">{emptyMessage}</p>
+        <p className="text-ink/60 font-medium">
+          {emptyMessage ?? 'Tidak ada data.'}
+        </p>
       </div>
     );
   }

@@ -24,13 +24,18 @@ interface Props {
     paramTo?: string;
   };
   debounceMs?: number;
+  /** Heading oversized di atas filter bar (oversized pattern sama seperti
+   *  public page headers — `font-display text-3xl md:text-4xl font-black uppercase`).
+   *  Pakai untuk "statement" halaman list, konsisten dengan public page headers. */
+  heading?: ReactNode;
+  /** Sub-heading 1-line italic ink/60 — penjelasan singkat di bawah heading. */
+  subheading?: string;
 }
 
 /**
  * Standar header untuk halaman list admin.
- * Layout: 1 kotak shadow berisi search + filters + primary action (tombol +),
- * disusun 1 baris horizontal. Opsi secondary di bawah untuk form tambahan
- * (date range, insert form, dll).
+ * Layout: optional heading + subheading, lalu 1 kotak shadow berisi search +
+ * filters + primary action. Opsi secondary di bawah untuk form tambahan.
  *
  * Untuk halaman tanpa search/filter, tetap pakai component ini dengan
  * filters=[] dan action saja — konsistensi visual antar halaman terjaga.
@@ -46,9 +51,25 @@ export function AdminTableHeader({
   secondary,
   dateRange,
   debounceMs,
+  heading,
+  subheading,
 }: Props) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      {(heading || subheading) && (
+        <div>
+          {heading && (
+            <h2 className="font-display text-3xl md:text-4xl font-black uppercase leading-[0.95] tracking-tight text-ink">
+              {heading}
+            </h2>
+          )}
+          {subheading && (
+            <p className="mt-2 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
+              {subheading}
+            </p>
+          )}
+        </div>
+      )}
       <LiveFilterBar
         q={q}
         sort={sort}
@@ -60,7 +81,7 @@ export function AdminTableHeader({
         action={action}
         dateRange={dateRange}
       />
-      {secondary}
+      {secondary && <div className="mt-4">{secondary}</div>}
     </div>
   );
 }

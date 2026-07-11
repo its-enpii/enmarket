@@ -7,7 +7,7 @@
  * - Throw pada error agar Server Component bisa fallback ke notFound().
  */
 
-import type { Category, PaginatedResponse, Product } from './types';
+import type { Category, PaginatedResponse, Post, Product } from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api:8000';
 const REVALIDATE_SECONDS = 3600;
@@ -63,12 +63,19 @@ export const publicApi = {
     publicFetch<{ data: Product[] }>('/api/public/products/latest'),
 
   /** Katalog publik dengan filter + pagination. */
-  catalog: (params: { category?: string; q?: string; tipe?: 'download' | 'license' | 'bundle'; page?: number }) =>
+  catalog: (params: {
+    category?: string;
+    q?: string;
+    tipe?: 'download' | 'license' | 'bundle';
+    page?: number;
+    per_page?: number;
+  }) =>
     publicFetch<PaginatedResponse<Product>>('/api/public/products', {
       category: params.category,
       q: params.q,
       tipe: params.tipe,
       page: params.page,
+      per_page: params.per_page,
     }),
 
   /** Homepage: produk berdasarkan tipe (download = source code, license/bundle = karya jadi). */
@@ -94,6 +101,28 @@ export const publicApi = {
   /** Untuk sitemap: list slug semua kategori aktif. */
   categorySlugs: () =>
     publicFetch<{ data: string[] }>('/api/public/categories/slugs'),
+
+  // ───── Blog post (Catatan) ─────
+
+  /** List post published, paginated. Untuk /display. */
+  posts: (params?: { q?: string; page?: number; per_page?: number }) =>
+    publicFetch<PaginatedResponse<Post>>('/api/public/posts', {
+      q: params?.q,
+      page: params?.page,
+      per_page: params?.per_page,
+    }),
+
+  /** Post published terbaru, tanpa pagination. Untuk homepage Discover. */
+  latestPosts: (limit = 3) =>
+    publicFetch<{ data: Post[] }>('/api/public/posts/latest', { limit }),
+
+  /** Detail post by slug. 404 → throw PublicFetchError. */
+  post: (slug: string) =>
+    publicFetch<{ data: Post }>(`/api/public/posts/${slug}`),
+
+  /** Untuk sitemap: list slug semua post published. */
+  postSlugs: () =>
+    publicFetch<{ data: string[] }>('/api/public/posts/slugs'),
 };
 
 export { PublicFetchError };

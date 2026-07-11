@@ -1,14 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+
+import { Button } from '@/components/ui/neobrutal';
+import { NLink } from '@/components/ui/neobrutal';
 
 const NAV = [
   { href: '/admin', label: 'Beranda', icon: '◆' },
-  { href: '/admin/products', label: 'Produk', icon: '▤' },
   { href: '/admin/categories', label: 'Kategori', icon: '◧' },
+  { href: '/admin/products', label: 'Produk', icon: '▤' },
+  { href: '/admin/posts', label: 'Catatan', icon: '✎' },
   { href: '/admin/orders', label: 'Pesanan', icon: '◊' },
   { href: '/admin/license-keys', label: 'Lisensi', icon: '⚷' },
+  { href: '/admin/media', label: 'Media', icon: '◰' },
+  { href: '/admin/settings', label: 'Settings', icon: '⚙' },
 ];
 
 interface Props {
@@ -36,8 +41,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
 
       {/* Sidebar — fixed position.
           - mobile: drawer overlay (translate-x animate)
-          - lg+:    fixed left, tetap di tempat saat main scroll (mencegah
-                    sidebar ikut scroll, terutama long page tabel) */}
+          - lg+:    fixed left, tetap di tempat saat main scroll. */}
       <aside
         className={
           'fixed inset-y-0 left-0 z-50 w-64 bg-primary border-r-4 border-ink ' +
@@ -55,17 +59,21 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             </p>
           </Link>
           {/* Close button (mobile only) */}
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
+            flat
             onClick={onClose}
-            aria-label="Close menu"
-            className="lg:hidden text-surface text-2xl w-11 h-11 inline-flex items-center justify-center border-2 border-surface"
+            className="lg:hidden !w-11 !h-11 !px-0 !py-0 !text-2xl !border-surface !text-surface"
+            srLabel="Close menu"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
+        <nav className="flex-1 p-3">
+          <ul className="flex flex-col gap-1">
           {NAV.map((item) => {
             const active =
               item.href === '/admin'
@@ -73,31 +81,37 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
                 : currentPath.startsWith(item.href);
 
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className={
-                  'flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all min-h-[44px] ' +
-                  (active
-                    ? 'bg-accent text-ink border-ink shadow-[4px_4px_0_0_var(--color-ink)] translate-x-[-1px] translate-y-[-1px]'
-                    : 'bg-transparent text-surface border-transparent hover:border-ink hover:bg-accent hover:text-ink')
-                }
-              >
-                <span className="text-lg">{item.icon}</span>
-                {item.label}
-              </Link>
+              <li key={item.href}>
+                <NLink
+                  href={item.href}
+                  variant="default"
+                  underline="none"
+                  onClick={onClose}
+                  className={
+                    'flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all min-h-[44px] w-full ' +
+                    (active
+                      ? 'bg-accent text-ink border-ink shadow-[4px_4px_0_0_var(--color-ink)] translate-x-[-1px] translate-y-[-1px]'
+                      : 'bg-transparent text-surface border-transparent hover:border-ink hover:bg-accent hover:text-ink')
+                  }
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  {item.label}
+                </NLink>
+              </li>
             );
           })}
+          </ul>
         </nav>
 
         <div className="p-4 border-t-2 border-ink">
-          <Link
+          <NLink
             href="/"
-            className="block text-xs font-bold uppercase tracking-wide text-surface/70 hover:text-accent min-h-[44px] inline-flex items-center"
+            variant="on-dark"
+            underline="none"
+            className="text-xs font-bold uppercase tracking-wide min-h-[44px] inline-flex items-center"
           >
             ← Lihat Toko
-          </Link>
+          </NLink>
         </div>
       </aside>
     </>
@@ -109,13 +123,15 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
  */
 export function SidebarToggle({ onClick }: { onClick: () => void }) {
   return (
-    <button
+    <Button
+      variant="surface"
+      size="sm"
       type="button"
       onClick={onClick}
       aria-label="Open menu"
-      className="lg:hidden border-2 border-ink bg-surface text-ink w-11 h-11 flex items-center justify-center font-bold shadow-[3px_3px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all mr-2"
+      className="lg:hidden w-11 h-11 px-0 py-0 mr-2"
     >
       ☰
-    </button>
+    </Button>
   );
 }
