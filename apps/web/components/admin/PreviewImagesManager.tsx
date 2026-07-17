@@ -14,6 +14,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { BUTTON_LABEL_CLS } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+  const t = useTranslations('admin.shared');
   const router = useRouter();
   const [images, setImages] = useState(initial);
   const [pending, startTransition] = useTransition();
@@ -38,14 +40,12 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
       const data = event.data as { type?: string; url?: string } | null;
       if (data?.type === 'media-pick' && typeof data.url === 'string') {
         // Backend belum support attach-by-URL — kasih feedback visual dulu.
-        toast.info(
-          `Dipilih: ${data.url.slice(0, 60)}… — backend attach-by-URL coming soon. Untuk sekarang upload manual.`,
-        );
+        toast.info(t('imagePicked', { url: data.url.slice(0, 60) }));
       }
     }
     window.addEventListener('message', listener);
     return () => window.removeEventListener('message', listener);
-  }, []);
+  }, [t]);
 
   function openLibrary() {
     window.open('/admin/media?pick=1', 'media-picker', 'width=900,height=700');
@@ -75,16 +75,16 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
         setImages(data.data.preview_images);
         router.refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Gagal upload');
+        setError(err instanceof Error ? err.message : t('uploadError'));
       }
     });
   }
 
   async function removeImage(index: number) {
     const ok = await confirmDialog({
-      title: 'Hapus Preview Image',
-      message: 'Hapus preview image ini?',
-      confirmLabel: 'Hapus',
+      title: t('pickerConfirmTitle'),
+      message: t('pickerConfirmMessage'),
+      confirmLabel: t('pickerConfirmAction'),
       danger: true,
     });
     if (!ok) return;
@@ -105,9 +105,9 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
         const data = await res.json();
         setImages(data.data.preview_images);
         router.refresh();
-        toast.success('Image dihapus.');
+        toast.success(t('imageDeleted'));
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Gagal hapus');
+        toast.error(err instanceof Error ? err.message : t('deleteError'));
       }
     });
   }
@@ -120,7 +120,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={url}
-              alt={`Preview ${i + 1}`}
+              alt={t('previewAlt', { n: i + 1 })}
               className="h-24 w-24 object-cover"
             />
             <button
@@ -128,7 +128,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
               onClick={() => removeImage(i)}
               disabled={pending}
               className="absolute -top-2 -right-2 h-6 w-6 bg-accent border-2 border-ink text-xs font-bold shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-primary hover:text-surface disabled:opacity-50"
-              aria-label="Hapus"
+              aria-label={t('previewRemoveAria')}
             >
               ×
             </button>
@@ -139,7 +139,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
       {images.length < 5 && (
         <div className="flex flex-wrap gap-2">
           <label className={BUTTON_LABEL_CLS + ' inline-flex items-center gap-2 bg-surface px-3 py-2 text-sm'}>
-            + Upload Baru
+            {t('addImage')}
             <input
               type="file"
               accept="image/*"
@@ -154,13 +154,13 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
             disabled={pending}
             className={BUTTON_LABEL_CLS + ' inline-flex items-center gap-2 bg-accent px-3 py-2 text-sm'}
           >
-            ◰ Pakai dari Library
+            {t('pickerUseLibrary')}
           </button>
         </div>
       )}
 
       {pending && (
-        <p className="text-xs text-ink/60">Memproses…</p>
+        <p className="text-xs text-ink/60">{t('processing')}</p>
       )}
       {error && (
         <p className="text-xs font-bold text-primary">{error}</p>

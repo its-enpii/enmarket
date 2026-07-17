@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
@@ -65,11 +66,13 @@ export function LiveFilterBar({
   dir,
   filters = [],
   passthrough = {},
-  placeholder = 'Cari…',
+  placeholder: placeholderProp,
   debounceMs = 300,
   action,
   dateRange,
 }: Props) {
+  const t = useTranslations('admin.shared');
+  const placeholder = placeholderProp ?? t('searchPlaceholderDefault');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -112,12 +115,12 @@ export function LiveFilterBar({
 
   return (
     <div className="bg-surface border-2 border-ink p-3 shadow-[3px_3px_0_0_var(--color-ink)]">
-      <div className="flex flex-wrap gap-3 items-end">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         {/* Live search */}
-        <div className="flex-1 min-w-[200px]">
+        <div className="w-full sm:flex-1 sm:min-w-[200px]">
           <label htmlFor="live-search" className="block text-xs font-bold uppercase tracking-wide mb-1">
-            Cari
-            {pending && <span className="ml-2 text-primary normal-case font-normal">⟳ memuat…</span>}
+            {t('search')}
+            {pending && <span className="ml-2 text-primary normal-case font-normal">{t('searchPending')}</span>}
           </label>
           <Input
             id="live-search"
@@ -134,7 +137,7 @@ export function LiveFilterBar({
           const current = searchParams.get(f.key) ?? '';
           const placeholder = f.options.find((o) => o.value === current)?.label ?? f.label;
           return (
-            <div key={f.key} className="w-44">
+            <div key={f.key} className="w-full sm:w-44">
               <SelectSearch
                 name={f.key}
                 label={f.label}
@@ -151,22 +154,22 @@ export function LiveFilterBar({
         {/* Date range — pakai router.replace via pushFilter biar soft navigation
             (tidak full reload, sama seperti search & filter lain). */}
         {dateRange && (
-          <div className="flex gap-2 items-end">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
             <DatePicker
-              label="Dari"
+              label={t('dateFrom')}
               name={dateRange.paramFrom ?? 'date_from'}
               defaultValue={dateRange.from ?? ''}
-              placeholder="Dari"
-              className="w-48"
+              placeholder={t('dateFrom')}
+              className="w-full sm:w-48"
               onChange={(v) => pushFilter(dateRange.paramFrom ?? 'date_from', v)}
             />
             <DatePicker
-              label="Sampai"
+              label={t('dateTo')}
               name={dateRange.paramTo ?? 'date_to'}
               defaultValue={dateRange.to ?? ''}
-              placeholder="Sampai"
+              placeholder={t('dateTo')}
               align="right"
-              className="w-48"
+              className="w-full sm:w-48"
               onChange={(v) => pushFilter(dateRange.paramTo ?? 'date_to', v)}
             />
           </div>
@@ -179,9 +182,9 @@ export function LiveFilterBar({
           href={pathname}
           variant="ghost"
           size="md"
-          className="hover:bg-accent"
+          className="w-full sm:w-auto hover:bg-accent"
         >
-          Reset
+          {t('reset')}
         </Button>
 
         {/* Primary action — di dalam kotak, di akhir baris */}
@@ -203,6 +206,7 @@ interface HeaderProps {
 }
 
 export function SortableHeader({ field, currentSort, currentDir, children }: HeaderProps) {
+  const t = useTranslations('admin.shared');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -232,7 +236,7 @@ export function SortableHeader({ field, currentSort, currentDir, children }: Hea
         (pending ? 'cursor-wait opacity-50 ' : 'cursor-pointer ') +
         (active ? 'text-accent' : 'text-surface hover:text-accent')
       }
-      aria-label={`Sort by ${field}`}
+      aria-label={t('sortBy', { field })}
     >
       {children}
       {active && (

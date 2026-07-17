@@ -15,11 +15,12 @@
  */
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 
 interface Props {
-  /** Label tombol. Default: "Pilih dari Library". */
+  /** Label tombol. Default dari i18n `admin.shared.pickerButton`. */
   label?: string;
   /** Variant button. Default: 'surface'. */
   variant?: 'surface' | 'primary' | 'accent';
@@ -33,11 +34,13 @@ interface Props {
 }
 
 export function MediaPicker({
-  label = 'Pilih dari Library',
+  label: labelProp,
   variant = 'surface',
   size = 'sm',
   onPick,
 }: Props) {
+  const t = useTranslations('admin.shared');
+  const label = labelProp ?? t('pickerButton');
   const handleClick = useCallback(() => {
     // Register handler di window supaya window picker bisa panggil.
     // Pakai symbol key biar tidak conflict dengan listener lain.

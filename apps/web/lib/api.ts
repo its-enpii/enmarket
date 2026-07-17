@@ -10,7 +10,17 @@
 import { cookies } from 'next/headers';
 import type { ApiError } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+/**
+ * Server-side base URL: pakai internal Docker hostname `api` ketika Next.js
+ * berjalan di dalam container `web`. Fallback ke host port 8030 untuk lokal
+ * di luar Docker (mis. `npm run dev` langsung di workstation).
+ */
+const API_URL =
+  process.env.API_INTERNAL_URL ||
+  (process.env.NEXT_PUBLIC_API_URL?.startsWith('http://api')
+    ? process.env.NEXT_PUBLIC_API_URL
+    : `http://api:8000`) ||
+  'http://localhost:8000';
 
 export class ApiRequestError extends Error {
   status: number;

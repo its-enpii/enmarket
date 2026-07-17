@@ -18,6 +18,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   name: string;
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
+  const t = useTranslations('admin.shared');
   const [html, setHtml] = useState(defaultValue);
 
   const editor = useEditor({
@@ -66,7 +68,7 @@ export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
   if (!editor) {
     return (
       <div className="bg-surface border-2 border-ink p-4 text-ink/60 text-sm">
-        Memuat editor…
+        {t('tiptapLoading')}
       </div>
     );
   }
@@ -87,6 +89,7 @@ export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
 }
 
 function Toolbar({ editor }: { editor: Editor }) {
+  const t = useTranslations('admin.shared');
   const Btn = ({
     onClick,
     active,
@@ -114,13 +117,13 @@ function Toolbar({ editor }: { editor: Editor }) {
   );
 
   function addLink() {
-    const url = window.prompt('URL:');
+    const url = window.prompt(t('tiptapPromptUrl'));
     if (!url) return;
     editor.chain().focus().setLink({ href: url }).run();
   }
 
   function addImage() {
-    const url = window.prompt('Image URL (v1: base64 atau URL eksternal):');
+    const url = window.prompt(t('tiptapPromptImage'));
     if (!url) return;
     editor.chain().focus().setImage({ src: url }).run();
   }
@@ -130,74 +133,74 @@ function Toolbar({ editor }: { editor: Editor }) {
       <Btn
         onClick={() => editor.chain().focus().toggleBold().run()}
         active={editor.isActive('bold')}
-        title="Bold (Ctrl+B)"
+        title={t('tiptapBold')}
       >
         <b>B</b>
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleItalic().run()}
         active={editor.isActive('italic')}
-        title="Italic (Ctrl+I)"
+        title={t('tiptapItalic')}
       >
         <i>I</i>
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         active={editor.isActive('heading', { level: 2 })}
-        title="Heading 2"
+        title={t('tiptapH2')}
       >
         H2
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         active={editor.isActive('heading', { level: 3 })}
-        title="Heading 3"
+        title={t('tiptapH3')}
       >
         H3
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         active={editor.isActive('bulletList')}
-        title="Bullet list"
+        title={t('tiptapBulletList')}
       >
         •
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         active={editor.isActive('orderedList')}
-        title="Numbered list"
+        title={t('tiptapOrderedList')}
       >
         1.
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         active={editor.isActive('blockquote')}
-        title="Quote"
+        title={t('tiptapQuote')}
       >
         &ldquo;
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         active={editor.isActive('codeBlock')}
-        title="Code block"
+        title={t('tiptapCode')}
       >
         {'</>'}
       </Btn>
-      <Btn onClick={addLink} active={editor.isActive('link')} title="Link">
+      <Btn onClick={addLink} active={editor.isActive('link')} title={t('tiptapLink')}>
         🔗
       </Btn>
-      <Btn onClick={addImage} title="Image">
+      <Btn onClick={addImage} title={t('tiptapImage')}>
         🖼
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().undo().run()}
-        title="Undo (Ctrl+Z)"
+        title={t('tiptapUndo')}
       >
         ↶
       </Btn>
       <Btn
         onClick={() => editor.chain().focus().redo().run()}
-        title="Redo"
+        title={t('tiptapRedo')}
       >
         ↷
       </Btn>

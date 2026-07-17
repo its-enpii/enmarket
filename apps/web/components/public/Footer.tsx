@@ -14,8 +14,8 @@ export async function Footer() {
   const tCommon = await getTranslations('common.site');
   return (
     <footer className="bg-ink text-surface">
-      <div className="px-6 md:px-12 py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
+      <div className="px-6 md:px-12 py-12 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
           {/* Left col: brand */}
           <div className="flex flex-col gap-8">
             <h3 className="font-display text-headline-xl font-black uppercase leading-none">
@@ -60,7 +60,7 @@ export async function Footer() {
                   name="email"
                   placeholder={t('emailPlaceholder')}
                   required
-                  className="bg-surface px-4 py-4 w-full font-label text-label-sm focus:ring-0 focus:outline-none border-none rounded-none"
+                  className="bg-surface px-4 py-4 w-full min-w-0 font-label text-label-sm focus:ring-0 focus:outline-none border-none rounded-none"
                 />
                 <button
                   type="submit"

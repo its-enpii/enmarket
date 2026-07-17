@@ -94,6 +94,11 @@ class ProductController extends Controller
             $data['file_url'] = $this->storage->upload($file, "products/{$filename}");
         }
 
+        // Guard: kalau tipe download/bundle dan tidak ada file_url, reject.
+        if (in_array($data['tipe'], ['download', 'bundle'], true) && empty($data['file_url'])) {
+            abort(422, 'File produk wajib di-upload untuk tipe download atau bundle.');
+        }
+
         // preview_images: array of URLs (biasanya dari upload terpisah, tapi
         // izinkan JSON string atau array)
         if (isset($data['preview_images']) && is_string($data['preview_images'])) {
@@ -144,6 +149,13 @@ class ProductController extends Controller
                 $this->storage->delete($product->file_url);
             }
             $data['file_url'] = null;
+        }
+
+        // Guard: kalau tipe download/bundle dan tidak ada file_url setelah update,
+        // reject — cegah bundle tanpa file lolos validasi.
+        $effectiveTipe = $data['tipe'] ?? $product->tipe;
+        if (in_array($effectiveTipe, ['download', 'bundle'], true) && empty($data['file_url']) && empty($product->file_url)) {
+            abort(422, 'File produk wajib di-upload untuk tipe download atau bundle.');
         }
 
         if (isset($data['preview_images']) && is_string($data['preview_images'])) {
@@ -214,8 +226,15 @@ class ProductController extends Controller
             'fitur' => ['nullable'],
             'status' => ['required', 'in:aktif,draft,tidak_dijual'],
             'is_featured' => ['nullable', 'boolean'],
-            'file' => ['nullable', 'file', 'max:512000'], // 500MB max
+            'file' => [
+                'nullable',
+                'file',
+                'max:512000', // 500MB max
+                'required_if:tipe,download,bundle', // tipe download/bundle wajib upload file
+            ],
             'remove_file' => ['nullable', 'boolean'],
+        ], [
+            'file.required_if' => 'File produk wajib di-upload untuk tipe download atau bundle.',
         ]);
     }
 }

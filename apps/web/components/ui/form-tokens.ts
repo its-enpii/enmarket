@@ -63,9 +63,11 @@ export const LABEL_INLINE_CLS =
 export const HINT_CLS = 'mt-1 text-xs text-ink/60';
 export const ERROR_CLS = 'mt-1 text-xs font-bold text-primary';
 
-/** Checkbox & radio — NeoBrutalism style (square, ink border, primary check) */
+/** Checkbox & radio — NeoBrutalism style (square, ink border, primary check).
+ *  Checkmark glyph di-inject via CSS rule di globals.css (class .neobrutal-checkbox)
+ *  — Tailwind/PostCSS salah parse url("data:…") di utility string sebagai path. */
 export const CHECKBOX_CLS =
-  'h-5 w-5 shrink-0 appearance-none border-2 border-ink bg-surface ' +
+  'neobrutal-checkbox h-5 w-5 shrink-0 appearance-none border-2 border-ink bg-surface ' +
   'checked:bg-primary checked:shadow-[2px_2px_0_0_var(--color-ink)] ' +
   'focus:outline-none focus:shadow-[3px_3px_0_0_var(--color-ink)] ' +
   'transition-all cursor-pointer disabled:opacity-50';

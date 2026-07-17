@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Button, Card } from '@/components/ui/neobrutal';
 import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
 
 interface Props {
@@ -32,29 +33,62 @@ export function PaymentPoller({
   const router = useRouter();
   const t = useTranslations('payment');
   const [status, setStatus] = useState<OrderStatus>(initialStatus);
-  const [now, setNow] = useState<number>(Date.now());
+  // `now` null saat SSR + initial client mount — countdown tidak dirender
+  // sampai useEffect set Date.now() pertama kali (mencegah hydration
+  // mismatch karena server-rendered ms akan beda dengan client time).
+  const [now, setNow] = useState<number | null>(null);
   const [copyOk, setCopyOk] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
   const tickRef = useRef<NodeJS.Timeout | null>(null);
 
   const expiredAt = initialQrExpiredAt ? new Date(initialQrExpiredAt).getTime() : null;
-  const remainingMs = expiredAt ? Math.max(0, expiredAt - now) : 0;
-  const isExpired = status === 'expired' || (expiredAt !== null && remainingMs <= 0);
+  const remainingMs = expiredAt && now !== null ? Math.max(0, expiredAt - now) : null;
+  const isExpired =
+    status === 'expired' || (expiredAt !== null && remainingMs !== null && remainingMs <= 0);
 
-  // Countdown tick
+  // Countdown tick — pause saat tab hidden (hemat baterai + bandwidth mobile).
+  // `now` null saat SSR + initial client mount (hydration-safe). useEffect set
+  // Date.now() segera setelah mount, lalu interval 1s tick. Pause saat tab hidden.
   useEffect(() => {
-    tickRef.current = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
+    setNow(Date.now());
+    function start() {
+      if (tickRef.current) return;
+      tickRef.current = setInterval(() => {
+        setNow(Date.now());
+      }, 1000);
+    }
+    function stop() {
+      if (tickRef.current) {
+        clearInterval(tickRef.current);
+        tickRef.current = null;
+      }
+    }
+    function onVisibility() {
+      if (document.visibilityState === 'visible') start();
+      else stop();
+    }
+    if (document.visibilityState === 'visible') start();
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      if (tickRef.current) clearInterval(tickRef.current);
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
-  // Polling
+  // Polling — pause saat tab hidden (hemat baterai + bandwidth mobile).
   useEffect(() => {
-    if (status === 'paid' || isExpired) {
+    if (status === 'paid') {
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+      // Auto-redirect ke halaman sukses. Kasih jeda 1.2s biar banner
+      // "Payment received—redirecting…" terbaca dulu sebelum navigasi.
+      const t = setTimeout(() => router.push(`/pesanan-sukses/${kodeOrder}`), 1200);
+      return () => clearTimeout(t);
+    }
+    if (isExpired) {
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
@@ -84,9 +118,25 @@ export function PaymentPoller({
       }
     }
 
-    pollRef.current = setInterval(poll, POLL_INTERVAL_MS);
+    function start() {
+      if (pollRef.current) return;
+      pollRef.current = setInterval(poll, POLL_INTERVAL_MS);
+    }
+    function stop() {
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    }
+    function onVisibility() {
+      if (document.visibilityState === 'visible') start();
+      else stop();
+    }
+    if (document.visibilityState === 'visible') start();
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [kodeOrder, status, isExpired, router]);
 
@@ -122,122 +172,130 @@ export function PaymentPoller({
     }
   }
 
-  // Format mm:ss untuk countdown
-  const minutes = Math.floor(remainingMs / 60000);
-  const seconds = Math.floor((remainingMs % 60000) / 1000);
-  const countdownText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  // Format mm:ss untuk countdown. Placeholder saat SSR/initial mount supaya
+  // tidak hydration-mismatch — `now` baru tersedia setelah useEffect.
+  const minutes = remainingMs !== null ? Math.floor(remainingMs / 60000) : 0;
+  const seconds = remainingMs !== null ? Math.floor((remainingMs % 60000) / 1000) : 0;
+  const countdownText =
+    remainingMs !== null
+      ? `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+      : '--:--';
 
   // Banner status
-  let banner: { color: string; text: string } | null = null;
+  let banner: { variant: 'filled-primary' | 'filled-accent' | 'ink'; text: string } | null = null;
   const rawStatus: OrderStatus = status;
   if (rawStatus === 'paid') {
-    banner = { color: 'bg-primary text-surface', text: '✓ Pembayaran diterima — mengarahkan…' };
+    banner = { variant: 'filled-primary', text: t('paidRedirect') };
   } else if (rawStatus === 'failed') {
-    banner = { color: 'bg-accent text-ink', text: 'Pembayaran gagal. Coba lagi.' };
+    banner = { variant: 'filled-accent', text: t('failed') };
   } else if (rawStatus === 'expired' || isExpired) {
-    banner = { color: 'bg-ink text-surface', text: t('expiredTitle') + ' — buat pesanan baru.' };
+    banner = { variant: 'ink', text: t('expiredBanner') };
   }
 
   return (
     <div className="space-y-6">
       {banner && (
-        <div className={`${banner.color} border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)] font-bold text-center`}>
+        <Card variant={banner.variant} hoverable={false} className="p-4 font-bold text-center">
           {banner.text}
-        </div>
+        </Card>
       )}
 
       {/* Countdown */}
       {!isExpired && status === 'pending' && (
-        <div className="bg-accent text-ink border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)] text-center">
+        <Card variant="filled-accent" hoverable={false} className="p-4 text-center">
           <p className="text-xs font-bold uppercase tracking-wider opacity-80">
             {t('payWithin')}
           </p>
           <p className="text-4xl sm:text-5xl font-bold leading-none mt-1 font-mono">
             {countdownText}
           </p>
-        </div>
+        </Card>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* QR image */}
-        <div className="bg-surface border-2 border-ink p-6 shadow-[4px_4px_0_0_var(--color-ink)]">
+        <Card variant="surface" hoverable={false} className="p-6">
           <p className="text-xs font-bold uppercase tracking-wider text-ink/60 mb-3 text-center">
-            Scan QRIS
+            {t('scanTitle')}
           </p>
           <div className="aspect-square bg-surface border-2 border-ink overflow-hidden">
             {qrUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={qrUrl}
-                alt={`QRIS untuk order ${kodeOrder}`}
+                alt={t('qrAlt', { code: kodeOrder })}
                 className="w-full h-full object-contain"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-ink/40 text-sm">
-                QR tidak tersedia
+                {t('qrUnavailable')}
               </div>
             )}
           </div>
           <p className="mt-3 text-xs text-ink/60 text-center">
-            Buka app e-wallet / m-banking → Scan QR → Konfirmasi bayar.
+            {t('scanHint')}
           </p>
-        </div>
+        </Card>
 
         {/* Order info + manual check */}
         <div className="space-y-4">
-          <div className="bg-surface border-2 border-ink p-5 shadow-[4px_4px_0_0_var(--color-ink)]">
+          <Card variant="surface" hoverable={false} className="p-5">
             <p className="text-xs font-bold uppercase tracking-wider text-ink/60">
-              Kode Order
+              {t('orderCode')}
             </p>
-            <p className="text-xl font-bold text-ink mt-1 font-mono break-all">
+            <p className="text-xl font-bold text-ink mt-1 font-mono break-words">
               {kodeOrder}
             </p>
             <p className="mt-3 text-xs font-bold uppercase tracking-wider text-ink/60">
-              Total
+              {t('total')}
             </p>
             <p className="text-2xl font-bold text-primary">
               {totalFormatted}
             </p>
-          </div>
+          </Card>
 
           {qrString && (
-            <div className="bg-surface border-2 border-ink p-5 shadow-[4px_4px_0_0_var(--color-ink)]">
+            <Card variant="surface" hoverable={false} className="p-5">
               <p className="text-xs font-bold uppercase tracking-wider text-ink/60 mb-2">
-                Atau pakai QR string
+                {t('qrData')}
               </p>
               <p className="text-xs font-mono text-ink/80 break-all line-clamp-3">
                 {qrString}
               </p>
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="sm"
                 onClick={copyQrString}
-                className="mt-2 inline-block bg-primary text-surface border-2 border-ink px-3 py-1.5 text-xs font-bold shadow-[2px_2px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
+                className="mt-2"
               >
-                {copyOk ? '✓ Tersalin' : 'Copy'}
-              </button>
-            </div>
+                {copyOk ? t('copied') : t('copy')}
+              </Button>
+            </Card>
           )}
 
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="md"
             onClick={manualCheck}
             disabled={isChecking || status === 'paid'}
-            className="w-full bg-surface text-ink border-2 border-ink px-5 py-3 font-bold shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--color-ink)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full"
           >
-            {isChecking ? 'Mengecek…' : t('checkStatus')}
-          </button>
+            {isChecking ? t('checking') : t('checkStatus')}
+          </Button>
 
           <a
             href={`/cek-pesanan?kode_order=${encodeURIComponent(kodeOrder)}`}
             className="block text-center text-sm text-ink/60 hover:text-primary font-bold underline decoration-2 underline-offset-4"
           >
-            Lihat detail pesanan →
+            {t('viewOrder')}
           </a>
         </div>
       </div>
 
       <p className="text-center text-xs text-ink/50">
-        Status otomatis diperbarui setiap 4 detik.
+        {t('autoRefresh')}
       </p>
     </div>
   );

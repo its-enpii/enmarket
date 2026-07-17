@@ -25,7 +25,7 @@ export default async function AdminLayout({
   } catch (err) {
     if (err instanceof ApiRequestError) {
       const locale = await getLocale();
-      redirect({ pathname: '/login', locale });
+      redirect({ href: '/login', locale });
     }
     throw err;
   }

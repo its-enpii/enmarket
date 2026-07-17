@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/neobrutal';
+import { getTranslations } from 'next-intl/server';
 
-import { formatRupiah, TIPE_LABEL } from '@/lib/format';
+import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
 
 interface Props {
@@ -10,9 +11,10 @@ interface Props {
 /**
  * Card produk untuk grid. Thumbnail dari preview_images[0] atau blok primary.
  */
-export function ProductCard({ product }: Props) {
+export async function ProductCard({ product }: Props) {
+  const t = await getTranslations('katalog');
   const thumb = product.preview_images?.[0];
-  const kategoriNama = product.category?.nama ?? 'Tanpa kategori';
+  const kategoriNama = product.category?.nama ?? t('noCategory');
 
   return (
     <Card
@@ -33,19 +35,19 @@ export function ProductCard({ product }: Props) {
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
             <span className="font-bold text-sm uppercase tracking-wider opacity-80">
-              Tanpa Gambar
+              {t('noImage')}
             </span>
           </div>
         )}
 
         {product.is_featured && (
           <span className="absolute top-2 left-2 bg-accent text-ink border-2 border-ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-            Unggulan
+            {t('featured')}
           </span>
         )}
 
         <span className="absolute top-2 right-2 bg-ink text-surface border-2 border-ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-          {TIPE_LABEL[product.tipe] ?? product.tipe}
+          {t(`tipe.${product.tipe}`)}
         </span>
       </div>
 

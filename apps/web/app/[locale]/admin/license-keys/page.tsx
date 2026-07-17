@@ -1,22 +1,20 @@
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 import { AdminListProvider } from '@/components/admin/AdminListProvider';
 import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
-import { Button } from '@/components/admin/Button';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { DataTableArea } from '@/components/admin/DataTableArea';
 import { EmptyState } from '@/components/admin/EmptyState';
 import { Pagination } from '@/components/admin/Pagination';
 import { StatusBadge } from '@/components/admin/StatusBadge';
+import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import {
   LICENSE_STATUS_LABEL,
   type AdminLicenseKey,
-  type Category,
   type LicenseStatus,
   type PaginatedResponse,
-  type SingleResponse,
 } from '@/lib/types';
 
 import { ExtendDialog } from './ExtendDialog';
@@ -33,11 +31,14 @@ interface Props {
     sort?: string;
     dir?: 'asc' | 'desc';
   }>;
+  params: Promise<{ locale: string }>;
 }
 
-export const metadata = {
-  title: 'License Keys — Admin',
-};
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'admin.licenseKeys' });
+  return { title: `${t('listTitle')} — Admin` };
+}
 
 async function loadKeys(params: Awaited<Props['searchParams']>) {
   try {
@@ -58,17 +59,6 @@ async function loadKeys(params: Awaited<Props['searchParams']>) {
   }
 }
 
-async function loadProducts() {
-  try {
-    const res = await apiGet<SingleResponse<Category[]>>('/api/admin/categories');
-    // CategoryController returns flat list; kita butuh produk.
-    // Pakai /api/admin/products?per_page=100 untuk dropdown sederhana.
-    return res.data ?? [];
-  } catch {
-    return [];
-  }
-}
-
 async function loadActiveProducts() {
   try {
     const res = await apiGet<{ data: Array<{ id: number; nama: string }> }>(
@@ -83,9 +73,8 @@ async function loadActiveProducts() {
 
 export default async function LicenseKeysPage({ searchParams }: Props) {
   const params = await searchParams;
+  const t = await getTranslations('admin.licenseKeys');
   const [keysRes, products] = await Promise.all([loadKeys(params), loadActiveProducts()]);
-  // loadProducts unused — keep signature untuk potential extension
-  void loadProducts;
 
   const rows = keysRes.data ?? [];
   const meta = keysRes.meta;
@@ -93,7 +82,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
   const columns: Column<AdminLicenseKey>[] = [
     {
       key: 'key',
-      header: 'Key',
+      header: t('columns.key'),
       width: '260px',
       render: (k) => (
         <code className="text-xs font-mono bg-ink/5 px-2 py-1 border border-ink/20 select-all">
@@ -103,25 +92,26 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
     },
     {
       key: 'product',
-      header: 'Produk',
+      header: t('columns.product'),
       render: (k) => (
-        <Link
+        <NLink
           href={`/admin/products/${k.product_id}`}
-          className="font-bold text-primary hover:text-accent underline decoration-2 underline-offset-2"
+          variant="primary"
+          underline="static"
         >
-          {k.product?.nama ?? `Product #${k.product_id}`}
-        </Link>
+          {k.product?.nama ?? t('productFallback', { id: k.product_id })}
+        </NLink>
       ),
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('columns.status'),
       width: '120px',
       render: (k) => <StatusBadge status={k.status} labelMap={LICENSE_STATUS_LABEL} />,
     },
     {
       key: 'activated',
-      header: 'Aktivasi',
+      header: t('columns.activated'),
       width: '110px',
       render: (k) => (
         <span className="text-xs text-ink/60">{formatDate(k.activated_at)}</span>
@@ -129,7 +119,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
     },
     {
       key: 'expired',
-      header: 'Expired',
+      header: t('columns.expired'),
       width: '110px',
       render: (k) => (
         <span className="text-xs text-ink/60">{formatDate(k.expired_at)}</span>
@@ -137,7 +127,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
     },
     {
       key: 'created',
-      header: 'Created',
+      header: t('columns.created'),
       width: '110px',
       render: (k) => (
         <span className="text-xs text-ink/60">{formatDate(k.created_at)}</span>
@@ -145,7 +135,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
     },
     {
       key: 'aksi',
-      header: 'Aksi',
+      header: t('columns.actions'),
       width: '200px',
       render: (k) => {
         const canRevoke = k.status === 'aktif' || k.status === 'digunakan';
@@ -163,11 +153,11 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
   ];
 
   const STATUS_OPTIONS: { value: LicenseStatus | ''; label: string }[] = [
-    { value: '', label: 'Semua Status' },
-    { value: 'aktif', label: 'Aktif' },
-    { value: 'digunakan', label: 'Digunakan' },
-    { value: 'kadaluarsa', label: 'Kadaluarsa' },
-    { value: 'dicabut', label: 'Dicabut' },
+    { value: '', label: t('filters.allStatus') },
+    { value: 'aktif', label: t('filters.active') },
+    { value: 'digunakan', label: t('filters.used') },
+    { value: 'kadaluarsa', label: t('filters.expired') },
+    { value: 'dicabut', label: t('filters.revoked') },
   ];
 
   return (
@@ -176,14 +166,13 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
         <div className="p-6 sm:p-8 space-y-6">
           <header className="border-b-4 border-ink pb-6">
             <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-              ✎ Studio / Lisensi
+              {t('listEyebrow')}
             </p>
             <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-              License Keys<span className="text-primary">.</span>
+              {t('listTitle')}<span className="text-primary">.</span>
             </h1>
             <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-              Semua kunci lisensi yang diterbitkan. Bisa dicabut, diperpanjang
-              masa berlakunya, atau digenerate massal dari sini.
+              {t('listSubtitle')}
             </p>
           </header>
 
@@ -194,15 +183,15 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
             filters={[
               {
                 key: 'product_id',
-                label: 'Produk',
+                label: t('filters.product'),
                 options: [
-                  { value: '', label: 'Semua Produk' },
+                  { value: '', label: t('filters.allProduct') },
                   ...products.map((p) => ({ value: String(p.id), label: p.nama })),
                 ],
               },
-              { key: 'status', label: 'Status', options: STATUS_OPTIONS },
+              { key: 'status', label: t('filters.status'), options: STATUS_OPTIONS },
             ]}
-            placeholder="EPS-XXXX-…"
+            placeholder={t('searchPlaceholder')}
             action={<LicenseKeyTrigger products={products} />}
             secondary={<LicenseKeyFormCard products={products} />}
           />
@@ -218,8 +207,8 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
               rowKey={(k) => k.id}
               emptyState={
                 <EmptyState
-                  title={params.q || params.status || params.product_id ? 'Tidak ada license key yang cocok' : 'Belum ada license key'}
-                  body={params.q || params.status || params.product_id ? 'Coba ubah filter atau hapus pencarian.' : 'Generate license key pertama lewat form di atas.'}
+                  title={params.q || params.status || params.product_id ? t('empty.noMatch') : t('empty.noneYet')}
+                  body={params.q || params.status || params.product_id ? t('empty.noMatchHint') : t('empty.noneYetHint')}
                 />
               }
             />

@@ -1,5 +1,5 @@
 import { publicApi } from '@/lib/public-api';
-import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 import { FeaturedSection } from '@/components/public/FeaturedSection';
 import { JournalSection } from '@/components/public/JournalSection';
@@ -33,12 +33,19 @@ import type { Post, Product } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export const metadata: Metadata = {
-  title: 'enpiistudio — Discover, develop, display',
-  description:
-    'Marketplace karya digital dari studio enpii — apa pun yang bisa diunduh, dipakai, atau dinikmati. Pilih, bayar, langsung dapat.',
-  alternates: { canonical: '/' },
-};
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'common.site' });
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: { canonical: `/${locale}` },
+  };
+}
 
 // Wrapper local: fetch dengan fallback aman — biar section tidak hilang
 // kalau API down/error. Fallback = array kosong (section tetap render

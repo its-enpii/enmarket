@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { confirmDialog } from '@/components/ui/dialog-store';
@@ -18,6 +19,7 @@ interface Props {
  * Pattern simpel, no modal infra.
  */
 export function ExtendDialog({ id }: Props) {
+  const t = useTranslations('admin.licenseKeys.extend');
   const [open, setOpen] = useState(false);
   const [days, setDays] = useState('30');
   const [pending, startTransition] = useTransition();
@@ -26,13 +28,13 @@ export function ExtendDialog({ id }: Props) {
     e.preventDefault();
     const n = Number(days);
     if (!Number.isFinite(n) || n < 1 || n > 365) {
-      toast.error('Hari harus antara 1–365.');
+      toast.error(t('invalidDays'));
       return;
     }
     const ok = await confirmDialog({
-      title: 'Perpanjang Expired',
-      message: `Perpanjang expired_at ${n} hari?`,
-      confirmLabel: 'Perpanjang',
+      title: t('confirmTitle'),
+      message: t('confirmMessage', { days: n }),
+      confirmLabel: t('confirmAction'),
     });
     if (!ok) return;
 
@@ -45,7 +47,7 @@ export function ExtendDialog({ id }: Props) {
       if (res.error) {
         toast.error(res.error);
       } else {
-        toast.success(res.message ?? 'Expired diperpanjang.');
+        toast.success(res.message ?? t('success'));
         setOpen(false);
       }
     });
@@ -54,7 +56,7 @@ export function ExtendDialog({ id }: Props) {
   if (!open) {
     return (
       <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(true)}>
-        Perpanjang
+        {t('openButton')}
       </Button>
     );
   }
@@ -68,12 +70,12 @@ export function ExtendDialog({ id }: Props) {
         max={365}
         value={days}
         onChange={(e) => setDays(e.target.value)}
-        placeholder="hari"
+        placeholder={t('daysPlaceholder')}
         autoFocus
         className="w-20"
       />
       <Button type="submit" variant="primary" size="sm" disabled={pending}>
-        {pending ? '…' : 'OK'}
+        {pending ? '…' : t('okButton')}
       </Button>
       <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
         ✕

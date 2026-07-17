@@ -124,12 +124,12 @@ export function SelectSearch({
         aria-expanded={open}
         className={
           BUTTON_LINK_BASE_CLS +
-          ' justify-between gap-2 w-full text-left bg-surface px-3 py-2.5 text-sm font-medium text-ink ' +
+          ' justify-between gap-2 w-full text-left bg-surface px-3 py-2.5 min-h-[44px] text-sm font-medium text-ink ' +
           'focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] ' +
           'focus:shadow-[4px_4px_0_0_var(--color-ink)]'
         }
       >
-        <span className={selected ? 'text-ink' : 'text-ink/40'}>
+        <span className={'flex-1 text-left ' + (selected ? 'text-ink' : 'text-ink/40')}>
           {selected?.label ?? placeholder}
         </span>
         <span className="flex items-center gap-1">
@@ -183,7 +183,7 @@ export function SelectSearch({
                     aria-selected={active}
                     onClick={() => selectOption(o.value)}
                     className={
-                      'flex w-full text-left px-3 py-2 text-sm border-l-4 ' +
+                      'flex w-full min-h-[44px] text-left px-3 py-2.5 text-sm border-l-4 ' +
                       (active
                         ? 'bg-primary text-surface border-accent font-bold'
                         : 'border-transparent hover:bg-accent hover:text-ink')

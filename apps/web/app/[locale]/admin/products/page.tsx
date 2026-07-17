@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 import { AdminListProvider } from '@/components/admin/AdminListProvider';
 import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/admin/EmptyState';
 import { SortableHeader } from '@/components/admin/LiveFilterBar';
 import { Pagination } from '@/components/admin/Pagination';
 import { StatusBadge } from '@/components/admin/StatusBadge';
+import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { TIPE_LABEL, formatDate, formatRupiah } from '@/lib/format';
 import type {
@@ -30,11 +31,14 @@ interface Props {
     sort?: string;
     dir?: 'asc' | 'desc';
   }>;
+  params: Promise<{ locale: string }>;
 }
 
-export const metadata = {
-  title: 'Produk — Admin',
-};
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'admin.products' });
+  return { title: `${t('listTitle')} — Admin` };
+}
 
 async function loadProducts(params: Awaited<Props['searchParams']>) {
   try {
@@ -66,6 +70,8 @@ async function loadCategories() {
 
 export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
+  const t = await getTranslations('admin.products');
+  const tBtns = await getTranslations('common.buttons');
   const [productsRes, categories] = await Promise.all([
     loadProducts(params),
     loadCategories(),
@@ -81,28 +87,25 @@ export default async function ProductsPage({ searchParams }: Props) {
       key: 'nama',
       header: (
         <SortableHeader field="nama" currentSort={currentSort} currentDir={currentDir}>
-          Nama
+          {t('columns.name')}
         </SortableHeader>
       ),
       render: (p) => (
-        <Link
-          href={`/admin/products/${p.id}`}
-          className="font-bold text-primary hover:text-accent underline decoration-2 underline-offset-2"
-        >
+        <NLink href={`/admin/products/${p.id}`} variant="primary" underline="static">
           {p.nama}
-        </Link>
+        </NLink>
       ),
     },
     {
       key: 'kategori',
-      header: 'Kategori',
+      header: t('columns.category'),
       render: (p) => <span className="text-ink/80">{p.category?.nama ?? '—'}</span>,
     },
     {
       key: 'harga',
       header: (
         <SortableHeader field="harga" currentSort={currentSort} currentDir={currentDir}>
-          Harga
+          {t('columns.price')}
         </SortableHeader>
       ),
       width: '140px',
@@ -110,7 +113,7 @@ export default async function ProductsPage({ searchParams }: Props) {
     },
     {
       key: 'tipe',
-      header: 'Tipe',
+      header: t('columns.type'),
       width: '100px',
       render: (p) => <span className="text-xs uppercase font-bold tracking-wide">{TIPE_LABEL[p.tipe] ?? p.tipe}</span>,
     },
@@ -118,7 +121,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       key: 'status',
       header: (
         <SortableHeader field="status" currentSort={currentSort} currentDir={currentDir}>
-          Status
+          {t('columns.status')}
         </SortableHeader>
       ),
       width: '120px',
@@ -128,7 +131,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       key: 'updated',
       header: (
         <SortableHeader field="updated_at" currentSort={currentSort} currentDir={currentDir}>
-          Update
+          {t('columns.updated')}
         </SortableHeader>
       ),
       width: '120px',
@@ -136,12 +139,12 @@ export default async function ProductsPage({ searchParams }: Props) {
     },
     {
       key: 'aksi',
-      header: 'Aksi',
+      header: t('columns.actions'),
       width: '180px',
       render: (p) => (
         <div className="flex gap-2">
           <Button href={`/admin/products/${p.id}`} variant="ghost" size="sm">
-            Edit
+            {tBtns('edit')}
           </Button>
           <DeleteButton itemId={p.id} itemName={p.nama} action={deleteProduct} />
         </div>
@@ -152,19 +155,19 @@ export default async function ProductsPage({ searchParams }: Props) {
   const filters = [
     {
       key: 'status',
-      label: 'Status',
+      label: t('filters.status'),
       options: [
-        { value: '', label: 'Semua Status' },
-        { value: 'aktif', label: 'Aktif' },
-        { value: 'draft', label: 'Draft' },
-        { value: 'tidak_dijual', label: 'Tidak Dijual' },
+        { value: '', label: t('filters.allStatus') },
+        { value: 'aktif', label: t('filters.active') },
+        { value: 'draft', label: t('filters.draft') },
+        { value: 'tidak_dijual', label: t('filters.notForSale') },
       ],
     },
     {
       key: 'category_id',
-      label: 'Kategori',
+      label: t('filters.category'),
       options: [
-        { value: '', label: 'Semua Kategori' },
+        { value: '', label: t('filters.allCategory') },
         ...categories.map((c) => ({ value: String(c.id), label: c.nama })),
       ],
     },
@@ -175,14 +178,13 @@ export default async function ProductsPage({ searchParams }: Props) {
       <div className="p-6 sm:p-8 space-y-6">
         <header className="border-b-4 border-ink pb-6">
           <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-            ✎ Studio / Katalog
+            {t('listEyebrow')}
           </p>
           <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-            Produk<span className="text-primary">.</span>
+            {t('listTitle')}<span className="text-primary">.</span>
           </h1>
           <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-            Semua barang yang dijual di toko. Atur harga, tipe, dan status
-            publish dari sini.
+            {t('listSubtitle')}
           </p>
         </header>
 
@@ -191,10 +193,10 @@ export default async function ProductsPage({ searchParams }: Props) {
             sort={currentSort}
             dir={currentDir}
             filters={filters}
-            placeholder="Cari nama atau slug…"
+            placeholder={t('searchPlaceholder')}
             action={
               <Button href="/admin/products/new" variant="primary" size="md">
-                + Produk Baru
+                {t('newButton')}
               </Button>
             }
           />
@@ -210,12 +212,12 @@ export default async function ProductsPage({ searchParams }: Props) {
               rowKey={(p) => p.id}
               emptyState={
                 <EmptyState
-                  title={params.q ? `Tidak ada hasil untuk "${params.q}"` : 'Belum ada produk'}
-                  body={params.q ? 'Coba kata kunci lain atau hapus filter.' : 'Tambah produk pertama untuk mulai berjualan.'}
+                  title={params.q ? t('empty.noResults', { query: params.q }) : t('empty.noneYet')}
+                  body={params.q ? t('empty.noResultsHint') : t('empty.noneYetHint')}
                   action={
                     !params.q && (
                       <Button href="/admin/products/new" variant="primary" size="md">
-                        + Produk Baru
+                        {t('newButton')}
                       </Button>
                     )
                   }

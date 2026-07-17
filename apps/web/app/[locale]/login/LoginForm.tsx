@@ -12,16 +12,17 @@ interface State {
 }
 
 interface Props {
-  action: (formData: FormData) => Promise<State>;
+  action: (formData: FormData) => Promise<State | void>;
 }
 
 export function LoginForm({ action }: Props) {
   const t = useTranslations('login');
-  const [state, formAction, pending] = useActionState(
-    async (_prev: State | undefined, formData: FormData): Promise<State> => {
-      return action(formData);
+  const [state, formAction, pending] = useActionState<State | undefined, FormData>(
+    async (_prev, formData) => {
+      const result = await action(formData);
+      return result ?? {};
     },
-    {} as State,
+    undefined,
   );
 
   return (

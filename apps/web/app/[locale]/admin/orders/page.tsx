@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 import { AdminListProvider } from '@/components/admin/AdminListProvider';
 import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
@@ -8,6 +8,7 @@ import { DataTableArea } from '@/components/admin/DataTableArea';
 import { EmptyState } from '@/components/admin/EmptyState';
 import { Pagination } from '@/components/admin/Pagination';
 import { StatusBadge } from '@/components/admin/StatusBadge';
+import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime } from '@/lib/format';
 import {
@@ -26,11 +27,14 @@ interface Props {
     sort?: string;
     dir?: 'asc' | 'desc';
   }>;
+  params: Promise<{ locale: string }>;
 }
 
-export const metadata = {
-  title: 'Pesanan — Admin',
-};
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'admin.orders' });
+  return { title: `${t('listTitle')} — Admin` };
+}
 
 async function loadOrders(params: Awaited<Props['searchParams']>) {
   try {
@@ -57,6 +61,7 @@ async function loadOrders(params: Awaited<Props['searchParams']>) {
 
 export default async function OrdersPage({ searchParams }: Props) {
   const params = await searchParams;
+  const t = await getTranslations('admin.orders');
   const ordersRes = await loadOrders(params);
   const rows = ordersRes.data ?? [];
   const meta = ordersRes.meta;
@@ -64,20 +69,17 @@ export default async function OrdersPage({ searchParams }: Props) {
   const columns: Column<Order>[] = [
     {
       key: 'kode_order',
-      header: 'Kode',
+      header: t('columns.code'),
       width: '180px',
       render: (o) => (
-        <Link
-          href={`/admin/orders/${o.kode_order}`}
-          className="font-bold text-primary hover:text-accent underline decoration-2 underline-offset-2"
-        >
+        <NLink href={`/admin/orders/${o.kode_order}`} variant="primary" underline="static">
           {o.kode_order}
-        </Link>
+        </NLink>
       ),
     },
     {
       key: 'pembeli',
-      header: 'Pembeli',
+      header: t('columns.buyer'),
       render: (o) => (
         <div>
           <p className="font-bold">{o.nama_pembeli}</p>
@@ -87,13 +89,13 @@ export default async function OrdersPage({ searchParams }: Props) {
     },
     {
       key: 'total',
-      header: 'Total',
+      header: t('columns.total'),
       width: '140px',
       render: (o) => <span className="font-bold">{o.total_harga_formatted}</span>,
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('columns.status'),
       width: '120px',
       render: (o) => (
         <StatusBadge status={o.status} labelMap={ORDER_STATUS_LABEL} />
@@ -101,7 +103,7 @@ export default async function OrdersPage({ searchParams }: Props) {
     },
     {
       key: 'tanggal',
-      header: 'Tanggal',
+      header: t('columns.date'),
       width: '140px',
       render: (o) => (
         <span className="text-ink/60 text-xs">{formatDateTime(o.created_at)}</span>
@@ -109,23 +111,23 @@ export default async function OrdersPage({ searchParams }: Props) {
     },
     {
       key: 'aksi',
-      header: 'Aksi',
+      header: t('columns.actions'),
       width: '100px',
       render: (o) => (
         <Button href={`/admin/orders/${o.kode_order}`} variant="ghost" size="sm">
-          Lihat
+          {t('viewAction')}
         </Button>
       ),
     },
   ];
 
   const STATUS_OPTIONS = [
-    { value: '', label: 'Semua Status' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'paid', label: 'Paid' },
-    { value: 'failed', label: 'Failed' },
-    { value: 'expired', label: 'Expired' },
-    { value: 'refunded', label: 'Refunded' },
+    { value: '', label: t('filterStatusAll') },
+    { value: 'pending', label: t('filterStatusPending') },
+    { value: 'paid', label: t('filterStatusPaid') },
+    { value: 'failed', label: t('filterStatusFailed') },
+    { value: 'expired', label: t('filterStatusExpired') },
+    { value: 'refunded', label: t('filterStatusRefunded') },
   ];
 
   return (
@@ -133,14 +135,13 @@ export default async function OrdersPage({ searchParams }: Props) {
       <div className="p-6 sm:p-8 space-y-6">
         <header className="border-b-4 border-ink pb-6">
           <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-            ✎ Studio / Pesanan
+            {t('listEyebrow')}
           </p>
           <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-            Pesanan<span className="text-primary">.</span>
+            {t('listTitle')}<span className="text-primary">.</span>
           </h1>
           <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-            Semua transaksi masuk. Lacak status pembayaran, generate ulang
-            token, dan kirim ulang notifikasi.
+            {t('listSubtitle')}
           </p>
         </header>
 
@@ -148,8 +149,8 @@ export default async function OrdersPage({ searchParams }: Props) {
             q={params.q ?? ''}
             sort={params.sort ?? 'created_at'}
             dir={params.dir === 'asc' ? 'asc' : 'desc'}
-            filters={[{ key: 'status', label: 'Status', options: STATUS_OPTIONS }]}
-            placeholder="Cari kode / nama / email…"
+            filters={[{ key: 'status', label: t('filterStatusLabel'), options: STATUS_OPTIONS }]}
+            placeholder={t('searchPlaceholder')}
             dateRange={{ from: params.date_from, to: params.date_to }}
           />
 
@@ -164,8 +165,8 @@ export default async function OrdersPage({ searchParams }: Props) {
               rowKey={(o) => o.kode_order}
               emptyState={
                 <EmptyState
-                  title={params.q || params.status ? 'Tidak ada pesanan yang cocok' : 'Belum ada pesanan'}
-                  body={params.q || params.status ? 'Coba ubah filter atau hapus pencarian.' : 'Order pertama akan muncul di sini setelah ada yang checkout.'}
+                  title={params.q || params.status ? t('empty.noMatch') : t('empty.noneYet')}
+                  body={params.q || params.status ? t('empty.noMatchHint') : t('empty.noneYetHint')}
                 />
               }
             />

@@ -7,9 +7,13 @@
 
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { FormField } from '@/components/admin/FormField';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Card } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
 
 import { createCategory, updateCategory, ActionResult } from './actions';
@@ -27,11 +31,9 @@ interface Props {
 
 export function CategoryForm({ initial }: Props) {
   const router = useRouter();
+  const t = useTranslations('admin.categories.form');
+  const tBtns = useTranslations('common.buttons');
   const isEdit = !!initial;
-
-  const action = isEdit
-    ? updateCategory.bind(null, initial!.id)
-    : createCategory;
 
   const [state, formAction, pending] = useActionState(
     async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
@@ -55,56 +57,54 @@ export function CategoryForm({ initial }: Props) {
 
   return (
     <form action={formAction} className="space-y-5">
-      <FormField label="Nama" htmlFor="nama" required error={fieldErr('nama')}>
-        <input
+      <FormField label={t('fieldName')} htmlFor="nama" required error={fieldErr('nama')}>
+        <Input
           id="nama"
           name="nama"
           required
           defaultValue={initial?.nama}
           onBlur={autoSlug}
-          className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
         />
       </FormField>
 
       <FormField
-        label="Slug"
+        label={t('fieldSlug')}
         htmlFor="slug"
-        hint="Otomatis dari nama (editable). Hanya huruf kecil, angka, dan strip."
+        hint={t('fieldSlugHint')}
         error={fieldErr('slug')}
       >
-        <input
+        <Input
           id="slug"
           name="slug"
           defaultValue={initial?.slug ?? ''}
           pattern="[a-z0-9-]+"
-          className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink font-mono text-sm focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
+          className="font-mono"
         />
       </FormField>
 
       <FormField
-        label="Deskripsi"
+        label={t('fieldDescription')}
         htmlFor="deskripsi"
-        hint="Opsional. Maks 1000 karakter."
+        hint={t('fieldDescriptionHint')}
         error={fieldErr('deskripsi')}
       >
-        <textarea
+        <Textarea
           id="deskripsi"
           name="deskripsi"
           rows={4}
           defaultValue={initial?.deskripsi ?? ''}
-          className="w-full bg-surface border-2 border-ink px-3 py-2 text-ink focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all resize-y"
         />
       </FormField>
 
       {state.error && (
-        <div className="bg-accent border-2 border-ink px-4 py-2 text-sm font-bold text-ink shadow-[2px_2px_0_0_var(--color-ink)]">
+        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
           {state.error}
-        </div>
+        </Card>
       )}
 
       <div className="flex gap-3 pt-2">
         <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? 'Menyimpan…' : isEdit ? 'Simpan Perubahan' : 'Buat Kategori'}
+          {pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
         </Button>
         <Button
           type="button"
@@ -113,7 +113,7 @@ export function CategoryForm({ initial }: Props) {
           flat
           onClick={() => router.push('/admin/categories')}
         >
-          Batal
+          {tBtns('cancel')}
         </Button>
       </div>
     </form>

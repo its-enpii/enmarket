@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { confirmDialog } from '@/components/ui/dialog-store';
@@ -16,13 +17,14 @@ interface Props {
  * Tombol re-trigger generateForOrder — untuk paid order yang belum punya delivery rows.
  */
 export function GenerateDeliveriesForm({ kodeOrder }: Props) {
+  const t = useTranslations('admin.orders.actions');
   const [pending, startTransition] = useTransition();
 
   async function handleClick() {
     const ok = await confirmDialog({
-      title: 'Generate Ulang Deliveries',
-      message: 'Generate ulang semua delivery untuk order ini?',
-      confirmLabel: 'Generate',
+      title: t('generateDeliveriesConfirmTitle'),
+      message: t('generateDeliveriesConfirmMessage'),
+      confirmLabel: t('generateDeliveries'),
       danger: true,
     });
     if (!ok) return;
@@ -31,7 +33,7 @@ export function GenerateDeliveriesForm({ kodeOrder }: Props) {
       if (res.error) {
         toast.error(res.error);
       } else {
-        toast.success(res.message ?? 'Deliveries di-generate.');
+        toast.success(res.message ?? t('generateDeliveriesSuccess'));
       }
     });
   }
@@ -44,7 +46,7 @@ export function GenerateDeliveriesForm({ kodeOrder }: Props) {
       disabled={pending}
       onClick={handleClick}
     >
-      {pending ? '…' : '⚙ Generate Deliveries'}
+      {pending ? '…' : t('generateDeliveries')}
     </Button>
   );
 }

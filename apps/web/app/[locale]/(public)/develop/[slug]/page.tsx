@@ -24,6 +24,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { RelatedWorks } from '@/components/public/RelatedWorks';
 import { WorkGallery } from '@/components/public/WorkGallery';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
 
@@ -51,18 +52,19 @@ async function fetchProduct(slug: string): Promise<Product | null> {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'developDetail' });
   const product = await fetchProduct(slug);
   if (!product) {
     return {
-      title: 'Work tidak ditemukan — enpiistudio',
+      title: t('notFound'),
       robots: { index: false },
     };
   }
 
   const description = product.deskripsi
     ? product.deskripsi.slice(0, 160)
-    : `${product.nama} — karya dari studio enpii.`;
+    : t('fallbackDescription', { name: product.nama });
 
   const ogImage = product.preview_images?.[0];
 
@@ -88,15 +90,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function WorkDetailPage({ params }: PageProps) {
-  const { slug, locale } = await params;
+  const { slug } = await params;
   const product = await fetchProduct(slug);
   if (!product) notFound();
 
   const t = await getTranslations('developDetail');
-  const tCommon = await getTranslations('common.buttons');
   const tKatalog = await getTranslations('katalog');
-  const isEn = locale === 'en';
-  const L = (id: string, en: string) => (isEn ? en : id);
 
   const kategori = product.category;
   const oneLineDesc = product.deskripsi?.split(/\r?\n/)[0]?.slice(0, 140) ?? '';
@@ -108,16 +107,18 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
   // Specs
   const specs: Array<{ label: string; value: string }> = [];
-  specs.push({ label: L('Tipe', 'Type'), value: tKatalog(`tipe.${product.tipe}`) });
-  if (kategori) specs.push({ label: L('Kategori', 'Category'), value: kategori.nama });
-  if (product.needs_license_key) specs.push({ label: L('Lisensi', 'License'), value: L('Termasuk key', 'Key included') });
+  specs.push({ label: t('type'), value: tKatalog(`tipe.${product.tipe}`) });
+  if (kategori) specs.push({ label: t('category'), value: kategori.nama });
+  if (product.needs_license_key) specs.push({ label: t('license'), value: t('included') });
   if (product.has_downloadable_file) {
     specs.push({
-      label: L('Download', 'Download'),
-      value: product.download_expiry_days ? `${product.download_expiry_days} ${L('hari', 'days')}` : L('Selamanya', 'Unlimited'),
+      label: t('download'),
+      value: product.download_expiry_days
+        ? t('days', { count: product.download_expiry_days })
+        : t('unlimited'),
     });
   }
-  if (product.is_featured) specs.push({ label: L('Status', 'Status'), value: L('Studio pick', 'Studio pick') });
+  if (product.is_featured) specs.push({ label: t('status'), value: t('studioPickLabel') });
 
   return (
     <>
@@ -128,7 +129,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             href="/develop"
             className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary transition-colors"
           >
-            <span aria-hidden="true">←</span> {L('Kembali ke Develop', 'Back to Develop')}
+            {t('back')}
           </Link>
           {kategori && (
             <span className="ml-4 font-label text-label-sm uppercase text-ink/40">
@@ -167,7 +168,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             <div className="flex flex-wrap gap-2">
               {product.is_featured && (
                 <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider shadow-[2px_2px_0_0_var(--color-ink)]">
-                  ✎ Studio Pick
+                  {t('studioPick')}
                 </span>
               )}
               <span className="inline-flex items-center bg-ink text-surface border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider">
@@ -199,7 +200,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </span>
               {product.needs_license_key && (
                 <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
-                  + license key
+                  {t('licenseIncluded')}
                 </span>
               )}
             </div>
@@ -219,7 +220,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {/* Pull-quote column — dominant */}
             <div>
               <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-                ✎ About this work
+                {t('about')}
               </p>
               <blockquote className="font-display text-3xl md:text-5xl font-black uppercase leading-[1.05] tracking-tight text-ink">
                 {paragraphs.map((p, i) =>
@@ -242,16 +243,16 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {/* Sidebar — quick facts panel (data-driven, no boilerplate) */}
             <div className="space-y-4 font-body text-body-md text-ink/80 lg:pt-12">
               <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-2">
-                ✎ Quick facts
+                {t('quickFacts')}
               </p>
               <dl className="space-y-3">
                 <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                  <dt className="font-label text-label-sm uppercase text-ink/60">{L('Tipe', 'Type')}</dt>
+                  <dt className="font-label text-label-sm uppercase text-ink/60">{t('type')}</dt>
                   <dd className="font-bold text-ink">{tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}</dd>
                 </div>
                 {kategori && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">Category</dt>
+                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('category')}</dt>
                     <dd>
                       <Link
                         href={`/develop?category=${kategori.slug}`}
@@ -264,26 +265,26 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 )}
                 {product.fitur && product.fitur.length > 0 && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">Fitur</dt>
-                    <dd className="font-bold text-ink">{product.fitur.length} item</dd>
+                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('features')}</dt>
+                    <dd className="font-bold text-ink">{t('items', { count: product.fitur.length })}</dd>
                   </div>
                 )}
                 {product.preview_images && product.preview_images.length > 0 && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">Preview</dt>
-                    <dd className="font-bold text-ink">{product.preview_images.length} gambar</dd>
+                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('preview')}</dt>
+                    <dd className="font-bold text-ink">{t('images', { count: product.preview_images.length })}</dd>
                   </div>
                 )}
                 {product.has_downloadable_file && product.download_expiry_days && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">Akses</dt>
-                    <dd className="font-bold text-ink">{product.download_expiry_days} hari</dd>
+                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('access')}</dt>
+                    <dd className="font-bold text-ink">{t('days', { count: product.download_expiry_days })}</dd>
                   </div>
                 )}
                 {product.needs_license_key && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">License</dt>
-                    <dd className="font-bold text-ink">Termasuk</dd>
+                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('license')}</dt>
+                    <dd className="font-bold text-ink">{t('included')}</dd>
                   </div>
                 )}
               </dl>
@@ -293,7 +294,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   href="/display"
                   className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-primary hover:text-ink transition-colors"
                 >
-                  Baca proses di Display
+                  {t('readProcess')}
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
@@ -307,18 +308,19 @@ export default async function WorkDetailPage({ params }: PageProps) {
         <section className="border-b-4 border-ink bg-surface">
           <div className="px-6 md:px-12 py-16 md:py-20">
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-              ✎ Details
+              {t('details')}
             </p>
             <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink mb-10">
-              Specs &{' '}
-              <span className="text-primary">fitur</span>
+              {t('specsTitle')}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {specs.map((spec) => (
-                <div
+                <Card
                   key={spec.label}
-                  className="bg-surface border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)]"
+                  variant="surface"
+                  hoverable={false}
+                  className="p-4"
                 >
                   <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-2">
                     → {spec.label}
@@ -326,7 +328,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   <p className="font-display text-xl font-black uppercase text-ink leading-tight">
                     {spec.value}
                   </p>
-                </div>
+                </Card>
               ))}
             </div>
 
@@ -334,7 +336,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {product.fitur && product.fitur.length > 0 && (
               <div className="mt-10">
                 <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink/60 mb-4">
-                  ✎ Yang kamu dapat
+                  {t('includedTitle')}
                 </p>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {product.fitur.map((f, i) => (
@@ -367,14 +369,14 @@ export default async function WorkDetailPage({ params }: PageProps) {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-                  ✎ Gallery
+                  {t('gallery')}
                 </p>
                 <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
-                  Lebih dekat.
+                  {t('galleryTitle')}
                 </h2>
               </div>
               <p className="font-body text-body-md text-ink/60">
-                Klik thumbnail untuk lihat lebih besar.
+                {t('galleryHint')}
               </p>
             </div>
 
@@ -394,25 +396,21 @@ export default async function WorkDetailPage({ params }: PageProps) {
       <section className="bg-primary text-surface">
         <div className="px-6 md:px-12 py-16 md:py-20 text-center">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
-            ✎ Tertarik dengan {product.nama}?
+            {t('finalEyebrow', { name: product.nama })}
           </p>
           <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight mb-8 max-w-3xl mx-auto">
-            Tambah ke keranjang, atau lihat{' '}
-            <Link
-              href="/develop"
-              className="inline-block bg-accent text-ink px-2 py-0.5 -rotate-1 hover:rotate-0 transition-transform"
-            >
-              karya lain
-            </Link>
-            .
+            {t('finalTitle')}
           </h2>
           <div className="flex justify-center">
-            <Link
+            <Button
+              variant="surface"
+              size="lg"
               href="/develop"
-              className="inline-flex items-center gap-2 bg-surface text-ink border-4 border-ink px-8 py-4 font-label text-label-sm uppercase font-black tracking-wider shadow-[6px_6px_0_0_var(--color-accent)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] transition-all"
+              shadowColor="accent"
+              className="inline-flex items-center gap-2"
             >
-              ← Kembali ke Develop
-            </Link>
+              {t('backFinal')}
+            </Button>
           </div>
         </div>
       </section>

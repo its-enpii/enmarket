@@ -38,7 +38,7 @@ type CommonProps = {
 };
 
 type Props = CommonProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof CommonProps | 'href'> & {
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof CommonProps | 'href' | 'popover'> & {
     href: string;
   };
 

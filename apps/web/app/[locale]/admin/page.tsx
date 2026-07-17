@@ -1,11 +1,13 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 import { Button } from '@/components/admin/Button';
-import { EmptyState } from '@/components/admin/EmptyState';
-import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Card } from '@/components/ui/neobrutal';
+import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime, formatRupiah } from '@/lib/format';
+
+import { ActivityRow } from './ActivityRow';
 import type {
   ActivityLog,
   AdminOrderStats,
@@ -15,9 +17,15 @@ import type {
   SingleResponse,
 } from '@/lib/types';
 
-export const metadata = {
-  title: 'Beranda Admin — enpiistudio Store',
-};
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'admin.dashboard' });
+  return { title: `${t('title')} — Admin` };
+}
 
 async function loadProductStats() {
   try {
@@ -92,6 +100,7 @@ async function loadRecentActivity() {
 }
 
 export default async function AdminHomePage() {
+  const t = await getTranslations('admin.dashboard');
   const [productStats, orderStats, licenseActive, pendingRes, activityRes] = await Promise.all([
     loadProductStats(),
     loadOrderStats(),
@@ -103,36 +112,37 @@ export default async function AdminHomePage() {
   // 6 stat tiles — alternating 2-2-2: SURF | ACCENT | PRIMARY | ACCENT | PRIMARY | SURF.
   // Ritme warna jelas, ujung-ujung surface jadi frame natural.
   const tiles = [
-    { label: 'Total Produk', value: String(productStats.data.total), tone: 'surface' as const },
-    { label: 'Pesanan Pending', value: String(orderStats.data.pending), tone: 'accent' as const },
-    { label: 'Paid Bulan Ini', value: String(orderStats.data.paid_month), tone: 'primary' as const },
-    { label: 'Pendapatan Bulan Ini', value: formatRupiah(orderStats.data.revenue_month), tone: 'accent' as const },
-    { label: 'Total Order', value: String(orderStats.data.total), tone: 'primary' as const },
-    { label: 'License Aktif', value: String(licenseActive), tone: 'surface' as const },
+    { label: t('tileStatTotalProducts'), value: String(productStats.data.total), tone: 'surface' as const },
+    { label: t('tileStatPendingOrders'), value: String(orderStats.data.pending), tone: 'accent' as const },
+    { label: t('tileStatPaidMonth'), value: String(orderStats.data.paid_month), tone: 'primary' as const },
+    { label: t('tileStatRevenueMonth'), value: formatRupiah(orderStats.data.revenue_month), tone: 'accent' as const },
+    { label: t('tileStatTotalOrders'), value: String(orderStats.data.total), tone: 'primary' as const },
+    { label: t('tileStatActiveLicenses'), value: String(licenseActive), tone: 'surface' as const },
   ];
 
   const pendingOrders = pendingRes.data ?? [];
   const recentActivity = activityRes.data ?? [];
+  const activityCount = activityRes.meta?.total ?? 0;
 
   return (
     <div className="p-6 sm:p-8 space-y-8">
       {/* ───── HEADER ───── */}
       <header className="border-b-4 border-ink pb-6">
         <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-          ✎ Dashboard
+          {t('eyebrow')}
         </p>
         <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-          Beranda<span className="text-primary">.</span>
+          {t('title')}<span className="text-primary">.</span>
         </h1>
         <p className="mt-4 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          Ringkasan toko digital enpiistudio. Angka realtime — bukan retrospective.
+          {t('subtitle')}
         </p>
       </header>
 
       {/* ───── STAT TILES (6) ───── */}
       <section>
         <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-3">
-          ✎ Statistik
+          {t('sectionStats')}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {tiles.map((tile) => {
@@ -163,35 +173,37 @@ export default async function AdminHomePage() {
       {/* ───── PENDING ORDERS + RECENT ACTIVITY (2-col) ───── */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending orders panel */}
-        <Card variant="surface" className="p-6">
-          <div className="flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
+        <Card variant="surface" className="p-6 flex flex-col max-h-[28rem]">
+          <div className="shrink-0 flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
             <div>
               <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-                ✎ Needs attention
+                {t('pendingEyebrow')}
               </p>
               <h2 className="font-display text-2xl font-black uppercase tracking-tight text-ink leading-tight mt-1">
-                Pending Orders
+                {t('pendingTitle')}
               </h2>
             </div>
-            <Link
+            <NLink
               href="/admin/orders?status=pending"
-              className="font-label text-[10px] uppercase font-bold text-primary hover:text-accent underline decoration-2 underline-offset-2"
+              variant="primary"
+              underline="static"
+              className="font-label text-[10px] uppercase"
             >
-              Lihat semua →
-            </Link>
+              {t('pendingViewAll')}
+            </NLink>
           </div>
 
           {pendingOrders.length === 0 ? (
             <div className="py-8 text-center">
               <p className="font-display text-lg font-black uppercase text-ink/60">
-                Tidak ada order pending 🎉
+                {t('pendingEmpty')}
               </p>
               <p className="mt-1 font-body text-body-sm text-ink/50">
-                Semua pesanan sudah diproses — tinggal nunggu paid.
+                {t('pendingEmptyHint')}
               </p>
             </div>
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-2 overflow-y-auto pr-1 -mr-1 flex-1 min-h-0">
               {pendingOrders.map((o) => (
                 <li key={o.kode_order}>
                   <Link
@@ -224,32 +236,32 @@ export default async function AdminHomePage() {
         </Card>
 
         {/* Recent activity panel — real data dari ActivityLogger observer */}
-        <Card variant="surface" className="p-6">
-          <div className="flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
+        <Card variant="surface" className="p-6 flex flex-col max-h-[28rem]">
+          <div className="shrink-0 flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
             <div>
               <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-                ✎ Recent
+                {t('activityEyebrow')}
               </p>
               <h2 className="font-display text-2xl font-black uppercase tracking-tight text-ink leading-tight mt-1">
-                Activity
+                {t('activityTitle')}
               </h2>
             </div>
             <span className="text-[10px] text-ink/50 italic font-body">
-              {activityRes.meta?.total ?? 0} entr{activityRes.meta?.total === 1 ? 'y' : 'ies'}
+              {t('activityCount', { count: activityCount })}
             </span>
           </div>
 
           {recentActivity.length === 0 ? (
             <div className="py-8 text-center">
               <p className="font-display text-lg font-black uppercase text-ink/60">
-                Belum ada aktivitas
+                {t('activityEmpty')}
               </p>
               <p className="mt-1 font-body text-body-sm text-ink/50">
-                Edit produk, post, atau order — log akan muncul di sini.
+                {t('activityEmptyHint')}
               </p>
             </div>
           ) : (
-            <ul className="space-y-3">
+            <ul className="space-y-3 overflow-y-auto pr-1 -mr-1 flex-1 min-h-0">
               {recentActivity.map((entry) => (
                 <ActivityRow key={entry.id} entry={entry} />
               ))}
@@ -261,68 +273,15 @@ export default async function AdminHomePage() {
       {/* ───── QUICK SHORTCUTS ───── */}
       <section>
         <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-3">
-          ✎ Quick action
+          {t('sectionQuick')}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Button href="/admin/products/new" variant="primary" size="md">+ Produk Baru</Button>
-          <Button href="/admin/posts/new" variant="primary" size="md">+ Catatan Baru</Button>
-          <Button href="/admin/orders?status=pending" variant="accent" size="md">Cek Pending</Button>
-          <Button href="/admin/license-keys" variant="surface" size="md">License Pool</Button>
+          <Button href="/admin/products/new" variant="primary" size="md">{t('quickNewProduct')}</Button>
+          <Button href="/admin/posts/new" variant="primary" size="md">{t('quickNewPost')}</Button>
+          <Button href="/admin/orders?status=pending" variant="accent" size="md">{t('quickCheckPending')}</Button>
+          <Button href="/admin/license-keys" variant="surface" size="md">{t('quickLicensePool')}</Button>
         </div>
       </section>
     </div>
-  );
-}
-
-// ───── Activity row helper ─────
-
-const ACTION_LABEL: Record<string, { icon: string; verb: string }> = {
-  created: { icon: '+', verb: 'membuat' },
-  updated: { icon: '✎', verb: 'memperbarui' },
-  status_changed: { icon: '⇄', verb: 'mengubah status' },
-  deleted: { icon: '−', verb: 'menghapus' },
-  maintenance_toggled: { icon: '⚠', verb: 'maintenance' },
-};
-
-const SUBJECT_LABEL: Record<string, string> = {
-  product: 'Produk',
-  post: 'Catatan',
-  order: 'Order',
-  license_key: 'License',
-  setting: 'Setting',
-  maintenance: 'Maintenance',
-};
-
-function ActivityRow({ entry }: { entry: ActivityLog }) {
-  const actionMeta = ACTION_LABEL[entry.action] ?? { icon: '•', verb: entry.action };
-  const subjectName = SUBJECT_LABEL[entry.subject_type] ?? entry.subject_type;
-  const detail = entry.subject_label ?? entry.subject_id ?? '';
-
-  return (
-    <li className="flex items-start gap-3 p-3 border-2 border-ink bg-surface hover:bg-accent transition-colors">
-      <span
-        aria-hidden="true"
-        className="shrink-0 w-8 h-8 flex items-center justify-center border-2 border-ink bg-primary text-surface font-display font-black text-base"
-      >
-        {actionMeta.icon}
-      </span>
-      <div className="flex-1 min-w-0">
-        <p className="font-body text-sm text-ink">
-          <span className="font-bold">{actionMeta.verb}</span>{' '}
-          <span className="text-ink/60 uppercase font-bold tracking-wide text-[10px]">
-            {subjectName}
-          </span>
-          {detail && (
-            <>
-              {' '}
-              <span className="font-bold truncate">"{detail}"</span>
-            </>
-          )}
-        </p>
-        <p className="mt-1 text-[10px] text-ink/50 italic">
-          {formatDateTime(entry.created_at)}
-        </p>
-      </div>
-    </li>
   );
 }

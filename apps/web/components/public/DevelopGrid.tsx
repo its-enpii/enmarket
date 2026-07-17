@@ -17,6 +17,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { formatRupiah } from '@/lib/format';
@@ -27,12 +28,6 @@ interface Props {
   initialMeta: PaginationMeta;
   filterKey: string; // serialized "tipe=q&page=1" — biar useEffect reset saat filter change
 }
-
-const DIVIDER_QUOTES = [
-  'Built with intention, not on demand.',
-  'Harga adalah nomor — value adalah yang ada di baliknya.',
-  'Sebagian karya di sini masih dalam tahap eksplorasi.',
-];
 
 interface LoadResult {
   data: Product[];
@@ -60,6 +55,7 @@ async function fetchPage(
 }
 
 export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) {
+  const t = useTranslations('develop');
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [meta, setMeta] = useState<PaginationMeta>(initialMeta);
   const [loading, setLoading] = useState(false);
@@ -82,7 +78,7 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
     const next = meta.current_page + 1;
     const result = await fetchPage(next, filterKey);
     if (!result) {
-      setError('Gagal memuat. Coba lagi.');
+      setError(t('loadError'));
       setLoading(false);
       return;
     }
@@ -94,7 +90,7 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
     });
     setMeta(result.meta);
     setLoading(false);
-  }, [loading, hasMore, meta.current_page, filterKey]);
+  }, [loading, hasMore, meta.current_page, filterKey, t]);
 
   // IntersectionObserver — trigger loadMore saat sentinel visible.
   useEffect(() => {
@@ -120,7 +116,15 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
     <>
       <div className="space-y-12">
         {products.map((product, i) => (
-          <Fragment key={product.id} product={product} index={i} />
+          <Fragment
+            key={product.id}
+            product={product}
+            index={i}
+            studioNote={t('studioNote')}
+            quote={t(`divider${(Math.floor(i / 3) % 3) + 1}` as 'divider1' | 'divider2' | 'divider3')}
+            fallbackDescription={t('fallbackDescription')}
+            viewLabel={t('view')}
+          />
         ))}
       </div>
 
@@ -145,17 +149,17 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
             {loading ? (
               <>
                 <span className="inline-block w-3 h-3 bg-accent mr-3 animate-pulse" />
-                Loading…
+                {t('loading')}
               </>
             ) : (
-              'Load more artifacts'
+              t('loadMore')
             )}
           </button>
         )}
 
         {!hasMore && products.length > 0 && (
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink/40">
-            ✎ End of catalog — {meta.total} artifacts total
+            {t('end', { count: meta.total })}
           </p>
         )}
 
@@ -169,21 +173,39 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
 
 // ───── Fragment + DevelopCard (mirror dari server version) ─────
 
-function Fragment({ product, index }: { product: Product; index: number }) {
+function Fragment({
+  product,
+  index,
+  studioNote,
+  quote,
+  fallbackDescription,
+  viewLabel,
+}: {
+  product: Product;
+  index: number;
+  studioNote: string;
+  quote: string;
+  fallbackDescription: string;
+  viewLabel: string;
+}) {
   const isLarge = index % 2 === 0;
   const showDivider = (index + 1) % 3 === 0 && index < 12;
-  const quoteIdx = Math.floor(index / 3) % DIVIDER_QUOTES.length;
 
   return (
     <>
-      <DevelopCard product={product} variant={isLarge ? 'large' : 'small'} />
+      <DevelopCard
+        product={product}
+        variant={isLarge ? 'large' : 'small'}
+        fallbackDescription={fallbackDescription}
+        viewLabel={viewLabel}
+      />
       {showDivider && (
         <div className="bg-primary text-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] p-10 md:p-16 -rotate-[0.5deg]">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
-            ✎ Studio note
+            {studioNote}
           </p>
           <p className="font-display text-2xl md:text-4xl font-black uppercase leading-tight">
-            “{DIVIDER_QUOTES[quoteIdx]}”
+            “{quote}”
           </p>
         </div>
       )}
@@ -194,14 +216,18 @@ function Fragment({ product, index }: { product: Product; index: number }) {
 function DevelopCard({
   product,
   variant,
+  fallbackDescription,
+  viewLabel,
 }: {
   product: Product;
   variant: 'large' | 'small';
+  fallbackDescription: string;
+  viewLabel: string;
 }) {
   const thumb = product.preview_images?.[0];
   const href = `/develop/${product.slug}`;
   const title = product.nama;
-  const body = product.deskripsi || 'Artifact dari studio enpii.';
+  const body = product.deskripsi || fallbackDescription;
   const oneLiner = body.length > 110 ? body.slice(0, 110).trim() + '…' : body;
   const priceLabel = formatRupiah(product.harga);
   const kategoriNama = product.category?.nama ?? null;
@@ -247,7 +273,7 @@ function DevelopCard({
               arrow
               className="font-label text-label-sm uppercase font-bold"
             >
-              View
+              {viewLabel}
             </NLink>
           </div>
         </div>

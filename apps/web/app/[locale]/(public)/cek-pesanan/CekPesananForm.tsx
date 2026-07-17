@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 
@@ -33,7 +34,7 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
     <form action={formAction} className="space-y-4">
       <div>
         <label htmlFor="kode_order" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('title')}
+          {t('codeLabel')}
         </label>
         <Input
           id="kode_order"
@@ -50,17 +51,17 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
 
       <div>
         <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          Email
+          {t('emailLabel')}
         </label>
         <Input
           id="email"
           name="email"
           type="email"
           required
-          placeholder="email@example.com"
+          placeholder={t('emailPlaceholder')}
           autoComplete="email"
         />
-        <FormHint>Email yang kamu pakai saat checkout.</FormHint>
+        <FormHint>{t('emailHint')}</FormHint>
         <FormError>{state?.fieldErrors?.email?.[0]}</FormError>
       </div>
 
@@ -68,13 +69,15 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
         <FormError variant="box">{state.error}</FormError>
       )}
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
+        size="md"
         disabled={pending}
-        className="w-full bg-primary text-surface border-2 border-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0_0_var(--color-ink)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full"
       >
         {pending ? `${t('submit')}…` : `${t('submit')} →`}
-      </button>
+      </Button>
     </form>
   );
 }

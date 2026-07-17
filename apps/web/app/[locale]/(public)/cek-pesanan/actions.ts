@@ -6,6 +6,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 
 import { ApiRequestError, apiPost } from '@/lib/api';
 
@@ -20,6 +21,7 @@ interface CheckResult {
 }
 
 export async function checkOrderAction(input: CheckInput): Promise<CheckResult> {
+  const t = await getTranslations('checkOrder');
   try {
     const res = await apiPost<{ data: { kode_order: string } }>('/api/orders/check', input);
 
@@ -35,10 +37,15 @@ export async function checkOrderAction(input: CheckInput): Promise<CheckResult> 
     redirect(`/cek-pesanan/${encodeURIComponent(res.data.kode_order)}`);
   } catch (err) {
     if (err instanceof ApiRequestError) {
-      const body = err.body as { message?: string; errors?: Record<string, string[]> } | undefined;
+      const body = err.body as { errors?: Record<string, string[]> } | undefined;
+      const fieldErrors = body?.errors
+        ? Object.fromEntries(
+            Object.keys(body.errors).map((field) => [field, [t('errorGeneric')]]),
+          )
+        : undefined;
       return {
-        error: body?.message ?? err.message,
-        fieldErrors: body?.errors,
+        error: err.status === 404 ? t('errorNotFound') : t('errorGeneric'),
+        fieldErrors,
       };
     }
     // redirect() throws — biarin

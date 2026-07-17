@@ -12,6 +12,7 @@
  */
 
 import { Card, NLink } from '@/components/ui/neobrutal';
+import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
 import type { Product } from '@/lib/types';
@@ -38,7 +39,10 @@ async function fetchRelated(currentSlug: string, categorySlug?: string): Promise
 }
 
 export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
-  const related = await fetchRelated(currentSlug, categorySlug);
+  const [related, t] = await Promise.all([
+    fetchRelated(currentSlug, categorySlug),
+    getTranslations('developDetail'),
+  ]);
 
   if (related.length === 0) {
     return null;
@@ -50,12 +54,10 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-              ✎ More from studio
+              {t('relatedEyebrow')}
             </p>
             <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
-              Karya{' '}
-              <span className="text-primary">lainnya</span>
-              .
+              {t('relatedTitle')}
             </h2>
           </div>
           <NLink
@@ -65,13 +67,17 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
             arrow
             className="font-label text-label-sm uppercase font-bold"
           >
-            Lihat semua di Develop
+            {t('relatedAll')}
           </NLink>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {related.map((product) => (
-            <RelatedCard key={product.id} product={product} />
+            <RelatedCard
+              key={product.id}
+              product={product}
+              fallbackDescription={t('relatedFallback')}
+            />
           ))}
         </div>
       </div>
@@ -79,7 +85,13 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
   );
 }
 
-function RelatedCard({ product }: { product: Product }) {
+function RelatedCard({
+  product,
+  fallbackDescription,
+}: {
+  product: Product;
+  fallbackDescription: string;
+}) {
   const thumb = product.preview_images?.[0];
   const href = `/develop/${product.slug}`;
   const title = product.nama;
@@ -109,7 +121,7 @@ function RelatedCard({ product }: { product: Product }) {
             {title}
           </h3>
           <p className="mt-1 text-xs text-ink/60 line-clamp-2">
-            {product.deskripsi?.slice(0, 80) ?? 'Artifact dari studio enpii.'}
+            {product.deskripsi?.slice(0, 80) ?? fallbackDescription}
           </p>
         </div>
         <span className="inline-flex items-center self-start bg-accent text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase shadow-[3px_3px_0_0_var(--color-ink)]">

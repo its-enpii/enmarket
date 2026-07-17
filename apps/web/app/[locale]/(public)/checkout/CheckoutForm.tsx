@@ -1,8 +1,9 @@
 'use client';
 
 import { useActionState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
+import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 
@@ -19,19 +20,20 @@ interface Props {
 
 export function CheckoutForm({ defaultEmail }: Props) {
   const t = useTranslations('checkout');
-  const tCommon = useTranslations('common.buttons');
-  const locale = useLocale();
-  const isEn = locale === 'en';
-  const L = (id: string, en: string) => (isEn ? en : id);
 
-  const [state, formAction, pending] = useActionState(
-    async (_prev: State | undefined, formData: FormData): Promise<State> => {
-      return checkoutAction({
+  // FormData → CheckoutInput: server action expect object {nama,email,wa},
+  // bukan FormData. Wrapper ini tetap di-handle client-side biar input object
+  // sampai utuh. NEXT_REDIRECT di-rethrow biar Next.js follow redirect().
+  const [state, formAction, pending] = useActionState<State | undefined, FormData>(
+    async (_prev, formData) =>
+      checkoutAction({
         nama: (formData.get('nama') as string) ?? '',
         email: (formData.get('email') as string) ?? '',
         wa: (formData.get('wa') as string) ?? '',
-      });
-    },
+      }).catch((err) => {
+        if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
+        return { error: t('errorGeneric') };
+      }),
     {} as State,
   );
 
@@ -40,10 +42,10 @@ export function CheckoutForm({ defaultEmail }: Props) {
       {/* Header strip — matches theme eyebrow */}
       <div className="border-b-2 border-ink/20 pb-3 flex items-baseline justify-between">
         <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/70">
-          ✎ {t('buyerInfo', { defaultValue: 'Data Pembeli' })}
+          ✎ {t('buyerInfo')}
         </p>
         <span className="font-label text-[10px] uppercase tracking-wider text-ink/50">
-          {L('Wajib diisi', 'Required')}
+          {t('required')}
         </span>
       </div>
 
@@ -57,7 +59,7 @@ export function CheckoutForm({ defaultEmail }: Props) {
           type="text"
           required
           autoComplete="name"
-          placeholder={L('Nama kamu', 'Your name')}
+          placeholder={t('namePlaceholder')}
         />
         <FormError>{state?.fieldErrors?.nama?.[0]}</FormError>
       </div>
@@ -73,9 +75,9 @@ export function CheckoutForm({ defaultEmail }: Props) {
           required
           autoComplete="email"
           defaultValue={defaultEmail}
-          placeholder="kamu@email.com"
+          placeholder={t('emailPlaceholder')}
         />
-        <FormHint>{L('Untuk kirim link download & license key.', 'Used to send download link & license key.')}</FormHint>
+        <FormHint>{t('emailHint')}</FormHint>
         <FormError>{state?.fieldErrors?.email?.[0]}</FormError>
       </div>
 
@@ -91,7 +93,7 @@ export function CheckoutForm({ defaultEmail }: Props) {
           autoComplete="tel"
           placeholder="08123456789"
         />
-        <FormHint>{L('Untuk notifikasi status pesanan.', 'For order status notifications.')}</FormHint>
+        <FormHint>{t('phoneHint')}</FormHint>
         <FormError>{state?.fieldErrors?.wa?.[0]}</FormError>
       </div>
 
@@ -99,19 +101,19 @@ export function CheckoutForm({ defaultEmail }: Props) {
         <FormError variant="box">{state.error}</FormError>
       )}
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
+        size="lg"
+        shadowColor="accent"
         disabled={pending}
-        className="w-full bg-primary text-surface border-4 border-ink px-6 py-5 font-label text-base uppercase font-black tracking-wider shadow-[6px_6px_0_0_var(--color-accent)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_0_var(--color-accent)] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full"
       >
         {pending ? `${t('placeOrder')}…` : `${t('placeOrder')} →`}
-      </button>
+      </Button>
 
       <p className="text-xs text-ink/50 text-center border-t-2 border-ink/10 pt-3">
-        {L(
-          'Dengan klik tombol ini, kamu akan diarahkan ke halaman pembayaran QRIS Tripay.',
-          'By clicking this button, you will be redirected to the QRIS Tripay payment page.'
-        )}
+        {t('submitHint')}
       </p>
     </form>
   );

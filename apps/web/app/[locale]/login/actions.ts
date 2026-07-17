@@ -22,7 +22,6 @@ interface LoginResult {
 
 export async function loginAction(formData: FormData): Promise<LoginResult> {
   const t = await getTranslations('login');
-  const tCommon = await getTranslations('common.buttons');
   const token = formData.get('token')?.toString() ?? '';
 
   if (!token.trim()) {
@@ -32,12 +31,10 @@ export async function loginAction(formData: FormData): Promise<LoginResult> {
   try {
     await apiPost<LoginResponse>('/api/admin/login', { token });
   } catch (err) {
-    if (err instanceof ApiRequestError) {
-      const msg = err.body?.message || `HTTP ${err.status}`;
-      const fieldErrors = err.body?.errors?.token;
-      return { error: fieldErrors?.[0] ?? msg };
+    if (err instanceof ApiRequestError && (err.status === 401 || err.status === 422)) {
+      return { error: t('errorInvalid') };
     }
-    return { error: tCommon('retry') };
+    return { error: t('errorGeneric') };
   }
 
   const cookieStore = await cookies();
@@ -49,5 +46,6 @@ export async function loginAction(formData: FormData): Promise<LoginResult> {
   });
 
   const locale = await getLocale();
-  redirect({ pathname: '/admin', locale });
+  redirect({ href: '/admin', locale });
+  return {} as LoginResult;
 }

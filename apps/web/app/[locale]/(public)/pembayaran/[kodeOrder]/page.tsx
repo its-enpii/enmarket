@@ -49,14 +49,14 @@ export default async function PembayaranPage({ params }: PageProps) {
         href="/keranjang"
         className="inline-block mb-4 text-sm font-bold text-ink/60 hover:text-primary"
       >
-        ← {tCommon('back')}
+        {tCommon('back')}
       </Link>
 
       <h1 className="text-2xl sm:text-3xl font-bold text-ink mb-2">
         {t('title')}
       </h1>
       <p className="text-sm text-ink/60 mb-8">
-        Scan QR di bawah ini dari app e-wallet / m-banking kamu.
+        {t('pageInstruction')}
       </p>
 
       <PaymentPoller

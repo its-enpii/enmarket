@@ -16,7 +16,5 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: (await import(`../messages/${locale}.json`)).default,
-    // 'warn' saat dev agar missing keys tidak crash; bisa strict ke 'error' di prod.
-    onMessageError: () => undefined,
   };
 });

@@ -38,6 +38,9 @@ type CommonProps = {
   srLabel?: string;
   /** Tanpa shadow/border. Untuk button di dalam card yg sudah shadowed. */
   flat?: boolean;
+  /** Override shadow color (default ink). Pakai 'accent' untuk hero CTA yang
+   *  pakai shadow kuning khas neobrutal. */
+  shadowColor?: 'ink' | 'accent';
   children?: ReactNode;
   className?: string;
 };
@@ -50,6 +53,8 @@ type ButtonAsButton = CommonProps &
 type ButtonAsLink = CommonProps &
   Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | keyof CommonProps> & {
     href: string;
+    /** Pakai native <a> untuk external URL (download, dll.). Hindari Next.js Link yang akan client-route. */
+    external?: boolean;
   };
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
@@ -60,16 +65,22 @@ export function Button(props: ButtonProps) {
     size = 'md',
     flat = false,
     srLabel,
+    shadowColor = 'ink',
     children,
     className = '',
     ...rest
   } = props;
 
+  // Saat shadowColor override, replace var(--color-ink) di base interactive.
   const baseShape = flat
     ? 'font-bold hover:brightness-110 active:brightness-95'
-    : size === 'sm'
-      ? INTERACTIVE_BASE_SM
-      : INTERACTIVE_BASE;
+    : shadowColor === 'accent'
+      ? size === 'sm'
+        ? INTERACTIVE_BASE_SM.replace(/var\(--color-ink\)/g, 'var(--color-accent)')
+        : INTERACTIVE_BASE.replace(/var\(--color-ink\)/g, 'var(--color-accent)')
+      : size === 'sm'
+        ? INTERACTIVE_BASE_SM
+        : INTERACTIVE_BASE;
 
   // `ghost` adalah alias legacy admin untuk `surface`.
   const variantKey: ButtonVariant = variant === 'ghost' ? 'surface' : variant;
@@ -95,7 +106,14 @@ export function Button(props: ButtonProps) {
   );
 
   if ('href' in props && props.href !== undefined) {
-    const { href, ...anchorRest } = rest as ButtonAsLink;
+    const { href, external, ...anchorRest } = rest as ButtonAsLink & { external?: boolean };
+    if (external) {
+      return (
+        <a href={href} className={composed} {...anchorRest}>
+          {inner}
+        </a>
+      );
+    }
     return (
       <Link href={href} className={composed} {...anchorRest}>
         {inner}

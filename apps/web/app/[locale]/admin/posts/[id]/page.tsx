@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Card } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime } from '@/lib/format';
 import {
@@ -37,20 +37,23 @@ async function loadPost(id: string) {
 
 export default async function EditPostPage({ params }: Props) {
   const { id } = await params;
-  const post = await loadPost(id);
+  const [post, t] = await Promise.all([
+    loadPost(id),
+    getTranslations('admin.posts'),
+  ]);
   if (!post) notFound();
 
   return (
     <div className="p-6 sm:p-8 space-y-6">
       <header className="border-b-4 border-ink pb-6">
         <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-          ✎ Studio / Catatan / Edit
+          {t('editEyebrow')}
         </p>
         <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
           {post.title}<span className="text-primary">.</span>
         </h1>
         <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          Sunting catatan. Perubahan langsung tersimpan setelah klik Simpan.
+          {t('editSubtitle')}
         </p>
       </header>
 
@@ -58,19 +61,21 @@ export default async function EditPostPage({ params }: Props) {
       <Card variant="surface" className="p-4 flex flex-wrap items-center gap-3">
         <StatusBadge status={post.status} labelMap={POST_STATUS_LABEL} bgOverride={STATUS_BG} />
         <span className="text-sm">
-          <strong>Slug:</strong> <code className="font-mono">{post.slug}</code>
+          <strong>{t('quickInfo.slug')}:</strong> <code className="font-mono">{post.slug}</code>
         </span>
         {post.published_at && (
           <span className="text-sm">
-            <strong>Publish:</strong> {formatDateTime(post.published_at)}
+            <strong>{t('quickInfo.publish')}:</strong> {formatDateTime(post.published_at)}
           </span>
         )}
-        <Link
+        <NLink
           href="/admin/posts"
-          className="ml-auto text-xs underline text-primary font-bold hover:text-accent"
+          variant="primary"
+          underline="static"
+          className="ml-auto text-xs"
         >
-          ← Kembali ke daftar
-        </Link>
+          {t('quickInfo.backToList')}
+        </NLink>
       </Card>
 
       <Card variant="surface" className="p-6 md:p-8">

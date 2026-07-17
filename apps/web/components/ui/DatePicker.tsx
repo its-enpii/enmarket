@@ -142,7 +142,7 @@ export function DatePicker({
             'focus:shadow-[4px_4px_0_0_var(--color-ink)]'
           }
         >
-          <span className={'truncate ' + (isoValue ? 'text-ink' : 'text-ink/40')}>
+          <span className={'flex-1 text-left truncate ' + (isoValue ? 'text-ink' : 'text-ink/40')}>
             {displayLabel}
           </span>
           <CalendarIcon />

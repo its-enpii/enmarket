@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
@@ -14,13 +15,14 @@ interface Props {
 }
 
 export function RevokeButton({ id, keyMasked }: Props) {
+  const t = useTranslations('admin.licenseKeys.revoke');
   const [pending, startTransition] = useTransition();
 
   async function handleClick() {
     const ok = await confirmDialog({
-      title: 'Cabut License Key',
-      message: `Cabut license key "${keyMasked}"? Tindakan ini tidak bisa dibatalkan.`,
-      confirmLabel: 'Cabut',
+      title: t('confirmTitle'),
+      message: t('confirmMessage', { key: keyMasked }),
+      confirmLabel: t('confirmAction'),
       danger: true,
     });
     if (!ok) return;
@@ -32,7 +34,7 @@ export function RevokeButton({ id, keyMasked }: Props) {
       if (res.error) {
         toast.error(res.error);
       } else {
-        toast.success(res.message ?? 'Key dicabut.');
+        toast.success(res.message ?? t('success'));
       }
     });
   }
@@ -45,7 +47,7 @@ export function RevokeButton({ id, keyMasked }: Props) {
       onClick={handleClick}
       disabled={pending}
     >
-      {pending ? '…' : 'Cabut'}
+      {pending ? '…' : t('button')}
     </Button>
   );
 }

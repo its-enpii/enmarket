@@ -1,4 +1,5 @@
 import { NLink } from '@/components/ui/neobrutal';
+import { getTranslations } from 'next-intl/server';
 
 import type { Category } from '@/lib/types';
 
@@ -11,11 +12,13 @@ interface Props {
  * Sidebar filter kategori — chip list.
  * Tampilkan semua kategori + link "Semua" untuk reset.
  */
-export function CategoryFilter({ categories, activeSlug }: Props) {
+export async function CategoryFilter({ categories, activeSlug }: Props) {
+  const t = await getTranslations('katalog');
+
   return (
     <aside className="bg-surface border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)]">
       <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-ink">
-        Kategori
+        {t('categoryLabel')}
       </h2>
       <ul className="flex flex-col gap-2">
         <li>
@@ -29,7 +32,7 @@ export function CategoryFilter({ categories, activeSlug }: Props) {
                 : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_var(--color-ink)]'
             }`}
           >
-            Semua
+            {t('allCategories')}
           </NLink>
         </li>
         {categories.map((cat) => {

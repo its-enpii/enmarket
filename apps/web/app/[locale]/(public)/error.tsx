@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+
+import { Button } from '@/components/ui/neobrutal';
 
 interface Props {
   error: Error & { digest?: string };
@@ -19,7 +20,7 @@ export default function PublicError({ error, reset }: Props) {
         {t('subtitle500')}
       </h1>
       <p className="mt-4 text-base text-ink/70">
-        Coba lagi sebentar, atau kembali ke katalog.
+        {t('body500')}
       </p>
       {process.env.NODE_ENV === 'development' && (
         <pre className="mt-4 text-xs text-left bg-ink/5 p-3 border border-ink/20 overflow-x-auto font-mono max-w-xl mx-auto">
@@ -27,19 +28,12 @@ export default function PublicError({ error, reset }: Props) {
         </pre>
       )}
       <div className="mt-8 flex flex-wrap gap-3 items-center justify-center">
-        <button
-          type="button"
-          onClick={reset}
-          className="border-2 border-ink bg-accent text-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[5px_5px_0_0_var(--color-ink)] transition-all min-h-[44px]"
-        >
+        <Button variant="accent" size="md" onClick={reset} className="min-h-[44px]">
           {t('retry')}
-        </button>
-        <Link
-          href="/katalog"
-          className="inline-block border-2 border-ink bg-surface text-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[5px_5px_0_0_var(--color-ink)] transition-all min-h-[44px]"
-        >
+        </Button>
+        <Button variant="surface" size="md" href="/katalog" className="min-h-[44px]">
           {t('viewCatalog').replace('← ', '')}
-        </Link>
+        </Button>
       </div>
     </div>
   );

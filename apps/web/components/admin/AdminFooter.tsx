@@ -1,8 +1,13 @@
+'use client';
+
 /**
  * Footer admin — branding enpiistudio + link public store.
  * Konsisten dengan public Footer (border-t-4 ink, surface bg) tapi lebih ringkas.
  */
+import { useTranslations } from 'next-intl';
+
 export function AdminFooter() {
+  const t = useTranslations('admin.footer');
   return (
     <footer className="border-t-4 border-ink bg-surface mt-auto">
       <div className="px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-ink/60">
@@ -10,8 +15,8 @@ export function AdminFooter() {
           <span className="bg-primary text-surface border-2 border-ink px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide mr-1.5">
             enpii
           </span>
-          <span className="font-bold text-ink">Admin Panel</span>
-          <span className="ml-2">— enpiistudio Store</span>
+          <span className="font-bold text-ink">{t('brand')}</span>
+          <span className="ml-2">{t('store')}</span>
         </p>
         <div className="flex gap-3">
           <a
@@ -28,7 +33,7 @@ export function AdminFooter() {
             rel="noopener noreferrer"
             className="hover:text-ink font-bold"
           >
-            ← Lihat Toko
+            {t('viewStore')}
           </a>
         </div>
       </div>

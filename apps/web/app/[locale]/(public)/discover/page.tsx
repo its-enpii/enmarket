@@ -75,7 +75,7 @@ export default async function DiscoverPage({
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
             {t('eyebrow')}
           </p>
-          <h1 className="font-display text-7xl md:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
             {t('title')}
             <span className="text-primary">.</span>
           </h1>
@@ -90,7 +90,7 @@ export default async function DiscoverPage({
         <div className="px-6 md:px-12 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
           {/* Pull-quote — kolom kiri, dominant. Frasa studio identity (EN),
               dibungkus span dengan background color + hard shadow Neobrutalism. */}
-          <blockquote className="font-display text-3xl md:text-5xl font-black uppercase leading-[1.05] tracking-tight text-ink">
+          <blockquote className="font-display text-2xl sm:text-3xl md:text-5xl font-black uppercase leading-[1.05] tracking-tight text-ink break-words">
             <span className="text-primary">“</span>
             Code is a{' '}
             <span className="inline-block bg-primary text-surface px-2 py-0.5 border-2 border-ink shadow-[4px_4px_0_0_var(--color-accent)]">

@@ -3,8 +3,9 @@
  * Translated via next-intl 'display' / 'displayList' namespaces.
  */
 
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+
+import { Button, Card } from '@/components/ui/neobrutal';
 
 import { SearchBar } from '@/components/public/SearchBar';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
@@ -18,7 +19,14 @@ interface PageProps {
   searchParams: Promise<{ tag?: string; q?: string }>;
 }
 
-const TAG_PILLS = ['Dev Log', 'Design', 'Behind the Scenes', 'Process'] as const;
+const TAG_KEYS = ['devLog', 'design', 'behindScenes', 'process'] as const;
+
+type TagLabels = {
+  design: string;
+  process: string;
+  devLog: string;
+  note: string;
+};
 
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
@@ -44,14 +52,21 @@ async function fetchPosts(): Promise<PaginatedResponse<Post> | null> {
   }
 }
 
-export default async function DisplayPage({ searchParams }: PageProps) {
+export default async function DisplayPage({ params, searchParams }: PageProps) {
+  const { locale } = await params;
   const sp = await searchParams;
   const q = typeof sp.q === 'string' && sp.q.trim() ? sp.q.trim() : undefined;
 
   const t = await getTranslations('displayList');
-  const tTags = await getTranslations('display.tags');
   const tPost = await getTranslations('displayPost');
   const tCommon = await getTranslations('common.search');
+
+  const tagLabels: TagLabels = {
+    design: t('tags.design'),
+    process: t('tags.process'),
+    devLog: t('tags.devLog'),
+    note: t('tags.note'),
+  };
 
   const postsData = await fetchPosts();
   const posts = postsData?.data ?? [];
@@ -68,7 +83,7 @@ export default async function DisplayPage({ searchParams }: PageProps) {
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
             {t('eyebrow')}
           </p>
-          <h1 className="font-display text-7xl md:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
             {t('title')}
             <span className="text-primary">.</span>
           </h1>
@@ -85,8 +100,8 @@ export default async function DisplayPage({ searchParams }: PageProps) {
             <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
               {t('tagsLabel')}
             </span>
-            {TAG_PILLS.map((tag) => {
-              const tone = tag === 'Dev Log' || tag === 'Process' ? 'primary' : 'accent';
+            {TAG_KEYS.map((tag) => {
+              const tone = tag === 'devLog' || tag === 'process' ? 'primary' : 'accent';
               return (
                 <span
                   key={tag}
@@ -97,7 +112,7 @@ export default async function DisplayPage({ searchParams }: PageProps) {
                       : 'bg-primary text-surface',
                   ].join(' ')}
                 >
-                  {tag}
+                  {t(`tags.${tag}`)}
                 </span>
               );
             })}
@@ -126,6 +141,9 @@ export default async function DisplayPage({ searchParams }: PageProps) {
               post={featured}
               readEntryLabel={tPost('readEntry')}
               minutesLabel={t('minutesShort')}
+              locale={locale}
+              featuredLabel={t('featured')}
+              tagLabels={tagLabels}
             />
           </div>
         </section>
@@ -155,6 +173,8 @@ export default async function DisplayPage({ searchParams }: PageProps) {
                   variant={pickVariant(i, rest.length)}
                   readEntryLabel={tPost('readEntry')}
                   readLabel={tPost('readShort')}
+                  locale={locale}
+                  tagLabels={tagLabels}
                 />
               ))}
             </div>
@@ -178,12 +198,15 @@ export default async function DisplayPage({ searchParams }: PageProps) {
           <p className="font-body text-body-md text-surface/80 max-w-xl mx-auto mb-8">
             {t('footerBody')}
           </p>
-          <Link
+          <Button
+            variant="surface"
+            size="lg"
             href="/develop"
-            className="inline-flex items-center gap-2 bg-surface text-ink border-4 border-ink px-8 py-4 font-label text-label-sm uppercase font-black tracking-wider shadow-[6px_6px_0_0_var(--color-accent)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] transition-all"
+            shadowColor="accent"
+            className="inline-flex items-center gap-2"
           >
             {t('footerCta')}
-          </Link>
+          </Button>
         </div>
       </section>
     </>
@@ -194,18 +217,26 @@ function FeaturedCover({
   post,
   readEntryLabel,
   minutesLabel,
+  locale,
+  featuredLabel,
+  tagLabels,
 }: {
   post: Post;
   readEntryLabel: string;
   minutesLabel: string;
+  locale: string;
+  featuredLabel: string;
+  tagLabels: TagLabels;
 }) {
-  const date = post.published_at ? formatDate(post.published_at) : '';
-  const tag = post.excerpt ? pickTag(post.excerpt) : 'Catatan';
+  const date = post.published_at ? formatDate(post.published_at, locale) : '';
+  const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
 
   return (
-    <Link
+    <Card
+      variant="surface"
+      thick
       href={`/display/${post.slug}`}
-      className="group block bg-surface border-4 border-ink shadow-[12px_12px_0_0_var(--color-ink)] overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] transition-all"
+      className="group overflow-hidden"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12">
         <div className="lg:col-span-7 relative bg-primary/10 border-b-4 lg:border-b-0 lg:border-r-4 border-ink overflow-hidden">
@@ -223,7 +254,7 @@ function FeaturedCover({
           )}
           <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider shadow-[3px_3px_0_0_var(--color-ink)]">
-              ✎ Featured
+              {featuredLabel}
             </span>
             <span className="inline-flex items-center bg-ink text-surface border-2 border-ink px-3 py-1 font-label text-label-sm font-bold uppercase tracking-wider">
               {tag}
@@ -250,7 +281,7 @@ function FeaturedCover({
           </span>
         </div>
       </div>
-    </Link>
+    </Card>
   );
 }
 
@@ -269,22 +300,28 @@ function PostCardZine({
   variant,
   readEntryLabel,
   readLabel,
+  locale,
+  tagLabels,
 }: {
   post: Post;
   variant: ZineVariant;
   readEntryLabel: string;
   readLabel: string;
+  locale: string;
+  tagLabels: TagLabels;
 }) {
-  const date = post.published_at ? formatDate(post.published_at) : '';
-  const tag = post.excerpt ? pickTag(post.excerpt) : 'Catatan';
+  const date = post.published_at ? formatDate(post.published_at, locale) : '';
+  const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
   const tagTone: 'accent' | 'primary' = post.id % 2 === 0 ? 'accent' : 'primary';
   const href = `/display/${post.slug}`;
 
   if (variant === 'wide') {
     return (
-      <Link
+      <Card
+        variant="surface"
+        thick
         href={href}
-        className="group block bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all"
+        className="group overflow-hidden"
       >
         <div className="grid grid-cols-1 md:grid-cols-12">
           <div className="md:col-span-7 bg-primary/10 border-b-4 md:border-b-0 md:border-r-4 border-ink overflow-hidden">
@@ -309,15 +346,17 @@ function PostCardZine({
             </span>
           </div>
         </div>
-      </Link>
+      </Card>
     );
   }
 
   if (variant === 'square') {
     return (
-      <Link
+      <Card
+        variant="surface"
+        thick
         href={href}
-        className="group block bg-surface border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] overflow-hidden hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
+        className="group overflow-hidden"
       >
         <div className="aspect-square bg-primary/10 border-b-4 border-ink overflow-hidden">
           {post.thumbnail ? (
@@ -337,14 +376,16 @@ function PostCardZine({
           <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
           {post.excerpt && <p className="font-body text-body-sm text-ink/70 leading-snug line-clamp-3">{post.excerpt}</p>}
         </div>
-      </Link>
+      </Card>
     );
   }
 
   return (
-    <Link
+    <Card
+      variant="surface"
+      thick
       href={href}
-      className="group block bg-surface border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] overflow-hidden hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)] transition-all"
+      className="group overflow-hidden"
     >
       <div className="grid grid-cols-1 sm:grid-cols-3">
         <div className="sm:col-span-1 bg-primary/10 border-b-4 sm:border-b-0 sm:border-r-4 border-ink overflow-hidden">
@@ -369,30 +410,30 @@ function PostCardZine({
           </span>
         </div>
       </div>
-    </Link>
+    </Card>
   );
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-US', {
+  return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   });
 }
 
-function pickTag(excerpt: string): string {
+function pickTag(excerpt: string, labels: TagLabels): string {
   const lower = excerpt.toLowerCase();
   if (lower.includes('design') || lower.includes('desain') || lower.includes('ui')) {
-    return 'Design';
+    return labels.design;
   }
   if (lower.includes('behind') || lower.includes('scenes') || lower.includes('process')) {
-    return 'Process';
+    return labels.process;
   }
   if (lower.includes('dev') || lower.includes('code') || lower.includes('kode') || lower.includes('build')) {
-    return 'Dev Log';
+    return labels.devLog;
   }
-  return 'Catatan';
+  return labels.note;
 }

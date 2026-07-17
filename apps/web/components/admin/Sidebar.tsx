@@ -1,20 +1,24 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
+import { routing } from '@/i18n/routing';
 
-const NAV = [
-  { href: '/admin', label: 'Beranda', icon: '◆' },
-  { href: '/admin/categories', label: 'Kategori', icon: '◧' },
-  { href: '/admin/products', label: 'Produk', icon: '▤' },
-  { href: '/admin/posts', label: 'Catatan', icon: '✎' },
-  { href: '/admin/orders', label: 'Pesanan', icon: '◊' },
-  { href: '/admin/license-keys', label: 'Lisensi', icon: '⚷' },
-  { href: '/admin/media', label: 'Media', icon: '◰' },
-  { href: '/admin/settings', label: 'Settings', icon: '⚙' },
-];
+const NAV_HREFS = [
+  '/admin',
+  '/admin/categories',
+  '/admin/products',
+  '/admin/posts',
+  '/admin/orders',
+  '/admin/license-keys',
+  '/admin/media',
+  '/admin/settings',
+] as const;
+
+const NAV_ICONS = ['◆', '◧', '▤', '✎', '◊', '⚷', '◰', '⚙'];
 
 interface Props {
   currentPath: string;
@@ -27,13 +31,24 @@ interface Props {
  * State controlled dari parent (AdminShell).
  */
 export function Sidebar({ currentPath, open, onClose }: Props) {
+  const t = useTranslations('admin');
+  const tSidebar = useTranslations('admin.sidebar');
+  // usePathname() returns path with locale prefix (e.g. /en/admin/...). Strip it
+  // so href matching against `/admin/...` works for nested routes too.
+  const path = currentPath.replace(
+    new RegExp(`^/(${routing.locales.join('|')})`),
+    '',
+  ) || '/';
+
+  const navKeys = ['dashboard', 'categories', 'products', 'posts', 'orders', 'licenseKeys', 'media', 'settings'] as const;
+
   return (
     <>
       {/* Backdrop untuk mobile */}
       {open && (
         <button
           type="button"
-          aria-label="Close menu"
+          aria-label={tSidebar('closeMenu')}
           onClick={onClose}
           className="lg:hidden fixed inset-0 bg-ink/60 z-40 cursor-default"
         />
@@ -52,10 +67,10 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
         <div className="p-6 border-b-2 border-ink flex items-center justify-between">
           <Link href="/admin" onClick={onClose} className="block">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-              enpiistudio
+              {tSidebar('brandTitle')}
             </p>
             <p className="text-2xl font-bold text-surface leading-none mt-1">
-              Admin
+              {tSidebar('brandSubtitle')}
             </p>
           </Link>
           {/* Close button (mobile only) */}
@@ -66,7 +81,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             flat
             onClick={onClose}
             className="lg:hidden !w-11 !h-11 !px-0 !py-0 !text-2xl !border-surface !text-surface"
-            srLabel="Close menu"
+            srLabel={tSidebar('closeMenu')}
           >
             ✕
           </Button>
@@ -74,16 +89,16 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
 
         <nav className="flex-1 p-3">
           <ul className="flex flex-col gap-1">
-          {NAV.map((item) => {
+          {NAV_HREFS.map((href, idx) => {
             const active =
-              item.href === '/admin'
-                ? currentPath === '/admin'
-                : currentPath.startsWith(item.href);
+              href === '/admin'
+                ? path === '/admin'
+                : path.startsWith(href);
 
             return (
-              <li key={item.href}>
+              <li key={href}>
                 <NLink
-                  href={item.href}
+                  href={href}
                   variant="default"
                   underline="none"
                   onClick={onClose}
@@ -94,8 +109,8 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
                       : 'bg-transparent text-surface border-transparent hover:border-ink hover:bg-accent hover:text-ink')
                   }
                 >
-                  <span className="text-lg">{item.icon}</span>
-                  {item.label}
+                  <span className="text-lg">{NAV_ICONS[idx]}</span>
+                  {t(`nav.${navKeys[idx]}`)}
                 </NLink>
               </li>
             );
@@ -110,7 +125,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             underline="none"
             className="text-xs font-bold uppercase tracking-wide min-h-[44px] inline-flex items-center"
           >
-            ← Lihat Toko
+            {tSidebar('viewStore')}
           </NLink>
         </div>
       </aside>
@@ -122,13 +137,14 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
  * Toggle button untuk sidebar (dipakai di Topbar mobile).
  */
 export function SidebarToggle({ onClick }: { onClick: () => void }) {
+  const tSidebar = useTranslations('admin.sidebar');
   return (
     <Button
       variant="surface"
       size="sm"
       type="button"
       onClick={onClick}
-      aria-label="Open menu"
+      aria-label={tSidebar('openMenu')}
       className="lg:hidden w-11 h-11 px-0 py-0 mr-2"
     >
       ☰

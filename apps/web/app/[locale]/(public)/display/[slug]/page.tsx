@@ -14,11 +14,12 @@
  *   5. Related notes — 2-3 smaller bordered cards from latest posts
  */
 
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
+import { Link } from '@/i18n/navigation';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
@@ -30,6 +31,13 @@ export const revalidate = 0;
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
 }
+
+type TagLabels = {
+  design: string;
+  process: string;
+  devLog: string;
+  note: string;
+};
 
 async function fetchPost(slug: string): Promise<Post | null> {
   try {
@@ -44,11 +52,12 @@ async function fetchPost(slug: string): Promise<Post | null> {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'displayPost' });
   const post = await fetchPost(slug);
   if (!post) {
     return {
-      title: 'Catatan tidak ditemukan — enpiistudio',
+      title: t('notFound'),
       robots: { index: false },
     };
   }
@@ -82,14 +91,23 @@ export default async function DisplayDetailPage({ params }: PageProps) {
   const post = await fetchPost(slug);
   if (!post) notFound();
 
-  const isEn = locale === 'en';
-  const L = (id: string, en: string) => (isEn ? en : id);
   const t = await getTranslations('displayPost');
-  const tCommon = await getTranslations('common.buttons');
+  const tList = await getTranslations('displayList');
+  const tagLabels: TagLabels = {
+    design: tList('tags.design'),
+    process: tList('tags.process'),
+    devLog: tList('tags.devLog'),
+    note: tList('tags.note'),
+  };
 
-  const date = post.published_at ? formatDateLong(post.published_at) : '';
-  const primaryTag = post.excerpt ? pickTag(post.excerpt) : 'Catatan';
-  const tags = deriveTags(post, primaryTag);
+  const date = post.published_at ? formatDateLong(post.published_at, locale) : '';
+  const primaryTag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
+  const tags = deriveTags(post, primaryTag, {
+    studioNotes: t('tagStudioNotes'),
+    tools: t('tagTools'),
+    typography: t('tagTypography'),
+    experiment: t('tagExperiment'),
+  });
 
   // Fetch related — fallback to latest, exclude current
   const related = await fetchRelated(slug);
@@ -103,7 +121,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             href="/display"
             className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary transition-colors"
           >
-            <span aria-hidden="true">←</span> {t('backToJournal')}
+            {t('backToJournal')}
           </Link>
         </div>
       </div>
@@ -139,10 +157,10 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           <div className="px-6 md:px-12 py-12 md:py-16">
             <div className="border-4 border-ink bg-primary shadow-[12px_12px_0_0_var(--color-accent)] p-10 md:p-16 -rotate-1 max-w-4xl">
               <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-                ✎ Studio notes
+                {t('fallbackEyebrow')}
               </p>
               <p className="font-display text-3xl md:text-5xl font-black uppercase leading-tight tracking-tight">
-                No cover image — content speaks for itself.
+                {t('fallbackCover')}
               </p>
             </div>
           </div>
@@ -176,13 +194,13 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               <>
                 <span aria-hidden="true" className="font-bold text-ink/30">·</span>
                 <span className="font-label text-label-sm uppercase tracking-wider text-ink">
-                  {post.reading_time_minutes} mnt baca
+                  {t('minutes', { count: post.reading_time_minutes })}
                 </span>
               </>
             ) : null}
             <span aria-hidden="true" className="font-bold text-ink/30">·</span>
             <span className="font-label text-label-sm uppercase tracking-wider text-ink/70">
-              ✎ Studio notes
+              {t('studioNotes')}
             </span>
           </div>
         </div>
@@ -208,7 +226,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             {/* End-of-article signature mark */}
             <div className="mt-16 flex items-center gap-3 font-label text-label-sm uppercase tracking-[0.3em] text-ink/40">
               <span aria-hidden="true">— ✎ —</span>
-              <span>end of note</span>
+              <span>{t('end')}</span>
             </div>
           </div>
         </div>
@@ -220,7 +238,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           <div className="px-6 md:px-12 py-8 md:py-10">
             <div className="max-w-3xl mx-auto">
               <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-4">
-                ✎ Filed under
+                {t('filedUnder')}
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 {tags.map((t, i) => (
@@ -258,25 +276,28 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
               <div>
                 <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-                  ✎ More from Display
+                  {t('moreEyebrow')}
                 </p>
                 <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
-                  Keep{' '}
-                  <span className="text-primary">reading</span>
-                  .
+                  {t('moreTitle')}
                 </h2>
               </div>
               <Link
                 href="/display"
                 className="font-label text-label-sm uppercase font-bold text-primary hover:text-ink underline decoration-2 underline-offset-4"
               >
-                All entries →
+                {t('allEntries')}
               </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {related.map((p) => (
-                <RelatedNote key={p.id} post={p} />
+                <RelatedNote
+                  key={p.id}
+                  post={p}
+                  locale={locale}
+                  tagLabels={tagLabels}
+                />
               ))}
             </div>
           </div>
@@ -287,28 +308,29 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       <section className="bg-primary text-surface">
         <div className="px-6 md:px-12 py-12 md:py-16 text-center">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
-            ✎ Selesai dibaca?
+            {t('finalEyebrow')}
           </p>
           <h2 className="font-display text-2xl md:text-4xl font-black uppercase leading-tight mb-6 max-w-3xl mx-auto">
-            Balik ke rak, atau lihat{' '}
-            <span className="inline-block bg-accent text-ink px-2 py-0.5 -rotate-1">
-              karya terbaru
-            </span>
-            .
+            {t('finalTitle')}
           </h2>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link
+            <Button
+              variant="surface"
+              size="md"
               href="/display"
-              className="inline-flex items-center gap-2 bg-surface text-ink border-4 border-ink px-6 py-3 font-label text-label-sm uppercase font-black tracking-wider shadow-[6px_6px_0_0_var(--color-accent)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] transition-all"
+              shadowColor="accent"
+              className="inline-flex items-center gap-2"
             >
-              ← Kembali ke Display
-            </Link>
-            <Link
+              {t('backDisplay')}
+            </Button>
+            <Button
+              variant="outline"
+              size="md"
               href="/develop"
-              className="inline-flex items-center gap-2 bg-transparent text-surface border-4 border-surface px-6 py-3 font-label text-label-sm uppercase font-black tracking-wider hover:bg-surface hover:text-ink transition-colors"
+              className="inline-flex items-center gap-2 border-surface text-surface hover:bg-surface hover:text-ink"
             >
-              Lihat karya di Develop →
-            </Link>
+              {t('viewDevelop')}
+            </Button>
           </div>
         </div>
       </section>
@@ -318,28 +340,28 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
 // ───── Helpers ─────
 
-function formatDateLong(iso: string): string {
+function formatDateLong(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-US', {
+  return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   });
 }
 
-function pickTag(excerpt: string): string {
+function pickTag(excerpt: string, labels: TagLabels): string {
   const lower = excerpt.toLowerCase();
   if (lower.includes('design') || lower.includes('desain') || lower.includes('ui')) {
-    return 'Design';
+    return labels.design;
   }
   if (lower.includes('behind') || lower.includes('scenes') || lower.includes('process')) {
-    return 'Process';
+    return labels.process;
   }
   if (lower.includes('dev') || lower.includes('code') || lower.includes('kode') || lower.includes('build')) {
-    return 'Dev Log';
+    return labels.devLog;
   }
-  return 'Catatan';
+  return labels.note;
 }
 
 /**
@@ -347,18 +369,27 @@ function pickTag(excerpt: string): string {
  * keyword overlap. Selalu sertakan "Studio notes" sebagai default supaya
  * section Tags tidak pernah kosong (konsisten dengan tone).
  */
-function deriveTags(post: Post, primary: string): string[] {
+function deriveTags(
+  post: Post,
+  primary: string,
+  labels: {
+    studioNotes: string;
+    tools: string;
+    typography: string;
+    experiment: string;
+  },
+): string[] {
   const tags = new Set<string>();
   if (post.excerpt) tags.add(primary);
-  tags.add('Studio notes');
+  tags.add(labels.studioNotes);
 
   const lower = ((post.excerpt ?? '') + ' ' + (post.title ?? '')).toLowerCase();
   if (lower.includes('typescript') || lower.includes('next.js') || lower.includes('laravel')) {
-    tags.add('Tools');
+    tags.add(labels.tools);
   } else if (lower.includes('typography')) {
-    tags.add('Typography');
+    tags.add(labels.typography);
   } else if (lower.includes('eksperimen') || lower.includes('experiment')) {
-    tags.add('Eksperimen');
+    tags.add(labels.experiment);
   }
 
   return Array.from(tags);
@@ -373,15 +404,24 @@ async function fetchRelated(currentSlug: string): Promise<Post[]> {
   }
 }
 
-function RelatedNote({ post }: { post: Post }) {
-  const date = post.published_at ? formatDateShort(post.published_at) : '';
-  const tag = post.excerpt ? pickTag(post.excerpt) : 'Catatan';
+function RelatedNote({
+  post,
+  locale,
+  tagLabels,
+}: {
+  post: Post;
+  locale: string;
+  tagLabels: TagLabels;
+}) {
+  const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
+  const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
   const tagTone: 'accent' | 'primary' = post.id % 2 === 0 ? 'accent' : 'primary';
 
   return (
-    <Link
+    <Card
+      variant="surface"
       href={`/display/${post.slug}`}
-      className="group block bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] overflow-hidden hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)] transition-all"
+      className="group overflow-hidden"
     >
       <div className="aspect-square bg-primary/10 border-b-2 border-ink overflow-hidden">
         {post.thumbnail ? (
@@ -418,12 +458,12 @@ function RelatedNote({ post }: { post: Post }) {
           {post.title}
         </h3>
       </div>
-    </Link>
+    </Card>
   );
 }
 
-function formatDateShort(iso: string): string {
+function formatDateShort(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', { month: 'short', day: 'numeric' });
 }

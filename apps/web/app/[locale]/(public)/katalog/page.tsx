@@ -85,7 +85,12 @@ export default async function CatalogPage({ params, searchParams }: PageProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-6">
         <div className="space-y-4">
-          <SearchBar defaultValue={q ?? ''} variant="compact" />
+          <SearchBar
+            defaultValue={q ?? ''}
+            variant="compact"
+            placeholder={t('searchPlaceholder')}
+            submitLabel={t('searchSubmit')}
+          />
           <CategoryFilter categories={categoriesData} activeSlug={category} />
         </div>
 

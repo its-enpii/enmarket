@@ -107,6 +107,21 @@ body {
 }
 
 /*
+ * Checkbox checkmark glyph — diekstrak ke CSS biasa karena PostCSS salah parse
+ * url("data:…") di Tailwind utility string sebagai relative module path.
+ * Class `.neobrutal-checkbox` ditambah via CHECKBOX_CLS di form-tokens.ts.
+ */
+.neobrutal-checkbox {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 0.7rem;
+}
+
+.neobrutal-checkbox:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23F3F3F3' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpolyline points='4,11 8,15 16,5'/%3E%3C/svg%3E");
+}
+
+/*
  * ───── Neobrutal utility classes ─────
  *
  * neobrutal-border        → 4px solid ink border (uniform untuk semua container)
@@ -176,6 +191,57 @@ body {
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/*
+ * ───── NeoBrutal scrollbar — global default ─────
+ *
+ * Scrollbar tipis brand-colored di semua container yang overflow.
+ * Brand palette: track = ink border-tipis, thumb = mustard accent dengan
+ * border ink, no rounded (konsisten * { border-radius: 0 }).
+ *
+ * Lebar track 10px biar tidak makan ruang konten tapi tetap grabable.
+ * Hover state: thumb membesar sedikit → shadow hard muncul.
+ */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) var(--color-ink);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border: 2px solid var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-ink);
+}
+
+/* Horizontal-only variant untuk container yang scroll horizontal (table orders,
+   code block). Track di bawah, bukan di samping. */
+::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+::-webkit-scrollbar-track:horizontal {
+  background: var(--color-surface);
+  border-top: 2px solid var(--color-ink);
+  border-left: none;
 }
 
 /*

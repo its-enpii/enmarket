@@ -104,13 +104,14 @@ export const INTERACTIVE_BASE_SM = [
 
 // ───── Button variant fills ─────
 
-export type ButtonVariant = 'primary' | 'accent' | 'surface' | 'outline';
+export type ButtonVariant = 'primary' | 'accent' | 'surface' | 'outline' | 'ink';
 
 export const BUTTON_VARIANT_CLS: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-surface',
   accent: 'bg-accent text-ink',
   surface: 'bg-surface text-ink',
   outline: 'bg-transparent text-ink',
+  ink: 'bg-ink text-surface',
 };
 
 // ───── Button sizes ─────
@@ -125,12 +126,13 @@ export const BUTTON_SIZE_CLS: Record<ButtonSize, string> = {
 
 // ───── Card variant fills ─────
 
-export type CardVariant = 'surface' | 'filled-primary' | 'filled-accent';
+export type CardVariant = 'surface' | 'filled-primary' | 'filled-accent' | 'ink';
 
 export const CARD_VARIANT_CLS: Record<CardVariant, string> = {
   surface: 'bg-surface text-ink',
   'filled-primary': 'bg-primary text-surface',
   'filled-accent': 'bg-accent text-ink',
+  ink: 'bg-ink text-surface',
 };
 
 // ───── Link variant ─────

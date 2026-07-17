@@ -21,7 +21,7 @@ export function ToastContainer() {
     <div
       aria-live="polite"
       aria-atomic="true"
-      className="fixed top-4 right-4 z-[100] flex flex-col gap-2 w-[min(calc(100vw-2rem),22rem)] pointer-events-none"
+      className="fixed top-20 right-4 z-[100] flex flex-col gap-2 w-[min(calc(100vw-2rem),22rem)] pointer-events-none"
     >
       {toasts.map((t) => (
         <ToastItem key={t.id} toast={t} />
@@ -87,7 +87,7 @@ function ToastItem({ toast: t }: { toast: Toast }) {
           setTimeout(() => toast.dismiss(t.id), 200);
         }}
         aria-label="Dismiss"
-        className="shrink-0 w-7 h-7 inline-flex items-center justify-center font-bold opacity-80 hover:opacity-100"
+        className="shrink-0 min-w-[44px] min-h-[44px] w-11 h-11 inline-flex items-center justify-center font-bold opacity-80 hover:opacity-100"
       >
         ✕
       </button>

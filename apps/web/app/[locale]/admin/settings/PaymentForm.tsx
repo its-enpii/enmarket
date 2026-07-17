@@ -12,12 +12,15 @@
  */
 
 import { useActionState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { Card } from '@/components/ui/neobrutal';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { FormError } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
+import { SelectSearch } from '@/components/ui/SelectSearch';
 import { toast } from '@/components/ui/toast-store';
 import type { SiteChannels, SitePayment } from '@/lib/types';
 
@@ -33,6 +36,7 @@ interface Props {
 // ───── Payment credentials section ─────
 
 function PaymentSection({ initial }: { initial: SitePayment }) {
+  const t = useTranslations('admin.settings.payment');
   const [state, action, pending] = useActionState<ActionResult, FormData>(
     async (prev, fd) => {
       const res = await updatePayment(prev, fd);
@@ -43,8 +47,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
   );
 
   const modeOptions = [
-    { value: 'sandbox', label: 'Sandbox — testing, transaksi tidak nyata' },
-    { value: 'production', label: 'Production — live, transaksi nyata' },
+    { value: 'sandbox', label: t('modeSandbox') },
+    { value: 'production', label: t('modeProduction') },
   ];
 
   return (
@@ -54,15 +58,15 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
         <div className="flex items-center gap-4">
           <div className="flex-1 min-w-0">
             <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-              ✎ Mode
+              ✎ {t('modeEyebrow').replace('✎ ', '')}
             </p>
             <p className="mt-1 font-display text-2xl font-black uppercase text-ink leading-tight">
-              {initial.tripay_mode === 'production' ? 'Production' : 'Sandbox'}
+              {initial.tripay_mode === 'production' ? t('modeProductionTitle') : t('modeSandboxTitle')}
             </p>
             <p className="mt-1 font-body text-body-sm text-ink/60">
               {initial.tripay_mode === 'production'
-                ? 'Transaksi nyata. Pastikan credentials valid.'
-                : 'Transaksi tidak nyata. Untuk testing flow.'}
+                ? t('modeProductionDesc')
+                : t('modeSandboxDesc')}
             </p>
           </div>
           <div className="text-right shrink-0">
@@ -74,7 +78,7 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
                   : 'bg-accent text-ink')
               }
             >
-              ● {initial.tripay_mode === 'production' ? 'LIVE' : 'TEST'}
+              {initial.tripay_mode === 'production' ? t('modeBadgeLive') : t('modeBadgeTest')}
             </span>
           </div>
         </div>
@@ -84,10 +88,10 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
       <Card variant="surface" className="p-6 space-y-5">
         <div className="border-b-2 border-ink pb-3">
           <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-            ✎ Tripay
+            ✎ {t('sectionTripay')}
           </p>
           <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-            Credentials
+            {t('sectionTripayTitle')}
           </h2>
         </div>
 
@@ -95,10 +99,10 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
           <FormError variant="box">{state.error}</FormError>
 
           <FormField
-            label="Merchant Code"
+            label={t('fieldMerchant')}
             htmlFor="tripay-merchant"
             required
-            hint="Kode merchant dari dashboard Tripay."
+            hint={t('fieldMerchantHint')}
             error={state.fieldErrors?.tripay_merchant?.[0]}
           >
             <Input
@@ -111,12 +115,12 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
           </FormField>
 
           <FormField
-            label="API Key"
+            label={t('fieldApiKey')}
             htmlFor="tripay-api-key"
             hint={
               initial.tripay_api_key_masked
-                ? `Saat ini: ${initial.tripay_api_key_masked}. Kosongkan untuk keep, atau ketik nilai baru untuk replace.`
-                : 'Disimpan terenkripsi. Tidak akan ditampilkan setelah disimpan.'
+                ? t('fieldApiKeyHintCurrent', { masked: initial.tripay_api_key_masked })
+                : t('fieldApiKeyHintNew')
             }
             error={state.fieldErrors?.tripay_api_key?.[0]}
           >
@@ -131,12 +135,12 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
           </FormField>
 
           <FormField
-            label="Private Key"
+            label={t('fieldPrivateKey')}
             htmlFor="tripay-private-key"
             hint={
               initial.tripay_private_key_masked
-                ? `Saat ini: ${initial.tripay_private_key_masked}. Kosongkan untuk keep.`
-                : 'Untuk signature generation. JANGAN share ke siapapun.'
+                ? t('fieldPrivateKeyHintCurrent', { masked: initial.tripay_private_key_masked })
+                : t('fieldPrivateKeyHintNew')
             }
             error={state.fieldErrors?.tripay_private_key?.[0]}
           >
@@ -151,27 +155,22 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
           </FormField>
 
           <FormField
-            label="Mode"
+            label={t('fieldMode')}
             htmlFor="tripay-mode"
-            hint="Pilih sandbox untuk testing, production untuk live."
+            hint={t('fieldModeHint')}
           >
-            <select
-              id="tripay-mode"
+            <SelectSearch
               name="tripay_mode"
               defaultValue={initial.tripay_mode}
-              className="block w-full border-2 border-ink bg-surface px-3 py-2 text-base font-body text-ink focus:outline-none focus:ring-0 focus:border-primary"
-            >
-              {modeOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+              options={modeOptions}
+              placeholder={t('modePlaceholder')}
+              clearable={false}
+            />
           </FormField>
 
           <div className="flex gap-2 pt-2 border-t-2 border-ink">
             <Button type="submit" variant="primary" size="md" disabled={pending}>
-              {pending ? 'Menyimpan…' : 'Simpan Tripay Config'}
+              {pending ? t('submitPending') : t('submit')}
             </Button>
           </div>
         </form>
@@ -183,6 +182,7 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
 // ───── Channels section ─────
 
 function ChannelsSection({ initial }: { initial: SiteChannels }) {
+  const t = useTranslations('admin.settings.payment');
   const [state, action, pending] = useActionState<ActionResult, FormData>(
     async (prev, fd) => {
       const res = await updateChannels(prev, fd);
@@ -196,10 +196,10 @@ function ChannelsSection({ initial }: { initial: SiteChannels }) {
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
         <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-          ✎ Channels
+          ✎ {t('sectionChannels')}
         </p>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          Payment Channels
+          {t('sectionChannelsTitle')}
         </h2>
       </div>
 
@@ -208,32 +208,32 @@ function ChannelsSection({ initial }: { initial: SiteChannels }) {
 
         <ToggleRow
           name="channel_qris"
-          label="QRIS"
-          description="Quick Response Code Indonesian Standard."
+          label={t('channelQris')}
+          description={t('channelQrisDesc')}
           defaultEnabled={initial.qris}
         />
         <ToggleRow
           name="channel_va"
-          label="Virtual Account"
-          description="BCA, BNI, BRI, Mandiri, dll."
+          label={t('channelVa')}
+          description={t('channelVaDesc')}
           defaultEnabled={initial.va}
         />
         <ToggleRow
           name="channel_ewallet"
-          label="E-Wallet"
-          description="OVO, DANA, GoPay, ShopeePay."
+          label={t('channelEwallet')}
+          description={t('channelEwalletDesc')}
           defaultEnabled={initial.ewallet}
         />
         <ToggleRow
           name="channel_convenience_store"
-          label="Convenience Store"
-          description="Indomaret, Alfamart."
+          label={t('channelConvenienceStore')}
+          description={t('channelConvenienceStoreDesc')}
           defaultEnabled={initial.convenience_store}
         />
 
         <div className="flex gap-2 pt-2 border-t-2 border-ink">
           <Button type="submit" variant="primary" size="md" disabled={pending}>
-            {pending ? 'Menyimpan…' : 'Simpan Channels'}
+            {pending ? t('submitPending') : t('submitChannels')}
           </Button>
         </div>
       </form>
@@ -253,20 +253,20 @@ function ToggleRow({
   defaultEnabled: boolean;
 }) {
   return (
-    <label className="flex items-center gap-4 p-3 border-2 border-ink bg-surface cursor-pointer hover:bg-accent transition-colors">
-      <input
-        type="checkbox"
-        name={name}
-        defaultChecked={defaultEnabled}
-        className="w-5 h-5 accent-primary"
-      />
+    <Card
+      as="label"
+      variant="surface"
+      hoverable={false}
+      className="flex items-center gap-4 p-3 cursor-pointer hover:bg-accent transition-colors"
+    >
+      <Checkbox name={name} defaultChecked={defaultEnabled} />
       <div className="flex-1 min-w-0">
         <p className="font-display font-black uppercase text-sm text-ink">
           {label}
         </p>
         <p className="font-body text-xs text-ink/60 mt-0.5">{description}</p>
       </div>
-    </label>
+    </Card>
   );
 }
 

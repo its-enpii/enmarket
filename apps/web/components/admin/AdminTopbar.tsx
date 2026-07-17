@@ -1,27 +1,36 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 
-import { logoutAction } from '@/app/admin/actions';
+import { logoutAction } from '@/app/[locale]/admin/actions';
 import { useAdminDrawer } from './AdminDrawerContext';
 
-/**
- * Mapping pathname → human title untuk AdminTopbar.
- * Kalau pathname tidak match, fallback ke segment terakhir (formatted).
- */
-const PATH_TITLES: Record<string, { title: string; subtitle?: string }> = {
-  '/admin': { title: 'Beranda', subtitle: 'Ringkasan toko digital enpiistudio.' },
-  '/admin/products': { title: 'Produk', subtitle: 'Kelola semua produk di katalog.' },
-  '/admin/categories': { title: 'Kategori', subtitle: 'Kelompokkan produk per kategori.' },
-  '/admin/orders': { title: 'Pesanan', subtitle: 'Daftar pesanan masuk.' },
-  '/admin/posts': { title: 'Catatan', subtitle: 'Editorial notes dari studio.' },
-  '/admin/license-keys': { title: 'License Keys', subtitle: 'Pool license key untuk produk digital.' },
-  '/admin/media': { title: 'Media', subtitle: 'Galeri upload — reusable untuk semua entity.' },
-  '/admin/settings': { title: 'Settings — Site Identity', subtitle: 'Identitas studio: nama, logo, social links.' },
-  '/admin/settings/payment': { title: 'Settings — Payment', subtitle: 'Konfigurasi Tripay gateway.' },
-  '/admin/settings/maintenance': { title: 'Settings — Maintenance', subtitle: 'Toggle maintenance mode toko.' },
+type TitleKey =
+  | 'dashboard'
+  | 'products'
+  | 'categories'
+  | 'orders'
+  | 'posts'
+  | 'licenseKeys'
+  | 'media'
+  | 'settings'
+  | 'settingsPayment'
+  | 'settingsMaintenance';
+
+const PATH_KEYS: Record<string, TitleKey> = {
+  '/admin': 'dashboard',
+  '/admin/products': 'products',
+  '/admin/categories': 'categories',
+  '/admin/orders': 'orders',
+  '/admin/posts': 'posts',
+  '/admin/license-keys': 'licenseKeys',
+  '/admin/media': 'media',
+  '/admin/settings': 'settings',
+  '/admin/settings/payment': 'settingsPayment',
+  '/admin/settings/maintenance': 'settingsMaintenance',
 };
 
 function formatSlug(s: string): string {
@@ -30,30 +39,43 @@ function formatSlug(s: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function resolveTitle(pathname: string): { title: string; subtitle?: string } {
-  if (PATH_TITLES[pathname]) return PATH_TITLES[pathname];
-
-  const segments = pathname.split('/').filter(Boolean);
-  const last = segments[segments.length - 1];
-  const parent = segments.length > 1 ? segments[segments.length - 2] : null;
-
-  if (parent && PATH_TITLES['/admin/' + parent]) {
-    const base = PATH_TITLES['/admin/' + parent].title;
-    return {
-      title: `${base} — ${formatSlug(last)}`,
-    };
-  }
-  return { title: formatSlug(last ?? 'Admin') };
-}
-
 /**
  * AdminTopbar — single topbar di layout AdminShell (bukan per-page).
  * Title auto-resolve dari pathname. Logout button di kanan.
  */
 export function AdminTopbar() {
+  const tTitles = useTranslations('admin.topbarTitles');
+  const tTopbar = useTranslations('admin.topbar');
+  const tSidebar = useTranslations('admin.sidebar');
   const pathname = usePathname();
   const drawer = useAdminDrawer();
-  const { title, subtitle } = resolveTitle(pathname ?? '/admin');
+
+  // Strip locale prefix (e.g. /en/admin/products → /admin/products).
+  const cleanPath = pathname?.replace(/^\/(id|en)(?=\/)/, '') ?? '/admin';
+  const key = PATH_KEYS[cleanPath];
+
+  let title: string;
+  let subtitle: string | undefined;
+  if (key) {
+    title = tTitles(key);
+    // Subtitle keys map 1:1 — try, fall back silently if missing.
+    try {
+      subtitle = tTitles(`${key}Subtitle` as `${TitleKey}Subtitle`);
+    } catch {
+      subtitle = undefined;
+    }
+  } else {
+    const segments = cleanPath.split('/').filter(Boolean);
+    const last = segments[segments.length - 1];
+    const parent = segments.length > 1 ? segments[segments.length - 2] : null;
+
+    if (parent && PATH_KEYS['/admin/' + parent]) {
+      const baseKey = PATH_KEYS['/admin/' + parent];
+      title = `${tTitles(baseKey)} — ${formatSlug(last ?? '')}`;
+    } else {
+      title = formatSlug(last ?? tTitles('fallback'));
+    }
+  }
 
   return (
     <header className="bg-surface border-b-4 border-ink px-4 sm:px-8 py-5 flex items-center justify-between gap-3 sticky top-0 z-30">
@@ -64,7 +86,7 @@ export function AdminTopbar() {
             size="sm"
             type="button"
             onClick={() => drawer.openDrawer()}
-            aria-label="Open menu"
+            aria-label={tSidebar('openMenu')}
             className="lg:hidden w-11 h-11 px-0 py-0"
           >
             ☰
@@ -88,11 +110,11 @@ export function AdminTopbar() {
           target="_blank"
           className="hidden sm:inline-flex hover:bg-accent"
         >
-          ← Toko
+          {tTopbar('viewSite')}
         </Button>
         <form action={logoutAction}>
           <Button variant="surface" size="sm" type="submit" className="hover:bg-accent">
-            Logout
+            {tTopbar('logout')}
           </Button>
         </form>
       </div>

@@ -32,7 +32,7 @@ export async function Pagination({ meta, basePath, searchParams }: Props) {
   const isNextDisabled = meta.current_page >= meta.last_page;
 
   return (
-    <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
+    <nav className="mt-8 flex flex-wrap items-center justify-center gap-2" aria-label={t('label')}>
       <Button
         size="sm"
         variant="surface"

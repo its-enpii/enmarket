@@ -7,9 +7,10 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { randomUUID } from 'crypto';
 
-import { ApiRequestError, apiPost } from '@/lib/api';
+import { apiPost } from '@/lib/api';
 
 interface AddResult {
   error?: string;
@@ -20,6 +21,7 @@ interface AddResult {
  * Tambah produk ke cart, then stay on the same page.
  */
 export async function addToCartAction(productId: number, qty = 1): Promise<AddResult> {
+  const t = await getTranslations('developDetail');
   // Ensure cart session exists
   const cookieStore = await cookies();
   let sessionId = cookieStore.get('cart_session')?.value;
@@ -40,11 +42,8 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
     });
     revalidatePath('/keranjang');
     return { ok: true };
-  } catch (err) {
-    if (err instanceof ApiRequestError) {
-      return { error: err.body?.message ?? err.message };
-    }
-    return { error: 'Gagal menambahkan ke keranjang.' };
+  } catch {
+    return { error: t('addError') };
   }
 }
 
@@ -52,6 +51,7 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
  * Tambah ke cart lalu langsung redirect ke /keranjang.
  */
 export async function addToCartAndGoAction(productId: number, qty = 1) {
+  const t = await getTranslations('developDetail');
   const cookieStore = await cookies();
   const existingSession = cookieStore.get('cart_session')?.value;
   if (!existingSession || existingSession.length < 16) {
@@ -68,11 +68,8 @@ export async function addToCartAndGoAction(productId: number, qty = 1) {
       product_id: productId,
       qty,
     });
-  } catch (err) {
-    if (err instanceof ApiRequestError) {
-      throw new Error(err.body?.message ?? err.message);
-    }
-    throw err;
+  } catch {
+    throw new Error(t('addError'));
   }
 
   revalidatePath('/keranjang');

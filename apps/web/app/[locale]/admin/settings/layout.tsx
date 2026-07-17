@@ -12,16 +12,25 @@
 
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
-const SUB_NAV = [
-  { href: '/admin/settings', label: 'Site Identity', icon: '✎' },
-  { href: '/admin/settings/payment', label: 'Payment', icon: '◊' },
-  { href: '/admin/settings/maintenance', label: 'Maintenance', icon: '⚠' },
+import { Button } from '@/components/admin/Button';
+
+interface NavItem {
+  href: string;
+  labelKey: 'identity' | 'payment' | 'maintenance';
+  icon: string;
+}
+
+const SUB_NAV: NavItem[] = [
+  { href: '/admin/settings', labelKey: 'identity', icon: '✎' },
+  { href: '/admin/settings/payment', labelKey: 'payment', icon: '◊' },
+  { href: '/admin/settings/maintenance', labelKey: 'maintenance', icon: '⚠' },
 ];
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('admin.settingsNav');
   const pathname = usePathname() ?? '/admin/settings';
 
   return (
@@ -34,19 +43,17 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
               ? pathname === '/admin/settings'
               : pathname.startsWith(item.href);
           return (
-            <Link
+            <Button
               key={item.href}
               href={item.href}
-              className={
-                'inline-flex items-center gap-2 px-4 py-2 font-label text-label-sm uppercase font-bold border-2 transition-all min-h-[40px] ' +
-                (active
-                  ? 'bg-ink text-surface border-ink shadow-[3px_3px_0_0_var(--color-accent)]'
-                  : 'bg-surface text-ink border-ink hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]')
-              }
+              size="sm"
+              variant={active ? 'ink' : 'surface'}
+              shadowColor={active ? 'accent' : 'ink'}
+              className="inline-flex items-center gap-2"
             >
               <span aria-hidden="true">{item.icon}</span>
-              {item.label}
-            </Link>
+              {t(item.labelKey)}
+            </Button>
           );
         })}
       </nav>

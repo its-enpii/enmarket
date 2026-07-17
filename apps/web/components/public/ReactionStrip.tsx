@@ -19,6 +19,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { toast } from '@/components/ui/toast-store';
 
@@ -64,6 +65,7 @@ function saveStored(slug: string, data: StoredReaction) {
 }
 
 export function ReactionStrip({ postSlug }: Props) {
+  const t = useTranslations('post.reactions');
   const [choice, setChoice] = useState<Reaction>(null);
   const [helpful, setHelpful] = useState(0);
   const [notReally, setNotReally] = useState(0);
@@ -103,9 +105,9 @@ export function ReactionStrip({ postSlug }: Props) {
     saveStored(postSlug, { choice: newChoice, helpful: newHelpful, notReally: newNotReally });
 
     if (newChoice === 'helpful') {
-      toast.success('Noted — thanks for reading.');
+      toast.success(t('thanks'));
     } else if (newChoice === 'not-really') {
-      toast.info('Okay — noted. Akan coba lebih jelas下次.');
+      toast.info(t('improve'));
     }
   }
 
@@ -115,21 +117,20 @@ export function ReactionStrip({ postSlug }: Props) {
         {/* Prompt */}
         <div className="flex-1">
           <p className="font-label text-label-sm uppercase tracking-[0.2em] text-accent mb-2">
-            ✎ Reaction
+            {t('eyebrow')}
           </p>
           <p className="font-display text-2xl md:text-3xl font-black uppercase leading-tight text-ink">
-            Was this helpful?
+            {t('question')}
           </p>
           <p className="mt-2 font-body text-body-sm text-ink/70">
-            No analytics, no comments — just a quick nod (or shake) biar tahu
-            nada catatannya nyambung atau nggak.
+            {t('description')}
           </p>
         </div>
 
         {/* Buttons */}
         <div className="flex flex-wrap items-center gap-3 shrink-0">
           <ReactionButton
-            label="Helpful"
+            label={t('helpful')}
             icon="✓"
             tone="accent"
             active={choice === 'helpful'}
@@ -137,7 +138,7 @@ export function ReactionStrip({ postSlug }: Props) {
             onClick={() => pick('helpful')}
           />
           <ReactionButton
-            label="Not really"
+            label={t('notReally')}
             icon="✕"
             tone="primary"
             active={choice === 'not-really'}

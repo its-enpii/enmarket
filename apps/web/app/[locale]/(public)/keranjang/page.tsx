@@ -5,6 +5,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
+import { Button, Card } from '@/components/ui/neobrutal';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 import { formatRupiah } from '@/lib/format';
@@ -59,14 +60,14 @@ export default async function KeranjangPage() {
             ✎ Selection
           </p>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <h1 className="font-display text-6xl md:text-8xl font-black uppercase leading-[0.9] tracking-tight text-ink">
+            <h1 className="font-display text-5xl sm:text-6xl md:text-8xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
               {t('title')}<span className="text-primary">.</span>
             </h1>
             <Link
               href="/develop"
               className="inline-flex items-center gap-2 self-start lg:self-auto font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary underline decoration-2 underline-offset-4"
             >
-              <span aria-hidden="true">←</span> {t('continueShopping')}
+              {t('continueShopping')}
             </Link>
           </div>
           <p className="mt-8 font-body text-body-lg italic text-ink/80 max-w-2xl border-l-4 border-accent pl-6">
@@ -109,17 +110,18 @@ export default async function KeranjangPage() {
   );
 }
 
-function CartItem({
+async function CartItem({
   item,
 }: {
   item: Awaited<ReturnType<typeof cartApi.get>>['data']['items'][number];
 }) {
+  const t = await getTranslations('keranjang');
   const p = item.product;
   const thumb = p.preview_images?.[0];
   const category = p.category?.nama ?? null;
 
   return (
-    <article className="bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] overflow-hidden">
+    <Card variant="surface" as="article" hoverable={false} className="overflow-hidden">
       <div className="flex flex-col sm:flex-row">
         <Link
           href={`/develop/${p.slug}`}
@@ -161,7 +163,7 @@ function CartItem({
 
           <div className="flex items-baseline gap-2 border-l-2 border-ink/20 pl-3">
             <span className="font-label text-[10px] uppercase tracking-wider text-ink/50">
-              Subtotal
+              {t('subtotal')}
             </span>
             <span className="font-display font-black text-base text-ink">
               {item.subtotal_formatted}
@@ -178,11 +180,11 @@ function CartItem({
           </div>
         </div>
       </div>
-    </article>
+    </Card>
   );
 }
 
-function SummaryBlock({
+async function SummaryBlock({
   subtotal,
   discount,
   total,
@@ -193,15 +195,16 @@ function SummaryBlock({
   total: string;
   itemCount: number;
 }) {
+  const t = await getTranslations('keranjang');
   return (
-    <aside className="bg-primary text-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)]">
+    <Card variant="filled-primary" as="aside" thick hoverable={false}>
       <div className="p-6 md:p-8 space-y-5">
         <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent">
-          ✎ Order summary
+          ✎ {t('summary')}
         </p>
         <div className="flex items-baseline justify-between border-b border-surface/20 pb-3">
           <span className="font-label text-label-sm uppercase tracking-wider text-surface/80">
-            Subtotal
+            {t('subtotal')}
           </span>
           <span className="font-display font-black text-lg text-surface">
             {formatRupiah(String(subtotal))}
@@ -210,7 +213,7 @@ function SummaryBlock({
         {discount > 0 && (
           <div className="flex items-baseline justify-between border-b border-surface/20 pb-3">
             <span className="font-label text-label-sm uppercase tracking-wider text-accent">
-              Discount
+              {t('discount')}
             </span>
             <span className="font-display font-black text-lg text-accent">
               − {formatRupiah(String(discount))}
@@ -219,7 +222,7 @@ function SummaryBlock({
         )}
         <div className="pt-2">
           <p className="font-label text-label-sm uppercase tracking-[0.2em] text-surface/70 mb-2">
-            Total
+            {t('total')}
           </p>
           <div className="inline-flex items-center bg-accent text-ink border-2 border-ink px-4 py-3 shadow-[4px_4px_0_0_var(--color-surface)]">
             <span className="font-display font-black text-3xl md:text-4xl uppercase tracking-tight">
@@ -227,53 +230,56 @@ function SummaryBlock({
             </span>
           </div>
           <p className="mt-3 font-label text-[10px] uppercase tracking-wider text-surface/60">
-            {itemCount} works · belum termasuk ongkos
+            {itemCount} {t('itemsSuffix')}
           </p>
         </div>
 
-        <Link
+        <Button
+          variant="surface"
+          size="lg"
           href="/checkout"
-          className="mt-2 block w-full text-center bg-surface text-ink border-4 border-ink px-6 py-5 font-label text-base uppercase font-black tracking-wider shadow-[6px_6px_0_0_var(--color-accent)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_0_var(--color-accent)] transition-all"
+          shadowColor="accent"
+          className="w-full mt-2"
         >
-          Checkout →
-        </Link>
+          {t('checkout')}
+        </Button>
 
         <p className="text-center font-label text-[10px] uppercase tracking-wider text-surface/60">
-          Pembayaran via QRIS · Tripay
+          {t('paymentNote')}
         </p>
       </div>
-    </aside>
+    </Card>
   );
 }
 
-function TrustNote() {
+async function TrustNote() {
+  const t = await getTranslations('keranjang');
   return (
-    <div className="mt-6 border-2 border-ink bg-surface p-5 shadow-[4px_4px_0_0_var(--color-ink)]">
+    <Card variant="surface" hoverable={false} className="mt-6 p-5">
       <p className="font-label text-[10px] uppercase tracking-[0.2em] text-accent mb-2">
-        ✎ Studio note
+        {t('trustNoteEyebrow')}
       </p>
       <p className="font-display text-base font-black uppercase leading-tight text-ink">
-        Handcrafted &amp; delivered digitally.
+        {t('trustNoteTitle')}
       </p>
       <p className="mt-2 font-body text-xs text-ink/70 leading-snug">
-        Karya di sini dibuat tangan — bukan template massal. Setelah bayar,
-        link unduhan &amp; license key (kalau ada) langsung dikirim ke email
-        &amp; WhatsApp yang kamu isi di checkout.
+        {t('trustNoteBody')}
       </p>
-    </div>
+    </Card>
   );
 }
 
-function EmptyCart() {
+async function EmptyCart() {
+  const t = await getTranslations('keranjang');
   return (
     <>
       <section className="border-b-4 border-ink">
         <div className="px-6 md:px-12 py-16 md:py-20">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-            ✎ Selection
+            ✎ {t('selection')}
           </p>
           <h1 className="font-display text-6xl md:text-8xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-            Your Selection<span className="text-primary">.</span>
+            {t('title')}<span className="text-primary">.</span>
           </h1>
         </div>
       </section>
@@ -294,34 +300,35 @@ function EmptyCart() {
             </div>
 
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent">
-              ✎ Empty
+              {t('emptyEyebrow')}
             </p>
             <h2 className="mt-4 font-display text-4xl md:text-5xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-              Nothing here yet —<br />
-              go{' '}
+              {t('emptyTitle1')}<br />
+              {t('emptyTitle2')}{' '}
               <span className="inline-block bg-ink text-accent px-2 py-0.5 -rotate-1">
-                Discover
-              </span>{' '}
-              something.
+                {t('emptyTitle3')}
+              </span>
             </h2>
             <p className="mt-6 font-body text-body-md text-ink/70 max-w-md mx-auto">
-              Rak karya masih kosong. Jalan-jalan sebentar di Develop — pilih
-              yang menarik, bawa pulang.
+              {t('emptyBody')}
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link
+              <Button
+                variant="primary"
+                size="lg"
                 href="/develop"
-                className="inline-flex items-center gap-2 bg-primary text-surface border-4 border-ink px-6 py-4 font-label text-label-sm uppercase font-black tracking-wider shadow-[6px_6px_0_0_var(--color-accent)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] transition-all"
+                shadowColor="accent"
               >
-                Browse Develop →
-              </Link>
-              <Link
+                {t('emptyCtaDevelop')}
+              </Button>
+              <Button
+                variant="surface"
+                size="lg"
                 href="/display"
-                className="inline-flex items-center gap-2 bg-surface text-ink border-4 border-ink px-6 py-4 font-label text-label-sm uppercase font-black tracking-wider hover:bg-accent transition-colors"
               >
-                Or read Display
-              </Link>
+                {t('emptyCtaDisplay')}
+              </Button>
             </div>
           </div>
         </div>
@@ -330,36 +337,41 @@ function EmptyCart() {
   );
 }
 
-function ErrorState({ message }: { message: string }) {
+async function ErrorState({ message }: { message: string }) {
+  const t = await getTranslations('keranjang');
   return (
     <>
       <section className="border-b-4 border-ink">
         <div className="px-6 md:px-12 py-16 md:py-20">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-            ✎ Selection
+            ✎ {t('selection')}
           </p>
           <h1 className="font-display text-6xl md:text-8xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-            Your Selection<span className="text-primary">.</span>
+            {t('title')}<span className="text-primary">.</span>
           </h1>
         </div>
       </section>
 
       <section className="border-b-4 border-ink bg-surface">
         <div className="px-6 md:px-12 py-20">
-          <div className="max-w-2xl mx-auto border-4 border-ink bg-surface shadow-[8px_8px_0_0_var(--color-ink)] p-8">
+          <div className="max-w-2xl mx-auto">
+          <Card variant="surface" thick hoverable={false} className="max-w-2xl mx-auto p-8">
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-              ✎ Error
+              {t('errorEyebrow')}
             </p>
             <h2 className="font-display text-3xl md:text-4xl font-black uppercase leading-tight text-ink mb-4">
-              Gagal memuat keranjang.
+              {t('errorTitle')}
             </h2>
             <p className="font-body text-body-md text-ink/70 mb-6">{message}</p>
-            <Link
+            <Button
+              variant="primary"
+              size="md"
               href="/develop"
-              className="inline-flex items-center gap-2 bg-primary text-surface border-4 border-ink px-5 py-3 font-label text-label-sm uppercase font-black tracking-wider shadow-[4px_4px_0_0_var(--color-accent)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-accent)] transition-all"
+              shadowColor="accent"
             >
-              ← Lihat karya di Develop
-            </Link>
+              {t('errorAction')}
+            </Button>
+          </Card>
           </div>
         </div>
       </section>

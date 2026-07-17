@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { confirmDialog } from '@/components/ui/dialog-store';
@@ -18,13 +19,14 @@ interface Props {
  * Setelah sukses, revalidatePath di server action refresh halaman.
  */
 export function RegenerateTokenForm({ kodeOrder, orderItemId }: Props) {
+  const t = useTranslations('admin.orders.actions');
   const [pending, startTransition] = useTransition();
 
   async function handleClick() {
     const ok = await confirmDialog({
-      title: 'Generate Token Baru',
-      message: 'Generate token download baru? Token lama akan tidak valid lagi.',
-      confirmLabel: 'Generate',
+      title: t('regenerateTokenConfirmTitle'),
+      message: t('regenerateTokenConfirmMessage'),
+      confirmLabel: t('regenerateToken'),
       danger: true,
     });
     if (!ok) return;
@@ -33,7 +35,7 @@ export function RegenerateTokenForm({ kodeOrder, orderItemId }: Props) {
       if (res.error) {
         toast.error(res.error);
       } else {
-        toast.success(res.message ?? 'Token baru telah dibuat.');
+        toast.success(res.message ?? t('regenerateTokenSuccess'));
       }
     });
   }
@@ -46,7 +48,7 @@ export function RegenerateTokenForm({ kodeOrder, orderItemId }: Props) {
       disabled={pending}
       onClick={handleClick}
     >
-      {pending ? '…' : '↻ Token Baru'}
+      {pending ? '…' : t('regenerateToken')}
     </Button>
   );
 }

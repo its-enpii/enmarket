@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 import { EmptyState } from '@/components/public/EmptyState';
+import { Card } from '@/components/ui/neobrutal';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 
@@ -75,9 +76,9 @@ export default async function CheckoutPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-8">
-        <div className="bg-surface border-4 border-ink p-6 shadow-[6px_6px_0_0_var(--color-ink)]">
+        <Card variant="surface" thick hoverable={false} className="p-6">
           <CheckoutForm />
-        </div>
+        </Card>
 
         <aside className="bg-primary text-surface border-4 border-ink p-5 shadow-[6px_6px_0_0_var(--color-ink)] h-fit">
           <h2 className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4 border-b border-surface/30 pb-2">

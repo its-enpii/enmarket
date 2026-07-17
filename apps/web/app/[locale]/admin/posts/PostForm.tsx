@@ -7,6 +7,7 @@
 
 import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { FileUpload } from '@/components/admin/FileUpload';
@@ -14,6 +15,7 @@ import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
+import { Card } from '@/components/ui/neobrutal';
 import { TiptapEditor } from '@/components/admin/TiptapEditor';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { slugify } from '@/lib/format';
@@ -44,6 +46,8 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
 
 export function PostForm({ initial }: Props) {
   const router = useRouter();
+  const t = useTranslations('admin.posts.form');
+  const tBtns = useTranslations('common.buttons');
   const isEdit = !!initial;
 
   const [state, formAction, pending] = useActionState(
@@ -75,9 +79,9 @@ export function PostForm({ initial }: Props) {
     <form action={formAction} className="space-y-8">
       {/* ───── Title + Slug ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Identitas" title="Judul & Slug" />
+        <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
-          <FormField label="Judul" htmlFor="title" required error={fieldErr('title')}>
+          <FormField label={t('fieldTitle')} htmlFor="title" required error={fieldErr('title')}>
             <Input
               id="title"
               name="title"
@@ -89,9 +93,9 @@ export function PostForm({ initial }: Props) {
           </FormField>
 
           <FormField
-            label="Slug"
+            label={t('fieldSlug')}
             htmlFor="slug"
-            hint="URL-friendly identifier. Huruf kecil, angka, strip."
+            hint={t('fieldSlugHint')}
             error={fieldErr('slug')}
           >
             <Input
@@ -107,11 +111,11 @@ export function PostForm({ initial }: Props) {
 
       {/* ───── Konten ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Konten" title="Tulisan" />
+        <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
         <FormField
-          label="Ringkasan"
+          label={t('fieldExcerpt')}
           htmlFor="excerpt"
-          hint="Tampil di card list & meta description. Maks 500 karakter."
+          hint={t('fieldExcerptHint')}
           error={fieldErr('excerpt')}
         >
           <Textarea
@@ -124,30 +128,30 @@ export function PostForm({ initial }: Props) {
         </FormField>
 
         <FormField
-          label="Konten"
+          label={t('fieldContent')}
           htmlFor="content"
           required
-          hint="Heading, paragraf, list, link, quote, code, image."
+          hint={t('fieldContentHint')}
           error={fieldErr('content')}
         >
           <TiptapEditor
             name="content"
             defaultValue={initial?.content ?? ''}
-            placeholder="Mulai menulis… (bold, italic, H2/H3, list, link, image, code)"
+            placeholder={t('fieldContentPlaceholder')}
           />
         </FormField>
       </section>
 
       {/* ───── Media ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Media" title="Thumbnail" />
+        <SectionHeader eyebrow={t('sectionMedia')} title={t('sectionMediaTitle')} />
         <FormField
-          label="Thumbnail"
+          label={t('fieldThumbnail')}
           htmlFor="thumbnail"
           hint={
             isEdit && initial?.thumbnail
-              ? `Saat ini: ${initial.thumbnail}`
-              : 'Opsional. Gambar utama untuk card list & hero detail.'
+              ? t('fieldThumbnailHintCurrent', { url: initial.thumbnail })
+              : t('fieldThumbnailHintEmpty')
           }
           error={fieldErr('thumbnail')}
         >
@@ -158,37 +162,37 @@ export function PostForm({ initial }: Props) {
             defaultPreview={initial?.thumbnail ?? undefined}
           />
           {isEdit && initial?.thumbnail && (
-            <Checkbox name="remove_thumbnail" value="1" label="Hapus thumbnail saat simpan" className="mt-2" />
+            <Checkbox name="remove_thumbnail" value="1" label={t('removeThumbnail')} className="mt-2" />
           )}
         </FormField>
       </section>
 
       {/* ───── Publish ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Publikasi" title="Status & Jadwal" />
+        <SectionHeader eyebrow={t('sectionPublish')} title={t('sectionPublishTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
-          <FormField label="Status" htmlFor="status" required error={fieldErr('status')}>
+          <FormField label={t('fieldStatus')} htmlFor="status" required error={fieldErr('status')}>
             <SelectSearch
               name="status"
               required
               defaultValue={status}
               onChange={(v) => setStatus(v as PostStatus)}
-              placeholder="Pilih status…"
+              placeholder={t('statusPlaceholder')}
               options={[
-                { value: 'draft', label: 'Draft — belum publish' },
-                { value: 'published', label: 'Published — tampil publik' },
-                { value: 'archived', label: 'Diarsipkan — sembunyikan' },
+                { value: 'draft', label: t('statusDraft') },
+                { value: 'published', label: t('statusPublished') },
+                { value: 'archived', label: t('statusArchived') },
               ]}
             />
           </FormField>
 
           <FormField
-            label="Tanggal Publish"
+            label={t('fieldPublishedAt')}
             htmlFor="published_at"
             hint={
               status === 'published'
-                ? 'Akan otomatis terisi sekarang() kalau dikosongkan saat status Published.'
-                : 'Hanya relevan saat status Published. Kosongkan untuk draft.'
+                ? t('fieldPublishedAtHintActive')
+                : t('fieldPublishedAtHintInactive')
             }
             error={fieldErr('published_at')}
           >
@@ -204,17 +208,17 @@ export function PostForm({ initial }: Props) {
       </section>
 
       {state.error && (
-        <div className="bg-accent border-2 border-ink px-4 py-2 text-sm font-bold text-ink shadow-[2px_2px_0_0_var(--color-ink)]">
+        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
           {state.error}
-        </div>
+        </Card>
       )}
 
       <div className="flex gap-3 pt-2 border-t-2 border-ink">
         <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? 'Menyimpan…' : isEdit ? 'Simpan Perubahan' : 'Buat Catatan'}
+          {pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
         </Button>
         <Button type="button" variant="ghost" size="md" flat onClick={() => router.back()}>
-          Batal
+          {tBtns('cancel')}
         </Button>
       </div>
     </form>

@@ -100,12 +100,17 @@ class OrderDeliveryService
 
     private function createDeliveryForItem(OrderItem $item): OrderDelivery
     {
+        // Pakai Product::hasDownloadableFile() (cek file_url exist), bukan
+        // OrderItem::hasDownloadableFile() (cuma cek tipe_produk). Tanpa ini,
+        // bundle/download dengan file_url kosong akan tulis NULL ke delivery.
+        $downloadUrl = $item->product?->hasDownloadableFile()
+            ? $item->product->file_url
+            : null;
+
         $delivery = new OrderDelivery([
             'order_item_id' => $item->id,
             'download_token' => $this->generateUniqueToken(),
-            'download_url' => $item->hasDownloadableFile()
-                ? ($item->product?->file_url)
-                : null,
+            'download_url' => $downloadUrl,
             'token_expired_at' => now()->addDays(self::TOKEN_EXPIRY_DAYS),
         ]);
 

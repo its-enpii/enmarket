@@ -15,8 +15,7 @@
  * Tone: editorial / curated, bukan listing template.
  */
 
-import Link from 'next/link';
-import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 import { DevelopGrid } from '@/components/public/DevelopGrid';
 import { SearchBar } from '@/components/public/SearchBar';
@@ -27,12 +26,6 @@ import type { PaginatedResponse, Product } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export const metadata: Metadata = {
-  title: 'Develop — enpiistudio',
-  description:
-    'Curated collection karya digital dari studio enpii — tools, systems, dan products. Bukan katalog toko; ini rak studio.',
-  alternates: { canonical: '/develop' },
-};
 
 // ───── Constants ─────
 
@@ -40,15 +33,25 @@ const VALID_TIPE = ['download', 'license', 'bundle'] as const;
 type Tipe = (typeof VALID_TIPE)[number];
 
 interface PageProps {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ tipe?: string; page?: string; q?: string }>;
 }
 
-// Filter pills — All + tipe. Tipe labels pakai tone editorial.
-const FILTER_PILLS: Array<{ label: string; value: 'all' | Tipe }> = [
-  { label: 'All', value: 'all' },
-  { label: 'Apps', value: 'download' },
-  { label: 'Templates', value: 'license' },
-  { label: 'Bundles', value: 'bundle' },
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'develop' });
+  return {
+    title: `${t('title')} — enpiistudio`,
+    description: t('listSubtitle'),
+    alternates: { canonical: `/${locale}/develop` },
+  };
+}
+
+const FILTER_PILLS: Array<{ key: 'filterAll' | 'typeDownload' | 'typeLicense' | 'typeBundle'; value: 'all' | Tipe }> = [
+  { key: 'filterAll', value: 'all' },
+  { key: 'typeDownload', value: 'download' },
+  { key: 'typeLicense', value: 'license' },
+  { key: 'typeBundle', value: 'bundle' },
 ];
 
 // ───── Data fetch ─────
@@ -74,6 +77,7 @@ async function fetchCatalog(
 // ───── Component ─────
 
 export default async function DevelopPage({ searchParams }: PageProps) {
+  const t = await getTranslations('develop');
   const sp = await searchParams;
   const activeTipe: 'all' | Tipe =
     typeof sp.tipe === 'string' && VALID_TIPE.includes(sp.tipe as Tipe)
@@ -108,14 +112,13 @@ export default async function DevelopPage({ searchParams }: PageProps) {
       <section className="border-b-4 border-ink">
         <div className="px-6 md:px-12 py-20 md:py-28">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-            ✎ Develop
+            {t('eyebrow')}
           </p>
-          <h1 className="font-display text-7xl md:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
             Develop<span className="text-primary">.</span>
           </h1>
           <p className="mt-8 font-body text-body-lg italic text-ink/80 max-w-2xl border-l-4 border-accent pl-6">
-            Things I've built — tools, systems, and products from the studio.
-            Bukan rak toko. Ini catatan kerja yang kebetulan bisa dibeli.
+            {t('listSubtitle')}
           </p>
         </div>
       </section>
@@ -126,7 +129,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
           {/* Filter pills */}
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
-              Filter →
+              {t('filterLabel')}
             </span>
             {FILTER_PILLS.map((pill) => {
               const isActive = pill.value === activeTipe;
@@ -137,23 +140,20 @@ export default async function DevelopPage({ searchParams }: PageProps) {
                 ? `/develop?${params.toString()}`
                 : '/develop';
               return (
-                <Link
+                <Button
                   key={pill.value}
+                  variant={isActive ? 'ink' : 'surface'}
+                  size="sm"
                   href={href}
                   aria-current={isActive ? 'page' : undefined}
-                  className={[
-                    'inline-flex items-center px-4 py-2 font-label text-label-sm uppercase font-bold border-2 transition-all min-h-[40px]',
-                    isActive
-                      ? 'bg-ink text-surface border-ink shadow-[3px_3px_0_0_var(--color-accent)]'
-                      : 'bg-surface text-ink border-ink hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]',
-                  ].join(' ')}
+                  className="inline-flex items-center"
                 >
-                  {pill.label}
-                </Link>
+                  {t(pill.key)}
+                </Button>
               );
             })}
             <span className="ml-2 font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">
-              {meta.total} {meta.total === 1 ? 'artifact' : 'artifacts'}
+              {t('items', { count: meta.total })}
             </span>
           </div>
 
@@ -163,8 +163,8 @@ export default async function DevelopPage({ searchParams }: PageProps) {
               defaultValue={q ?? ''}
               variant="default"
               basePath="/develop"
-              placeholder="Cari artifact…"
-              submitLabel="Cari"
+              placeholder={t('searchPlaceholder')}
+              submitLabel={t('search')}
               showIcon={false}
             />
           </div>
@@ -175,15 +175,13 @@ export default async function DevelopPage({ searchParams }: PageProps) {
       {products.length === 0 ? (
         <section className="px-6 md:px-12 py-24 text-center border-b-4 border-ink">
           <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
-            {q ? `Tidak ada hasil untuk "${q}"` : 'Belum ada artifact di rak ini.'}
+            {q ? t('noResults', { query: q }) : t('empty')}
           </p>
           <p className="font-body text-body-md text-ink/60 max-w-md mx-auto mb-8">
-            {q
-              ? 'Coba kata kunci lain — atau reset filter di bawah.'
-              : 'Karya pertama biasanya rilis setelah cukup banyak prototype dibuang. Sabar — atau cek kategori lain.'}
+            {q ? t('noResultsHint') : t('emptyHint')}
           </p>
           <Button href="/develop" variant="primary" size="md">
-            {q ? 'Reset Search' : 'Lihat Semua'}
+            {q ? t('resetSearch') : t('viewAll')}
           </Button>
         </section>
       ) : (
@@ -203,14 +201,10 @@ export default async function DevelopPage({ searchParams }: PageProps) {
         <div className="px-6 md:px-12 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-              ✎ Penasaran prosesnya?
+              {t('footerEyebrow')}
             </p>
             <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight">
-              Curious how these{' '}
-              <span className="inline-block bg-accent text-ink px-2 py-0.5 -rotate-1">
-                are made
-              </span>
-              ?
+              {t('footerTitle')}
             </h2>
           </div>
           <NLink
@@ -220,7 +214,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
             arrow
             className="font-label text-label-sm uppercase font-bold text-2xl md:text-3xl whitespace-nowrap"
           >
-            Read the process
+            {t('footerCta')}
           </NLink>
         </div>
       </section>

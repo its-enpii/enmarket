@@ -11,6 +11,7 @@
  */
 
 import { useActionState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { Card } from '@/components/ui/neobrutal';
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export function MaintenanceForm({ status }: Props) {
+  const t = useTranslations('admin.settings.maintenance');
   const [state, action, pending] = useActionState<ActionResult, FormData>(
     async (prev, fd) => {
       const res = await setMaintenance(prev, fd);
@@ -50,10 +52,10 @@ export function MaintenanceForm({ status }: Props) {
     const targetEnabled = formData.get('enabled') === '1';
     if (targetEnabled && !enabled) {
       const ok = await confirmDialog({
-        title: 'Aktifkan Maintenance?',
-        message: 'Pelanggan tidak akan bisa akses toko. Order baru akan ditolak sampai mode ini dimatikan. Yakin?',
-        confirmLabel: 'Ya, Aktifkan',
-        cancelLabel: 'Batal',
+        title: t('confirmTitle'),
+        message: t('confirmMessage'),
+        confirmLabel: t('confirmAction'),
+        cancelLabel: t('confirmCancel'),
         danger: true,
       });
       if (!ok) return; // abort
@@ -65,10 +67,10 @@ export function MaintenanceForm({ status }: Props) {
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
         <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-          ✎ Status
+          ✎ {t('sectionStatus')}
         </p>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          Mode Toko
+          {t('sectionStatusTitle')}
         </h2>
       </div>
 
@@ -78,12 +80,10 @@ export function MaintenanceForm({ status }: Props) {
         <div className="flex items-center gap-4 p-4 border-2 border-ink bg-surface">
           <div className="flex-1 min-w-0">
             <p className="font-display font-black uppercase text-lg text-ink">
-              {enabled ? '● Maintenance Aktif' : '○ Toko Normal'}
+              {enabled ? t('statusActive') : t('statusInactive')}
             </p>
             <p className="mt-1 font-body text-xs text-ink/60">
-              {enabled
-                ? 'Pengunjung melihat halaman 503. Hanya admin yang bisa bypass.'
-                : 'Toko berjalan normal. Pelanggan bisa checkout seperti biasa.'}
+              {enabled ? t('statusActiveHint') : t('statusInactiveHint')}
             </p>
           </div>
           <span
@@ -92,14 +92,14 @@ export function MaintenanceForm({ status }: Props) {
               (enabled ? 'bg-primary text-surface' : 'bg-surface text-ink')
             }
           >
-            {enabled ? 'ACTIVE' : 'OFF'}
+            {enabled ? t('badgeActive') : t('badgeInactive')}
           </span>
         </div>
 
         <FormField
-          label="Banner Message"
+          label={t('fieldMessage')}
           htmlFor="maintenance-message"
-          hint="Teks yang ditampilkan ke pelanggan saat maintenance."
+          hint={t('fieldMessageHint')}
         >
           <Textarea
             id="maintenance-message"
@@ -115,10 +115,10 @@ export function MaintenanceForm({ status }: Props) {
         <div className="flex gap-2 pt-2 border-t-2 border-ink">
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending
-              ? 'Memproses…'
+              ? t('submitPending')
               : enabled
-                ? 'Matikan Maintenance'
-                : 'Aktifkan Maintenance'}
+                ? t('submitInactive')
+                : t('submitActive')}
           </Button>
         </div>
       </form>

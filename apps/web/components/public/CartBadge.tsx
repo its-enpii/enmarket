@@ -31,7 +31,7 @@ export async function CartBadge() {
         <span aria-hidden="true">🛒</span>
         <span className="hidden sm:inline">{t('viewCart')}</span>
         {count > 0 && (
-          <span className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 bg-accent text-ink border-2 border-ink min-w-[1.25rem] h-5 px-1 text-xs font-bold flex items-center justify-center">
+          <span className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 bg-accent text-ink border-2 border-ink min-w-[1.75rem] h-7 px-1.5 text-xs font-bold flex items-center justify-center">
             {count > 99 ? '99+' : count}
           </span>
         )}

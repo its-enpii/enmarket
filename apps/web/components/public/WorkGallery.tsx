@@ -16,6 +16,7 @@
  * Untuk <=2 gambar: pakai grid sederhana tanpa irregular pattern.
  */
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface Props {
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export function WorkGallery({ images, alt, title }: Props) {
+  const t = useTranslations('developDetail');
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
   if (images.length === 0) {
@@ -45,7 +47,7 @@ export function WorkGallery({ images, alt, title }: Props) {
         type="button"
         onClick={() => setActiveIdx(0)}
         className="block w-full bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform cursor-pointer"
-        aria-label={`Lihat ${alt} lebih besar`}
+        aria-label={t('galleryOpen', { name: alt })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -60,7 +62,7 @@ export function WorkGallery({ images, alt, title }: Props) {
   return (
     <>
       {/* Irregular grid */}
-      <div className="grid grid-cols-4 grid-rows-[auto_auto_auto_auto] gap-4 md:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 grid-rows-[auto_auto_auto_auto] gap-4 md:gap-6">
         {images.slice(0, 8).map((src, i) => {
           const pattern = i % 5;
           // pattern 0: large (2 col × 2 row)
@@ -71,8 +73,12 @@ export function WorkGallery({ images, alt, title }: Props) {
           const isLarge = pattern === 0;
           const isMedium = pattern === 3;
 
-          const colSpan = isLarge ? 'col-span-2' : isMedium ? 'col-span-2' : 'col-span-1';
-          const aspectClass = isLarge ? 'aspect-square' : isMedium ? 'aspect-[2/1]' : 'aspect-square';
+          // Mobile (2-col): large tile = full-width (col-span-2), medium = full-width,
+          // small tiles pair up per row. Desktop (4-col): irregular mosaic.
+          const colSpan = isLarge || isMedium
+            ? 'col-span-2'
+            : 'col-span-1';
+          const aspectClass = isLarge ? 'aspect-square' : isMedium ? 'aspect-[2/1] sm:aspect-[2/1]' : 'aspect-square';
           const rotate = i % 3 === 0 ? '-rotate-1' : i % 3 === 1 ? 'rotate-1' : '';
           const shadowSize = isLarge ? 'shadow-[10px_10px_0_0_var(--color-ink)]' : 'shadow-[6px_6px_0_0_var(--color-ink)]';
 
@@ -88,12 +94,12 @@ export function WorkGallery({ images, alt, title }: Props) {
                 rotate,
                 'hover:rotate-0 transition-transform',
               ].join(' ')}
-              aria-label={`Lihat gambar ${i + 1} lebih besar`}
+              aria-label={t('galleryOpenNumber', { number: i + 1 })}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={src}
-                alt={`${alt} — frame ${i + 1}`}
+                alt={t('galleryFrame', { name: alt, number: i + 1 })}
                 loading="lazy"
                 className={`w-full ${aspectClass} object-cover group-hover:scale-[1.02] transition-transform`}
               />
@@ -109,7 +115,7 @@ export function WorkGallery({ images, alt, title }: Props) {
           onClick={() => setActiveIdx(null)}
           role="dialog"
           aria-modal="true"
-          aria-label="Image preview"
+          aria-label={t('galleryDialog')}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -118,7 +124,7 @@ export function WorkGallery({ images, alt, title }: Props) {
             className="max-w-full max-h-full object-contain border-4 border-surface shadow-[12px_12px_0_0_var(--color-accent)]"
           />
           <span className="absolute top-6 right-6 text-surface font-label text-label-sm uppercase font-bold tracking-wider border-2 border-surface px-4 py-2">
-            ✕ Close
+            ✕ {t('galleryClose')}
           </span>
           <span className="absolute bottom-6 left-6 text-surface font-label text-label-sm uppercase font-bold tracking-wider">
             {activeIdx + 1} / {images.length}

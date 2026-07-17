@@ -4,11 +4,10 @@ import { usePathname } from '@/i18n/navigation';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
-import { LocaleSwitcher } from '@/components/public/LocaleSwitcher';
 
 interface Props {
   children?: ReactNode;
@@ -36,6 +35,16 @@ export function TopNav({ children }: Props) {
   const t = useTranslations('nav');
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
 
+  // Lock body scroll saat mobile menu open (iOS Safari friendly).
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   const navItems = [
     { key: 'discover', href: '/discover' },
     { key: 'develop', href: '/develop' },
@@ -49,7 +58,7 @@ export function TopNav({ children }: Props) {
           href="/"
           variant="default"
           underline="none"
-          className="font-display text-headline-md font-black uppercase tracking-tighter min-h-[44px] inline-flex items-center text-2xl"
+          className="font-display text-2xl md:text-headline-md font-black uppercase tracking-tighter min-h-[44px] inline-flex items-center"
         >
           {siteName}
         </NLink>
@@ -74,7 +83,6 @@ export function TopNav({ children }: Props) {
             );
           })}
           {children}
-          <LocaleSwitcher />
           <Button variant="surface" size="sm" href="/login">
             {t('admin')}
           </Button>
@@ -114,9 +122,6 @@ export function TopNav({ children }: Props) {
                 </Link>
               );
             })}
-            <div className="px-3 py-2">
-              <LocaleSwitcher />
-            </div>
             <Button
               href="/login"
               variant="surface"

@@ -58,6 +58,7 @@ function Modal({ state }: { state: DialogState }) {
       {/* Backdrop */}
       <button
         type="button"
+        tabIndex={-1}
         aria-label="Close dialog"
         onClick={() => close('cancel')}
         className="absolute inset-0 bg-ink/60 cursor-default"

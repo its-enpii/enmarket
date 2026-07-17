@@ -16,6 +16,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
 import {
@@ -33,6 +34,7 @@ interface Props {
 }
 
 export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props) {
+  const t = useTranslations('admin.media');
   const [items] = useState<MediaItem[]>(initialItems);
   const [filters, setFilters] = useState<FilterMediaOptions>(initialFilters);
 
@@ -59,7 +61,7 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
               htmlFor="media-search"
               className="block text-xs font-bold uppercase tracking-wide mb-1"
             >
-              Cari file
+              {t('searchLabel')}
             </label>
             <Input
               id="media-search"
@@ -67,20 +69,20 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
               type="text"
               value={filters.q ?? ''}
               onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
-              placeholder="namafile.png"
+              placeholder={t('searchPlaceholder')}
             />
           </div>
 
           <div className="w-44">
             <SelectSearch
               name="source"
-              label="Sumber"
+              label={t('source.label')}
               value={filters.source ?? 'all'}
-              placeholder="Semua Sumber"
+              placeholder={t('source.all')}
               options={[
-                { value: 'all', label: 'Semua Sumber' },
-                { value: 'product', label: 'Produk' },
-                { value: 'post', label: 'Catatan' },
+                { value: 'all', label: t('source.all') },
+                { value: 'product', label: t('source.product') },
+                { value: 'post', label: t('source.post') },
               ]}
               onChange={(v) =>
                 setFilters((f) => ({ ...f, source: v as 'all' | 'product' | 'post' }))
@@ -92,14 +94,14 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
           <div className="w-44">
             <SelectSearch
               name="type"
-              label="Tipe"
+              label={t('type.label')}
               value={filters.type ?? 'all'}
-              placeholder="Semua Tipe"
+              placeholder={t('type.all')}
               options={[
-                { value: 'all', label: 'Semua Tipe' },
-                { value: 'image', label: 'Image' },
-                { value: 'video', label: 'Video' },
-                { value: 'other', label: 'Lainnya' },
+                { value: 'all', label: t('type.all') },
+                { value: 'image', label: t('type.image') },
+                { value: 'video', label: t('type.video') },
+                { value: 'other', label: t('type.other') },
               ]}
               onChange={(v) =>
                 setFilters((f) => ({
@@ -113,8 +115,9 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
 
           <div className="ml-auto self-end">
             <p className="font-label text-[10px] uppercase tracking-wider text-ink/60">
-              {filtered.length} {filtered.length === 1 ? 'item' : 'items'}
-              {filtered.length !== items.length && ` (dari ${items.length})`}
+              {filtered.length !== items.length
+                ? t('countWithTotal', { count: filtered.length, total: items.length })
+                : t('count', { count: filtered.length })}
             </p>
           </div>
         </div>
@@ -152,12 +155,15 @@ function MediaCard({
   onClick: () => void;
   pickerMode: boolean;
 }) {
-  const Tag = pickerMode ? 'button' : 'div';
+  const t = useTranslations('admin.media');
   return (
-    <Tag
-      onClick={onClick}
+    <Card
+      as={pickerMode ? 'button' : 'div'}
       type={pickerMode ? 'button' : undefined}
-      className="block text-left bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-ink)] transition-all cursor-pointer"
+      onClick={onClick}
+      variant="surface"
+      hoverable={false}
+      className="block text-left overflow-hidden cursor-pointer"
     >
       {/* Preview */}
       <div className="aspect-square bg-ink/10 border-b-2 border-ink overflow-hidden relative">
@@ -186,7 +192,7 @@ function MediaCard({
             (item.source === 'product' ? 'bg-accent text-ink' : 'bg-primary text-surface')
           }
         >
-          {item.source === 'product' ? '◆ Produk' : '✎ Catatan'}
+          {item.source === 'product' ? t('sourceBadge.product') : t('sourceBadge.post')}
         </span>
       </div>
 
@@ -199,11 +205,12 @@ function MediaCard({
           {item.sourceLabel}
         </p>
       </div>
-    </Tag>
+    </Card>
   );
 }
 
 function EmptyGallery({ hasItems }: { hasItems: boolean }) {
+  const t = useTranslations('admin.media.empty');
   return (
     <Card variant="surface" className="p-12 text-center">
       <div className="max-w-md mx-auto">
@@ -219,15 +226,13 @@ function EmptyGallery({ hasItems }: { hasItems: boolean }) {
           />
         </div>
         <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-2">
-          ✎ {hasItems ? 'No match' : 'Kosong'}
+          {hasItems ? t('eyebrowMatch') : t('eyebrowEmpty')}
         </p>
         <h3 className="font-display text-2xl md:text-3xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-          {hasItems ? 'Tidak ada yang cocok' : 'Belum ada media'}
+          {hasItems ? t('titleMatch') : t('titleEmpty')}
         </h3>
         <p className="mt-3 font-body text-body-md text-ink/70">
-          {hasItems
-            ? 'Coba kata kunci lain atau reset filter.'
-            : 'Upload image di form produk atau catatan — akan muncul di sini.'}
+          {hasItems ? t('hintMatch') : t('hintEmpty')}
         </p>
       </div>
     </Card>

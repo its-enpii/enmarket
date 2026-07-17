@@ -36,7 +36,7 @@ import {
   type CardVariant,
 } from './styles';
 
-type AllowedTag = 'div' | 'article' | 'section' | 'aside';
+type AllowedTag = 'div' | 'article' | 'section' | 'aside' | 'label' | 'button';
 
 type CommonProps = {
   variant?: CardVariant;

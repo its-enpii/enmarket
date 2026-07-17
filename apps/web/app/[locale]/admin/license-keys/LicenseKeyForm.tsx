@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { FormField } from '@/components/admin/FormField';
@@ -34,16 +35,18 @@ const INITIAL: ActionResult = {};
  * Kalau products list panjang, dropdown di-virtualize di Fase 6.
  */
 export function LicenseKeyTrigger({ products: _products }: Props) {
+  const t = useTranslations('admin.licenseKeys');
   const { open, setOpen } = useLicenseKey();
   if (open) return null;
   return (
     <Button type="button" variant="primary" size="md" onClick={() => setOpen(true)}>
-      + Tambah Key Manual
+      {t('trigger')}
     </Button>
   );
 }
 
 export function LicenseKeyFormCard({ products }: Props) {
+  const t = useTranslations('admin.licenseKeys.form');
   const { open, setOpen } = useLicenseKey();
   const [state, formAction, pending] = useActionState<ActionResult, FormData>(
     async (prev, fd) => {
@@ -64,14 +67,14 @@ export function LicenseKeyFormCard({ products }: Props) {
       <div className="flex items-center justify-between border-b-2 border-ink pb-3">
         <div>
           <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
-            ✎ Quick Action
+            {t('eyebrow')}
           </p>
           <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-            Tambah License Key Manual
+            {t('title')}
           </h3>
         </div>
         <Button type="button" variant="ghost" size="sm" flat onClick={() => setOpen(false)}>
-          ✕ Tutup
+          {t('close')}
         </Button>
       </div>
 
@@ -80,17 +83,17 @@ export function LicenseKeyFormCard({ products }: Props) {
 
         <SelectSearch
           name="product_id"
-          label="Produk"
+          label={t('fieldProduct')}
           required
-          placeholder="— Pilih produk —"
+          placeholder={t('productPlaceholder')}
           defaultValue=""
-          showAllOption={{ value: '', label: '— Pilih produk —' }}
+          showAllOption={{ value: '', label: t('productPlaceholder') }}
           options={products.map((p) => ({ value: String(p.id), label: p.nama }))}
           error={state.fieldErrors?.product_id?.[0]}
         />
 
         <div className="grid grid-cols-2 gap-3">
-          <FormField label="Jumlah" htmlFor="count" error={state.fieldErrors?.count?.[0]}>
+          <FormField label={t('fieldCount')} htmlFor="count" error={state.fieldErrors?.count?.[0]}>
             <Input
               id="count"
               name="count"
@@ -103,10 +106,10 @@ export function LicenseKeyFormCard({ products }: Props) {
           </FormField>
 
           <FormField
-            label="Prefix (opsional)"
+            label={t('fieldPrefix')}
             htmlFor="prefix"
             error={state.fieldErrors?.prefix?.[0]}
-            hint="Default: ADMIN. Huruf besar + angka, 2–10 char."
+            hint={t('fieldPrefixHint')}
           >
             <Input
               id="prefix"
@@ -122,10 +125,10 @@ export function LicenseKeyFormCard({ products }: Props) {
 
         <div className="flex gap-2 pt-2 border-t-2 border-ink">
           <Button type="submit" variant="primary" size="md" disabled={pending}>
-            {pending ? 'Menyimpan…' : 'Generate'}
+            {pending ? t('submitPending') : t('submitGenerate')}
           </Button>
           <Button type="button" variant="ghost" size="md" flat onClick={() => setOpen(false)}>
-            Batal
+            {t('cancel')}
           </Button>
         </div>
       </form>

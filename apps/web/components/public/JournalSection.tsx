@@ -1,11 +1,8 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
 
-import { formatDate } from '@/lib/format';
 import type { Post } from '@/lib/types';
 
 interface Props {
@@ -15,20 +12,27 @@ interface Props {
 /**
  * Latest / Display — Neobrutalism enpiistudio.
  */
-export function JournalSection({ posts }: Props) {
-  const t = useTranslations('home');
-  const tPost = useTranslations('displayPost');
-  const tProduct = useTranslations('product.card');
-  const data: JournalItem[] = posts.length >= 2
-    ? posts.slice(0, 2).map((p) => ({
-        title: p.title,
-        body: p.excerpt ?? '',
-        date: p.published_at ? formatDate(p.published_at) : '—',
-        image: p.thumbnail ?? null,
-        href: `/display/${p.slug}`,
-        category: 'Journal',
-      }))
-    : PLACEHOLDER_ENTRIES;
+export async function JournalSection({ posts }: Props) {
+  const [t, tPost, format] = await Promise.all([
+    getTranslations('home'),
+    getTranslations('displayPost'),
+    getFormatter(),
+  ]);
+  const data: JournalItem[] = posts.slice(0, 2).map((p) => ({
+    title: p.title,
+    body: p.excerpt ?? '',
+    date: p.published_at
+      ? format.dateTime(new Date(p.published_at), {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          timeZone: 'Asia/Jakarta',
+        })
+      : '—',
+    image: p.thumbnail ?? null,
+    href: `/display/${p.slug}`,
+    category: t('journalCategory'),
+  }));
 
   return (
     <section className="py-24 px-6 md:px-12 bg-surface">
@@ -128,22 +132,3 @@ function JournalEntry({
     </article>
   );
 }
-
-const PLACEHOLDER_ENTRIES: JournalItem[] = [
-  {
-    title: 'The Honesty of Raw Concrete',
-    body: 'How architectural brutalism informs modern digital interface logic through hierarchy and material truth.',
-    date: 'Oct 24, 2026',
-    image: null,
-    href: '/display',
-    category: 'Journal',
-  },
-  {
-    title: 'Coding with Intentional Flaws',
-    body: 'Embracing the glitch and the irregular to create digital spaces that feel human and crafted.',
-    date: 'Sep 12, 2026',
-    image: null,
-    href: '/display',
-    category: 'Journal',
-  },
-];

@@ -6,6 +6,7 @@
 
 import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/admin/Button';
 import { FileUpload } from '@/components/admin/FileUpload';
@@ -14,8 +15,9 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
+import { Card } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
-import type { Category, Product, StatusProduct, TipeProduct } from '@/lib/types';
+import type { Category, Product } from '@/lib/types';
 
 import { createProduct, updateProduct, ActionResult } from './actions';
 
@@ -43,9 +45,9 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
 
 export function ProductForm({ categories, initial }: Props) {
   const router = useRouter();
+  const t = useTranslations('admin.products.form');
+  const tBtns = useTranslations('common.buttons');
   const isEdit = !!initial;
-
-  const action = isEdit ? updateProduct.bind(null, initial!.id) : createProduct;
 
   const [state, formAction, pending] = useActionState(
     async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
@@ -86,9 +88,9 @@ export function ProductForm({ categories, initial }: Props) {
     <form action={formAction} className="space-y-8">
       {/* ───── Identitas ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Identitas" title="Informasi Dasar" />
+        <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
-          <FormField label="Nama" htmlFor="nama" required error={fieldErr('nama')}>
+          <FormField label={t('fieldName')} htmlFor="nama" required error={fieldErr('nama')}>
             <Input
               id="nama"
               name="nama"
@@ -100,9 +102,9 @@ export function ProductForm({ categories, initial }: Props) {
           </FormField>
 
           <FormField
-            label="Slug"
+            label={t('fieldSlug')}
             htmlFor="slug"
-            hint="URL-friendly identifier. Huruf kecil, angka, strip."
+            hint={t('fieldSlugHint')}
             error={fieldErr('slug')}
           >
             <Input
@@ -114,7 +116,7 @@ export function ProductForm({ categories, initial }: Props) {
             />
           </FormField>
 
-          <FormField label="Kategori" htmlFor="category_id" error={fieldErr('category_id')}>
+          <FormField label={t('fieldCategory')} htmlFor="category_id" error={fieldErr('category_id')}>
             <SelectSearch
               name="category_id"
               options={categories.map((c) => ({
@@ -123,9 +125,9 @@ export function ProductForm({ categories, initial }: Props) {
                 hint: c.slug ?? undefined,
               }))}
               defaultValue={initial?.category_id ? String(initial.category_id) : ''}
-              placeholder="— Tanpa Kategori —"
+              placeholder={t('categoryPlaceholder')}
               clearable
-              showAllOption={{ value: '', label: '— Tanpa Kategori —' }}
+              showAllOption={{ value: '', label: t('categoryPlaceholder') }}
             />
           </FormField>
         </div>
@@ -133,9 +135,9 @@ export function ProductForm({ categories, initial }: Props) {
 
       {/* ───── Harga & Tipe ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Penjualan" title="Harga, Tipe, dan Status" />
+        <SectionHeader eyebrow={t('sectionPricing')} title={t('sectionPricingTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
-          <FormField label="Harga (Rp)" htmlFor="harga" required error={fieldErr('harga')}>
+          <FormField label={t('fieldPrice')} htmlFor="harga" required error={fieldErr('harga')}>
             <Input
               id="harga"
               name="harga"
@@ -147,38 +149,38 @@ export function ProductForm({ categories, initial }: Props) {
             />
           </FormField>
 
-          <FormField label="Tipe" htmlFor="tipe" required error={fieldErr('tipe')}>
+          <FormField label={t('fieldType')} htmlFor="tipe" required error={fieldErr('tipe')}>
             <SelectSearch
               name="tipe"
               required
               defaultValue={initial?.tipe ?? 'download'}
-              placeholder="Pilih tipe…"
+              placeholder={t('typePlaceholder')}
               options={[
-                { value: 'download', label: 'Download — hanya file' },
-                { value: 'license', label: 'License — hanya key' },
-                { value: 'bundle', label: 'Bundle — file + key' },
+                { value: 'download', label: t('typeDownload') },
+                { value: 'license', label: t('typeLicense') },
+                { value: 'bundle', label: t('typeBundle') },
               ]}
             />
           </FormField>
 
-          <FormField label="Status" htmlFor="status" required error={fieldErr('status')}>
+          <FormField label={t('fieldStatus')} htmlFor="status" required error={fieldErr('status')}>
             <SelectSearch
               name="status"
               required
               defaultValue={initial?.status ?? 'draft'}
-              placeholder="Pilih status…"
+              placeholder={t('statusPlaceholder')}
               options={[
-                { value: 'draft', label: 'Draft — belum dijual' },
-                { value: 'aktif', label: 'Aktif — tampil di toko' },
-                { value: 'tidak_dijual', label: 'Tidak Dijual' },
+                { value: 'draft', label: t('statusDraft') },
+                { value: 'aktif', label: t('statusActive') },
+                { value: 'tidak_dijual', label: t('statusNotForSale') },
               ]}
             />
           </FormField>
 
           <FormField
-            label="Download Expiry (hari)"
+            label={t('fieldDownloadExpiry')}
             htmlFor="download_expiry_days"
-            hint="Untuk tipe download/bundle. Berapa hari link download berlaku."
+            hint={t('fieldDownloadExpiryHint')}
             error={fieldErr('download_expiry_days')}
           >
             <Input
@@ -195,8 +197,8 @@ export function ProductForm({ categories, initial }: Props) {
 
       {/* ───── Deskripsi ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Konten" title="Deskripsi & Fitur" />
-        <FormField label="Deskripsi" htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
+        <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
+        <FormField label={t('fieldDescription')} htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
           <Textarea
             id="deskripsi"
             name="deskripsi"
@@ -206,13 +208,15 @@ export function ProductForm({ categories, initial }: Props) {
           />
         </FormField>
 
-        <FormField label="Fitur / Isi Produk" htmlFor="fitur-input" hint="Maks 20 item." error={fieldErr('fitur')}>
+        <FormField label={t('fieldFitur')} htmlFor="fitur-input" hint={t('fieldFiturHint')} error={fieldErr('fitur')}>
           <input type="hidden" name="fitur" value={fiturJson} />
           <div className="space-y-2">
             {fitur.map((f, i) => (
-              <div
+              <Card
                 key={i}
-                className="flex items-center gap-2 border-2 border-ink bg-surface px-3 py-2"
+                variant="surface"
+                hoverable={false}
+                className="flex items-center gap-2 px-3 py-2"
               >
                 <span className="text-primary font-bold">{i + 1}.</span>
                 <span className="flex-1 text-sm">{f}</span>
@@ -222,11 +226,11 @@ export function ProductForm({ categories, initial }: Props) {
                   size="sm"
                   flat
                   onClick={() => removeFitur(i)}
-                  srLabel={`Hapus fitur ${f}`}
+                  srLabel={t('fiturRemove', { value: f })}
                 >
                   ×
                 </Button>
-              </div>
+              </Card>
             ))}
             <div className="flex gap-2">
               <Input
@@ -238,7 +242,7 @@ export function ProductForm({ categories, initial }: Props) {
                     addFitur();
                   }
                 }}
-                placeholder="Tulis fitur lalu Enter / klik +"
+                placeholder={t('fiturPlaceholder')}
                 className="flex-1"
                 variant="flat"
               />
@@ -248,7 +252,7 @@ export function ProductForm({ categories, initial }: Props) {
                 size="sm"
                 flat
                 onClick={addFitur}
-                srLabel="Tambah fitur"
+                srLabel={t('fiturAdd')}
               >
                 +
               </Button>
@@ -259,32 +263,36 @@ export function ProductForm({ categories, initial }: Props) {
 
       {/* ───── File produk ───── */}
       <section className="space-y-5">
-        <SectionHeader eyebrow="Distribusi" title="File Produk" />
+        <SectionHeader eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
         <FormField
-          label="File Produk"
+          label={t('fieldFile')}
           htmlFor="file"
-          hint={isEdit && initial?.file_url ? `Saat ini: ${initial.file_url}` : 'Upload file yang akan dikirim ke pembeli.'}
+          hint={
+            isEdit && initial?.file_url
+              ? t('fieldFileHintCurrent', { url: initial.file_url })
+              : t('fieldFileHintEmpty')
+          }
           error={fieldErr('file')}
         >
           <FileUpload name="file" accept=".zip,.rar,.7z,.pdf,.apk,.exe,.tar.gz" maxSizeMB={500} />
           {isEdit && initial?.file_url && (
-            <Checkbox name="remove_file" value="1" label="Hapus file terlampir saat simpan" className="mt-2" />
+            <Checkbox name="remove_file" value="1" label={t('removeFile')} className="mt-2" />
           )}
         </FormField>
       </section>
 
       {state.error && (
-        <div className="bg-accent border-2 border-ink px-4 py-2 text-sm font-bold text-ink shadow-[2px_2px_0_0_var(--color-ink)]">
+        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
           {state.error}
-        </div>
+        </Card>
       )}
 
       <div className="flex gap-3 pt-2 border-t-2 border-ink">
         <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? 'Menyimpan…' : isEdit ? 'Simpan Perubahan' : 'Buat Produk'}
+          {pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
         </Button>
         <Button type="button" variant="ghost" size="md" flat onClick={() => router.back()}>
-          Batal
+          {tBtns('cancel')}
         </Button>
       </div>
     </form>
