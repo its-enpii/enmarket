@@ -17,7 +17,7 @@ class CartResource extends JsonResource
             'expires_at' => $this->expires_at?->toIso8601String(),
             'items' => CartItemResource::collection($items->load('product')),
             'total' => (float) $total,
-            'total_formatted' => 'Rp ' . number_format($total, 0, ',', '.'),
+            'total_formatted' => 'Rp '.number_format($total, 0, ',', '.'),
             'item_count' => $items->sum('qty'),
         ];
     }

@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                 return new RemoteEnStorage($baseUrl, $apiKey);
             }
 
-            return new LocalMockEnStorage();
+            return new LocalMockEnStorage;
         });
 
         // Bind NextRevalidator untuk on-demand ISR revalidation webhook
@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Bind CartService (stateless, bisa singleton)
-        $this->app->singleton(CartService::class, fn () => new CartService());
+        $this->app->singleton(CartService::class, fn () => new CartService);
 
         // Bind NotificationDispatcher — null webhook kalau belum dikonfigurasi = dev log mode
         $this->app->singleton(NotificationDispatcher::class, function () {
@@ -73,7 +73,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OrderDeliveryService::class);
 
         // Bind SiteSettings service (cached key/value accessor)
-        $this->app->singleton(SiteSettings::class, fn () => new SiteSettings());
+        $this->app->singleton(SiteSettings::class, fn () => new SiteSettings);
     }
 
     /**
@@ -85,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Register ActivityLogger observer untuk audit trail.
         // Append-only — semua created/updated/deleted masuk activity_logs table.
-        $observer = new ActivityLogger();
+        $observer = new ActivityLogger;
         Product::observe($observer);
         Post::observe($observer);
         Order::observe($observer);
@@ -112,17 +112,18 @@ class AppServiceProvider extends ServiceProvider
         // Download: per-token (biar browser normal gak ke-throttle kalau IP shared)
         RateLimiter::for('download', function (Request $request) {
             $token = (string) $request->route('token');
+
             return Limit::perMinute(30)->by("download:{$token}");
         });
 
         // Cart: lenient, per-IP
         RateLimiter::for('cart', function (Request $request) {
-            return Limit::perMinute(60)->by('cart:' . $request->ip());
+            return Limit::perMinute(60)->by('cart:'.$request->ip());
         });
 
         // Order status polling: moderate, per-IP
         RateLimiter::for('order-status', function (Request $request) {
-            return Limit::perMinute(10)->by('order:' . $request->ip());
+            return Limit::perMinute(10)->by('order:'.$request->ip());
         });
     }
 }

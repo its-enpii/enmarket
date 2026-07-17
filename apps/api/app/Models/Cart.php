@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Cart extends Model
 {
@@ -30,7 +31,7 @@ class Cart extends Model
     {
         return (float) $this->items()
             ->join('products', 'products.id', '=', 'cart_items.product_id')
-            ->sum(\Illuminate\Support\Facades\DB::raw('products.harga * cart_items.qty'));
+            ->sum(DB::raw('products.harga * cart_items.qty'));
     }
 
     /**

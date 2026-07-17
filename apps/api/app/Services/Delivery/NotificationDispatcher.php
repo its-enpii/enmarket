@@ -46,6 +46,7 @@ class NotificationDispatcher
         if (! $this->n8nWebhookUrl) {
             $this->logDevMode($payload);
             $this->markAllSent($deliveries);
+
             return;
         }
 

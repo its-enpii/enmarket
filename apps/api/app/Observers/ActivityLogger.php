@@ -3,6 +3,11 @@
 namespace App\Observers;
 
 use App\Models\ActivityLog;
+use App\Models\LicenseKey;
+use App\Models\Order;
+use App\Models\Post;
+use App\Models\Product;
+use App\Models\SiteSetting;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,22 +30,22 @@ class ActivityLogger
      * Override per model kalau perlu.
      */
     private const SUBJECT_TYPE_MAP = [
-        \App\Models\Product::class => 'product',
-        \App\Models\Post::class => 'post',
-        \App\Models\Order::class => 'order',
-        \App\Models\LicenseKey::class => 'license_key',
-        \App\Models\SiteSetting::class => 'setting',
+        Product::class => 'product',
+        Post::class => 'post',
+        Order::class => 'order',
+        LicenseKey::class => 'license_key',
+        SiteSetting::class => 'setting',
     ];
 
     /**
      * Map model class → field name untuk human-readable label.
      */
     private const LABEL_FIELD_MAP = [
-        \App\Models\Product::class => 'nama',
-        \App\Models\Post::class => 'title',
-        \App\Models\Order::class => 'kode_order',
-        \App\Models\LicenseKey::class => 'license_key',
-        \App\Models\SiteSetting::class => 'key',
+        Product::class => 'nama',
+        Post::class => 'title',
+        Order::class => 'kode_order',
+        LicenseKey::class => 'license_key',
+        SiteSetting::class => 'key',
     ];
 
     public function created(Model $model): void

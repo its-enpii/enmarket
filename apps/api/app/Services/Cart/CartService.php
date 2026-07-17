@@ -3,7 +3,6 @@
 namespace App\Services\Cart;
 
 use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Product;
 
 /**
@@ -95,6 +94,7 @@ class CartService
         if ($cart) {
             $cart->items()->where('product_id', $productId)->delete();
         }
+
         return $cart?->fresh(['items.product']) ?? $this->getOrCreateCart($sessionId);
     }
 

@@ -22,8 +22,7 @@ class PostController extends Controller
     public function __construct(
         private readonly EnStorageClient $storage,
         private readonly NextRevalidator $revalidator,
-    ) {
-    }
+    ) {}
 
     /**
      * GET /api/admin/posts
@@ -108,7 +107,7 @@ class PostController extends Controller
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
             $ext = $file->getClientOriginalExtension() ?: 'jpg';
-            $filename = Str::random(20) . '.' . $ext;
+            $filename = Str::random(20).'.'.$ext;
             $path = $this->storage->upload($file, "posts/thumbnails/{$post->id}/{$filename}");
             $post->thumbnail = $path;
             $post->save();
@@ -149,7 +148,7 @@ class PostController extends Controller
             }
             $file = $request->file('thumbnail');
             $ext = $file->getClientOriginalExtension() ?: 'jpg';
-            $filename = Str::random(20) . '.' . $ext;
+            $filename = Str::random(20).'.'.$ext;
             $path = $this->storage->upload($file, "posts/thumbnails/{$post->id}/{$filename}");
             $post->thumbnail = $path;
             $post->save();
@@ -211,7 +210,7 @@ class PostController extends Controller
     {
         $uniqueSlugRule = 'unique:posts,slug';
         if ($post) {
-            $uniqueSlugRule = 'unique:posts,slug,' . $post->id;
+            $uniqueSlugRule = 'unique:posts,slug,'.$post->id;
         }
 
         return $request->validate([

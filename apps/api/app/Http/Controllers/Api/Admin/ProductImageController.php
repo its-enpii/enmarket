@@ -21,9 +21,7 @@ class ProductImageController extends Controller
 {
     private const MAX_PREVIEW_IMAGES = 5;
 
-    public function __construct(private readonly EnStorageClient $storage)
-    {
-    }
+    public function __construct(private readonly EnStorageClient $storage) {}
 
     /**
      * Upload satu preview image dan append ke array.
@@ -38,14 +36,14 @@ class ProductImageController extends Controller
 
         if (count($current) >= self::MAX_PREVIEW_IMAGES) {
             return response()->json([
-                'message' => 'Maksimal ' . self::MAX_PREVIEW_IMAGES . ' preview image.',
+                'message' => 'Maksimal '.self::MAX_PREVIEW_IMAGES.' preview image.',
                 'code' => 'preview_limit',
             ], 422);
         }
 
         $file = $request->file('file');
         $ext = $file->getClientOriginalExtension() ?: 'jpg';
-        $filename = Str::random(20) . '.' . $ext;
+        $filename = Str::random(20).'.'.$ext;
         $path = $this->storage->upload($file, "products/previews/{$product->id}/{$filename}");
 
         $current[] = $path;

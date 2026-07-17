@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CartResource;
+use App\Models\Product;
 use App\Services\Cart\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,9 +12,7 @@ use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
-    public function __construct(private readonly CartService $cartService)
-    {
-    }
+    public function __construct(private readonly CartService $cartService) {}
 
     /**
      * GET /api/cart — ambil cart by cookie cart_session.
@@ -42,7 +41,7 @@ class CartController extends Controller
         $sessionId = $this->resolveSessionId($request);
 
         // Cegah produk non-aktif masuk cart
-        $product = \App\Models\Product::find($data['product_id']);
+        $product = Product::find($data['product_id']);
         if (! $product || $product->status !== 'aktif') {
             return response()->json([
                 'message' => 'Produk ini sedang tidak dijual.',

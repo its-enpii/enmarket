@@ -121,7 +121,7 @@ class OrderResendController extends Controller
         Log::info('Admin regenerate token', [
             'order' => $kodeOrder,
             'order_item_id' => $item->id,
-            'new_token_prefix' => substr($delivery->download_token ?? '', 0, 8) . '…',
+            'new_token_prefix' => substr($delivery->download_token ?? '', 0, 8).'…',
         ]);
 
         return response()->json([
@@ -160,7 +160,7 @@ class OrderResendController extends Controller
         $created = $this->deliveryService->generateForOrder($order);
 
         return response()->json([
-            'message' => count($created) . ' delivery rows diproses.',
+            'message' => count($created).' delivery rows diproses.',
             'order' => $kodeOrder,
         ]);
     }

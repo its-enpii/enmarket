@@ -78,6 +78,7 @@ class NextRevalidator
     {
         if ($this->nextBaseUrl === '') {
             Log::warning('NextRevalidator: APP_NEXT_INTERNAL_URL kosong, skip revalidation.');
+
             return;
         }
 
@@ -87,7 +88,7 @@ class NextRevalidator
                 'Accept' => 'application/json',
             ])
                 ->timeout(3)
-                ->post(rtrim($this->nextBaseUrl, '/') . '/api/revalidate', [
+                ->post(rtrim($this->nextBaseUrl, '/').'/api/revalidate', [
                     'paths' => $paths,
                 ]);
 
@@ -95,7 +96,7 @@ class NextRevalidator
                 Log::warning("NextRevalidator: webhook {$this->nextBaseUrl}/api/revalidate returned HTTP {$response->status()}");
             }
         } catch (Throwable $e) {
-            Log::warning('NextRevalidator failed: ' . $e->getMessage());
+            Log::warning('NextRevalidator failed: '.$e->getMessage());
         }
     }
 }

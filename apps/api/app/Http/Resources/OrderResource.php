@@ -17,7 +17,7 @@ class OrderResource extends JsonResource
             'email_pembeli' => $this->email_pembeli,
             'wa_pembeli' => $this->wa_pembeli,
             'total_harga' => (string) $this->total_harga,
-            'total_harga_formatted' => 'Rp ' . number_format((float) $this->total_harga, 0, ',', '.'),
+            'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
             'status' => $this->status,
             'tripay_reference' => $this->tripay_reference,
             'qr_string' => $isPublic ? null : $this->qr_string,
@@ -36,7 +36,7 @@ class OrderResource extends JsonResource
                 'status' => $this->status,
                 'paid_at' => $this->paid_at?->toIso8601String(),
                 'qr_expired_at' => $this->qr_expired_at?->toIso8601String(),
-                'total_harga_formatted' => 'Rp ' . number_format((float) $this->total_harga, 0, ',', '.'),
+                'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
                 'item_count' => $this->whenLoaded('items', fn () => $this->items->count()),
             ];
         }

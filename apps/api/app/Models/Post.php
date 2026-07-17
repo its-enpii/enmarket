@@ -72,7 +72,7 @@ class Post extends Model
         }
 
         while ($query->exists()) {
-            $slug = $base . '-' . $counter;
+            $slug = $base.'-'.$counter;
             $query = static::query()->where('slug', $slug);
             if ($ignoreId !== null) {
                 $query->where('id', '!=', $ignoreId);

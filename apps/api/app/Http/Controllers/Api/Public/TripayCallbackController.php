@@ -21,8 +21,7 @@ class TripayCallbackController extends Controller
     public function __construct(
         private readonly TripayClient $tripay,
         private readonly OrderDeliveryService $deliveryService,
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request): JsonResponse
     {
@@ -31,12 +30,14 @@ class TripayCallbackController extends Controller
 
         if (! $signature) {
             Log::warning('Tripay callback: missing X-Callback-Signature header');
+
             return response()->json(['message' => 'Missing signature'], 400);
         }
 
         $payload = $this->tripay->verifyCallback($rawBody, $signature);
         if ($payload === null) {
             Log::warning('Tripay callback: invalid signature');
+
             return response()->json(['message' => 'Invalid signature'], 403);
         }
 
@@ -45,12 +46,14 @@ class TripayCallbackController extends Controller
 
         if (! $reference || ! $status) {
             Log::warning('Tripay callback: missing reference or status', $payload);
+
             return response()->json(['message' => 'Missing fields'], 400);
         }
 
         $order = Order::where('tripay_reference', $reference)->first();
         if (! $order) {
             Log::warning("Tripay callback: order not found for ref {$reference}");
+
             return response()->json(['message' => 'Order not found'], 404);
         }
 
@@ -65,6 +68,7 @@ class TripayCallbackController extends Controller
         $newStatus = $map[$status] ?? null;
         if ($newStatus === null) {
             Log::warning("Tripay callback: unknown status '{$status}'");
+
             return response()->json(['message' => 'Unknown status'], 400);
         }
 

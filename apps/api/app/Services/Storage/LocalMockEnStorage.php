@@ -31,7 +31,7 @@ class LocalMockEnStorage implements EnStorageClient
             $filename
         );
 
-        return $this->prefix . '/' . $fullPath;
+        return $this->prefix.'/'.$fullPath;
     }
 
     public function delete(string $path): bool
@@ -62,7 +62,7 @@ class LocalMockEnStorage implements EnStorageClient
     {
         // Untuk mock: return path relatif — frontend/admin perlu endpoint khusus
         // untuk stream file (diimplementasi di Fase 4 bersama /download/{token}).
-        return '/storage/' . ltrim($path, '/');
+        return '/storage/'.ltrim($path, '/');
     }
 
     /**
@@ -71,7 +71,7 @@ class LocalMockEnStorage implements EnStorageClient
     private function stripPrefix(string $path): ?string
     {
         $path = ltrim($path, '/');
-        if (str_starts_with($path, $this->prefix . '/')) {
+        if (str_starts_with($path, $this->prefix.'/')) {
             return substr($path, strlen($this->prefix) + 1);
         }
         if ($path === $this->prefix) {

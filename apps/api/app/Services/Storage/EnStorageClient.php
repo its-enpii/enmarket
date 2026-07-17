@@ -21,7 +21,6 @@ interface EnStorageClient
      * Upload file ke storage. Return path/URL yang bisa dipakai
      * untuk retrieve nanti.
      *
-     * @param  UploadedFile  $file
      * @param  string  $destinationPath  Path relatif dalam bucket (mis. "products/abc/file.zip")
      */
     public function upload(UploadedFile $file, string $destinationPath): string;

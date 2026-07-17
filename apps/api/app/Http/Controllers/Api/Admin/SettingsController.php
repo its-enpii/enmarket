@@ -24,8 +24,7 @@ class SettingsController extends Controller
 {
     public function __construct(
         private readonly EnStorageClient $storage,
-    ) {
-    }
+    ) {}
 
     /**
      * GET /api/admin/settings
@@ -57,8 +56,7 @@ class SettingsController extends Controller
                 $links = [];
             }
             // Filter: hanya row dengan label + url non-empty yang disimpan.
-            $clean = array_values(array_filter($links, fn ($l) =>
-                is_array($l) && ! empty($l['label']) && ! empty($l['url'])
+            $clean = array_values(array_filter($links, fn ($l) => is_array($l) && ! empty($l['label']) && ! empty($l['url'])
             ));
             // Normalize: trim values.
             $clean = array_map(fn ($l) => [
@@ -119,7 +117,7 @@ class SettingsController extends Controller
 
         $file = $request->file('file');
         $ext = $file->getClientOriginalExtension() ?: 'bin';
-        $filename = 'logo-' . Str::random(16) . '.' . $ext;
+        $filename = 'logo-'.Str::random(16).'.'.$ext;
         $url = $this->storage->upload($file, "settings/{$filename}");
 
         // Update logo_url di site_settings otomatis

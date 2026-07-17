@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct(private readonly NextRevalidator $revalidator)
-    {
-    }
+    public function __construct(private readonly NextRevalidator $revalidator) {}
 
     /**
      * GET /api/admin/categories

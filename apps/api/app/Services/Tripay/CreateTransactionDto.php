@@ -9,15 +9,12 @@ namespace App\Services\Tripay;
 class CreateTransactionDto
 {
     /**
-     * @param string $method Payment method code (QRIS untuk QRIS Direct)
-     * @param string $merchantRef Unique reference dari merchant (kita pakai kode_order)
-     * @param int $amount Total dalam Rupiah (integer, no decimal)
-     * @param string $customerName
-     * @param string $customerEmail
-     * @param string $customerPhone
-     * @param array<int, array{sku:string,name:string,price:int,quantity:int}> $orderItems
-     * @param int $expiredTime Detik dari sekarang sampai QR expired
-     * @param string|null $callbackUrl URL untuk receive callback Tripay
+     * @param  string  $method  Payment method code (QRIS untuk QRIS Direct)
+     * @param  string  $merchantRef  Unique reference dari merchant (kita pakai kode_order)
+     * @param  int  $amount  Total dalam Rupiah (integer, no decimal)
+     * @param  array<int, array{sku:string,name:string,price:int,quantity:int}>  $orderItems
+     * @param  int  $expiredTime  Detik dari sekarang sampai QR expired
+     * @param  string|null  $callbackUrl  URL untuk receive callback Tripay
      */
     public function __construct(
         public readonly string $method,
@@ -60,6 +57,7 @@ class CreateTransactionDto
         if ($this->callbackUrl) {
             $body['callback_url'] = $this->callbackUrl;
         }
+
         return $body;
     }
 }

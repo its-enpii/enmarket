@@ -35,7 +35,7 @@ class RemoteEnStorage implements EnStorageClient
 
     public function upload(UploadedFile $file, string $destinationPath): string
     {
-        $endpoint = rtrim($this->baseUrl, '/') . self::ENDPOINT_FILES;
+        $endpoint = rtrim($this->baseUrl, '/').self::ENDPOINT_FILES;
 
         $response = Http::withHeaders($this->authHeaders())
             ->timeout(self::HTTP_TIMEOUT_SECONDS)
@@ -97,12 +97,12 @@ class RemoteEnStorage implements EnStorageClient
     {
         // Placeholder: kembalikan URL publik langsung. Saat spec final,
         // ganti ke signed URL (request terpisah ke endpoint signed-url).
-        return rtrim($this->baseUrl, '/') . self::ENDPOINT_FILES . '/' . ltrim($path, '/');
+        return rtrim($this->baseUrl, '/').self::ENDPOINT_FILES.'/'.ltrim($path, '/');
     }
 
     private function fileEndpoint(string $path): string
     {
-        return rtrim($this->baseUrl, '/') . self::ENDPOINT_FILES . '/' . ltrim($path, '/');
+        return rtrim($this->baseUrl, '/').self::ENDPOINT_FILES.'/'.ltrim($path, '/');
     }
 
     /**
@@ -112,8 +112,9 @@ class RemoteEnStorage implements EnStorageClient
     {
         $headers = ['Accept' => 'application/json'];
         if ($this->apiKey !== '') {
-            $headers['Authorization'] = 'Bearer ' . $this->apiKey;
+            $headers['Authorization'] = 'Bearer '.$this->apiKey;
         }
+
         return $headers;
     }
 }

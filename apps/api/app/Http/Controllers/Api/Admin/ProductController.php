@@ -16,8 +16,7 @@ class ProductController extends Controller
     public function __construct(
         private readonly EnStorageClient $storage,
         private readonly NextRevalidator $revalidator,
-    ) {
-    }
+    ) {}
 
     /**
      * GET /api/admin/products
@@ -90,7 +89,7 @@ class ProductController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $ext = $file->getClientOriginalExtension() ?: 'bin';
-            $filename = Str::random(20) . '.' . $ext;
+            $filename = Str::random(20).'.'.$ext;
             $data['file_url'] = $this->storage->upload($file, "products/{$filename}");
         }
 
@@ -142,7 +141,7 @@ class ProductController extends Controller
             }
             $file = $request->file('file');
             $ext = $file->getClientOriginalExtension() ?: 'bin';
-            $filename = Str::random(20) . '.' . $ext;
+            $filename = Str::random(20).'.'.$ext;
             $data['file_url'] = $this->storage->upload($file, "products/{$filename}");
         } elseif ($request->boolean('remove_file')) {
             if ($product->file_url) {
@@ -211,7 +210,7 @@ class ProductController extends Controller
     {
         $uniqueSlugRule = 'unique:products,slug';
         if ($product) {
-            $uniqueSlugRule = 'unique:products,slug,' . $product->id;
+            $uniqueSlugRule = 'unique:products,slug,'.$product->id;
         }
 
         return $request->validate([

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderDelivery;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +28,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class DownloadController extends Controller
 {
-    public function show(Request $request, string $token): BinaryFileResponse|StreamedResponse|\Illuminate\Http\JsonResponse
+    public function show(Request $request, string $token): BinaryFileResponse|StreamedResponse|JsonResponse
     {
         $delivery = OrderDelivery::where('download_token', $token)
             ->with(['orderItem', 'orderItem.order'])
@@ -60,6 +61,7 @@ class DownloadController extends Controller
                 'token_prefix' => substr($token, 0, 12),
                 'path' => $path,
             ]);
+
             return response()->json([
                 'message' => 'File tidak ditemukan di storage. Hubungi admin.',
             ], 500);
@@ -72,7 +74,7 @@ class DownloadController extends Controller
             // Tambah extension dari file asli kalau belum ada
             $ext = pathinfo($relative, PATHINFO_EXTENSION);
             if ($ext) {
-                $filename .= '.' . $ext;
+                $filename .= '.'.$ext;
             }
         }
 
@@ -88,6 +90,7 @@ class DownloadController extends Controller
         if (str_starts_with($path, 'enstorage/')) {
             return substr($path, strlen('enstorage/'));
         }
+
         return $path;
     }
 }

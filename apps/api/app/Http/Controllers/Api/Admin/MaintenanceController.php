@@ -67,7 +67,7 @@ class MaintenanceController extends Controller
             // invalidate previous bypass sessions.
             Artisan::call('down', [
                 '--render' => 'errors::503',
-                '--secret' => 'bypass-' . bin2hex(random_bytes(8)),
+                '--secret' => 'bypass-'.bin2hex(random_bytes(8)),
                 '--retry' => 60,
             ]);
         } else {

@@ -31,7 +31,8 @@ class TestDeliveryCommand extends Command
             : Order::where('status', 'paid')->with(['items.delivery'])->latest()->first();
 
         if (! $order) {
-            $this->error("Order tidak ditemukan" . ($kode ? " (kode: {$kode})" : ' (tidak ada order paid)'));
+            $this->error('Order tidak ditemukan'.($kode ? " (kode: {$kode})" : ' (tidak ada order paid)'));
+
             return self::FAILURE;
         }
 
@@ -39,15 +40,17 @@ class TestDeliveryCommand extends Command
         if (empty($deliveries)) {
             $this->warn("Order {$order->kode_order} belum ada delivery rows.");
             $this->warn("Generate dulu: POST /api/admin/orders/{$order->kode_order}/generate-deliveries");
+
             return self::FAILURE;
         }
 
         $this->info("Order: {$order->kode_order} ({$order->nama_pembeli})");
-        $this->info("Items: {$order->items->count()}, deliveries: " . count($deliveries));
+        $this->info("Items: {$order->items->count()}, deliveries: ".count($deliveries));
 
         $dispatcher->dispatchOrderPaid($order, $deliveries);
 
-        $this->info("✓ Dispatched. Cek storage/logs/laravel.log untuk payload detail.");
+        $this->info('✓ Dispatched. Cek storage/logs/laravel.log untuk payload detail.');
+
         return self::SUCCESS;
     }
 }

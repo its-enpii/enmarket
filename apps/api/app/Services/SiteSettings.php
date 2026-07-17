@@ -40,6 +40,7 @@ class SiteSettings
     public function get(string $key, mixed $default = null): mixed
     {
         $all = $this->all();
+
         return $all[$key] ?? $default;
     }
 

@@ -12,6 +12,7 @@ use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use App\Services\Tripay\TripayException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -26,7 +27,7 @@ class CheckoutController extends Controller
     /**
      * GET /api/checkout — preview cart (untuk sanity-check sebelum form).
      */
-    public function preview(\Illuminate\Http\Request $request): JsonResponse
+    public function preview(Request $request): JsonResponse
     {
         $sessionId = $request->cookie('cart_session') ?: (string) Str::uuid();
         $cart = $this->cartService->getOrCreateCart($sessionId);
@@ -145,14 +146,16 @@ class CheckoutController extends Controller
             ], 201);
         } catch (TripayException $e) {
             Log::error('Checkout Tripay error', ['err' => $e->getMessage()]);
+
             return response()->json([
-                'message' => 'Gagal membuat transaksi pembayaran: ' . $e->getMessage(),
+                'message' => 'Gagal membuat transaksi pembayaran: '.$e->getMessage(),
                 'code' => 'tripay_error',
             ], 502);
         } catch (\Throwable $e) {
             Log::error('Checkout error', ['err' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
             return response()->json([
-                'message' => 'Checkout gagal: ' . $e->getMessage(),
+                'message' => 'Checkout gagal: '.$e->getMessage(),
                 'code' => 'checkout_error',
             ], 500);
         }

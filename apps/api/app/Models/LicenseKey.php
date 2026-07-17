@@ -83,6 +83,6 @@ class LicenseKey extends Model
             $groups[] = $group;
         }
 
-        return $prefix . '-' . implode('-', $groups);
+        return $prefix.'-'.implode('-', $groups);
     }
 }

@@ -13,7 +13,7 @@ class CartItemResource extends JsonResource
             'product_id' => $this->product_id,
             'qty' => $this->qty,
             'product' => $this->whenLoaded('product', fn () => new ProductResource($this->product)),
-            'subtotal_formatted' => 'Rp ' . number_format($this->product->harga * $this->qty, 0, ',', '.'),
+            'subtotal_formatted' => 'Rp '.number_format($this->product->harga * $this->qty, 0, ',', '.'),
             'subtotal' => (float) $this->product->harga * $this->qty,
         ];
     }

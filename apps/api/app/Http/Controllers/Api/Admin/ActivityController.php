@@ -60,6 +60,7 @@ class ActivityController extends Controller
             return null;
         }
         $n = (int) $m[1];
+
         return match ($m[2]) {
             's' => $n,
             'm' => $n * 60,

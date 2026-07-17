@@ -47,6 +47,7 @@ class PostResource extends JsonResource
     {
         $wordCount = str_word_count(strip_tags($this->content ?? ''));
         $minutes = (int) ceil($wordCount / 200);
+
         return max(1, $minutes);
     }
 }

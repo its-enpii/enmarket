@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\LicenseKey;
 use App\Models\Product;
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 
 /**
  * Bulk generate license keys untuk produk tertentu.
@@ -39,6 +38,7 @@ class SeedLicenseKeysCommand extends Command
         $product = Product::find($productId);
         if (! $product) {
             $this->error("Product #{$productId} tidak ditemukan.");
+
             return self::FAILURE;
         }
 

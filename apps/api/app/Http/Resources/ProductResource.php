@@ -21,7 +21,7 @@ class ProductResource extends JsonResource
             'slug' => $this->slug,
             'deskripsi' => $this->deskripsi,
             'harga' => $this->harga,
-            'harga_formatted' => 'Rp ' . number_format((float) $this->harga, 0, ',', '.'),
+            'harga_formatted' => 'Rp '.number_format((float) $this->harga, 0, ',', '.'),
             'tipe' => $this->tipe,
             'file_url' => $this->file_url,
             'download_expiry_days' => $this->download_expiry_days,
@@ -33,6 +33,7 @@ class ProductResource extends JsonResource
             'has_downloadable_file' => $this->hasDownloadableFile(),
             'license_key_stats' => $this->whenLoaded('licenseKeys', function () {
                 $all = $this->licenseKeys;
+
                 return [
                     'total' => $all->count(),
                     'aktif' => $all->where('status', 'aktif')->count(),

@@ -4,9 +4,9 @@ namespace App\Services\Tripay;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use RuntimeException;
 
 /**
  * Tripay API client (sandbox + production).
@@ -31,6 +31,7 @@ class TripayClient
      * Buat transaksi baru di Tripay.
      *
      * @return array{reference:string, qr_string:string, qr_url:string, amount:int, status:string, merchant_ref:string, expired_at:?int}
+     *
      * @throws TripayException
      */
     public function createTransaction(CreateTransactionDto $dto): array
@@ -40,13 +41,13 @@ class TripayClient
         $json = json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Authorization' => 'Bearer '.$this->apiKey,
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])
             ->timeout($this->timeout)
             ->withBody($json, 'application/json')
-            ->post($this->baseUrl . '/transaction/create');
+            ->post($this->baseUrl.'/transaction/create');
 
         return $this->parseResponse($response, 'transaction/create');
     }
@@ -59,11 +60,11 @@ class TripayClient
     public function getTransaction(string $reference): array
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Authorization' => 'Bearer '.$this->apiKey,
             'Accept' => 'application/json',
         ])
             ->timeout($this->timeout)
-            ->get($this->baseUrl . '/transaction/detail', ['reference' => $reference]);
+            ->get($this->baseUrl.'/transaction/detail', ['reference' => $reference]);
 
         return $this->parseResponse($response, 'transaction/detail');
     }
@@ -86,6 +87,7 @@ class TripayClient
                 'expected_prefix' => substr($expected, 0, 8),
                 'got_prefix' => substr($signature, 0, 8),
             ]);
+
             return null;
         }
 
@@ -111,7 +113,7 @@ class TripayClient
      */
     public function signMerchant(string $merchantCode, string $merchantRef, int $amount): string
     {
-        return hash_hmac('sha256', $merchantCode . $merchantRef . $amount, $this->privateKey);
+        return hash_hmac('sha256', $merchantCode.$merchantRef.$amount, $this->privateKey);
     }
 
     public function merchantCode(): string
@@ -124,7 +126,7 @@ class TripayClient
      *
      * @throws TripayException
      */
-    private function parseResponse(\Illuminate\Http\Client\Response $response, string $endpoint): array
+    private function parseResponse(Response $response, string $endpoint): array
     {
         try {
             $response->throw();
@@ -134,7 +136,7 @@ class TripayClient
                 'body' => method_exists($e, 'response') ? $e->response?->body() : null,
             ]);
             throw new TripayException(
-                "Tripay {$endpoint} gagal: " . $e->getMessage(),
+                "Tripay {$endpoint} gagal: ".$e->getMessage(),
                 method_exists($e, 'response') ? $e->response?->status() ?? 0 : 0,
             );
         }
