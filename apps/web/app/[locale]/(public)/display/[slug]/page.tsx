@@ -19,7 +19,8 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import { Link } from '@/i18n/navigation';
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
@@ -117,12 +118,14 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="relative z-0 bg-surface border-b-2 border-ink/20">
         <div className="px-6 md:px-12 py-4">
-          <Link
+          <NLink
             href="/display"
-            className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary transition-colors"
+            variant="default"
+            underline="none"
+            className="font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary"
           >
             {t('backToJournal')}
-          </Link>
+          </NLink>
         </div>
       </div>
 
@@ -184,9 +187,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
           {/* Meta strip — thin bordered box (per brief item 2) */}
           <div className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-2 border-ink bg-surface px-5 py-3 shadow-[3px_3px_0_0_var(--color-ink)]">
-            <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-2.5 py-0.5 font-label text-label-sm font-black uppercase tracking-wider">
+            <Badge tone="accent" size="sm" className="px-2.5 py-0.5 text-label-sm">
               {primaryTag}
-            </span>
+            </Badge>
             <span className="font-label text-label-sm uppercase tracking-wider text-ink">
               {date}
             </span>
@@ -282,12 +285,14 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                   {t('moreTitle')}
                 </h2>
               </div>
-              <Link
+              <NLink
                 href="/display"
-                className="font-label text-label-sm uppercase font-bold text-primary hover:text-ink underline decoration-2 underline-offset-4"
+                variant="primary"
+                underline="static"
+                className="font-label text-label-sm uppercase font-bold hover:text-ink"
               >
                 {t('allEntries')}
-              </Link>
+              </NLink>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

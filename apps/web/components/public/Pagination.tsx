@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 import type { PaginationMeta } from '@/lib/types';
 
@@ -46,13 +47,16 @@ export async function Pagination({ meta, basePath, searchParams }: Props) {
       {pages.map((p) => {
         const isActive = p === meta.current_page;
         return isActive ? (
-          <span
+          <Badge
             key={p}
+            tone="primary"
+            size="md"
+            shadow={false}
             aria-current="page"
-            className="border-2 border-ink px-3 py-1.5 text-sm font-bold bg-primary text-surface cursor-default min-h-[40px] inline-flex items-center"
+            className="cursor-default min-h-[40px] text-sm normal-case tracking-normal"
           >
             {p}
-          </span>
+          </Badge>
         ) : (
           <Button
             key={p}

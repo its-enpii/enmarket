@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Button } from '@/components/ui/neobrutal';
 
 /**
  * Global 404 — dipanggil kalau tidak ada not-found.tsx di segment yang cocok.
@@ -17,18 +17,12 @@ export default function GlobalNotFound() {
         Mungkin URL-nya salah ketik atau halaman sudah dihapus.
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Link
-          href="/katalog"
-          className="inline-block bg-primary text-surface border-2 border-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] transition-all min-h-[44px]"
-        >
+        <Button variant="primary" size="md" href="/katalog">
           ← Lihat Katalog
-        </Link>
-        <Link
-          href="/"
-          className="inline-block bg-surface text-ink border-2 border-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] transition-all min-h-[44px]"
-        >
+        </Button>
+        <Button variant="surface" size="md" href="/">
           Beranda
-        </Link>
+        </Button>
       </div>
     </div>
   );

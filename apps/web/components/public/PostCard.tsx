@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 
 import { formatDate } from '@/lib/format';
 import type { Post } from '@/lib/types';
@@ -47,9 +48,9 @@ export function PostCard({ post, compact = false }: Props) {
           </div>
         )}
         {isPublished && (
-          <span className="absolute top-2 right-2 bg-accent text-ink border-2 border-ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+          <Badge tone="accent" size="sm" className="absolute top-2 right-2 font-bold">
             Published
-          </span>
+          </Badge>
         )}
       </div>
 

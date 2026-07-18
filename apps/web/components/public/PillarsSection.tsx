@@ -69,7 +69,7 @@ export function PillarsSection() {
         >
           <article className="flex flex-col gap-6">
             <div
-              className={`w-16 h-16 neobrutal-border flex items-center justify-center text-3xl ${iconCls(p)}`}
+              className={`w-16 h-16 border-4 border-ink flex items-center justify-center text-3xl ${iconCls(p)}`}
               aria-hidden="true"
             >
               {p.icon}
@@ -92,7 +92,7 @@ export function PillarsSection() {
       >
         <article className="flex flex-col items-center gap-6">
           <div
-            className="w-16 h-16 neobrutal-border bg-ink text-surface flex items-center justify-center text-3xl"
+            className="w-16 h-16 border-4 border-ink bg-ink text-surface flex items-center justify-center text-3xl"
             aria-hidden="true"
           >
             ☷

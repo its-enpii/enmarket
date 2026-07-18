@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+import { Card } from '@/components/ui/neobrutal';
+
 export interface Column<T> {
   key: string;
   header: ReactNode;
@@ -27,16 +29,16 @@ export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }
       return <>{emptyState}</>;
     }
     return (
-      <div className="bg-surface border-2 border-ink px-6 py-12 text-center shadow-[4px_4px_0_0_var(--color-ink)]">
+      <Card variant="surface" hoverable={false} className="px-6 py-12 text-center">
         <p className="text-ink/60 font-medium">
           {emptyMessage ?? 'Tidak ada data.'}
         </p>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="relative border-2 border-ink bg-surface shadow-[4px_4px_0_0_var(--color-ink)]">
+    <Card variant="surface" hoverable={false} className="relative !shadow-[4px_4px_0_0_var(--color-ink)]">
       {/* Scroll indicator — gradient samar di kanan (mobile only) untuk kasih
           tahu user ada kolom yang off-screen. Pointer-events-none jadi tidak
           block scroll horizontal. Hidden di sm+ karena tabel biasanya fit. */}
@@ -75,6 +77,6 @@ export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   );
 }

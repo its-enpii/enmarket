@@ -15,6 +15,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { loadAllMedia } from '@/lib/media';
+import { Badge } from '@/components/ui/Badge';
 
 import { MediaGallery } from './MediaGallery';
 
@@ -54,9 +55,9 @@ export default async function MediaPage({ searchParams }: Props) {
             </p>
           </div>
           {pickerMode && (
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-accent text-ink text-[10px] font-bold uppercase tracking-wider border-2 border-ink self-start shadow-[2px_2px_0_0_var(--color-ink)]">
+            <Badge tone="accent" size="sm" className="gap-1 px-3 py-1.5 font-bold shadow-[2px_2px_0_0_var(--color-ink)] self-start">
               {t('pickerBadge')}
-            </span>
+            </Badge>
           )}
         </div>
       </header>

@@ -15,7 +15,7 @@
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 
 interface NavItem {
   href: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Button } from '@/components/ui/neobrutal';
 
 interface Props {
   error: Error & { digest?: string };
@@ -30,19 +30,12 @@ export default function GlobalError({ error, reset }: Props) {
         </pre>
       )}
       <div className="mt-8 flex flex-wrap gap-3 items-center justify-center">
-        <button
-          type="button"
-          onClick={reset}
-          className="border-2 border-ink bg-accent text-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[5px_5px_0_0_var(--color-ink)] transition-all min-h-[44px]"
-        >
+        <Button variant="accent" size="md" type="button" onClick={reset}>
           Coba Lagi
-        </button>
-        <Link
-          href="/"
-          className="inline-block border-2 border-ink bg-surface text-ink px-5 py-3 font-bold shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[5px_5px_0_0_var(--color-ink)] transition-all min-h-[44px]"
-        >
+        </Button>
+        <Button variant="surface" size="md" href="/">
           Beranda
-        </Link>
+        </Button>
       </div>
     </div>
   );

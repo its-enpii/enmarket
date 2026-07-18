@@ -21,6 +21,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/neobrutal';
 import { toast } from '@/components/ui/toast-store';
 
 type Reaction = 'helpful' | 'not-really' | null;
@@ -112,7 +114,7 @@ export function ReactionStrip({ postSlug }: Props) {
   }
 
   return (
-    <div className="border-4 border-ink bg-surface shadow-[6px_6px_0_0_var(--color-ink)] p-6 md:p-8">
+    <Card variant="surface" thick hoverable={false} className="p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         {/* Prompt */}
         <div className="flex-1">
@@ -147,7 +149,7 @@ export function ReactionStrip({ postSlug }: Props) {
           />
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -193,9 +195,9 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
       </span>
       <span>{label}</span>
       {count > 0 && (
-        <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 bg-ink text-surface font-bold text-xs border-2 border-ink">
+        <Badge tone="ink" size="sm" shadow={false} className="min-w-[24px] !h-6 px-1.5 !text-xs font-bold normal-case tracking-normal">
           {count}
-        </span>
+        </Badge>
       )}
     </button>
   );

@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { AdminListProvider } from '@/components/admin/AdminListProvider';
 import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { DataTableArea } from '@/components/admin/DataTableArea';
 import { EmptyState } from '@/components/admin/EmptyState';

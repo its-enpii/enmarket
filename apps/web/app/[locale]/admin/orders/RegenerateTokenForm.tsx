@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import { toast } from '@/components/ui/toast-store';
 

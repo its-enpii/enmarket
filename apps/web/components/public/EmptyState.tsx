@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 
 interface Props {
   title: string;
@@ -17,7 +17,7 @@ interface Props {
 export function EmptyState({ title, message, cta }: Props) {
   const t = useTranslations('common.empty');
   return (
-    <div className="bg-surface border-2 border-ink p-8 sm:p-12 shadow-[4px_4px_0_0_var(--color-ink)] text-center">
+    <Card variant="surface" hoverable={false} className="p-8 sm:p-12 text-center" style={{ boxShadow: '4px 4px 0 0 var(--color-ink)' }}>
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/60">
         {t('title')}
       </p>
@@ -34,6 +34,6 @@ export function EmptyState({ title, message, cta }: Props) {
           {cta.label}
         </Button>
       )}
-    </div>
+    </Card>
   );
 }

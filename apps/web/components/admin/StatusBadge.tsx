@@ -1,3 +1,4 @@
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import { STATUS_LABEL } from '@/lib/format';
 
 interface Props {
@@ -8,33 +9,35 @@ interface Props {
    */
   labelMap?: Record<string, string>;
   /**
-   * Override background+text color per status key.
-   * Kalau tidak ada, pakai default product palette.
+   * Override background+text color per status key (legacy: tailwind class string).
+   * Unknown values fall back ke default palette. Pakai BadgeTone key ('accent'|
+   * 'primary'|'ink'|'surface') untuk explicit mapping.
    */
   bgOverride?: Record<string, string>;
 }
 
+const VALID_TONES: ReadonlySet<BadgeTone> = new Set(['accent', 'primary', 'ink', 'surface']);
+
 /**
  * Default product palette (NeoBrutalism-friendly).
  */
-const DEFAULT_BG: Record<string, string> = {
-  aktif: 'bg-accent text-ink',
-  draft: 'bg-surface text-ink',
-  tidak_dijual: 'bg-ink text-surface',
+const DEFAULT_TONE: Record<string, BadgeTone> = {
+  aktif: 'accent',
+  draft: 'surface',
+  tidak_dijual: 'ink',
 };
 
 export function StatusBadge({ status, labelMap, bgOverride }: Props) {
-  const bg = bgOverride?.[status] ?? DEFAULT_BG[status] ?? 'bg-surface text-ink';
+  const raw = bgOverride?.[status];
+  const tone: BadgeTone =
+    (raw && VALID_TONES.has(raw as BadgeTone) ? (raw as BadgeTone) : null) ??
+    DEFAULT_TONE[status] ??
+    'surface';
   const label = labelMap?.[status] ?? STATUS_LABEL[status] ?? status;
 
   return (
-    <span
-      className={
-        'inline-block border-2 border-ink px-2 py-0.5 text-xs font-bold uppercase tracking-wide ' +
-        bg
-      }
-    >
+    <Badge tone={tone} size="sm" shadow={false} className="font-bold tracking-wide">
       {label}
-    </span>
+    </Badge>
   );
 }

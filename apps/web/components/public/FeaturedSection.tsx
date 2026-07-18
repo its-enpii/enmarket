@@ -96,7 +96,7 @@ function FeaturedRow({
       <div
         className={`md:col-span-4 ${flip ? 'md:order-1' : 'md:order-2'} order-2 flex flex-col gap-4`}
       >
-        <span className="bg-accent text-ink neobrutal-border px-4 py-1 font-label text-label-sm font-black uppercase w-fit">
+        <span className="bg-accent text-ink border-4 border-ink px-4 py-1 font-label text-label-sm font-black uppercase w-fit">
           {item.priceLabel}
         </span>
         <h3 className="font-display text-headline-md text-primary uppercase">

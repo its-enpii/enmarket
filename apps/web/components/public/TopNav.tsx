@@ -52,7 +52,7 @@ export function TopNav({ children }: Props) {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink neobrutal-shadow relative">
+    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] relative">
       <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 py-4">
         <NLink
           href="/"
@@ -92,7 +92,7 @@ export function TopNav({ children }: Props) {
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="md:hidden neobrutal-border bg-surface text-ink w-11 h-11 flex items-center justify-center font-bold neobrutal-shadow active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
+          className="md:hidden border-4 border-ink bg-surface text-ink w-11 h-11 flex items-center justify-center font-bold shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
           aria-label={t('menu')}
           aria-expanded={open}
         >

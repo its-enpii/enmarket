@@ -19,6 +19,8 @@
 
 import type { ReactNode } from 'react';
 
+import { Card } from '@/components/ui/neobrutal';
+
 interface Props {
   title: string;
   body?: string;
@@ -27,7 +29,7 @@ interface Props {
 
 export function EmptyState({ title, body, action }: Props) {
   return (
-    <div className="border-2 border-ink bg-surface shadow-[6px_6px_0_0_var(--color-ink)] p-8 md:p-12">
+    <Card variant="surface" hoverable={false} className="p-8 md:p-12">
       <div className="flex flex-col md:flex-row md:items-center gap-8">
         {/* Illustration — purple box + gold square overlap */}
         <div className="relative inline-block shrink-0">
@@ -58,6 +60,6 @@ export function EmptyState({ title, body, action }: Props) {
           {action && <div className="mt-5">{action}</div>}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,4 +1,5 @@
-import { Button } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 
 import type { Category } from '@/lib/types';
 
@@ -24,20 +25,26 @@ export function CategoryRail({ categories }: Props) {
     : categories;
 
   return (
-    <section
+    <Card
+      as="section"
       aria-label="Kategori populer"
-      className="border-2 border-ink bg-surface shadow-[4px_4px_0_0_var(--color-ink)]"
+      variant="surface"
+      hoverable={false}
+      className="!shadow-[4px_4px_0_0_var(--color-ink)]"
     >
       <div className="flex items-center justify-between gap-2 border-b-2 border-ink px-4 py-3">
         <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-ink">
           Jelajahi Kategori
         </h2>
-        <a
+        <NLink
           href="/katalog"
-          className="text-xs font-bold text-primary hover:text-accent underline decoration-2 underline-offset-4"
+          variant="primary"
+          underline="static"
+          arrow
+          className="text-xs"
         >
-          Lihat semua →
-        </a>
+          Lihat semua
+        </NLink>
       </div>
       <div className="px-3 py-3 overflow-x-auto scrollbar-none">
         <ul className="flex items-stretch gap-3 min-w-min">
@@ -49,9 +56,9 @@ export function CategoryRail({ categories }: Props) {
                 size="sm"
                 className="hover:bg-accent"
               >
-                <span aria-hidden="true" className="flex items-center justify-center w-9 h-9 bg-primary text-surface border-2 border-ink font-bold text-base">
+                <Badge tone="primary" size="sm" shadow={false} aria-hidden="true" className="!w-9 !h-9 !p-0 justify-center font-bold text-base">
                   {cat.nama.charAt(0).toUpperCase()}
-                </span>
+                </Badge>
                 <span className="flex flex-col text-left">
                   <span className="font-bold text-sm leading-tight">{cat.nama}</span>
                   {typeof cat.products_count === 'number' && (
@@ -70,6 +77,6 @@ export function CategoryRail({ categories }: Props) {
           *Contoh kategori — data asli akan tampil setelah admin menambah karya.
         </p>
       )}
-    </section>
+    </Card>
   );
 }

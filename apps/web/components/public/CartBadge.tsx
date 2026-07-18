@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 
 /**
@@ -31,9 +32,14 @@ export async function CartBadge() {
         <span aria-hidden="true">🛒</span>
         <span className="hidden sm:inline">{t('viewCart')}</span>
         {count > 0 && (
-          <span className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 bg-accent text-ink border-2 border-ink min-w-[1.75rem] h-7 px-1.5 text-xs font-bold flex items-center justify-center">
+          <Badge
+            tone="accent"
+            size="sm"
+            shadow={false}
+            className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 min-w-[1.75rem] !h-7 px-1.5 !text-xs font-bold normal-case tracking-normal"
+          >
             {count > 99 ? '99+' : count}
-          </span>
+          </Badge>
         )}
       </span>
     </Button>

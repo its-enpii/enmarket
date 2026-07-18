@@ -8,7 +8,7 @@ import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { FormField } from '@/components/admin/FormField';
 import { Checkbox } from '@/components/ui/Checkbox';

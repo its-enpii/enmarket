@@ -6,9 +6,9 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 
+import { Card, NLink } from '@/components/ui/neobrutal';
 import { apiFetch } from '@/lib/api';
 import { LoginForm } from './LoginForm';
-import { Link } from '@/i18n/navigation';
 
 import { loginAction } from './actions';
 
@@ -43,7 +43,7 @@ export default async function LoginPage() {
   return (
     <main className="min-h-screen bg-surface flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <div className="bg-surface border-4 border-ink p-8 shadow-[8px_8px_0_0_var(--color-ink)]">
+        <Card variant="surface" hoverable={false} thick className="p-8" style={{ boxShadow: '8px 8px 0 0 var(--color-ink)' }}>
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
             enpiistudio Admin
           </p>
@@ -55,15 +55,16 @@ export default async function LoginPage() {
           </p>
 
           <LoginForm action={loginAction} />
-        </div>
+        </Card>
 
         <p className="mt-6 text-center text-sm">
-          <Link
+          <NLink
             href="/"
-            className="text-primary underline decoration-2 underline-offset-4 hover:text-accent"
+            variant="primary"
+            underline="static"
           >
             {t('backToHome')}
-          </Link>
+          </NLink>
         </p>
       </div>
     </main>

@@ -5,7 +5,8 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 import { formatRupiah } from '@/lib/format';
@@ -63,12 +64,14 @@ export default async function KeranjangPage() {
             <h1 className="font-display text-5xl sm:text-6xl md:text-8xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
               {t('title')}<span className="text-primary">.</span>
             </h1>
-            <Link
+            <NLink
               href="/develop"
-              className="inline-flex items-center gap-2 self-start lg:self-auto font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary underline decoration-2 underline-offset-4"
+              variant="default"
+              underline="static"
+              className="self-start lg:self-auto font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary"
             >
               {t('continueShopping')}
-            </Link>
+            </NLink>
           </div>
           <p className="mt-8 font-body text-body-lg italic text-ink/80 max-w-2xl border-l-4 border-accent pl-6">
             {t('subtitle')}
@@ -156,9 +159,13 @@ async function CartItem({
                 {p.nama}
               </Link>
             </div>
-            <span className="shrink-0 inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1.5 font-display font-black text-sm sm:text-base uppercase shadow-[2px_2px_0_0_var(--color-ink)]">
+            <Badge
+              tone="accent"
+              size="md"
+              className="shrink-0 font-display text-sm sm:text-base shadow-[2px_2px_0_0_var(--color-ink)]"
+            >
               {p.harga_formatted}
-            </span>
+            </Badge>
           </div>
 
           <div className="flex items-baseline gap-2 border-l-2 border-ink/20 pl-3">

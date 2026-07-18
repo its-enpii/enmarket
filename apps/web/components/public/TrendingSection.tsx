@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Button, NLink } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
 
@@ -44,12 +46,15 @@ export function TrendingSection({ trending, latest }: Props) {
               </p>
             )}
           </div>
-          <Link
+          <NLink
             href="/katalog"
-            className="text-xs sm:text-sm font-bold text-primary hover:text-accent underline decoration-2 underline-offset-4 shrink-0"
+            variant="primary"
+            underline="static"
+            arrow
+            className="shrink-0 text-xs sm:text-sm"
           >
-            Lihat semua →
-          </Link>
+            Lihat semua
+          </NLink>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -67,24 +72,28 @@ export function TrendingSection({ trending, latest }: Props) {
                     Beberapa karya dijual sebagai paket dengan harga lebih hemat.
                   </p>
                 </div>
-                <Link
+                <Button
                   href="/katalog?tipe=bundle"
-                  className="mt-3 inline-block self-start bg-ink text-surface border-2 border-ink px-3 py-1.5 text-xs font-bold shadow-[2px_2px_0_0_var(--color-surface)] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-surface)] transition-all"
+                  variant="ink"
+                  size="sm"
+                  className="mt-3 self-start"
                 >
                   Lihat paket →
-                </Link>
+                </Button>
               </div>
             )}
             {sideCards.length === 0 && (
               <div className="flex-1 bg-surface border-2 border-dashed border-ink p-4 text-center text-ink/60 flex flex-col justify-center min-h-[120px]">
                 <p className="font-bold text-sm">Etalase lagi disiapkan</p>
                 <p className="text-xs mt-1">Tambah produk dari dashboard admin.</p>
-                <Link
+                <NLink
                   href="/login"
-                  className="mt-2 inline-block self-center text-xs font-bold text-primary hover:text-accent underline decoration-2 underline-offset-4"
+                  variant="primary"
+                  underline="static"
+                  className="mt-2 self-center text-xs"
                 >
                   Login admin →
-                </Link>
+                </NLink>
               </div>
             )}
           </div>
@@ -126,9 +135,9 @@ export function TrendingSection({ trending, latest }: Props) {
                         </span>
                       </div>
                     )}
-                    <span className="absolute top-2 right-2 bg-ink text-surface border-2 border-ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                    <Badge tone="ink" size="sm" className="absolute top-2 right-2 font-bold">
                       {TIPE_LABEL[p.tipe] ?? p.tipe}
-                    </span>
+                    </Badge>
                   </div>
                   <div className="p-3">
                     <h3 className="font-bold text-sm leading-tight line-clamp-2 text-ink">
@@ -351,13 +360,13 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
           </div>
         )}
         {product.is_featured && (
-          <span className="absolute top-3 left-3 bg-accent text-ink border-2 border-ink px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
+          <Badge tone="accent" size="sm" className="absolute top-3 left-3 px-2.5 py-1 font-bold">
             ★ Unggulan
-          </span>
+          </Badge>
         )}
-        <span className="absolute top-3 right-3 bg-ink text-surface border-2 border-ink px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
+        <Badge tone="ink" size="sm" className="absolute top-3 right-3 px-2.5 py-1 font-bold">
           {TIPE_LABEL[product.tipe] ?? product.tipe}
-        </span>
+        </Badge>
       </div>
       <div className="p-5 flex-1 flex flex-col">
         <p className="text-[10px] font-bold uppercase tracking-wider text-accent">

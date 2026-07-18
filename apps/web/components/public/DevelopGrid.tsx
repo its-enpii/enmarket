@@ -20,6 +20,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Card, NLink } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import type { PaginationMeta, Product } from '@/lib/types';
 
@@ -263,9 +264,9 @@ function DevelopCard({
           </h3>
           <p className="font-body text-body-md text-ink/75">{oneLiner}</p>
           <div className="flex items-center justify-between mt-2">
-            <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1.5 font-label text-label-sm font-black uppercase shadow-[3px_3px_0_0_var(--color-ink)]">
+            <Badge tone="accent" size="md">
               {priceLabel}
-            </span>
+            </Badge>
             <NLink
               href={href}
               variant="primary"
@@ -314,9 +315,9 @@ function DevelopCard({
           {body.length > 90 ? '…' : ''}
         </p>
         <div className="flex items-center justify-between mt-2">
-          <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1.5 font-label text-label-sm font-black uppercase shadow-[3px_3px_0_0_var(--color-ink)]">
+          <Badge tone="accent" size="md">
             {priceLabel}
-          </span>
+          </Badge>
           <NLink
             href={href}
             variant="primary"

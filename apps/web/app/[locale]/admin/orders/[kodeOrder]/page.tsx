@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Card } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';

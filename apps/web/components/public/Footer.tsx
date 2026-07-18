@@ -6,7 +6,7 @@
 
 import { getTranslations } from 'next-intl/server';
 
-import { NLink } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 
 export async function Footer() {
   const t = await getTranslations('footer');
@@ -30,15 +30,15 @@ export async function Footer() {
             {/* Color swatches — brand indicator */}
             <div className="flex gap-6">
               <span
-                className="w-8 h-8 bg-primary neobrutal-border border-surface"
+                className="w-8 h-8 bg-primary border-4 border-surface"
                 aria-label="Primary"
               />
               <span
-                className="w-8 h-8 bg-accent neobrutal-border border-surface"
+                className="w-8 h-8 bg-accent border-4 border-surface"
                 aria-label="Accent"
               />
               <span
-                className="w-8 h-8 bg-surface neobrutal-border border-surface"
+                className="w-8 h-8 bg-surface border-4 border-surface"
                 aria-label="Surface"
               />
             </div>
@@ -46,7 +46,7 @@ export async function Footer() {
 
           {/* Right col: newsletter + links */}
           <div className="flex flex-col gap-12">
-            <div className="bg-surface text-ink neobrutal-border neobrutal-shadow p-8">
+            <Card variant="surface" thick hoverable={false} className="p-8">
               <p className="font-label text-label-sm font-black mb-4 uppercase">
                 {t('subscribeTitle')}
               </p>
@@ -70,7 +70,7 @@ export async function Footer() {
                   <span aria-hidden="true">→</span>
                 </button>
               </form>
-            </div>
+            </Card>
 
             <div className="grid grid-cols-2 gap-8">
               <div className="flex flex-col gap-4">

@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 
 /**

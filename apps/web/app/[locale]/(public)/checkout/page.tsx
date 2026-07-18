@@ -1,8 +1,7 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 import { EmptyState } from '@/components/public/EmptyState';
-import { Card } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 
@@ -80,7 +79,7 @@ export default async function CheckoutPage() {
           <CheckoutForm />
         </Card>
 
-        <aside className="bg-primary text-surface border-4 border-ink p-5 shadow-[6px_6px_0_0_var(--color-ink)] h-fit">
+        <Card variant="filled-primary" as="aside" thick hoverable={false} className="p-5 h-fit">
           <h2 className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4 border-b border-surface/30 pb-2">
             ✎ {t('orderSummary')}
           </h2>
@@ -101,16 +100,18 @@ export default async function CheckoutPage() {
           <p className="mt-4 text-xs opacity-70 border-t border-surface/20 pt-3">
             {t('paymentMethod')}
           </p>
-        </aside>
+        </Card>
       </div>
 
       <p className="mt-6 text-center text-sm">
-        <Link
+        <NLink
           href="/keranjang"
-          className="text-ink/60 hover:text-primary font-bold underline decoration-2 underline-offset-4"
+          variant="default"
+          underline="static"
+          className="text-ink/60 hover:text-primary font-bold"
         >
           {t('backToCart')}
-        </Link>
+        </NLink>
       </p>
     </div>
   );

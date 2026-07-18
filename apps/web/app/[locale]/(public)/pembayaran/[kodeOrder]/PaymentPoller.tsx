@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
 
 interface Props {
@@ -285,12 +285,14 @@ export function PaymentPoller({
             {isChecking ? t('checking') : t('checkStatus')}
           </Button>
 
-          <a
+          <NLink
             href={`/cek-pesanan?kode_order=${encodeURIComponent(kodeOrder)}`}
-            className="block text-center text-sm text-ink/60 hover:text-primary font-bold underline decoration-2 underline-offset-4"
+            variant="default"
+            underline="static"
+            className="block text-center text-sm text-ink/60 hover:text-primary font-bold"
           >
             {t('viewOrder')}
-          </a>
+          </NLink>
         </div>
       </div>
 

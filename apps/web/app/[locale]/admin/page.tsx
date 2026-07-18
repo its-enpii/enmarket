@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -206,9 +205,10 @@ export default async function AdminHomePage() {
             <ul className="space-y-2 overflow-y-auto pr-1 -mr-1 flex-1 min-h-0">
               {pendingOrders.map((o) => (
                 <li key={o.kode_order}>
-                  <Link
+                  <Card
                     href={`/admin/orders/${o.kode_order}`}
-                    className="block p-3 border-2 border-ink bg-surface hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)] transition-all"
+                    variant="surface"
+                    className="block p-3 hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
@@ -228,7 +228,7 @@ export default async function AdminHomePage() {
                         </p>
                       </div>
                     </div>
-                  </Link>
+                  </Card>
                 </li>
               ))}
             </ul>

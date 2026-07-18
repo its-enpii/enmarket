@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { getTranslations } from 'next-intl/server';
 
 import { formatRupiah } from '@/lib/format';
@@ -41,14 +42,14 @@ export async function ProductCard({ product }: Props) {
         )}
 
         {product.is_featured && (
-          <span className="absolute top-2 left-2 bg-accent text-ink border-2 border-ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+          <Badge tone="accent" size="sm" className="absolute top-2 left-2 font-bold">
             {t('featured')}
-          </span>
+          </Badge>
         )}
 
-        <span className="absolute top-2 right-2 bg-ink text-surface border-2 border-ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+        <Badge tone="ink" size="sm" className="absolute top-2 right-2 font-bold">
           {t(`tipe.${product.tipe}`)}
-        </span>
+        </Badge>
       </div>
 
       <div className="p-4">

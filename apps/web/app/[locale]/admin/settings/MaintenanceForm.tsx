@@ -13,7 +13,7 @@
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/admin/Button';
+import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/admin/FormField';

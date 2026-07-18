@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { NLink } from '@/components/ui/neobrutal';
 
 interface Benefit {
   icon: string;
@@ -73,12 +73,13 @@ export function TrustSection() {
       </div>
       <p className="text-xs text-ink/60 text-center pt-2">
         Punya pertanyaan?{' '}
-        <Link
+        <NLink
           href="/katalog"
-          className="font-bold text-primary hover:text-accent underline decoration-2 underline-offset-4"
+          variant="primary"
+          underline="static"
         >
           Lihat karya dulu
-        </Link>{' '}
+        </NLink>{' '}
         atau langsung kontak studio.
       </p>
     </section>

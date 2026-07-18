@@ -24,7 +24,8 @@ import { getTranslations } from 'next-intl/server';
 
 import { RelatedWorks } from '@/components/public/RelatedWorks';
 import { WorkGallery } from '@/components/public/WorkGallery';
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
 
@@ -125,12 +126,14 @@ export default async function WorkDetailPage({ params }: PageProps) {
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="relative z-0 bg-surface border-b-2 border-ink/20">
         <div className="px-6 md:px-12 py-4">
-          <Link
+          <NLink
             href="/develop"
-            className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary transition-colors"
+            variant="default"
+            underline="none"
+            className="font-label text-label-sm uppercase font-bold text-ink/70 hover:text-primary"
           >
             {t('back')}
-          </Link>
+          </NLink>
           {kategori && (
             <span className="ml-4 font-label text-label-sm uppercase text-ink/40">
               · {kategori.nama}
@@ -167,17 +170,17 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {/* Chips row */}
             <div className="flex flex-wrap gap-2">
               {product.is_featured && (
-                <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider shadow-[2px_2px_0_0_var(--color-ink)]">
+                <Badge tone="accent" size="md" className="shadow-[2px_2px_0_0_var(--color-ink)]">
                   {t('studioPick')}
-                </span>
+                </Badge>
               )}
-              <span className="inline-flex items-center bg-ink text-surface border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider">
+              <Badge tone="ink" size="md" shadow={false}>
                 {tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}
-              </span>
+              </Badge>
               {kategori && (
-                <span className="inline-flex items-center bg-surface text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-bold uppercase tracking-wider">
+                <Badge tone="surface" size="md" shadow={false}>
                   {kategori.nama}
-                </span>
+                </Badge>
               )}
             </div>
 
@@ -195,9 +198,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
             {/* Price — small gold tag, NOT a big banner */}
             <div className="flex items-baseline gap-3">
-              <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-4 py-2 font-display text-2xl md:text-3xl font-black uppercase shadow-[4px_4px_0_0_var(--color-ink)]">
+              <Badge tone="accent" size="lg">
                 {formatRupiah(product.harga)}
-              </span>
+              </Badge>
               {product.needs_license_key && (
                 <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
                   {t('licenseIncluded')}
@@ -254,12 +257,13 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
                     <dt className="font-label text-label-sm uppercase text-ink/60">{t('category')}</dt>
                     <dd>
-                      <Link
+                      <NLink
                         href={`/develop?category=${kategori.slug}`}
-                        className="font-bold text-primary hover:text-accent underline decoration-2 underline-offset-4"
+                        variant="primary"
+                        underline="static"
                       >
                         {kategori.nama}
-                      </Link>
+                      </NLink>
                     </dd>
                   </div>
                 )}
@@ -340,19 +344,18 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 </p>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {product.fitur.map((f, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 bg-surface border-2 border-ink px-4 py-3 shadow-[3px_3px_0_0_var(--color-ink)]"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="inline-flex shrink-0 items-center justify-center w-6 h-6 bg-accent border-2 border-ink text-ink font-bold text-xs"
-                      >
-                        ✓
-                      </span>
-                      <span className="font-body text-body-sm text-ink leading-snug">
-                        {f}
-                      </span>
+                    <li key={i}>
+                      <Card variant="surface" hoverable={false} className="flex items-start gap-3 px-4 py-3 !shadow-[3px_3px_0_0_var(--color-ink)]">
+                        <span
+                          aria-hidden="true"
+                          className="inline-flex shrink-0 items-center justify-center w-6 h-6 bg-accent border-2 border-ink text-ink font-bold text-xs"
+                        >
+                          ✓
+                        </span>
+                        <span className="font-body text-body-sm text-ink leading-snug">
+                          {f}
+                        </span>
+                      </Card>
                     </li>
                   ))}
                 </ul>

@@ -6,6 +6,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 
 import { SearchBar } from '@/components/public/SearchBar';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
@@ -253,12 +254,12 @@ function FeaturedCover({
             </div>
           )}
           <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center bg-accent text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider shadow-[3px_3px_0_0_var(--color-ink)]">
+            <Badge tone="accent" size="md">
               {featuredLabel}
-            </span>
-            <span className="inline-flex items-center bg-ink text-surface border-2 border-ink px-3 py-1 font-label text-label-sm font-bold uppercase tracking-wider">
+            </Badge>
+            <Badge tone="ink" size="md" shadow={false} className="font-bold">
               {tag}
-            </span>
+            </Badge>
           </div>
         </div>
 

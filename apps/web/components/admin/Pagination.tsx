@@ -16,6 +16,7 @@
 
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 
 interface Props {
@@ -70,13 +71,15 @@ export function Pagination({ currentPage, lastPage, basePath, queryParams }: Pro
             …
           </span>
         ) : p === currentPage ? (
-          <span
+          <Badge
             key={p}
+            tone="primary"
+            size="md"
             aria-current="page"
-            className="inline-flex items-center justify-center min-w-[40px] h-[36px] bg-primary text-surface border-2 border-ink px-3 text-sm font-bold uppercase tracking-wide shadow-[2px_2px_0_0_var(--color-ink)]"
+            className="min-w-[40px] !h-[36px] !px-3 !text-sm normal-case tracking-wide cursor-default"
           >
             {p}
-          </span>
+          </Badge>
         ) : (
           <Link key={p} href={pageHref(p)}>
             <Button variant="ghost" size="sm">{p}</Button>

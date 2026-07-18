@@ -12,6 +12,7 @@
  */
 
 import { Card, NLink } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
@@ -124,9 +125,9 @@ function RelatedCard({
             {product.deskripsi?.slice(0, 80) ?? fallbackDescription}
           </p>
         </div>
-        <span className="inline-flex items-center self-start bg-accent text-ink border-2 border-ink px-3 py-1 font-label text-label-sm font-black uppercase shadow-[3px_3px_0_0_var(--color-ink)]">
+        <Badge tone="accent" size="md" className="self-start">
           {priceLabel}
-        </span>
+        </Badge>
       </div>
     </Card>
   );

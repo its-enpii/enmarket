@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { Card } from '@/components/ui/neobrutal';
+
 interface Props {
   images: string[];
   alt: string;
@@ -16,11 +18,11 @@ export function ImageGallery({ images, alt }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="aspect-video bg-primary text-surface border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] flex items-center justify-center">
+      <Card variant="filled-primary" hoverable={false} thick className="aspect-video flex items-center justify-center">
         <span className="font-bold text-lg uppercase tracking-wider opacity-80">
           Tanpa Gambar
         </span>
-      </div>
+      </Card>
     );
   }
 
@@ -28,14 +30,14 @@ export function ImageGallery({ images, alt }: Props) {
 
   return (
     <div>
-      <div className="aspect-video bg-surface border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] overflow-hidden">
+      <Card variant="surface" hoverable={false} thick className="aspect-video overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={main}
           alt={alt}
           className="w-full h-full object-cover"
         />
-      </div>
+      </Card>
 
       {images.length > 1 && (
         <div className="mt-4 flex flex-wrap gap-3">

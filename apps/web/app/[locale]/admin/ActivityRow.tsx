@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
+import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/neobrutal';
 import { formatDateTime } from '@/lib/format';
 import type { ActivityLog } from '@/lib/types';
@@ -32,12 +33,15 @@ export function ActivityRow({ entry }: { entry: ActivityLog }) {
         hoverable={false}
         className="flex items-start gap-3 p-3 hover:bg-accent transition-colors"
       >
-        <span
+        <Badge
+          tone="primary"
+          size="sm"
+          shadow={false}
           aria-hidden="true"
-          className="shrink-0 w-8 h-8 flex items-center justify-center border-2 border-ink bg-primary text-surface font-display font-black text-base"
+          className="shrink-0 !w-8 !h-8 !p-0 justify-center font-display font-black text-base"
         >
           {meta.icon}
-        </span>
+        </Badge>
         <div className="flex-1 min-w-0">
           <p className="font-body text-sm text-ink">
             <span className="font-bold">{verb}</span>{' '}

@@ -4,7 +4,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { DatePicker } from '@/components/ui/DatePicker';
@@ -114,7 +114,7 @@ export function LiveFilterBar({
   }
 
   return (
-    <div className="bg-surface border-2 border-ink p-3 shadow-[3px_3px_0_0_var(--color-ink)]">
+    <Card variant="surface" hoverable={false} className="p-3 !shadow-[3px_3px_0_0_var(--color-ink)]">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         {/* Live search */}
         <div className="w-full sm:flex-1 sm:min-w-[200px]">
@@ -190,7 +190,7 @@ export function LiveFilterBar({
         {/* Primary action — di dalam kotak, di akhir baris */}
         {action}
       </div>
-    </div>
+    </Card>
   );
 }
 
