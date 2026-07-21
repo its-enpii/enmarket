@@ -70,10 +70,17 @@ export default async function HomePage() {
   ]);
 
   // FeaturedSection: gabungan featured + latest (fallback ke 4 placeholder).
-  const productsForFeatured: Product[] = [
-    ...(featuredResp.data ?? []),
-    ...(latestResp.data ?? []),
-  ];
+  // Dedupe by slug — produk yang muncul di featured + latest akan jadi 1 row.
+  // Penting: kalau tidak, React key collision (key={item.href} duplikat) →
+  // warning + potensi visual glitch.
+  const seen = new Set<string>();
+  const productsForFeatured: Product[] = [];
+  for (const p of [...(featuredResp.data ?? []), ...(latestResp.data ?? [])]) {
+    if (p.slug && !seen.has(p.slug)) {
+      seen.add(p.slug);
+      productsForFeatured.push(p);
+    }
+  }
 
   const recentPosts: Post[] = latestPostsResp.data ?? [];
 
