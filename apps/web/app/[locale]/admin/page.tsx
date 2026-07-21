@@ -10,6 +10,8 @@ import { ActivityRow } from './ActivityRow';
 import type {
   ActivityLog,
   AdminOrderStats,
+  AdminProvisioning,
+  AdminProvisioningStats,
   Order,
   PaginatedResponse,
   ProductStats,
@@ -66,6 +68,15 @@ async function loadActiveLicenseCount() {
   }
 }
 
+async function loadProvisioningStats() {
+  try {
+    const res = await apiGet<{ data: AdminProvisioningStats }>('/api/admin/account-provisionings/stats');
+    return res.data;
+  } catch {
+    return { menunggu_admin: 0, siap: 0, gagal: 0, dibatalkan: 0, total: 0 } satisfies AdminProvisioningStats;
+  }
+}
+
 /**
  * Pending orders — 5 paling lama, butuh perhatian admin. Sort by created_at ASC
  * (paling lama = paling atas) untuk lihat yang sudah lama menunggu.
@@ -76,6 +87,20 @@ async function loadPendingOrders() {
       status: 'pending',
       sort: 'created_at',
       dir: 'asc',
+      per_page: 5,
+    });
+  } catch {
+    return { data: [], meta: { current_page: 1, last_page: 1, per_page: 5, total: 0 } };
+  }
+}
+
+/**
+ * Pending activation — 5 paling lama menunggu aktivasi admin.
+ */
+async function loadPendingProvisionings() {
+  try {
+    return await apiGet<PaginatedResponse<AdminProvisioning>>('/api/admin/account-provisionings', {
+      status: 'menunggu_admin',
       per_page: 5,
     });
   } catch {
@@ -100,19 +125,21 @@ async function loadRecentActivity() {
 
 export default async function AdminHomePage() {
   const t = await getTranslations('admin.dashboard');
-  const [productStats, orderStats, licenseActive, pendingRes, activityRes] = await Promise.all([
+  const [productStats, orderStats, licenseActive, provisioningStats, pendingRes, pendingProvRes, activityRes] = await Promise.all([
     loadProductStats(),
     loadOrderStats(),
     loadActiveLicenseCount(),
+    loadProvisioningStats(),
     loadPendingOrders(),
+    loadPendingProvisionings(),
     loadRecentActivity(),
   ]);
 
-  // 6 stat tiles — alternating 2-2-2: SURF | ACCENT | PRIMARY | ACCENT | PRIMARY | SURF.
-  // Ritme warna jelas, ujung-ujung surface jadi frame natural.
+  // Stat tiles — grid adaptif lg:grid-cols-4 untuk render 8 tiles cleanly
   const tiles = [
     { label: t('tileStatTotalProducts'), value: String(productStats.data.total), tone: 'surface' as const },
     { label: t('tileStatPendingOrders'), value: String(orderStats.data.pending), tone: 'accent' as const },
+    { label: t('tileStatPendingProvisionings'), value: String(provisioningStats.menunggu_admin), tone: 'accent' as const },
     { label: t('tileStatPaidMonth'), value: String(orderStats.data.paid_month), tone: 'primary' as const },
     { label: t('tileStatRevenueMonth'), value: formatRupiah(orderStats.data.revenue_month), tone: 'accent' as const },
     { label: t('tileStatTotalOrders'), value: String(orderStats.data.total), tone: 'primary' as const },
@@ -120,6 +147,7 @@ export default async function AdminHomePage() {
   ];
 
   const pendingOrders = pendingRes.data ?? [];
+  const pendingProvisionings = pendingProvRes.data ?? [];
   const recentActivity = activityRes.data ?? [];
   const activityCount = activityRes.meta?.total ?? 0;
 
@@ -138,17 +166,13 @@ export default async function AdminHomePage() {
         </p>
       </header>
 
-      {/* ───── STAT TILES (6) ───── */}
+      {/* ───── STAT TILES ───── */}
       <section>
         <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-3">
           {t('sectionStats')}
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
           {tiles.map((tile) => {
-            // Pakai Card variant langsung untuk primary/accent agar primitive's
-            // fill (bg-primary/bg-accent) menang dari CSS source order —
-            // kalau pakai className, override sering kalah kalau bg-surface
-            // didefine lebih dulu di Tailwind v4 output.
             const cardVariant =
               tile.tone === 'primary'
                 ? 'filled-primary'
@@ -156,8 +180,8 @@ export default async function AdminHomePage() {
                   ? 'filled-accent'
                   : 'surface';
             return (
-              <Card key={tile.label} variant={cardVariant} className="p-4">
-                <p className="text-xs font-bold uppercase tracking-widest opacity-70">
+              <Card key={tile.label} variant={cardVariant} className="p-4 flex flex-col justify-between">
+                <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">
                   {tile.label}
                 </p>
                 <p className="mt-2 font-display text-2xl md:text-3xl font-black leading-none break-all">
@@ -168,6 +192,65 @@ export default async function AdminHomePage() {
           })}
         </div>
       </section>
+
+      {/* ───── ANTRIEAN AKTIVASI (FULL WIDTH JIKA ADA DATA) ───── */}
+      {pendingProvisionings.length > 0 && (
+        <Card variant="surface" className="p-6 border-accent bg-accent/5">
+          <div className="flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
+            <div>
+              <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+                {t('provisioningEyebrow')}
+              </p>
+              <h2 className="font-display text-2xl font-black uppercase tracking-tight text-ink leading-tight mt-1">
+                {t('provisioningTitle')}
+              </h2>
+            </div>
+            <NLink
+              href="/admin/account-provisionings?status=menunggu_admin"
+              variant="primary"
+              underline="static"
+              className="font-label text-[10px] uppercase"
+            >
+              {t('provisioningViewAll')}
+            </NLink>
+          </div>
+
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {pendingProvisionings.map((p) => {
+              const order = p.orderItem?.order;
+              const productName = p.orderItem?.nama_produk ?? '—';
+              return (
+                <li key={p.id}>
+                  <Card
+                    href="/admin/account-provisionings?status=menunggu_admin"
+                    variant="surface"
+                    className="block p-4 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)]"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <span className="inline-block text-[9px] font-bold uppercase px-1.5 py-0.5 border border-ink bg-accent text-ink mb-1">
+                          Aktivasi Manual
+                        </span>
+                        <p className="font-bold text-sm truncate text-ink">{productName}</p>
+                        {order && (
+                          <p className="font-mono text-xs text-ink/60 mt-0.5 truncate">
+                            {order.kode_order} · {order.nama_pembeli}
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-[10px] text-ink/50">
+                          {formatDateTime(p.created_at)}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      )}
 
       {/* ───── PENDING ORDERS + RECENT ACTIVITY (2-col) ───── */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -278,7 +361,7 @@ export default async function AdminHomePage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Button href="/admin/products/new" variant="primary" size="md">{t('quickNewProduct')}</Button>
           <Button href="/admin/posts/new" variant="primary" size="md">{t('quickNewPost')}</Button>
-          <Button href="/admin/orders?status=pending" variant="accent" size="md">{t('quickCheckPending')}</Button>
+          <Button href="/admin/account-provisionings?status=menunggu_admin" variant="accent" size="md">{t('quickProvisioningQueue')}</Button>
           <Button href="/admin/license-keys" variant="surface" size="md">{t('quickLicensePool')}</Button>
         </div>
       </section>
