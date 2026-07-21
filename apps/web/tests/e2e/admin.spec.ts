@@ -84,3 +84,37 @@ test.describe('Admin account-provisionings page', () => {
     await expect(page.locator('h1').first()).toBeVisible({ timeout: 30_000 });
   });
 });
+
+test.describe('Admin product edit page (real-case with linked posts)', () => {
+  test('edit produk demo memuat section linked posts + picker', async ({ context, page }) => {
+    await context.addCookies([
+      {
+        name: 'admin_token',
+        value: ADMIN_TOKEN,
+        domain: 'localhost',
+        path: '/',
+        httpOnly: false,
+        secure: false,
+        sameSite: 'Lax',
+      },
+    ]);
+
+    // Cari ID produk demo via API publik dulu (lebih reliable daripada scraping HTML).
+    const apiResp = await page.request.get('http://localhost:8000/api/public/products/starter-pack-demo');
+    expect(apiResp.ok()).toBeTruthy();
+    const productId = (await apiResp.json()).data.id;
+
+    await page.goto(`/id/admin/products/${productId}`, { waitUntil: 'domcontentloaded' });
+
+    // H1 — product name.
+    await expect(page.locator('h1').first()).toBeVisible({ timeout: 60_000 });
+
+    // Section 'Linked Posts' terlihat (cari text dari i18n).
+    const linkedSection = page.getByText(/catatan terkait|linked posts/i).first();
+    await expect(linkedSection).toBeVisible({ timeout: 30_000 });
+
+    // Existing linked posts dari seeder — minimal 2 (panduan + warning).
+    const linkedItems = page.locator('input[type="hidden"][name="linked_posts"]');
+    await expect(linkedItems).toHaveCount(2, { timeout: 10_000 });
+  });
+});

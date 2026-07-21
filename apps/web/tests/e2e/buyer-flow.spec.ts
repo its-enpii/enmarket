@@ -105,23 +105,27 @@ test.describe('Buyer flow — produk detail', () => {
     expect(bodyText?.length ?? 0).toBeGreaterThan(0);
   });
 
-  test('detail produk aktif render tanpa crash walaupun linked_posts kosong', async ({ page }) => {
+  test('detail produk aktif render linked posts dari relasi many-to-many', async ({ page }) => {
     // Buka katalog publik → ambil slug produk pertama → buka detail.
-    // linked_posts optional: kalau backend tidak return field, page tetap aman.
+    // Expect section 'Panduan & catatan terkait' dengan minimal 1 link ke display/{slug}.
     await page.goto('/id/katalog', { waitUntil: 'domcontentloaded' });
 
     const firstCard = page.locator('a[href*="/develop/"]').first();
     const href = await firstCard.getAttribute('href', { timeout: 30_000 }).catch(() => null);
     if (!href) {
-        test.skip(true, 'Tidak ada produk aktif di katalog.');
-        return;
+        throw new Error('Seeder tidak menghasilkan produk aktif. Run DemoSeeder di apps/api.');
     }
 
     await page.goto(href, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('h1').first()).toBeVisible({ timeout: 60_000 });
-    // Page tidak crash — body text ada.
-    const bodyText = await page.locator('body').textContent({ timeout: 10_000 });
-    expect(bodyText?.length ?? 0).toBeGreaterThan(0);
+
+    // Section 'Panduan & catatan terkait' tampil.
+    const linkedSection = page.locator('text=/panduan.*catatan terkait|related.*guides/i').first();
+    await expect(linkedSection).toBeVisible({ timeout: 30_000 });
+
+    // Minimal 1 link ke display/{slug}.
+    const displayLinks = page.locator('a[href*="/display/"]');
+    await expect(displayLinks.first()).toBeVisible({ timeout: 10_000 });
   });
 });
 
