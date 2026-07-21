@@ -444,6 +444,7 @@
     "typeDownload": "Unduhan",
     "typeLicense": "Lisensi",
     "typeBundle": "Bundel",
+    "typeAccount": "Aktivasi Akun",
     "checkAgain": "Cek Pesanan Lagi",
     "viewPayment": "Lanjut ke Pembayaran →",
     "viewOrders": "Cek Pesanan"
@@ -479,9 +480,23 @@
     "typeDownload": "Unduhan",
     "typeLicense": "Lisensi",
     "typeBundle": "Bundel",
+    "typeAccount": "Aktivasi Akun",
     "downloadFile": "Unduh Berkas",
     "expiredDownload": "⏰ Tautan telah kedaluwarsa. Hubungi kami.",
     "continuePayment": "Lanjutkan Pembayaran →"
+  },
+  "accountProvisioning": {
+    "statusPending": "Menunggu Aktivasi",
+    "statusReady": "Akun Aktif",
+    "statusGagal": "Gagal",
+    "statusDibatalkan": "Dibatalkan",
+    "pending": "Akun kamu sedang diproses tim kami. Kredensial akan dikirim lewat email dan WhatsApp setelah aktivasi selesai — biasanya dalam 1×24 jam.",
+    "username": "Username",
+    "password": "Password",
+    "server": "Server",
+    "profile": "Profil",
+    "expiry": "Masa Aktif",
+    "noDelivery": "Pengiriman untuk item ini belum tersedia."
   },
   "login": {
     "title": "Masuk ke Dasbor",
@@ -502,6 +517,7 @@
       "posts": "Catatan",
       "orders": "Pesanan",
       "licenseKeys": "License Keys",
+      "accountProvisionings": "Aktivasi Akun",
       "media": "Media",
       "settings": "Pengaturan"
     },
@@ -1019,6 +1035,38 @@
         "confirmAction": "Cabut",
         "success": "Key dicabut."
       }
+    },
+    "accountProvisionings": {
+      "eyebrow": "✎ Aktivasi",
+      "title": "Antrean Aktivasi",
+      "subtitle": "Pesanan untuk produk yang butuh aktivasi manual — akun langganan, game, kredensial API. Isi kredensial setelah setup selesai untuk mengirim notifikasi ke buyer.",
+      "sectionStats": "Status Antrian",
+      "statMenungguAdmin": "Menunggu Admin",
+      "statSiap": "Siap Dikirim",
+      "statGagal": "Gagal",
+      "statTotal": "Total Antrean",
+      "created": "Order paid pada",
+      "viewCredentials": "Lihat kredensial",
+      "markReady": "Aktivasi",
+      "regenerate": "Ganti Kredensial",
+      "resend": "Kirim Ulang Notifikasi",
+      "cancel": "Batal",
+      "markReadyTitle": "Aktivasi Akun",
+      "markReadyDescription": "Isi kredensial yang akan dikirim ke buyer. Notifikasi email + WhatsApp akan otomatis terkirim.",
+      "regenerateTitle": "Ganti Kredensial",
+      "regenerateDescription": "Update kredensial dan kirim ulang notifikasi ke buyer.",
+      "markSuccess": "Provisioning ditandai siap. Notifikasi terkirim.",
+      "regenerateSuccess": "Kredensial diperbarui. Notifikasi baru terkirim.",
+      "fields": {
+        "username": "Username",
+        "password": "Password",
+        "server": "Server/URL",
+        "profile": "Profil",
+        "expiry": "Masa Aktif",
+        "catatan": "Catatan (opsional)"
+      },
+      "emptyTitle": "Tidak ada antrian",
+      "emptyHint": "Order paid untuk produk bertipe aktivasi akan muncul di sini."
     },
     "media": {
       "_batch": "7",

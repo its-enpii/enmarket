@@ -4,7 +4,7 @@
  */
 
 export type StatusProduct = 'aktif' | 'draft' | 'tidak_dijual';
-export type TipeProduct = 'download' | 'license' | 'bundle';
+export type TipeProduct = 'download' | 'license' | 'bundle' | 'account_manual';
 
 export interface Category {
   id: number;
@@ -152,7 +152,7 @@ export interface Cart {
 // ───── Order ─────
 
 export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded';
-export type TipeOrder = 'download' | 'license' | 'bundle';
+export type TipeOrder = 'download' | 'license' | 'bundle' | 'account_manual';
 
 export interface OrderDeliveryInfo {
   has_download: boolean;
@@ -172,6 +172,19 @@ export interface OrderItem {
   harga_saat_beli_formatted: string;
   tipe_produk: TipeOrder;
   delivery?: OrderDeliveryInfo | null;
+  account_provisioning?: AccountProvisioningInfo | null;
+}
+
+/** Account provisioning info (untuk produk bertipe `account_manual`). */
+export interface AccountProvisioningInfo {
+  status: 'menunggu_admin' | 'siap' | 'gagal' | 'dibatalkan';
+  is_ready: boolean;
+  /** Null sampai status='siap'. Sembunyikan di UI saat masih menunggu. */
+  credentials: { username?: string; password?: string; server?: string; profile?: string; expiry?: string } | null;
+  catatan: string | null;
+  ready_at: string | null;
+  email_sent_at: string | null;
+  wa_sent_at: string | null;
 }
 
 export interface Order {
@@ -246,6 +259,53 @@ export const LICENSE_STATUS_LABEL: Record<LicenseStatus, string> = {
   kadaluarsa: 'Kadaluarsa',
   dicabut: 'Dicabut',
 };
+
+/** Status label Indonesia untuk AccountProvisioning. */
+export type ProvisioningStatus = 'menunggu_admin' | 'siap' | 'gagal' | 'dibatalkan';
+export const PROVISIONING_STATUS_LABEL: Record<ProvisioningStatus, string> = {
+  menunggu_admin: 'Menunggu Admin',
+  siap: 'Siap',
+  gagal: 'Gagal',
+  dibatalkan: 'Dibatalkan',
+};
+
+/** Statistik antrian provisioning (untuk dashboard tile). */
+export interface AdminProvisioningStats {
+  menunggu_admin: number;
+  siap: number;
+  gagal: number;
+  dibatalkan: number;
+  total: number;
+}
+
+/** Row provisioning untuk halaman admin/account-provisionings. */
+export interface AdminProvisioning {
+  id: number;
+  order_item_id: number;
+  status: ProvisioningStatus;
+  credentials: Record<string, string> | null;
+  catatan_admin: string | null;
+  ready_by_admin: string | null;
+  ready_at: string | null;
+  email_sent_at: string | null;
+  wa_sent_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  orderItem: {
+    id: number;
+    product_id: number;
+    nama_produk: string;
+    tipe_produk: TipeOrder;
+    order: {
+      id: number;
+      kode_order: string;
+      nama_pembeli: string;
+      email_pembeli: string;
+      status: OrderStatus;
+      paid_at: string | null;
+    } | null;
+  } | null;
+}
 
 // ───── Blog post (Catatan) ─────
 

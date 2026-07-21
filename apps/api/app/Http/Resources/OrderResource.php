@@ -10,6 +10,7 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         $isPublic = $request->boolean('public_view');
+        $publicView = $request->input('public_view') ?? ($this->additional['public_view'] ?? null);
 
         $arr = [
             'kode_order' => $this->kode_order,
@@ -30,7 +31,7 @@ class OrderResource extends JsonResource
         ];
 
         // Untuk polling ringan — strip heavy fields dari view publik
-        if ($request->input('public_view') === 'status') {
+        if ($publicView === 'status') {
             return [
                 'kode_order' => $this->kode_order,
                 'status' => $this->status,

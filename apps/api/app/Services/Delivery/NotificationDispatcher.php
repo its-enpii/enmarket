@@ -2,6 +2,7 @@
 
 namespace App\Services\Delivery;
 
+use App\Models\AccountProvisioning;
 use App\Models\Order;
 use App\Models\OrderDelivery;
 use Illuminate\Http\Client\ConnectionException;
@@ -10,14 +11,18 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Dispatch notifikasi "order paid" ke n8n (email + WA).
+ * Dispatch notifikasi ke n8n (email + WA).
+ *
+ * Dua event yang di-dispatch:
+ *   - order.paid      → delivery file/license siap di-download
+ *   - account.ready   → admin sudah aktivasi akun, kredensial siap di-deliver
  *
  * Mode dev (N8N_WEBHOOK_KIRIM_PRODUK kosong): log only + auto-mark email_sent_at / wa_sent_at.
- * Mode prod: POST payload ke n8n webhook, n8n yang kirim email & WA,
- *            n8n callback (TODO Fase 4.5) untuk set sent_at timestamps.
+ * Mode prod: POST payload ke n8n webhook, n8n yang kirim email & WA.
  *
- * n8n payload contract:
+ * n8n payload contract (order.paid):
  * {
+ *   "event": "order.paid",
  *   "order": { kode_order, nama_pembeli, email_pembeli, wa_pembeli, total_harga, status, paid_at },
  *   "deliveries": [
  *     { product: { nama, tipe }, download_url, download_token, token_expired_at,
@@ -41,13 +46,69 @@ class NotificationDispatcher
      */
     public function dispatchOrderPaid(Order $order, array $deliveries): void
     {
-        $payload = $this->buildPayload($order, $deliveries);
+        $payload = $this->buildOrderPaidPayload($order, $deliveries);
 
-        if (! $this->n8nWebhookUrl) {
-            $this->logDevMode($payload);
-            $this->markAllSent($deliveries);
+        $sent = $this->postToN8n($payload);
+
+        if ($sent) {
+            $this->markDeliveriesSent($deliveries);
+        }
+    }
+
+    /**
+     * Dispatch notifikasi "akun sudah siap" ke buyer.
+     * Payload: order info + 1 item dengan kredensial.
+     */
+    public function dispatchAccountReady(AccountProvisioning $prov): void
+    {
+        $prov->loadMissing('orderItem.order', 'orderItem.product');
+        $order = $prov->orderItem?->order;
+        $item = $prov->orderItem;
+
+        if (! $order || ! $item) {
+            Log::error('NotificationDispatcher: missing order or item for account.ready', [
+                'provisioning_id' => $prov->id,
+            ]);
 
             return;
+        }
+
+        $payload = [
+            'event' => 'account.ready',
+            'order' => [
+                'kode_order' => $order->kode_order,
+                'nama_pembeli' => $order->nama_pembeli,
+                'email_pembeli' => $order->email_pembeli,
+                'wa_pembeli' => $order->wa_pembeli,
+            ],
+            'item' => [
+                'product_nama' => $item->nama_produk,
+                'credentials' => $prov->credentials,
+                'catatan' => $prov->catatan_admin,
+            ],
+            'channels' => ['email', 'wa'],
+        ];
+
+        $sent = $this->postToN8n($payload);
+
+        if ($sent) {
+            $now = now();
+            $prov->forceFill([
+                'email_sent_at' => $prov->email_sent_at ?? $now,
+                'wa_sent_at' => $prov->wa_sent_at ?? $now,
+            ])->save();
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function postToN8n(array $payload): bool
+    {
+        if (! $this->n8nWebhookUrl) {
+            $this->logDevMode($payload);
+
+            return true;
         }
 
         try {
@@ -58,20 +119,20 @@ class NotificationDispatcher
 
             $response->throw();
 
-            // Asumsi n8n kirim ke 2 channel. Real ack callback akan lebih akurat (TODO).
-            $this->markAllSent($deliveries);
-
             Log::info('NotificationDispatcher: n8n accepted payload', [
-                'kode_order' => $order->kode_order,
+                'event' => $payload['event'] ?? 'unknown',
                 'status' => $response->status(),
             ]);
+
+            return true;
         } catch (RequestException|ConnectionException $e) {
             Log::error('NotificationDispatcher: n8n POST failed', [
-                'kode_order' => $order->kode_order,
+                'event' => $payload['event'] ?? 'unknown',
                 'status' => method_exists($e, 'response') ? $e->response?->status() : null,
                 'error' => $e->getMessage(),
             ]);
-            // Jangan throw — delivery sudah sukses, notification bisa di-retry manual.
+
+            return false;
         }
     }
 
@@ -79,7 +140,7 @@ class NotificationDispatcher
      * @param  array<int, OrderDelivery>  $deliveries
      * @return array<string, mixed>
      */
-    private function buildPayload(Order $order, array $deliveries): array
+    private function buildOrderPaidPayload(Order $order, array $deliveries): array
     {
         $items = [];
         foreach ($deliveries as $d) {
@@ -127,7 +188,7 @@ class NotificationDispatcher
      *
      * @param  array<int, OrderDelivery>  $deliveries
      */
-    private function markAllSent(array $deliveries): void
+    private function markDeliveriesSent(array $deliveries): void
     {
         $now = now();
         foreach ($deliveries as $d) {

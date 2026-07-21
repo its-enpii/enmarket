@@ -55,7 +55,7 @@ export function ActivityRow({ entry }: { entry: ActivityLog }) {
               </>
             )}
           </p>
-          <p className="mt-1 text-[10px] text-ink/50 italic">
+          <p className="mt-1 text-[10px] text-ink/50 italic" suppressHydrationWarning>
             {formatDateTime(entry.created_at)}
           </p>
         </div>

@@ -43,6 +43,15 @@ class OrderItem extends Model
         return $this->hasOne(OrderDelivery::class);
     }
 
+    /**
+     * Provisioning record untuk produk bertipe account_manual.
+     * Null untuk produk license/download/bundle.
+     */
+    public function accountProvisioning(): HasOne
+    {
+        return $this->hasOne(AccountProvisioning::class);
+    }
+
     public function needsLicenseKey(): bool
     {
         return in_array($this->tipe_produk, ['license', 'bundle'], true);

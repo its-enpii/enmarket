@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
+import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
@@ -27,6 +28,7 @@ const TYPE_KEYS = {
   download: 'typeDownload',
   license: 'typeLicense',
   bundle: 'typeBundle',
+  account_manual: 'typeAccount',
 } as const;
 
 export default async function PesananSuksesPage({ params }: PageProps) {
@@ -92,6 +94,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
           <ul className="space-y-3">
             {order.items.map((item) => {
               const delivery = item.delivery;
+              const provisioning = item.account_provisioning;
               const hasDownload = Boolean(delivery?.download_url);
               const hasLicense = Boolean(delivery?.license_key);
               const expired = Boolean(delivery?.token_expired_at && new Date(delivery.token_expired_at) < new Date());
@@ -117,7 +120,10 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                       <p className="font-mono font-bold text-sm break-words select-all">{delivery!.license_key}</p>
                     </div>
                   )}
-                  {!hasDownload && !hasLicense && <p className="mt-2 text-xs text-ink/60 italic">{t('noDelivery')}</p>}
+                  {provisioning && <AccountProvisioningBox provisioning={provisioning} />}
+                  {!hasDownload && !hasLicense && !provisioning && (
+                    <p className="mt-2 text-xs text-ink/60 italic">{t('noDelivery')}</p>
+                  )}
                 </li>
               );
             })}

@@ -14,9 +14,8 @@ use Illuminate\Support\Str;
  * Orchestrator untuk generate delivery setelah order paid.
  *
  * Untuk setiap OrderItem:
- * - Buat download_token (7 hari expiry)
- * - Set download_url dari product.file_url (snapshot)
- * - Kalau tipe=license/bundle → klaim 1 license key dari pool
+ * - Tipe account_manual → delegasi ke AccountProvisioningService
+ * - Tipe download/license/bundle → buat download_token + license key
  *
  * Idempotent: kalau order_delivery sudah ada, skip.
  */
@@ -27,35 +26,50 @@ class OrderDeliveryService
 
     public function __construct(
         private readonly NotificationDispatcher $notifier,
+        private readonly AccountProvisioningService $provisioningService,
     ) {}
 
     /**
-     * Generate deliveries untuk semua items dalam order.
-     * Return array of created OrderDelivery.
+     * Generate deliveries + provisioning untuk semua items dalam order.
+     * Return array of created rows (OrderDelivery untuk license/download/bundle,
+     * AccountProvisioning untuk account_manual).
      *
-     * @return array<int, OrderDelivery>
+     * @return array<int, mixed>
      */
     public function generateForOrder(Order $order): array
     {
-        $order->loadMissing('items.product', 'items.delivery');
+        $order->loadMissing('items.product', 'items.delivery', 'items.accountProvisioning');
 
         $created = [];
+        $deliveries = [];
 
         foreach ($order->items as $item) {
-            if ($item->delivery) {
-                // Sudah ada — idempotent skip
-                $created[] = $item->delivery;
+            // Branch: produk bertipe account_manual → provisioning manual, no auto-delivery
+            if ($item->product?->requiresManualActivation()) {
+                $created[] = $this->provisioningService->createForItem($item);
 
                 continue;
             }
 
-            $created[] = DB::transaction(function () use ($item) {
+            if ($item->delivery) {
+                // Sudah ada — idempotent skip
+                $created[] = $item->delivery;
+                $deliveries[] = $item->delivery;
+
+                continue;
+            }
+
+            $delivery = DB::transaction(function () use ($item) {
                 return $this->createDeliveryForItem($item);
             });
+            $created[] = $delivery;
+            $deliveries[] = $delivery;
         }
 
-        // Fire notifications setelah semua delivery row siap
-        $this->dispatchNotifications($order, $created);
+        // Fire notifications hanya untuk delivery rows (skip account_manual — admin yang handle)
+        if (! empty($deliveries)) {
+            $this->dispatchNotifications($order, $deliveries);
+        }
 
         return $created;
     }

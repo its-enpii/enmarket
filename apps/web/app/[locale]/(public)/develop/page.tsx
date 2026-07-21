@@ -29,7 +29,7 @@ export const revalidate = 0;
 
 // ───── Constants ─────
 
-const VALID_TIPE = ['download', 'license', 'bundle'] as const;
+const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
 type Tipe = (typeof VALID_TIPE)[number];
 
 interface PageProps {

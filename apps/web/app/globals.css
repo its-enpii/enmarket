@@ -203,25 +203,26 @@ body {
  * Lebar track 10px biar tidak makan ruang konten tapi tetap grabable.
  * Hover state: thumb membesar sedikit → shadow hard muncul.
  */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-accent) var(--color-ink);
+/* For Firefox fallback only, prevent Chrome 121+ from overriding ::-webkit-scrollbar */
+@supports (-moz-appearance: none) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-surface);
+  }
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-surface);
-  border-left: 2px solid var(--color-ink);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-accent);
   border: 2px solid var(--color-ink);
-  box-shadow: 2px 2px 0 0 var(--color-ink);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -235,13 +236,11 @@ html {
 /* Horizontal-only variant untuk container yang scroll horizontal (table orders,
    code block). Track di bawah, bukan di samping. */
 ::-webkit-scrollbar:horizontal {
-  height: 10px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track:horizontal {
-  background: var(--color-surface);
-  border-top: 2px solid var(--color-ink);
-  border-left: none;
+  background: transparent;
 }
 
 /*

@@ -35,6 +35,22 @@ class OrderItemResource extends JsonResource
             ];
         }
 
+        // Account provisioning info (untuk produk bertipe account_manual).
+        // Credentials hanya di-expose setelah status='siap' — saat masih
+        // menunggu_admin, field null supaya buyer tidak dapat bocoran.
+        if ($this->relationLoaded('accountProvisioning') && $this->accountProvisioning) {
+            $prov = $this->accountProvisioning;
+            $arr['account_provisioning'] = [
+                'status' => $prov->status,
+                'is_ready' => $prov->isReady(),
+                'credentials' => $prov->isReady() ? $prov->credentials : null,
+                'catatan' => $prov->catatan_admin,
+                'ready_at' => $prov->ready_at?->toIso8601String(),
+                'email_sent_at' => $prov->email_sent_at?->toIso8601String(),
+                'wa_sent_at' => $prov->wa_sent_at?->toIso8601String(),
+            ];
+        }
+
         return $arr;
     }
 }

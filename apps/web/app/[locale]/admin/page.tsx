@@ -202,7 +202,7 @@ export default async function AdminHomePage() {
               </p>
             </div>
           ) : (
-            <ul className="space-y-2 overflow-y-auto pr-1 -mr-1 flex-1 min-h-0">
+            <ul className="space-y-2 overflow-y-auto pr-3 -mr-3 flex-1 min-h-0">
               {pendingOrders.map((o) => (
                 <li key={o.kode_order}>
                   <Card
@@ -261,7 +261,7 @@ export default async function AdminHomePage() {
               </p>
             </div>
           ) : (
-            <ul className="space-y-3 overflow-y-auto pr-1 -mr-1 flex-1 min-h-0">
+            <ul className="space-y-3 overflow-y-auto pr-3 -mr-3 flex-1 min-h-0">
               {recentActivity.map((entry) => (
                 <ActivityRow key={entry.id} entry={entry} />
               ))}

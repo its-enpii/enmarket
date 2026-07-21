@@ -48,7 +48,7 @@ class OrderController extends Controller
             ], 404);
         }
 
-        $order->load(['items.delivery.licenseKey']);
+        $order->load(['items.delivery.licenseKey', 'items.accountProvisioning']);
 
         return response()->json([
             'data' => new OrderResource($order),
@@ -77,7 +77,7 @@ class OrderController extends Controller
             ], 403);
         }
 
-        $order->load(['items.delivery.licenseKey']);
+        $order->load(['items.delivery.licenseKey', 'items.accountProvisioning']);
 
         return response()->json([
             'data' => new OrderResource($order),
@@ -99,7 +99,7 @@ class OrderController extends Controller
             ], 404);
         }
 
-        $order->load(['items.delivery.licenseKey']);
+        $order->load(['items.delivery.licenseKey', 'items.accountProvisioning']);
 
         return response()->json([
             'data' => new OrderResource($order),

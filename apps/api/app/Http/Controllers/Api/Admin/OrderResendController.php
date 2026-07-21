@@ -142,7 +142,7 @@ class OrderResendController extends Controller
     public function generateDeliveries(string $kodeOrder): JsonResponse
     {
         $order = Order::where('kode_order', $kodeOrder)
-            ->with(['items.product', 'items.delivery'])
+            ->with(['items.product', 'items.delivery', 'items.accountProvisioning'])
             ->first();
 
         if (! $order) {

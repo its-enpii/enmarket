@@ -80,8 +80,10 @@ class TripayCallbackController extends Controller
 
             // Trigger delivery generation (idempotent via OrderDeliveryService)
             try {
-                $deliveries = $this->deliveryService->generateForOrder($order);
-                Log::info("Order {$order->kode_order} paid — {$this->countDeliveries($deliveries)} deliveries created");
+                $rows = $this->deliveryService->generateForOrder($order);
+                $deliveries = collect($rows)->whereInstanceOf(\App\Models\OrderDelivery::class);
+                $provisionings = collect($rows)->whereInstanceOf(\App\Models\AccountProvisioning::class);
+                Log::info("Order {$order->kode_order} paid — {$deliveries->count()} deliveries, {$provisionings->count()} awaiting admin activation");
             } catch (\Throwable $e) {
                 // Jangan fail callback kalau delivery gagal — bisa di-retry manual
                 Log::error("Order {$order->kode_order} paid but delivery failed", [
@@ -94,10 +96,5 @@ class TripayCallbackController extends Controller
         }
 
         return response()->json(['success' => true]);
-    }
-
-    private function countDeliveries(array $deliveries): int
-    {
-        return count($deliveries);
     }
 }

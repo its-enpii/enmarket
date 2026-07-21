@@ -443,6 +443,7 @@
     "typeDownload": "Download",
     "typeLicense": "License",
     "typeBundle": "Bundle",
+    "typeAccount": "Account Activation",
     "checkAgain": "Check Another Order",
     "shopAgain": "Shop Again →",
     "viewPayment": "Continue to Payment →",
@@ -479,9 +480,23 @@
     "typeDownload": "Download",
     "typeLicense": "License",
     "typeBundle": "Bundle",
+    "typeAccount": "Account Activation",
     "downloadFile": "Download File",
     "expiredDownload": "⏰ This link has expired. Contact us.",
     "continuePayment": "Continue to Payment →"
+  },
+  "accountProvisioning": {
+    "statusPending": "Awaiting Activation",
+    "statusReady": "Account Active",
+    "statusGagal": "Failed",
+    "statusDibatalkan": "Cancelled",
+    "pending": "Your account is being set up by our team. Credentials will be sent by email and WhatsApp once activation is done — usually within 24 hours.",
+    "username": "Username",
+    "password": "Password",
+    "server": "Server",
+    "profile": "Profile",
+    "expiry": "Expires",
+    "noDelivery": "Delivery for this item is not available yet."
   },
   "login": {
     "title": "Admin Login",
@@ -502,6 +517,7 @@
       "posts": "Notes",
       "orders": "Orders",
       "licenseKeys": "License Keys",
+      "accountProvisionings": "Account Activation",
       "media": "Media",
       "settings": "Settings"
     },
@@ -1019,6 +1035,38 @@
         "confirmAction": "Revoke",
         "success": "Key revoked."
       }
+    },
+    "accountProvisionings": {
+      "eyebrow": "✎ Activation",
+      "title": "Activation Queue",
+      "subtitle": "Orders for products that need manual activation — subscription accounts, game accounts, API credentials. Fill in credentials after setup completes to notify the buyer.",
+      "sectionStats": "Queue Status",
+      "statMenungguAdmin": "Awaiting Admin",
+      "statSiap": "Ready Sent",
+      "statGagal": "Failed",
+      "statTotal": "Total Queue",
+      "created": "Order paid on",
+      "viewCredentials": "View credentials",
+      "markReady": "Activate",
+      "regenerate": "Replace Credentials",
+      "resend": "Resend Notification",
+      "cancel": "Cancel",
+      "markReadyTitle": "Activate Account",
+      "markReadyDescription": "Fill credentials to send to the buyer. Email + WhatsApp notification will be sent automatically.",
+      "regenerateTitle": "Replace Credentials",
+      "regenerateDescription": "Update credentials and resend notification to the buyer.",
+      "markSuccess": "Provisioning marked ready. Notification sent.",
+      "regenerateSuccess": "Credentials updated. New notification sent.",
+      "fields": {
+        "username": "Username",
+        "password": "Password",
+        "server": "Server/URL",
+        "profile": "Profile",
+        "expiry": "Expiry",
+        "catatan": "Notes (optional)"
+      },
+      "emptyTitle": "Queue is empty",
+      "emptyHint": "Paid orders for activation-type products will appear here."
     },
     "media": {
       "_batch": "7",

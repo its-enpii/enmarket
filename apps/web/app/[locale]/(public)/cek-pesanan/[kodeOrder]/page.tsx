@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
+import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
@@ -45,6 +46,7 @@ const TYPE_KEYS = {
   download: 'typeDownload',
   license: 'typeLicense',
   bundle: 'typeBundle',
+  account_manual: 'typeAccount',
 } as const;
 
 export default async function CekPesananDetailPage({ params }: PageProps) {
@@ -118,6 +120,7 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
           <ul className="space-y-3">
             {order.items.map((item) => {
               const delivery = item.delivery;
+              const provisioning = item.account_provisioning;
               const hasDownload = Boolean(delivery?.download_url);
               const hasLicense = Boolean(delivery?.license_key);
               const expired = Boolean(delivery?.token_expired_at && new Date(delivery.token_expired_at) < new Date());
@@ -150,6 +153,7 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
                   {showDelivery && hasLicense && (
                     <p className="mt-2 text-xs font-mono bg-ink text-surface px-2 py-1 inline-block break-words">{delivery!.license_key}</p>
                   )}
+                  {provisioning && <AccountProvisioningBox provisioning={provisioning} />}
                 </li>
               );
             })}

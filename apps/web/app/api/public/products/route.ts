@@ -16,7 +16,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 
-const VALID_TIPE = ['download', 'license', 'bundle'] as const;
+const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
 type Tipe = (typeof VALID_TIPE)[number];
 
 export async function GET(req: NextRequest) {

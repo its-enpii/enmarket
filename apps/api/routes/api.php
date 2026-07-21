@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AccountProvisioningController;
 use App\Http\Controllers\Api\Admin\ActivityController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
@@ -132,6 +133,19 @@ Route::prefix('admin')->group(function () {
         Route::post('license-keys', [LicenseKeyController::class, 'store']);
         Route::get('license-keys/{id}', [LicenseKeyController::class, 'show']);
         Route::get('license-keys', [LicenseKeyController::class, 'index']);
+
+        // Account provisioning queue (manual activation flow)
+        // stats HARUS sebelum {id} — kalau tidak, "stats" dicocokkan sebagai id.
+        Route::get('account-provisionings/stats', [AccountProvisioningController::class, 'stats']);
+        Route::post('account-provisionings/{id}/mark-ready', [AccountProvisioningController::class, 'markReady'])
+            ->whereNumber('id');
+        Route::post('account-provisionings/{id}/regenerate', [AccountProvisioningController::class, 'regenerate'])
+            ->whereNumber('id');
+        Route::post('account-provisionings/{id}/resend', [AccountProvisioningController::class, 'resend'])
+            ->whereNumber('id');
+        Route::get('account-provisionings/{id}', [AccountProvisioningController::class, 'show'])
+            ->whereNumber('id');
+        Route::get('account-provisionings', [AccountProvisioningController::class, 'index']);
 
         // Site settings (identity, social, footer, payment, channels)
         Route::get('settings', [SettingsController::class, 'index']);

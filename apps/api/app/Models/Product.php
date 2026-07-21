@@ -130,4 +130,16 @@ class Product extends Model
     {
         return in_array($this->tipe, ['download', 'bundle'], true) && ! empty($this->file_url);
     }
+
+    /**
+     * Apakah produk butuh aktivasi manual admin sebelum delivery?
+     *
+     * Produk bertipe `account_manual` (akun langganan, akun game,
+     * kredensial API) — buyer tidak terima delivery otomatis. Order item
+     * dibuat via AccountProvisioningService dengan status menunggu_admin.
+     */
+    public function requiresManualActivation(): bool
+    {
+        return $this->tipe === 'account_manual';
+    }
 }

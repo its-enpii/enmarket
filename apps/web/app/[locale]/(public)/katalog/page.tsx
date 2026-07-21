@@ -16,7 +16,7 @@ interface PageProps {
   searchParams: Promise<{ category?: string; q?: string; tipe?: string; page?: string }>;
 }
 
-const VALID_TIPE = ['download', 'license', 'bundle'] as const;
+const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
 type Tipe = (typeof VALID_TIPE)[number];
 
 export async function generateMetadata({ params }: PageProps) {
