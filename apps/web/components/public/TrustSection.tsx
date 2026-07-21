@@ -1,4 +1,4 @@
-import { NLink } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 
 interface Benefit {
   icon: string;
@@ -49,25 +49,22 @@ export function TrustSection() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {BENEFITS.map((b, i) => {
-          const tile =
+          const variant =
             i % 4 === 0
-              ? 'bg-primary text-surface'
+              ? 'filled-primary'
               : i % 4 === 1
-                ? 'bg-accent text-ink'
+                ? 'filled-accent'
                 : i % 4 === 2
-                  ? 'bg-ink text-surface'
-                  : 'bg-surface text-ink';
+                  ? 'ink'
+                  : 'surface';
           return (
-            <div
-              key={b.title}
-              className={`${tile} border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)]`}
-            >
+            <Card key={b.title} variant={variant} hoverable={false} className="p-4">
               <p className="text-2xl" aria-hidden="true">
                 {b.icon}
               </p>
               <h3 className="mt-2 font-bold text-base leading-tight">{b.title}</h3>
               <p className="mt-1 text-xs leading-relaxed opacity-80">{b.body}</p>
-            </div>
+            </Card>
           );
         })}
       </div>

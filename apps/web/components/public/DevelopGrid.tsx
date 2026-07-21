@@ -19,7 +19,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Card, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import type { PaginationMeta, Product } from '@/lib/types';
@@ -141,11 +141,14 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
       {/* Fallback / status bar — selalu render biar UI kasih feedback */}
       <div className="mt-12 flex flex-col items-center gap-4">
         {hasMore && (
-          <button
+          <Button
             type="button"
             onClick={loadMore}
             disabled={loading}
-            className="inline-flex items-center px-8 py-3 bg-ink text-surface border-4 border-ink shadow-[6px_6px_0_0_var(--color-accent)] font-label text-label-sm uppercase font-black hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-accent)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[3px_3px_0_0_var(--color-accent)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            variant="ink"
+            size="md"
+            shadowColor="accent"
+            className="font-label text-label-sm uppercase"
           >
             {loading ? (
               <>
@@ -155,7 +158,7 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
             ) : (
               t('loadMore')
             )}
-          </button>
+          </Button>
         )}
 
         {!hasMore && products.length > 0 && (

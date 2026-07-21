@@ -1,3 +1,5 @@
+import { Card } from '@/components/ui/neobrutal';
+
 /**
  * Reusable skeleton untuk halaman form admin (new/edit).
  * Dipakai sebagai loading.tsx di route segment form — context-agnostic.
@@ -23,7 +25,7 @@ export function PageFormLoading({
 }: Props) {
   return (
     <div className="p-8 max-w-4xl">
-      <div className="bg-surface border-2 border-ink p-6 shadow-[4px_4px_0_0_var(--color-ink)] animate-pulse space-y-5">
+      <Card variant="surface" hoverable={false} className="p-6 animate-pulse space-y-5">
         {Array.from({ length: fieldCount }).map((_, i) => (
           <div key={i}>
             <div className="h-3 w-24 bg-ink/10 mb-2" />
@@ -42,7 +44,7 @@ export function PageFormLoading({
             <div className="h-10 w-24 bg-ink/10" />
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

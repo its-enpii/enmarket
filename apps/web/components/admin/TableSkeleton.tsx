@@ -1,3 +1,5 @@
+import { Card } from '@/components/ui/neobrutal';
+
 interface Props {
   columnCount: number;
   /** Lebar per kolom (CSS value). Optional.
@@ -27,7 +29,7 @@ function cellWidth(columnWidth?: string): string | undefined {
  */
 export function TableSkeleton({ columnCount, columnWidths, count = 10 }: Props) {
   return (
-    <div className="border-2 border-ink bg-surface shadow-[4px_4px_0_0_var(--color-ink)] overflow-hidden">
+    <Card variant="surface" hoverable={false} className="overflow-hidden p-0">
       <div className="overflow-x-auto">
         <table className="w-full text-sm" aria-busy="true">
           <thead>
@@ -69,6 +71,6 @@ export function TableSkeleton({ columnCount, columnWidths, count = 10 }: Props) 
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   );
 }

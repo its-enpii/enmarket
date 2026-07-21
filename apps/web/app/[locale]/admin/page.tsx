@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
@@ -228,9 +229,9 @@ export default async function AdminHomePage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
-                        <span className="inline-block text-[9px] font-bold uppercase px-1.5 py-0.5 border border-ink bg-accent text-ink mb-1">
+                        <Badge tone="accent" size="sm" shadow={false} className="text-[9px] mb-1 px-1.5 py-0.5">
                           Aktivasi Manual
-                        </span>
+                        </Badge>
                         <p className="font-bold text-sm truncate text-ink">{productName}</p>
                         {order && (
                           <p className="font-mono text-xs text-ink/60 mt-0.5 truncate">

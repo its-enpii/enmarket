@@ -1,8 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 
+import { Badge } from '@/components/ui/Badge';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime } from '@/lib/format';
-import { NLink } from '@/components/ui/neobrutal';
 import {
   PROVISIONING_STATUS_LABEL,
   type AdminProvisioning,
@@ -145,10 +146,8 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
             const order = row.orderItem?.order;
             const productName = row.orderItem?.nama_produk ?? '—';
             return (
-              <li
-                key={row.id}
-                className="border-2 border-ink bg-surface p-4 sm:p-5 shadow-[4px_4px_0_0_var(--color-ink)]"
-              >
+              <li key={row.id}>
+                <Card variant="surface" hoverable={false} className="p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -205,6 +204,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
                     )}
                   </details>
                 )}
+                </Card>
               </li>
             );
           })}
@@ -220,17 +220,15 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
               : `/admin/account-provisionings?${activeStatus ? `status=${activeStatus}&` : ''}page=${p}`;
             const isCurrent = p === meta.current_page;
             return (
-              <NLink
+              <Button
                 key={p}
                 href={href}
                 variant={isCurrent ? 'primary' : 'surface'}
-                underline="static"
-                className={`text-xs font-bold uppercase px-3 py-1.5 border-2 border-ink ${
-                  isCurrent ? 'bg-primary text-surface' : 'bg-surface hover:bg-accent/40'
-                }`}
+                size="sm"
+                flat
               >
                 {p}
-              </NLink>
+              </Button>
             );
           })}
         </div>
@@ -249,20 +247,14 @@ function StatTile({
   variant: 'surface' | 'filled-primary' | 'filled-accent' | 'ink';
 }) {
   return (
-    <div
-      className={`border-2 border-ink p-4 shadow-[3px_3px_0_0_var(--color-ink)] ${
-        variant === 'surface'
-          ? 'bg-surface text-ink'
-          : variant === 'filled-primary'
-            ? 'bg-primary text-surface'
-            : variant === 'filled-accent'
-              ? 'bg-accent text-ink'
-              : 'bg-ink text-surface'
-      }`}
+    <Card
+      variant={variant}
+      hoverable={false}
+      className="p-4"
     >
       <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">{label}</p>
       <p className="mt-2 font-display text-3xl font-black leading-none">{value}</p>
-    </div>
+    </Card>
   );
 }
 
@@ -274,12 +266,8 @@ function BadgeStatus({
   tone: 'primary' | 'accent';
 }) {
   return (
-    <span
-      className={`inline-block text-[10px] font-bold uppercase px-2 py-0.5 border-2 border-ink ${
-        tone === 'accent' ? 'bg-accent text-ink' : 'bg-primary text-surface'
-      }`}
-    >
+    <Badge tone={tone} size="sm" shadow={false}>
       {PROVISIONING_STATUS_LABEL[status]}
-    </span>
+    </Badge>
   );
 }

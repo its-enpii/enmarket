@@ -16,7 +16,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { BUTTON_LABEL_CLS } from '@/components/ui/neobrutal';
+import { Button, BUTTON_LABEL_CLS } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import { toast } from '@/components/ui/toast-store';
 
@@ -123,15 +123,18 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
               alt={t('previewAlt', { n: i + 1 })}
               className="h-24 w-24 object-cover"
             />
-            <button
+            <Button
               type="button"
               onClick={() => removeImage(i)}
               disabled={pending}
-              className="absolute -top-2 -right-2 h-6 w-6 bg-accent border-2 border-ink text-xs font-bold shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-primary hover:text-surface disabled:opacity-50"
+              variant="accent"
+              size="sm"
+              flat
+              className="absolute -top-2 -right-2 h-6 w-6 min-h-0 p-0 text-xs hover:bg-primary hover:text-surface"
               aria-label={t('previewRemoveAria')}
             >
               ×
-            </button>
+            </Button>
           </div>
         ))}
       </div>

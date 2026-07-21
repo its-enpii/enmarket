@@ -65,7 +65,7 @@ export function TrendingSection({ trending, latest }: Props) {
             ))}
             {sideCards.length === 1 && (
               // Isi slot terakhir dengan CTA bundle
-              <div className="bg-accent text-ink border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)] flex flex-col justify-between">
+              <Card variant="filled-accent" hoverable={false} className="p-4 flex flex-col justify-between">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider">📦 Paket Hemat</p>
                   <p className="mt-1 font-bold text-lg leading-snug">
@@ -80,7 +80,7 @@ export function TrendingSection({ trending, latest }: Props) {
                 >
                   Lihat paket →
                 </Button>
-              </div>
+              </Card>
             )}
             {sideCards.length === 0 && (
               <div className="flex-1 bg-surface border-2 border-dashed border-ink p-4 text-center text-ink/60 flex flex-col justify-center min-h-[120px]">
