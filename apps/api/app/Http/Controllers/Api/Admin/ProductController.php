@@ -107,11 +107,17 @@ class ProductController extends Controller
 
         $product = Product::create($data);
 
+        // Attach linked posts (opsional). `linked_posts` adalah array of post_id.
+        // Urutan di-set sesuai index array — admin urutan via UI reorder.
+        if ($request->has('linked_posts')) {
+            $this->syncLinkedPosts($product, $request->input('linked_posts'));
+        }
+
         // Trigger ISR revalidation untuk halaman yang menampilkan produk ini
         $this->revalidator->revalidateProduct($product->slug);
 
         return response()->json([
-            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys'])),
+            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys', 'posts'])),
             'message' => 'Produk berhasil dibuat.',
         ], 201);
     }
@@ -122,7 +128,7 @@ class ProductController extends Controller
     public function show(Product $product): JsonResponse
     {
         return response()->json([
-            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys'])),
+            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys', 'posts'])),
         ]);
     }
 
@@ -164,11 +170,17 @@ class ProductController extends Controller
 
         $product->update($data);
 
+        // Sync linked posts. Kalau field dikirim (meskipun array kosong) → sync.
+        // Kalau TIDAK dikirim sama sekali → biarkan existing (partial update).
+        if ($request->has('linked_posts')) {
+            $this->syncLinkedPosts($product, $request->input('linked_posts'));
+        }
+
         // Revalidate slug baru + (kalau slug berubah) slug lama
         $this->revalidator->revalidateProduct($product->slug);
 
         return response()->json([
-            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys'])),
+            'data' => new ProductResource($product->load(['category:id,nama,slug', 'licenseKeys', 'posts'])),
             'message' => 'Produk berhasil diperbarui.',
         ]);
     }
@@ -219,7 +231,7 @@ class ProductController extends Controller
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'deskripsi' => ['required', 'string'],
             'harga' => ['required', 'numeric', 'min:0'],
-            'tipe' => ['required', 'in:download,license,bundle'],
+            'tipe' => ['required', 'in:download,license,bundle,account_manual'],
             'download_expiry_days' => ['nullable', 'integer', 'min:1', 'max:365'],
             'preview_images' => ['nullable'],
             'fitur' => ['nullable'],
@@ -232,8 +244,52 @@ class ProductController extends Controller
                 'required_if:tipe,download,bundle', // tipe download/bundle wajib upload file
             ],
             'remove_file' => ['nullable', 'boolean'],
+            // linked_posts: optional array of post_id. Boleh JSON string (untuk form multipart)
+            // atau array langsung. Sync — kalau dikirim, replace semua existing.
+            'linked_posts' => ['nullable'],
         ], [
             'file.required_if' => 'File produk wajib di-upload untuk tipe download atau bundle.',
         ]);
+    }
+
+    /**
+     * Sync pivot `product_post` dari input.
+     *
+     * Accept: array of post_id (urutan = index array),
+     * atau array of {post_id, urutan}.
+     * ID yang tidak exist di posts table → di-skip (jangan crash).
+     */
+    private function syncLinkedPosts(Product $product, mixed $input): void
+    {
+        if (is_string($input)) {
+            $decoded = json_decode($input, true);
+            $input = is_array($decoded) ? $decoded : [];
+        }
+        if (! is_array($input)) {
+            return;
+        }
+
+        $sync = [];
+        foreach ($input as $i => $entry) {
+            if (is_int($entry) || (is_string($entry) && ctype_digit($entry))) {
+                $postId = (int) $entry;
+                $urutan = $i;
+            } elseif (is_array($entry) && isset($entry['post_id'])) {
+                $postId = (int) $entry['post_id'];
+                $urutan = isset($entry['urutan']) ? (int) $entry['urutan'] : $i;
+            } else {
+                continue;
+            }
+
+            // Skip invalid post_id — tidak crash kalau admin input post_id
+            // yang sudah dihapus.
+            if ($postId <= 0 || ! \App\Models\Post::where('id', $postId)->exists()) {
+                continue;
+            }
+
+            $sync[$postId] = ['urutan' => $urutan];
+        }
+
+        $product->posts()->sync($sync);
     }
 }

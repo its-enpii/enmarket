@@ -104,6 +104,25 @@ test.describe('Buyer flow — produk detail', () => {
     const bodyText = await page.locator('body').textContent({ timeout: 10_000 });
     expect(bodyText?.length ?? 0).toBeGreaterThan(0);
   });
+
+  test('detail produk aktif render tanpa crash walaupun linked_posts kosong', async ({ page }) => {
+    // Buka katalog publik → ambil slug produk pertama → buka detail.
+    // linked_posts optional: kalau backend tidak return field, page tetap aman.
+    await page.goto('/id/katalog', { waitUntil: 'domcontentloaded' });
+
+    const firstCard = page.locator('a[href*="/develop/"]').first();
+    const href = await firstCard.getAttribute('href', { timeout: 30_000 }).catch(() => null);
+    if (!href) {
+        test.skip(true, 'Tidak ada produk aktif di katalog.');
+        return;
+    }
+
+    await page.goto(href, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('h1').first()).toBeVisible({ timeout: 60_000 });
+    // Page tidak crash — body text ada.
+    const bodyText = await page.locator('body').textContent({ timeout: 10_000 });
+    expect(bodyText?.length ?? 0).toBeGreaterThan(0);
+  });
 });
 
 test.describe('Buyer flow — i18n locale', () => {

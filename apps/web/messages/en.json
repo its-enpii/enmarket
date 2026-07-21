@@ -212,6 +212,10 @@
     "relatedFallback": "A work from enpii studio.",
     "galleryOpen": "View {name} full size",
     "galleryOpenNumber": "View image {number} full size",
+    "linkedPostsEyebrow": "✎ Before You Buy",
+    "linkedPostsTitle": "Related Guides & Notes.",
+    "linkedPostsHint": "Worth reading first — saves you from nasty surprises.",
+    "linkedPostsRead": "Read note",
     "galleryDialog": "Image preview",
     "galleryFrame": "{name} — image {number}",
     "galleryClose": "Close",
@@ -798,6 +802,7 @@
         "typeDownload": "Download — file only",
         "typeLicense": "License — key only",
         "typeBundle": "Bundle — file + key",
+        "typeAccountManual": "Manual Account — admin activation",
         "fieldStatus": "Status",
         "statusPlaceholder": "Pick a status…",
         "statusDraft": "Draft — not on sale",
@@ -817,7 +822,17 @@
         "removeFile": "Remove attached file on save",
         "submitCreate": "Create Product",
         "submitSave": "Save Changes",
-        "submitPending": "Saving…"
+        "submitPending": "Saving…",
+        "sectionLinkedPosts": "Related Notes",
+        "sectionLinkedPostsTitle": "Linked Posts (guides, warnings, notes)",
+        "sectionLinkedPostsHint": "Link blog posts so buyers can read guides before checkout. Only published posts are listed.",
+        "linkedEmpty": "No posts linked yet. Add from the list below.",
+        "linkedAddCta": "Add post",
+        "linkedAllAdded": "All posts already added.",
+        "linkedNoPostsAvailable": "No published posts yet. Create one in the Notes menu.",
+        "linkedMoveUp": "Move up",
+        "linkedMoveDown": "Move down",
+        "linkedRemove": "Remove {value}"
       }
     },
     "posts": {

@@ -34,8 +34,20 @@ export interface Product {
   is_featured: boolean;
   needs_license_key: boolean;
   has_downloadable_file: boolean;
+  /** Blog posts yang di-link dari produk ini (panduan, warning, catatan teknis). */
+  linked_posts?: LinkedPost[];
   created_at: string | null;
   updated_at: string | null;
+}
+
+/** Snapshot ringkas post yang di-link dari produk — buyer-facing. */
+export interface LinkedPost {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  thumbnail: string | null;
+  urutan: number;
 }
 
 export interface PaginationMeta {

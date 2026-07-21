@@ -209,6 +209,10 @@
     "relatedEyebrow": "✎ Lainnya dari studio",
     "relatedTitle": "Karya lainnya.",
     "relatedAll": "Lihat semua di Develop",
+    "linkedPostsEyebrow": "✎ Sebelum kamu beli",
+    "linkedPostsTitle": "Panduan & catatan terkait.",
+    "linkedPostsHint": "Baca dulu sebelum checkout — biar nggak ada yang kejatuh ketipu.",
+    "linkedPostsRead": "Baca catatan",
     "relatedFallback": "Karya dari studio enpii.",
     "galleryOpen": "Lihat {name} dalam ukuran penuh",
     "galleryOpenNumber": "Lihat gambar {number} dalam ukuran penuh",
@@ -798,6 +802,7 @@
         "typeDownload": "Download — hanya file",
         "typeLicense": "License — hanya key",
         "typeBundle": "Bundle — file + key",
+        "typeAccountManual": "Akun Manual — aktivasi admin",
         "fieldStatus": "Status",
         "statusPlaceholder": "Pilih status…",
         "statusDraft": "Draft — belum dijual",
@@ -817,7 +822,17 @@
         "removeFile": "Hapus file terlampir saat simpan",
         "submitCreate": "Buat Produk",
         "submitSave": "Simpan Perubahan",
-        "submitPending": "Menyimpan…"
+        "submitPending": "Menyimpan…",
+        "sectionLinkedPosts": "Catatan Terkait",
+        "sectionLinkedPostsTitle": "Linked Posts (panduan, warning, catatan)",
+        "sectionLinkedPostsHint": "Tautkan blog post supaya buyer bisa baca panduan sebelum checkout. Posts hanya yang sudah published.",
+        "linkedEmpty": "Belum ada post yang di-link. Tambahkan dari daftar di bawah.",
+        "linkedAddCta": "Tambah post",
+        "linkedAllAdded": "Semua post sudah ditambahkan.",
+        "linkedNoPostsAvailable": "Belum ada post published. Buat post dulu di menu Catatan.",
+        "linkedMoveUp": "Naikkan urutan",
+        "linkedMoveDown": "Turunkan urutan",
+        "linkedRemove": "Hapus {value}"
       }
     },
     "posts": {

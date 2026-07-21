@@ -6,7 +6,13 @@ import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { TIPE_LABEL, formatRupiah } from '@/lib/format';
-import type { Category, Product, SingleResponse } from '@/lib/types';
+import type {
+  Category,
+  LinkedPost,
+  PaginatedResponse,
+  Product,
+  SingleResponse,
+} from '@/lib/types';
 
 import { ProductForm } from '../ProductForm';
 
@@ -35,6 +41,21 @@ async function loadCategories() {
   }
 }
 
+async function loadAvailablePosts(): Promise<LinkedPost[]> {
+  try {
+    const res = await apiGet<PaginatedResponse<{
+      id: number;
+      slug: string;
+      title: string;
+      excerpt: string | null;
+      thumbnail: string | null;
+    }>>('/api/admin/posts', { status: 'published', per_page: 100 });
+    return res.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   void id;
@@ -47,9 +68,10 @@ export default async function EditProductPage({ params }: Props) {
   const { id } = await params;
   const productId = Number(id);
 
-  const [product, categories, t] = await Promise.all([
+  const [product, categories, availablePosts, t] = await Promise.all([
     loadProduct(id),
     loadCategories(),
+    loadAvailablePosts(),
     getTranslations('admin.products'),
   ]);
 
@@ -94,7 +116,7 @@ export default async function EditProductPage({ params }: Props) {
       </Card>
 
       <Card variant="surface" className="p-6 md:p-8">
-        <ProductForm categories={categories} initial={product} />
+        <ProductForm categories={categories} initial={product} availablePosts={availablePosts} />
       </Card>
 
       {/* Preview images — separate section, managed by client component */}

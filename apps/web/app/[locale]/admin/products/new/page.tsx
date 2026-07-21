@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
 import { apiGet } from '@/lib/api';
-import type { Category, SingleResponse } from '@/lib/types';
+import type { Category, LinkedPost, PaginatedResponse, SingleResponse } from '@/lib/types';
 
 import { ProductForm } from '../ProductForm';
 
@@ -21,9 +21,29 @@ async function loadCategories() {
   }
 }
 
+/**
+ * Daftar published posts yang tersedia untuk di-link ke produk.
+ * Filter ke published saja + sort by updated_at desc biar fresh post di atas.
+ */
+async function loadAvailablePosts(): Promise<LinkedPost[]> {
+  try {
+    const res = await apiGet<PaginatedResponse<{
+      id: number;
+      slug: string;
+      title: string;
+      excerpt: string | null;
+      thumbnail: string | null;
+    }>>('/api/admin/posts', { status: 'published', per_page: 100 });
+    return res.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export default async function NewProductPage() {
-  const [categories, t] = await Promise.all([
+  const [categories, availablePosts, t] = await Promise.all([
     loadCategories(),
+    loadAvailablePosts(),
     getTranslations('admin.products'),
   ]);
 
@@ -42,7 +62,7 @@ export default async function NewProductPage() {
       </header>
 
       <Card variant="surface" className="p-6 md:p-8">
-        <ProductForm categories={categories} />
+        <ProductForm categories={categories} availablePosts={availablePosts} />
       </Card>
     </div>
   );

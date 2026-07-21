@@ -17,13 +17,15 @@ import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
-import type { Category, Product } from '@/lib/types';
+import type { Category, LinkedPost, Product } from '@/lib/types';
 
 import { createProduct, updateProduct, ActionResult } from './actions';
 
 interface Props {
   categories: Category[];
   initial?: Product;
+  /** Post published yang tersedia untuk di-link — di-load server-side. */
+  availablePosts?: LinkedPost[];
 }
 
 /**
@@ -43,7 +45,7 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-export function ProductForm({ categories, initial }: Props) {
+export function ProductForm({ categories, initial, availablePosts = [] }: Props) {
   const router = useRouter();
   const t = useTranslations('admin.products.form');
   const tBtns = useTranslations('common.buttons');
@@ -61,6 +63,10 @@ export function ProductForm({ categories, initial }: Props) {
 
   const [fitur, setFitur] = useState<string[]>(initial?.fitur ?? []);
   const [newFitur, setNewFitur] = useState('');
+  // Linked posts — array of post_id yang dipilih admin. Urutan = index array.
+  const [linkedIds, setLinkedIds] = useState<number[]>(
+    (initial?.linked_posts ?? []).map((p) => p.id),
+  );
 
   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
     if (isEdit) return;
@@ -79,10 +85,35 @@ export function ProductForm({ categories, initial }: Props) {
     setFitur(fitur.filter((_, idx) => idx !== i));
   }
 
+  function toggleLinked(id: number) {
+    setLinkedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  }
+
+  function moveLinked(id: number, dir: -1 | 1) {
+    setLinkedIds((prev) => {
+      const idx = prev.indexOf(id);
+      const newIdx = idx + dir;
+      if (idx === -1 || newIdx < 0 || newIdx >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
+      return next;
+    });
+  }
+
+  function removeLinked(id: number) {
+    setLinkedIds((prev) => prev.filter((x) => x !== id));
+  }
+
   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
 
   // Serialize fitur as JSON for the hidden input
   const fiturJson = JSON.stringify(fitur);
+
+  // Hidden inputs: satu `<input name="linked_posts">` per post_id, urutan
+  // sesuai array (admin atur via tombol ↑↓). Empty array → sync detach semua.
+  const linkedById = new Map(availablePosts.map((p) => [p.id, p]));
 
   return (
     <form action={formAction} className="space-y-8">
@@ -159,6 +190,7 @@ export function ProductForm({ categories, initial }: Props) {
                 { value: 'download', label: t('typeDownload') },
                 { value: 'license', label: t('typeLicense') },
                 { value: 'bundle', label: t('typeBundle') },
+                { value: 'account_manual', label: t('typeAccountManual') },
               ]}
             />
           </FormField>
@@ -259,6 +291,109 @@ export function ProductForm({ categories, initial }: Props) {
             </div>
           </div>
         </FormField>
+      </section>
+
+      {/* ───── Linked Posts (panduan / warning / catatan) ───── */}
+      <section className="space-y-4">
+        <SectionHeader eyebrow={t('sectionLinkedPosts')} title={t('sectionLinkedPostsTitle')} />
+        <p className="text-xs text-ink/60 font-body">{t('sectionLinkedPostsHint')}</p>
+
+        {/* Hidden inputs untuk serialize linked_posts ke backend (array of post_id). */}
+        {linkedIds.map((id) => (
+          <input key={id} type="hidden" name="linked_posts" value={id} />
+        ))}
+
+        {/* Selected posts — dengan kontrol urutan ↑↓ dan tombol hapus. */}
+        {linkedIds.length > 0 ? (
+          <ul className="space-y-2">
+            {linkedIds.map((id, i) => {
+              const post = linkedById.get(id);
+              if (!post) return null;
+              return (
+                <li key={id}>
+                  <Card variant="surface" hoverable={false} className="flex items-center gap-2 px-3 py-2">
+                    <span className="text-primary font-bold w-6 text-center">{i + 1}.</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold truncate">{post.title}</p>
+                      <p className="text-[10px] text-ink/50 font-mono truncate">/{post.slug}</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="surface"
+                      size="sm"
+                      flat
+                      onClick={() => moveLinked(id, -1)}
+                      disabled={i === 0}
+                      srLabel={t('linkedMoveUp')}
+                    >
+                      ↑
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="surface"
+                      size="sm"
+                      flat
+                      onClick={() => moveLinked(id, 1)}
+                      disabled={i === linkedIds.length - 1}
+                      srLabel={t('linkedMoveDown')}
+                    >
+                      ↓
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="accent"
+                      size="sm"
+                      flat
+                      onClick={() => removeLinked(id)}
+                      srLabel={t('linkedRemove', { value: post.title })}
+                    >
+                      ×
+                    </Button>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="text-xs italic text-ink/50 font-body">{t('linkedEmpty')}</p>
+        )}
+
+        {/* Picker — daftar available published posts. */}
+        {availablePosts.length > 0 ? (
+          <details className="border-2 border-ink/20 bg-surface">
+            <summary className="cursor-pointer px-4 py-2 font-label text-label-sm uppercase font-bold text-ink hover:bg-accent/40">
+              {t('linkedAddCta')} ({availablePosts.length})
+            </summary>
+            <ul className="border-t-2 border-ink/20 divide-y-2 divide-ink/10 max-h-72 overflow-y-auto">
+              {availablePosts
+                .filter((p) => !linkedIds.includes(p.id))
+                .map((p) => (
+                  <li key={p.id}>
+                    <button
+                      type="button"
+                      onClick={() => toggleLinked(p.id)}
+                      className="w-full text-left px-4 py-2 hover:bg-accent/30 flex items-center gap-3"
+                    >
+                      <span className="inline-flex items-center justify-center w-6 h-6 border-2 border-ink text-xs font-bold">
+                        +
+                      </span>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-bold truncate">{p.title}</span>
+                        <span className="block text-[10px] text-ink/50 font-mono truncate">/{p.slug}</span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              {availablePosts.filter((p) => !linkedIds.includes(p.id)).length === 0 && (
+                <li className="px-4 py-2 text-xs italic text-ink/50 font-body">
+                  {t('linkedAllAdded')}
+                </li>
+              )}
+            </ul>
+          </details>
+        ) : (
+          <p className="text-xs italic text-ink/50 font-body">{t('linkedNoPostsAvailable')}</p>
+        )}
       </section>
 
       {/* ───── File produk ───── */}

@@ -92,7 +92,14 @@ class ProductController extends Controller
     public function show(string $slug): JsonResponse
     {
         $product = Product::active()
-            ->with('category:id,nama,slug')
+            ->with([
+                'category:id,nama,slug',
+                // Hanya post published yang relevan untuk publik — filter di
+                // nested whereHas via scopePublished() lewat relasi posts().
+                'posts' => fn ($q) => $q->where('status', 'published')
+                    ->whereNotNull('published_at')
+                    ->where('published_at', '<=', now()),
+            ])
             ->where('slug', $slug)
             ->firstOrFail();
 

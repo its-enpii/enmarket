@@ -44,6 +44,18 @@ class ProductResource extends JsonResource
             }),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
+            // Blog posts yang di-link dari produk ini (panduan, warning, catatan).
+            // Hanya expose data minimal yang aman untuk publik: id, slug, title,
+            // excerpt, urutan tampil. Konten penuh (`content`) TIDAK di-expose —
+            // buyer klik ke `/display/{slug}` untuk baca full.
+            'linked_posts' => $this->whenLoaded('posts', fn () => $this->posts->map(fn ($p) => [
+                'id' => $p->id,
+                'slug' => $p->slug,
+                'title' => $p->title,
+                'excerpt' => $p->excerpt,
+                'thumbnail' => $p->thumbnail,
+                'urutan' => (int) ($p->pivot->urutan ?? 0),
+            ])->all()),
         ];
     }
 }

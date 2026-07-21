@@ -392,7 +392,53 @@ export default async function WorkDetailPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ───── 6. RELATED WORKS ───── */}
+      {/* ───── 6. LINKED POSTS (panduan, warning, catatan admin) ───── */}
+      {product.linked_posts && product.linked_posts.length > 0 && (
+        <section className="border-b-4 border-ink bg-surface">
+          <div className="px-6 md:px-12 py-16 md:py-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+              <div>
+                <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+                  {t('linkedPostsEyebrow')}
+                </p>
+                <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
+                  {t('linkedPostsTitle')}
+                </h2>
+              </div>
+              <p className="font-body text-body-md text-ink/60 max-w-md">
+                {t('linkedPostsHint')}
+              </p>
+            </div>
+
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {product.linked_posts.map((p) => (
+                <li key={p.id}>
+                  <NLink
+                    href={`/display/${p.slug}`}
+                    variant="default"
+                    underline="hover"
+                    className="block border-4 border-ink bg-surface p-5 shadow-[5px_5px_0_0_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-ink)] transition-all h-full"
+                  >
+                    <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-2">
+                      → {t('linkedPostsRead')}
+                    </p>
+                    <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink leading-tight mb-2">
+                      {p.title}
+                    </h3>
+                    {p.excerpt && (
+                      <p className="font-body text-body-sm text-ink/70 line-clamp-3">
+                        {p.excerpt}
+                      </p>
+                    )}
+                  </NLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* ───── 7. RELATED WORKS ───── */}
       <RelatedWorks currentSlug={product.slug} categorySlug={kategori?.slug} />
 
       {/* Final CTA — re-invoke primary action */}

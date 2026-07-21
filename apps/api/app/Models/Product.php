@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -71,6 +72,19 @@ class Product extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Blog posts yang di-link dari produk ini (panduan, warning, catatan).
+     * Sort by `urutan` asc + `id` asc sebagai tie-breaker — admin atur urutan
+     * tampil di detail produk via pivot `urutan` column.
+     */
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'product_post')
+            ->withPivot('urutan')
+            ->orderBy('product_post.urutan')
+            ->orderBy('product_post.id');
     }
 
     /**
