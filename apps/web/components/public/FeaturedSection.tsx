@@ -44,7 +44,7 @@ export function FeaturedSection({ products }: Props) {
       <div className="flex flex-col gap-24">
         {data.map((item, i) => (
           <FeaturedRow
-            key={item.title}
+            key={item.href}
             item={item}
             flip={i % 2 === 1}
             viewLabel={tProduct('view')}

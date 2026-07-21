@@ -31,6 +31,7 @@ export async function JournalSection({ posts }: Props) {
       : '—',
     image: p.thumbnail ?? null,
     href: `/display/${p.slug}`,
+    slug: p.slug,
     category: t('journalCategory'),
   }));
 
@@ -46,7 +47,7 @@ export async function JournalSection({ posts }: Props) {
       <div className="flex flex-col gap-16">
         {data.map((entry, i) => (
           <JournalEntry
-            key={entry.title}
+            key={entry.slug}
             entry={entry}
             flip={i % 2 === 1}
             readMore={tPost('readMore')}
@@ -64,6 +65,7 @@ interface JournalItem {
   date: string;
   image: string | null;
   href: string;
+  slug: string;
   category: string;
 }
 
