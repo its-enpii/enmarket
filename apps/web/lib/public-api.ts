@@ -7,7 +7,13 @@
  * - Throw pada error agar Server Component bisa fallback ke notFound().
  */
 
-import type { Category, PaginatedResponse, Post, Product } from './types';
+import type {
+  Category,
+  PaginatedResponse,
+  Post,
+  Product,
+  PublicSiteConfig,
+} from './types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api:8000';
 const REVALIDATE_SECONDS = 3600;
@@ -130,6 +136,12 @@ export const publicApi = {
   /** Untuk sitemap: list slug semua post published. */
   postSlugs: () =>
     publicFetch<{ data: string[] }>('/api/public/posts/slugs'),
+
+  /** Public site config (identity + social + footer) — aman untuk storefront. */
+  siteConfig: () =>
+    publicFetch<{ data: PublicSiteConfig }>('/api/public/site-config', undefined, {
+      revalidate: REVALIDATE_SECONDS,
+    }),
 };
 
 export { PublicFetchError };

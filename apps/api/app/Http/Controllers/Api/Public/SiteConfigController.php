@@ -25,17 +25,24 @@ class SiteConfigController extends Controller
         $flat = SiteSetting::all()->keyBy('key');
         $raw = fn (string $key) => $flat[$key]->value ?? null;
 
+        // Social links: {label, url}[] dari JSON. Shape sama dengan admin
+        // endpoint — supaya frontend tinggal consume langsung tanpa mapping.
+        $socialRaw = $raw('social_links');
+        $socialLinks = $socialRaw ? json_decode($socialRaw, true) : [];
+        if (! is_array($socialLinks)) {
+            $socialLinks = [];
+        }
+        $socialLinks = array_values(array_filter(
+            $socialLinks,
+            fn ($l) => is_array($l) && ! empty($l['label']) && ! empty($l['url']),
+        ));
+
         return response()->json([
             'data' => [
                 'studio_name' => $raw('studio_name'),
                 'tagline' => $raw('tagline'),
                 'logo_url' => $raw('logo_url'),
-                'social' => [
-                    'instagram' => $raw('social_instagram'),
-                    'twitter' => $raw('social_twitter'),
-                    'arena' => $raw('social_arena'),
-                    'github' => $raw('social_github'),
-                ],
+                'social' => $socialLinks,
                 'footer' => [
                     'text' => $raw('footer_text'),
                 ],

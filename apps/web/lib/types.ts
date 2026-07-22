@@ -95,6 +95,15 @@ export interface SocialLink {
 
 export type SiteSocial = SocialLink[];
 
+/** Public site-config yang aman di-expose ke storefront. */
+export interface PublicSiteConfig {
+  studio_name: string | null;
+  tagline: string | null;
+  logo_url: string | null;
+  social: SiteSocial;
+  footer: SiteFooter;
+}
+
 export interface SiteFooter {
   text: string | null;
 }
