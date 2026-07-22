@@ -24,8 +24,10 @@ import {
   BUTTON_SIZE_CLS,
   BUTTON_VARIANT_CLS,
   DISABLED_RESET,
-  INTERACTIVE_BASE,
-  INTERACTIVE_BASE_SM,
+  LIFT_HOVER,
+  LIFT_PRESS,
+  LIFT_SM_HOVER,
+  LIFT_SM_PRESS,
   TRANSITION,
   type ButtonSize,
   type ButtonVariant,
@@ -59,6 +61,15 @@ type ButtonAsLink = CommonProps &
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
+/**
+ * Base interactive mechanics via raw CSS class (.neo-btn-* di globals.css)
+ * Mengatasi bug rendering Tailwind v4 logical `translate`.
+ */
+const BASE_INK = [BORDER, 'neo-btn', 'neo-btn-ink'].join(' ');
+const BASE_ACCENT = [BORDER, 'neo-btn', 'neo-btn-accent'].join(' ');
+const BASE_SM_INK = [BORDER, 'neo-btn', 'neo-btn-sm-ink'].join(' ');
+const BASE_SM_ACCENT = [BORDER, 'neo-btn', 'neo-btn-sm-accent'].join(' ');
+
 export function Button(props: ButtonProps) {
   const {
     variant = 'primary',
@@ -71,16 +82,15 @@ export function Button(props: ButtonProps) {
     ...rest
   } = props;
 
-  // Saat shadowColor override, replace var(--color-ink) di base interactive.
-  const baseShape = flat
-    ? 'font-bold hover:brightness-110 active:brightness-95'
-    : shadowColor === 'accent'
-      ? size === 'sm'
-        ? INTERACTIVE_BASE_SM.replace(/var\(--color-ink\)/g, 'var(--color-accent)')
-        : INTERACTIVE_BASE.replace(/var\(--color-ink\)/g, 'var(--color-accent)')
-      : size === 'sm'
-        ? INTERACTIVE_BASE_SM
-        : INTERACTIVE_BASE;
+  // Resolve base shape tanpa string manipulation (Tailwind JIT safe)
+  let baseShape = '';
+  if (flat) {
+    baseShape = 'font-bold hover:brightness-110 active:brightness-95';
+  } else if (shadowColor === 'accent') {
+    baseShape = size === 'sm' ? BASE_SM_ACCENT : BASE_ACCENT;
+  } else {
+    baseShape = size === 'sm' ? BASE_SM_INK : BASE_INK;
+  }
 
   // `ghost` adalah alias legacy admin untuk `surface`.
   const variantKey: ButtonVariant = variant === 'ghost' ? 'surface' : variant;
@@ -88,13 +98,13 @@ export function Button(props: ButtonProps) {
   const size_ = BUTTON_SIZE_CLS[size];
 
   const composed = [
+    'inline-flex items-center justify-center text-center',
     baseShape,
     fill,
     size_,
     'font-bold cursor-pointer',
     DISABLED_RESET,
     'disabled:opacity-50 disabled:cursor-not-allowed',
-    flat ? '' : 'transition-all',
     className,
   ].join(' ');
 
@@ -129,39 +139,26 @@ export function Button(props: ButtonProps) {
 }
 
 // ───── Legacy-friendly class re-exports ─────
-//
-// Caller lama (admin/ProductCard, dll.) yang langsung pakai class constants
-// tetap bisa via: `import { BUTTON_VARIANT_CLS } from '@/components/ui/neobrutal'`.
 
 /**
- * Class untuk button non-primitive (e.g. inline tag `<a>` di map) yang
- * harus match style button. Pakai INTERACTIVE_BASE_SM mechanic:
- * translate positif + shadow mengecil (press-down spec).
+ * Class untuk button non-primitive (e.g. inline tag `<a>` di map).
  */
 export const BUTTON_LINK_BASE_CLS = [
   'inline-flex items-center justify-center',
   BORDER,
   'font-bold',
-  'shadow-[3px_3px_0_0_var(--color-ink)]',
-  'hover:translate-x-[2px] hover:translate-y-[2px]',
-  'hover:shadow-[1px_1px_0_0_var(--color-ink)]',
-  'active:translate-x-[2px] active:translate-y-[2px]',
-  'active:shadow-[1px_1px_0_0_var(--color-ink)]',
-  TRANSITION,
+  'neo-btn',
+  'neo-btn-sm-ink',
   'cursor-pointer',
 ].join(' ');
 
-/** Size kecil untuk Button sebagai `<Link>` non-primitive. */
 export const BUTTON_LINK_SIZE_SM =
   'px-3 py-2.5 text-sm font-medium min-h-[40px]';
 
-/** Plain-class button tanpa interactive state — untuk tag `<label>`, dsb. */
 export const BUTTON_LABEL_CLS = [
   BORDER,
   'font-bold cursor-pointer',
-  'shadow-[3px_3px_0_0_var(--color-ink)]',
   'hover:bg-accent',
-  'hover:translate-x-[1px] hover:translate-y-[1px]',
-  'hover:shadow-[1px_1px_0_0_var(--color-ink)]',
-  TRANSITION,
+  'neo-btn',
+  'neo-btn-sm-ink',
 ].join(' ');

@@ -6,8 +6,7 @@ import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
-import { Button } from '@/components/ui/neobrutal';
-import { NLink } from '@/components/ui/neobrutal';
+import { Button, NLink } from '@/components/ui/neobrutal';
 
 interface Props {
   children?: ReactNode;

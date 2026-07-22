@@ -98,7 +98,24 @@
 }
 
 body {
-  background: var(--background);
+  /*
+   * Background berlapis: surface color base + dot grid 1px ink (NeoBrutalism
+   * "graph paper"). Radial-gradient 24px spacing — konsisten dengan gutter
+   * token. Opacity 0.08: subtle, tidak ganggu border/shadow sebagai elemen
+   * visual dominan.
+   *
+   * background-attachment: fixed → pattern stay di viewport saat scroll,
+   * tidak ikut translate dengan konten (menghindari "scrolling dot" yang
+   * motion-sick triggering). pointer-events pada children tidak terimbas
+   * karena pattern ada di paint layer, bukan interactive.
+   *
+   * ponytail: untuk dark mode (jika di-enable nanti), swap rgba(4,3,3,…)
+   * ke rgba(243,243,243,…) untuk kontras terbalik. Saat ini dark mode
+   * dimatikan — lihat media query di bawah.
+   */
+  background:
+    radial-gradient(circle, rgba(4, 3, 3, 0.08) 1px, transparent 1.5px) 0 0 / 24px 24px fixed,
+    var(--color-surface);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -124,20 +141,9 @@ body {
 /*
  * ───── Neobrutal utility classes ─────
  *
- * neobrutal-border        → 4px solid ink border (uniform untuk semua container)
- * neobrutal-shadow        → 6px6px hard shadow ink (default state)
- * neobrutal-shadow-hover  → 10px10px hard shadow ink — bayangan MENETAP di
- *                            tempat saat button diangkat. Element TIDAK ikut
- *                            translate; hanya offset shadow yang bertambah,
- *                            sehingga kelihatan button "lifted" dari shadow.
- * neobrutal-shadow-press  → 2px2px hard shadow ink — bayangan MEMPERKECIL
- *                            saat button ditekan. Element translate ke arah
- *                            shadow (ke bawah-kanan) sehingga kelihatan
- *                            "masuk" ke shadow.
- *
- * CATATAN INTERAKSI:
- * Pakai `.neobrutal-button` (atau manual compose) untuk hover/active mekanik
- * yang benar: hanya translate + animate box-shadow, TIDAK keduanya sekaligus.
+ * Menggunakan raw CSS untuk interaktivitas tombol guna memastikan animasi
+ * berjalan mulus tanpa bug rendering (ghost line abu-abu / translation gagal)
+ * yang sering terjadi dengan Tailwind v4 logical `translate` property.
  */
 .neobrutal-border {
   border: var(--border-width-neobrutal) solid var(--color-ink);
@@ -147,22 +153,63 @@ body {
   box-shadow: var(--shadow-offset-neobrutal) var(--shadow-offset-neobrutal) 0 0 var(--color-ink);
 }
 
-.neobrutal-shadow-press {
+/* Base button mechanics */
+.neo-btn {
+  transform: translate(0px, 0px);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+/* Ink Shadow variants */
+.neo-btn-ink {
+  box-shadow: 6px 6px 0 0 var(--color-ink);
+}
+.neo-btn-ink:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+.neo-btn-ink:active:not(:disabled) {
+  transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 0 var(--color-ink);
 }
 
-.neobrutal-shadow-hover {
-  box-shadow: 10px 10px 0 0 var(--color-ink);
+/* Accent Shadow variants */
+.neo-btn-accent {
+  box-shadow: 6px 6px 0 0 var(--color-accent);
+}
+.neo-btn-accent:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--color-accent);
+}
+.neo-btn-accent:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--color-accent);
 }
 
-/*
- * Interaksi neobrutal — utility-only (no component primitive).
- *
- * Pola translate(-2px) + box-shadow membesar sudah dipakai di 22 file
- * existing (admin/UI/products) — Konsistensi > presisi. Untuk button
- * dengan mekanik "physical press" yang lebih akurat (shadow stays anchored),
- * pakai wrapper <div> + child terpisah, atau render via component primitive.
- */
+/* Compact variants (sm) */
+.neo-btn-sm-ink {
+  box-shadow: 3px 3px 0 0 var(--color-ink);
+}
+.neo-btn-sm-ink:hover:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 var(--color-ink);
+}
+.neo-btn-sm-ink:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 var(--color-ink);
+}
+
+.neo-btn-sm-accent {
+  box-shadow: 3px 3px 0 0 var(--color-accent);
+}
+.neo-btn-sm-accent:hover:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 var(--color-accent);
+}
+.neo-btn-sm-accent:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 var(--color-accent);
+}
 
 /*
  * Font-family utilities — bind ke CSS variables yang di-set oleh next/font
@@ -212,12 +259,16 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 14px;
+  height: 14px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-surface);
+  /* Border tipis ink di sisi dalam track — kasih frame samar supaya area
+     scroll tidak terasa "kosong" / blend dengan konten di atasnya. */
+  border-left: 1px solid rgba(4, 3, 3, 0.08);
+  border-top: 1px solid rgba(4, 3, 3, 0.08);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -236,11 +287,12 @@ body {
 /* Horizontal-only variant untuk container yang scroll horizontal (table orders,
    code block). Track di bawah, bukan di samping. */
 ::-webkit-scrollbar:horizontal {
-  height: 8px;
+  height: 14px;
 }
 
 ::-webkit-scrollbar-track:horizontal {
-  background: transparent;
+  background: var(--color-surface);
+  border-top: 1px solid rgba(4, 3, 3, 0.08);
 }
 
 /*

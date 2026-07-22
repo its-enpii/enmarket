@@ -55,16 +55,21 @@ export const SHADOW_SM_PRESS = 'shadow-[1px_1px_0_0_var(--color-ink)]';
 
 // ───── Press translate ─────
 
-/** Default press — 2px diagonal ke arah shadow (down-right). */
-export const LIFT_HOVER = 'hover:translate-x-[2px] hover:translate-y-[2px]';
-export const LIFT_PRESS = 'active:translate-x-[2px] active:translate-y-[2px]';
+/** Default press — 2px diagonal ke arah shadow (down-right). Pakai 0.5 (2px) Tailwind default */
+export const LIFT_HOVER = 'hover:translate-x-0.5 hover:translate-y-0.5';
+export const LIFT_PRESS = 'active:translate-x-0.5 active:translate-y-0.5';
 
-/** Compact press — 1px diagonal. Cocok untuk button kecil. */
+/** Compact press — 1px diagonal. Pakai arbitrary [1px]. */
 export const LIFT_SM_HOVER = 'hover:translate-x-[1px] hover:translate-y-[1px]';
 export const LIFT_SM_PRESS = 'active:translate-x-[1px] active:translate-y-[1px]';
 
 // ───── Transition ─────
-export const TRANSITION = 'transition-all';
+/**
+ * transition-all dengan transform-gpu untuk menghindari bug garis abu-abu
+ * (sub-pixel ghosting) di Chromium saat elemen ber-border tebal ditranslasi.
+ * Juga kita set will-change-transform.
+ */
+export const TRANSITION = 'transition-all will-change-transform';
 
 /** Disable lift saat button disabled — translate ditahan di posisi netral. */
 export const DISABLED_RESET =

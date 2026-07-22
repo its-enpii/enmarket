@@ -3,12 +3,13 @@
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { SectionContainer } from './SectionContainer';
 
 export function Hero() {
   const t = useTranslations('home');
   return (
-    <section className="min-h-[60vh] sm:min-h-[80vh] flex flex-col items-center justify-center text-center px-6 md:px-12 py-16 sm:py-24 border-b-4 border-ink">
-      <div className="w-full max-w-5xl">
+    <section className="min-h-[60vh] sm:min-h-[80vh] flex flex-col items-center justify-center text-center border-b-4 border-ink">
+      <SectionContainer py="xl">
         <h1 className="font-display text-4xl sm:text-6xl md:text-headline-xl text-primary leading-none mb-10 uppercase break-words">
           ENPIISTUDIO — <br />
           <span className="inline-block bg-ink text-accent px-6 py-2 transform -rotate-1">
@@ -32,7 +33,7 @@ export function Hero() {
             {t('heroCta')}
           </Button>
         </div>
-      </div>
+      </SectionContainer>
     </section>
   );
 }

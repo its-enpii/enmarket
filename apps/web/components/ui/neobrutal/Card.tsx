@@ -73,21 +73,16 @@ export function Card(props: CardProps) {
   const fill = CARD_VARIANT_CLS[variant];
   const borderCls = thick ? BORDER_THICK : BORDER;
 
-  // Press-down mechanic saat hoverable: translate + shadow shrink together,
-  // match dengan Button primitive & PostCard Display. Element + shadow
-  // bergerak searah — visual: kartu "turun" ke shadow, lalu "masuk" ke
-  // shadow saat active.
-  const interactive = hoverable
-    ? `${LIFT_HOVER} ${LIFT_PRESS} hover:shadow-[2px_2px_0_0_var(--color-ink)] active:shadow-[2px_2px_0_0_var(--color-ink)]`
-    : '';
+  // Press-down mechanic saat hoverable: translate + shadow shrink together.
+  // Memakai class raw CSS dari globals.css untuk menjamin hardware acceleration
+  // dan menghindari bug ghosting Tailwind v4 translate property.
+  const interactive = hoverable ? 'neo-btn neo-btn-ink' : 'shadow-[6px_6px_0_0_var(--color-ink)]';
 
   const composed = [
     'block',
     borderCls,
-    SHADOW_BASE,
     fill,
     interactive,
-    'transition-all',
     className,
   ].join(' ');
 
