@@ -41,6 +41,8 @@ Route::prefix('public')->group(function () {
     // Catalog publik
     Route::get('products/featured', [PublicProductController::class, 'featured']);
     Route::get('products/latest', [PublicProductController::class, 'latest']);
+    // HARUS sebelum products/{slug} — kalau tidak, 'homepage' ke-capture jadi slug.
+    Route::get('products/homepage', [PublicProductController::class, 'homepage']);
     Route::get('products', [PublicProductController::class, 'index']);
     Route::get('products/slugs', [PublicProductController::class, 'slugs']);
     Route::get('products/{slug}', [PublicProductController::class, 'show']);

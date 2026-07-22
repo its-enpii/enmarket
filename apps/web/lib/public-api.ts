@@ -62,6 +62,13 @@ export const publicApi = {
   latestProducts: () =>
     publicFetch<{ data: Product[] }>('/api/public/products/latest'),
 
+  /**
+   * Homepage: featured + latest digabung TANPA duplikat (server-side dedup).
+   * Single round-trip — ganti 2 call (featured + latest) di homepage.
+   */
+  homepageProducts: (perPage = 6) =>
+    publicFetch<{ data: Product[] }>('/api/public/products/homepage', { per_page: perPage }),
+
   /** Katalog publik dengan filter + pagination. */
   catalog: (params: {
     category?: string;

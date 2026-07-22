@@ -285,4 +285,89 @@ class PublicCatalogTest extends TestCase
             'status' => 'draft',
         ], $overrides));
     }
+
+    // ───── homepage (featured + latest merged, deduped) ─────
+
+    private function makeHomepageProduct(string $name, bool $featured, string $status = 'aktif'): Product
+    {
+        $p = new Product;
+        $p->nama = $name;
+        $p->slug = 'slug-'.uniqid();
+        $p->deskripsi = 'desc';
+        $p->harga = 10000;
+        $p->tipe = 'download';
+        $p->status = $status;
+        $p->is_featured = $featured;
+        $p->save();
+
+        return $p;
+    }
+
+    public function test_homepage_returns_featured_first_then_latest(): void
+    {
+        $featured = $this->makeHomepageProduct('Featured One', true);
+        $latest = $this->makeHomepageProduct('Latest Only', false);
+        $featuredThenLatest = $this->makeHomepageProduct('Also Featured', true);
+
+        $response = $this->getJson('/api/public/products/homepage');
+        $response->assertOk();
+
+        $data = $response->json('data');
+        $ids = array_column($data, 'id');
+
+        // Featured harus di depan.
+        $this->assertSame($featured->id, $ids[0]);
+        $this->assertSame($featuredThenLatest->id, $ids[1]);
+        // Lalu latest (yang bukan featured).
+        $this->assertSame($latest->id, $ids[2]);
+    }
+
+    public function test_homepage_dedupes_product_appearing_in_featured_and_latest(): void
+    {
+        // Produk featured saja — hanya muncul 1x meskipun eligible untuk 'latest'.
+        $featured = $this->makeHomepageProduct('Star Product', true);
+
+        $response = $this->getJson('/api/public/products/homepage');
+        $response->assertOk();
+
+        $data = $response->json('data');
+        $ids = array_column($data, 'id');
+
+        $this->assertSame(1, count(array_filter($ids, fn ($id) => $id === $featured->id)));
+        $this->assertSame($featured->id, $ids[0]);
+    }
+
+    public function test_homepage_excludes_draft_and_tidak_dijual(): void
+    {
+        $this->makeHomepageProduct('Active', false, 'aktif');
+        $this->makeHomepageProduct('Draft', false, 'draft');
+        $this->makeHomepageProduct('Not For Sale', true, 'tidak_dijual');
+
+        $response = $this->getJson('/api/public/products/homepage');
+        $response->assertOk();
+
+        $slugs = array_column($response->json('data'), 'slug');
+        $this->assertCount(1, $slugs); // cuma 'Active' yang lolos
+    }
+
+    public function test_homepage_clamps_per_page_to_max_12(): void
+    {
+        // 20 produk aktif → request per_page=20 → harus clamp ke 12.
+        for ($i = 0; $i < 20; $i++) {
+            $this->makeHomepageProduct("Product {$i}", $i % 3 === 0);
+        }
+
+        $response = $this->getJson('/api/public/products/homepage?per_page=20');
+        $response->assertOk();
+
+        $this->assertCount(12, $response->json('data'));
+    }
+
+    public function test_homepage_respects_per_page_lower_bound(): void
+    {
+        $response = $this->getJson('/api/public/products/homepage?per_page=0');
+        $response->assertOk();
+        // per_page=0 di-clamp ke min 1 — return max 1 produk (atau 0 kalau kosong).
+        $this->assertLessThanOrEqual(1, count($response->json('data')));
+    }
 }

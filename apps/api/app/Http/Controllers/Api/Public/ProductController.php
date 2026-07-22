@@ -46,6 +46,45 @@ class ProductController extends Controller
     }
 
     /**
+     * GET /api/public/products/homepage
+     * Halaman utama butuh featured + latest digabung TANPA duplikat.
+     * Single round-trip + server-side dedup.
+     *
+     * Strategi 2 query sederhana + merge di-collection (max 6+8 = 14 rows,
+     * keyBy('id') O(n)). Untuk data kecil, klaritas > micro-optimasi.
+     *
+     * Alternatif SQL UNION lebih cepat tapi rentan index collision di
+     * Eloquent. Untuk saat ini, simplicity wins.
+     */
+    public function homepage(Request $request): JsonResponse
+    {
+        $limit = min(max((int) $request->input('per_page', 6), 1), 12);
+
+        $featured = Product::active()
+            ->featured()
+            ->with('category:id,nama,slug')
+            ->latest('updated_at')
+            ->limit($limit) // upper bound — fill dari featured dulu
+            ->get();
+
+        // Ambil 'latest' yang BELUM ada di featured (keyBy → O(1) lookup).
+        $featuredIds = $featured->pluck('id')->all();
+        $latestExtra = Product::active()
+            ->whereNotIn('id', $featuredIds)
+            ->with('category:id,nama,slug')
+            ->latest('updated_at')
+            ->limit($limit) // ambil max $limit extra
+            ->get();
+
+        // featured di depan, latest di belakangnya — preserve featured-first sort.
+        $merged = $featured->concat($latestExtra)->take($limit);
+
+        return response()->json([
+            'data' => ProductResource::collection($merged),
+        ]);
+    }
+
+    /**
      * GET /api/public/products
      * Katalog publik: filter kategori (?category=slug) + search (?q=text) + pagination.
      */

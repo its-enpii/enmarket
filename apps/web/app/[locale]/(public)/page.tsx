@@ -5,7 +5,7 @@ import { FeaturedSection } from '@/components/public/FeaturedSection';
 import { JournalSection } from '@/components/public/JournalSection';
 import { Hero } from '@/components/public/Hero';
 import { PillarsSection } from '@/components/public/PillarsSection';
-import type { Post, Product } from '@/lib/types';
+import type { Post } from '@/lib/types';
 
 /*
  * Homepage — Neobrutalism enpiistudio.
@@ -63,24 +63,13 @@ async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
 }
 
 export default async function HomePage() {
-  const [featuredResp, latestResp, latestPostsResp] = await Promise.all([
-    safe(() => publicApi.featuredProducts(), { data: [] }),
-    safe(() => publicApi.latestProducts(), { data: [] }),
+  const [homepageResp, latestPostsResp] = await Promise.all([
+    safe(() => publicApi.homepageProducts(6), { data: [] }),
     safe(() => publicApi.latestPosts(2), { data: [] }),
   ]);
 
-  // FeaturedSection: gabungan featured + latest (fallback ke 4 placeholder).
-  // Dedupe by slug — produk yang muncul di featured + latest akan jadi 1 row.
-  // Penting: kalau tidak, React key collision (key={item.href} duplikat) →
-  // warning + potensi visual glitch.
-  const seen = new Set<string>();
-  const productsForFeatured: Product[] = [];
-  for (const p of [...(featuredResp.data ?? []), ...(latestResp.data ?? [])]) {
-    if (p.slug && !seen.has(p.slug)) {
-      seen.add(p.slug);
-      productsForFeatured.push(p);
-    }
-  }
+  // Server sudah dedup (featured-first ordering, max 6 row).
+  const productsForFeatured = homepageResp.data ?? [];
 
   const recentPosts: Post[] = latestPostsResp.data ?? [];
 
