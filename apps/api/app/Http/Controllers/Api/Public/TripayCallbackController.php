@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\PreorderReleaseQueue;
 use App\Services\Delivery\OrderDeliveryService;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Http\JsonResponse;
@@ -74,22 +75,45 @@ class TripayCallbackController extends Controller
 
         // Update sesuai transisi status
         $update = ['status' => $newStatus];
-        if ($newStatus === 'paid' && $order->status !== 'paid') {
-            $update['paid_at'] = now();
-            $order->update($update);
+        $now = now();
 
-            // Trigger delivery generation (idempotent via OrderDeliveryService)
-            try {
-                $rows = $this->deliveryService->generateForOrder($order);
-                $deliveries = collect($rows)->whereInstanceOf(\App\Models\OrderDelivery::class);
-                $provisionings = collect($rows)->whereInstanceOf(\App\Models\AccountProvisioning::class);
-                Log::info("Order {$order->kode_order} paid — {$deliveries->count()} deliveries, {$provisionings->count()} awaiting admin activation");
-            } catch (\Throwable $e) {
-                // Jangan fail callback kalau delivery gagal — bisa di-retry manual
-                Log::error("Order {$order->kode_order} paid but delivery failed", [
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
+        if ($newStatus === 'paid' && $order->status !== 'paid') {
+            // Pre-order branch: status ke `preorder_deposit_paid` (bukan `paid`).
+            // Delivery di-defer sampai admin trigger manual release. Enqueue di
+            // preorder_release_queue — release trigger pakai release_date.
+            if ($order->isPreorder()) {
+                $update['status'] = 'preorder_deposit_paid';
+                $update['paid_at'] = $now;
+                $update['preorder_deposit_paid_at'] = $now;
+                $order->update($update);
+
+                // Enqueue untuk release processing (admin manual via /admin/preorders/{kode}/release-now).
+                // firstOrCreate agar idempotent kalau Tripay retry callback yang sama.
+                PreorderReleaseQueue::firstOrCreate(
+                    ['order_id' => $order->id],
+                    [
+                        'release_date' => $order->preorder_release_date ?? $now->toDateString(),
+                    ],
+                );
+
+                Log::info("Pre-order deposit paid: order={$order->kode_order} (awaiting release on {$order->preorder_release_date?->toDateString()})");
+            } else {
+                $update['paid_at'] = $now;
+                $order->update($update);
+
+                // Trigger delivery generation (idempotent via OrderDeliveryService)
+                try {
+                    $rows = $this->deliveryService->generateForOrder($order);
+                    $deliveries = collect($rows)->whereInstanceOf(\App\Models\OrderDelivery::class);
+                    $provisionings = collect($rows)->whereInstanceOf(\App\Models\AccountProvisioning::class);
+                    Log::info("Order {$order->kode_order} paid — {$deliveries->count()} deliveries, {$provisionings->count()} awaiting admin activation");
+                } catch (\Throwable $e) {
+                    // Jangan fail callback kalau delivery gagal — bisa di-retry manual
+                    Log::error("Order {$order->kode_order} paid but delivery failed", [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                }
             }
         } else {
             $order->update($update);

@@ -20,6 +20,13 @@ class OrderResource extends JsonResource
             'total_harga' => (string) $this->total_harga,
             'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
             'status' => $this->status,
+            // Pre-order fields. Null untuk non-preorder orders.
+            'is_preorder' => $this->isPreorder(),
+            'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
+            'preorder_deposit_amount' => $this->isPreorder() ? (string) $this->preorder_deposit_amount : null,
+            'preorder_remaining_amount' => $this->isPreorder() ? (string) $this->preorder_remaining_amount : null,
+            'preorder_deposit_paid_at' => $this->isPreorder() ? $this->preorder_deposit_paid_at?->toIso8601String() : null,
+            'preorder_release_processed_at' => $this->isPreorder() ? $this->preorder_release_processed_at?->toIso8601String() : null,
             'tripay_reference' => $this->tripay_reference,
             'qr_string' => $isPublic ? null : $this->qr_string,
             'qr_url' => $this->qr_url,
@@ -30,7 +37,9 @@ class OrderResource extends JsonResource
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
         ];
 
-        // Untuk polling ringan — strip heavy fields dari view publik
+        // Untuk polling ringan — strip heavy fields dari view publik.
+        // Tetap expose flag pre-order + release_date karena UI butuh untuk
+        // countdown banner saat status=preorder_deposit_paid.
         if ($publicView === 'status') {
             return [
                 'kode_order' => $this->kode_order,
@@ -38,6 +47,8 @@ class OrderResource extends JsonResource
                 'paid_at' => $this->paid_at?->toIso8601String(),
                 'qr_expired_at' => $this->qr_expired_at?->toIso8601String(),
                 'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
+                'is_preorder' => $this->isPreorder(),
+                'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
                 'item_count' => $this->whenLoaded('items', fn () => $this->items->count()),
             ];
         }

@@ -32,6 +32,14 @@ export interface Product {
   fitur: string[];
   status: StatusProduct;
   is_featured: boolean;
+  // Pre-order fields. Null/undefined untuk produk non-pre-order.
+  // release_date/deposit_percent/deposit_amount/remaining_amount nullable
+  // ketika is_pre_order=false (lihat ProductResource).
+  is_pre_order: boolean;
+  release_date?: string | null;
+  deposit_percent?: number | null;
+  deposit_amount?: number | null;
+  remaining_amount?: number | null;
   needs_license_key: boolean;
   has_downloadable_file: boolean;
   /** Blog posts yang di-link dari produk ini (panduan, warning, catatan teknis). */
@@ -172,7 +180,7 @@ export interface Cart {
 
 // ───── Order ─────
 
-export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded';
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded' | 'preorder_deposit_paid';
 export type TipeOrder = 'download' | 'license' | 'bundle' | 'account_manual';
 
 export interface OrderDeliveryInfo {
@@ -216,6 +224,13 @@ export interface Order {
   total_harga: string;
   total_harga_formatted: string;
   status: OrderStatus;
+  // Pre-order fields — null/undefined untuk non-preorder orders.
+  is_preorder?: boolean;
+  preorder_release_date?: string | null;
+  preorder_deposit_amount?: string | null;
+  preorder_remaining_amount?: string | null;
+  preorder_deposit_paid_at?: string | null;
+  preorder_release_processed_at?: string | null;
   tripay_reference: string | null;
   qr_string: string | null;
   qr_url: string | null;
@@ -232,6 +247,8 @@ export interface OrderStatusSummary {
   paid_at: string | null;
   qr_expired_at: string | null;
   total_harga_formatted: string;
+  is_preorder?: boolean;
+  preorder_release_date?: string | null;
   item_count?: number;
 }
 
@@ -271,6 +288,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
   failed: 'Failed',
   expired: 'Expired',
   refunded: 'Refunded',
+  preorder_deposit_paid: 'DP Diterima',
 };
 
 /** Status label Indonesia untuk LicenseKey. */

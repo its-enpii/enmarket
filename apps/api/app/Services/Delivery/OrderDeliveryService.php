@@ -34,9 +34,11 @@ class OrderDeliveryService
      * Return array of created rows (OrderDelivery untuk license/download/bundle,
      * AccountProvisioning untuk account_manual).
      *
+     * @param  string  $eventType  Event notifikasi ke n8n. Default 'paid' (order paid biasa).
+     *                             'preorder_ready' untuk release pre-order (event berbeda).
      * @return array<int, mixed>
      */
-    public function generateForOrder(Order $order): array
+    public function generateForOrder(Order $order, string $eventType = 'paid'): array
     {
         $order->loadMissing('items.product', 'items.delivery', 'items.accountProvisioning');
 
@@ -66,9 +68,10 @@ class OrderDeliveryService
             $deliveries[] = $delivery;
         }
 
-        // Fire notifications hanya untuk delivery rows (skip account_manual — admin yang handle)
+        // Fire notifications hanya untuk delivery rows (skip account_manual — admin yang handle).
+        // Branch eventType: paid biasa vs preorder_ready (release manual dari antrian).
         if (! empty($deliveries)) {
-            $this->dispatchNotifications($order, $deliveries);
+            $this->dispatchNotifications($order, $deliveries, $eventType);
         }
 
         return $created;
@@ -76,12 +79,14 @@ class OrderDeliveryService
 
     /**
      * Kirim notifikasi saja (untuk admin resend). Delivery rows sudah ada.
+     * Pakai eventType 'paid' — case ini selalu resend untuk order paid biasa
+     * (admin resend tidak applicable untuk pre-order release flow).
      *
      * @param  array<int, OrderDelivery>  $deliveries
      */
     public function notifyOnly(Order $order, array $deliveries): void
     {
-        $this->dispatchNotifications($order, $deliveries);
+        $this->dispatchNotifications($order, $deliveries, 'paid');
     }
 
     /**
@@ -99,8 +104,8 @@ class OrderDeliveryService
             'wa_sent_at' => null,
         ])->save();
 
-        // Re-dispatch notifikasi email/WA untuk delivery ini saja
-        $this->dispatchNotifications($delivery->orderItem->order, [$delivery]);
+        // Re-dispatch notifikasi email/WA untuk delivery ini saja (event paid — resend context)
+        $this->dispatchNotifications($delivery->orderItem->order, [$delivery], 'paid');
 
         return $delivery;
     }
@@ -108,8 +113,14 @@ class OrderDeliveryService
     /**
      * @param  array<int, OrderDelivery>  $deliveries
      */
-    private function dispatchNotifications(Order $order, array $deliveries): void
+    private function dispatchNotifications(Order $order, array $deliveries, string $eventType = 'paid'): void
     {
+        if ($eventType === 'preorder_ready') {
+            $this->notifier->dispatchPreorderReady($order, $deliveries);
+
+            return;
+        }
+
         $this->notifier->dispatchOrderPaid($order, $deliveries);
     }
 

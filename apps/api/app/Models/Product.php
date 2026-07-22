@@ -28,6 +28,9 @@ class Product extends Model
         'fitur',
         'status',
         'is_featured',
+        'is_pre_order',
+        'release_date',
+        'preorder_deposit_percent',
     ];
 
     protected $casts = [
@@ -36,6 +39,9 @@ class Product extends Model
         'fitur' => 'array',
         'download_expiry_days' => 'integer',
         'is_featured' => 'boolean',
+        'is_pre_order' => 'boolean',
+        'release_date' => 'date',
+        'preorder_deposit_percent' => 'integer',
     ];
 
     /**
@@ -46,6 +52,24 @@ class Product extends Model
         static::saving(function (Product $product) {
             if (empty($product->slug)) {
                 $product->slug = static::generateUniqueSlug($product->nama, $product->id);
+            }
+
+            // Invariant pre-order: kalau is_pre_order=true, release_date & percent wajib.
+            // release_date harus hari ini atau setelahnya (tidak boleh di masa lalu).
+            // Validation rules di controller sudah handle ini untuk request HTTP;
+            // invariant di sini catch direct ORM usage (factory, seeder, tinker).
+            if ($product->is_pre_order) {
+                if (empty($product->release_date)) {
+                    throw new \InvalidArgumentException('release_date wajib diisi untuk produk pre-order.');
+                }
+                if ($product->release_date->lt(today()->startOfDay())) {
+                    throw new \InvalidArgumentException('release_date tidak boleh di masa lalu untuk produk pre-order.');
+                }
+                if ($product->preorder_deposit_percent === null
+                    || $product->preorder_deposit_percent < 1
+                    || $product->preorder_deposit_percent > 100) {
+                    throw new \InvalidArgumentException('preorder_deposit_percent harus 1-100 untuk produk pre-order.');
+                }
             }
         });
     }
@@ -155,5 +179,44 @@ class Product extends Model
     public function requiresManualActivation(): bool
     {
         return $this->tipe === 'account_manual';
+    }
+
+    /**
+     * Apakah produk dijual sebagai pre-order (DP dulu, fulfillment saat release)?
+     * Alias guard untuk (bool) $this->is_pre_order — readable di view + service.
+     */
+    public function isPreOrderable(): bool
+    {
+        return (bool) $this->is_pre_order;
+    }
+
+    /**
+     * Jumlah DP dalam rupiah (integer, hasil rounding agar Tripay amount integer).
+     * Return 0 untuk produk non-pre-order — caller harus branch via isPreOrderable().
+     */
+    public function depositAmount(): int
+    {
+        if (! $this->isPreOrderable()) {
+            return 0;
+        }
+        $harga = (int) round((float) $this->harga);
+        $pct = (int) $this->preorder_deposit_percent;
+
+        return (int) round($harga * $pct / 100);
+    }
+
+    /**
+     * Sisa harga yang "tidak dibayar" DP. Display only — model saat ini
+     * buyer tidak bayar kedua kali (DP = harga penuh), jadi ini untuk
+     * transparansi di UI summary.
+     */
+    public function remainingAmount(): int
+    {
+        if (! $this->isPreOrderable()) {
+            return 0;
+        }
+        $harga = (int) round((float) $this->harga);
+
+        return $harga - $this->depositAmount();
     }
 }

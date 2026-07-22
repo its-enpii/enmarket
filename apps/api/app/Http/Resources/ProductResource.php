@@ -29,6 +29,14 @@ class ProductResource extends JsonResource
             'fitur' => $this->fitur ?? [],
             'status' => $this->status,
             'is_featured' => (bool) $this->is_featured,
+            // Pre-order fields. Untuk non-preorder products, release_date/deposit_percent
+            // null, deposit_amount/remaining_amount null (whenLoaded-style suppression
+            // untuk hemat bandwidth — frontend branch via is_pre_order).
+            'is_pre_order' => $this->isPreOrderable(),
+            'release_date' => $this->isPreOrderable() ? $this->release_date?->toDateString() : null,
+            'deposit_percent' => $this->isPreOrderable() ? (int) $this->preorder_deposit_percent : null,
+            'deposit_amount' => $this->isPreOrderable() ? $this->depositAmount() : null,
+            'remaining_amount' => $this->isPreOrderable() ? $this->remainingAmount() : null,
             'needs_license_key' => $this->needsLicenseKey(),
             'has_downloadable_file' => $this->hasDownloadableFile(),
             'license_key_stats' => $this->whenLoaded('licenseKeys', function () {

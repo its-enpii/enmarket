@@ -13,17 +13,19 @@ use Illuminate\Support\Facades\Log;
 /**
  * Dispatch notifikasi ke n8n (email + WA).
  *
- * Dua event yang di-dispatch:
- *   - order.paid      → delivery file/license siap di-download
- *   - account.ready   → admin sudah aktivasi akun, kredensial siap di-deliver
+ * Tiga event yang di-dispatch:
+ *   - order.paid        → delivery file/license siap di-download (order paid biasa)
+ *   - account.ready     → admin sudah aktivasi akun, kredensial siap di-deliver
+ *   - preorder.ready    → release pre-order: license/file siap (different event untuk n8n template)
  *
  * Mode dev (N8N_WEBHOOK_KIRIM_PRODUK kosong): log only + auto-mark email_sent_at / wa_sent_at.
  * Mode prod: POST payload ke n8n webhook, n8n yang kirim email & WA.
  *
- * n8n payload contract (order.paid):
+ * n8n payload contract (order.paid / preorder.ready):
  * {
- *   "event": "order.paid",
- *   "order": { kode_order, nama_pembeli, email_pembeli, wa_pembeli, total_harga, status, paid_at },
+ *   "event": "order.paid" | "preorder.ready",
+ *   "order": { kode_order, nama_pembeli, email_pembeli, wa_pembeli, total_harga, status,
+ *              paid_at, release_date? },
  *   "deliveries": [
  *     { product: { nama, tipe }, download_url, download_token, token_expired_at,
  *       license_key (string|null) }
@@ -47,6 +49,24 @@ class NotificationDispatcher
     public function dispatchOrderPaid(Order $order, array $deliveries): void
     {
         $payload = $this->buildOrderPaidPayload($order, $deliveries);
+
+        $sent = $this->postToN8n($payload);
+
+        if ($sent) {
+            $this->markDeliveriesSent($deliveries);
+        }
+    }
+
+    /**
+     * Dispatch notifikasi "pre-order siap di-release" — di-trigger saat admin
+     * manual click Release Now. Payload mirip order.paid tapi event=`preorder.ready`
+     * supaya n8n bisa pakai template berbeda (announce-style, plus release_date context).
+     *
+     * @param  array<int, OrderDelivery>  $deliveries
+     */
+    public function dispatchPreorderReady(Order $order, array $deliveries): void
+    {
+        $payload = $this->buildPreorderReadyPayload($order, $deliveries);
 
         $sent = $this->postToN8n($payload);
 
@@ -167,6 +187,47 @@ class NotificationDispatcher
                 'total_harga' => (int) $order->total_harga,
                 'status' => $order->status,
                 'paid_at' => $order->paid_at?->toIso8601String(),
+            ],
+            'deliveries' => $items,
+            'channels' => ['email', 'wa'],
+        ];
+    }
+
+    /**
+     * Payload untuk event preorder.ready — struktur mirip order.paid tapi event berbeda
+     * (n8n template bisa announce "pre-order kamu sudah rilis!") plus release_date context.
+     *
+     * @param  array<int, OrderDelivery>  $deliveries
+     * @return array<string, mixed>
+     */
+    private function buildPreorderReadyPayload(Order $order, array $deliveries): array
+    {
+        $items = [];
+        foreach ($deliveries as $d) {
+            $item = $d->orderItem;
+            $items[] = [
+                'product' => [
+                    'nama' => $item->nama_produk,
+                    'tipe' => $item->tipe_produk,
+                ],
+                'download_url' => $d->download_url,
+                'download_token' => $d->download_token,
+                'token_expired_at' => $d->token_expired_at?->toIso8601String(),
+                'license_key' => $d->licenseKey?->key,
+            ];
+        }
+
+        return [
+            'event' => 'preorder.ready',
+            'order' => [
+                'kode_order' => $order->kode_order,
+                'nama_pembeli' => $order->nama_pembeli,
+                'email_pembeli' => $order->email_pembeli,
+                'wa_pembeli' => $order->wa_pembeli,
+                'total_harga' => (int) $order->total_harga,
+                'status' => $order->status,
+                'paid_at' => $order->paid_at?->toIso8601String(),
+                'release_date' => $order->preorder_release_date?->toDateString(),
             ],
             'deliveries' => $items,
             'channels' => ['email', 'wa'],

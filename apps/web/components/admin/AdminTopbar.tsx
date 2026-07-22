@@ -13,6 +13,7 @@ type TitleKey =
   | 'products'
   | 'categories'
   | 'orders'
+  | 'preorders'
   | 'posts'
   | 'licenseKeys'
   | 'media'
@@ -25,6 +26,7 @@ const PATH_KEYS: Record<string, TitleKey> = {
   '/admin/products': 'products',
   '/admin/categories': 'categories',
   '/admin/orders': 'orders',
+  '/admin/preorders': 'preorders',
   '/admin/posts': 'posts',
   '/admin/license-keys': 'licenseKeys',
   '/admin/media': 'media',
@@ -108,7 +110,7 @@ export function AdminTopbar() {
           size="sm"
           href="/"
           target="_blank"
-          className="hidden sm:inline-flex hover:bg-accent"
+          className="hidden sm:inline-flex items-center justify-center hover:bg-accent"
         >
           {tTopbar('viewSite')}
         </Button>

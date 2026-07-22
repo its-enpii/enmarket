@@ -20,6 +20,7 @@ import { slugify } from '@/lib/format';
 import type { Category, LinkedPost, Product } from '@/lib/types';
 
 import { createProduct, updateProduct, ActionResult } from './actions';
+import { DatePicker } from '@/components/ui/DatePicker';
 
 interface Props {
   categories: Category[];
@@ -222,6 +223,52 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
               min="1"
               max="365"
               defaultValue={initial?.download_expiry_days ?? 7}
+            />
+          </FormField>
+        </div>
+      </section>
+
+      {/* ───── Pre-Order ───── */}
+      <section className="space-y-5">
+        <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
+        <FormField
+          label={t('fieldPreOrder')}
+          hint={t('fieldPreOrderHint')}
+          error={fieldErr('is_pre_order')}
+        >
+          <Checkbox
+            name="is_pre_order"
+            value="1"
+            defaultChecked={initial?.is_pre_order ?? false}
+            label={t('fieldPreOrderLabel')}
+          />
+        </FormField>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          <FormField
+            label={t('fieldReleaseDate')}
+            hint={t('fieldReleaseDateHint')}
+            error={fieldErr('release_date')}
+          >
+            <DatePicker
+              name="release_date"
+              defaultValue={initial?.release_date ?? ''}
+              placeholder={t('fieldReleaseDatePlaceholder')}
+            />
+          </FormField>
+
+          <FormField
+            label={t('fieldDepositPercent')}
+            hint={t('fieldDepositPercentHint')}
+            error={fieldErr('preorder_deposit_percent')}
+          >
+            <Input
+              name="preorder_deposit_percent"
+              type="number"
+              min={1}
+              max={100}
+              defaultValue={initial?.preorder_deposit_percent ?? 50}
+              className="font-mono"
             />
           </FormField>
         </div>

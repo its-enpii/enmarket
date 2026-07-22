@@ -95,7 +95,13 @@ export default async function KeranjangPage() {
           </div>
 
           <div className="lg:sticky lg:top-24 space-y-6">
-            <SummaryBlock subtotal={subtotal} discount={discount} total={total} itemCount={itemCount} />
+            <SummaryBlock
+              subtotal={subtotal}
+              discount={discount}
+              total={total}
+              itemCount={itemCount}
+              items={cart.items}
+            />
             <TrustNote />
           </div>
         </SectionContainer>

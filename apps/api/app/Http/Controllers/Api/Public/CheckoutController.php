@@ -71,27 +71,85 @@ class CheckoutController extends Controller
             ], 422);
         }
 
-        $total = (int) $items->sum(fn ($i) => $i->product->harga * $i->qty);
+        $fullTotal = (int) $items->sum(fn ($i) => $i->product->harga * $i->qty);
 
-        if ($total < 100) {
+        // Pre-order handling: cart policy all-or-nothing. Mixed cart → 422.
+        // Kalau semua item pre-orderable, amount yang di-charge ke Tripay = DP%
+        // (bukan harga penuh). Saat release admin trigger manual — see PreorderReleaseService.
+        $hasPreorder = $items->contains(fn ($i) => $i->product?->isPreOrderable());
+        $hasNonPreorder = $items->contains(fn ($i) => $i->product && ! $i->product->isPreOrderable());
+
+        if ($hasPreorder && $hasNonPreorder) {
             return response()->json([
-                'message' => 'Total belanja minimal Rp 100.',
-                'code' => 'amount_too_small',
+                'message' => 'Tidak boleh campur produk pre-order dengan produk biasa dalam satu pesanan.',
+                'code' => 'cart_mixed_preorder',
             ], 422);
+        }
+
+        if ($hasPreorder) {
+            // Hitung DP per item. release_date di-order = max(item.release_date).
+            $depositTotal = 0;
+            $remainingTotal = 0;
+            $maxReleaseDate = null;
+
+            foreach ($items as $item) {
+                $product = $item->product;
+                $lineFull = (int) $item->product->harga * $item->qty;
+                $lineDeposit = $product->depositAmount() * $item->qty;
+                $lineRemaining = $lineFull - $lineDeposit;
+
+                $depositTotal += $lineDeposit;
+                $remainingTotal += $lineRemaining;
+
+                // Track max release date untuk order (semua item share release date biasanya,
+                // tapi max aman kalau ada heterogeneity).
+                $productRelease = $product->release_date?->toDateString();
+                if ($productRelease && ($maxReleaseDate === null || $productRelease > $maxReleaseDate)) {
+                    $maxReleaseDate = $productRelease;
+                }
+            }
+
+            if ($depositTotal < 100) {
+                return response()->json([
+                    'message' => 'Total DP minimal Rp 100.',
+                    'code' => 'amount_too_small',
+                ], 422);
+            }
+
+            // Untuk Tripay: amount = DP. Items payload pakai harga item asli (informational,
+            // Tripay validasi total via signature). Admin/admin system aware via order.
+            $total = $depositTotal;
+            $preorderMeta = [
+                'is_preorder' => true,
+                'preorder_release_date' => $maxReleaseDate,
+                'preorder_deposit_amount' => $depositTotal,
+                'preorder_remaining_amount' => $remainingTotal,
+            ];
+        } else {
+            if ($fullTotal < 100) {
+                return response()->json([
+                    'message' => 'Total belanja minimal Rp 100.',
+                    'code' => 'amount_too_small',
+                ], 422);
+            }
+            $total = $fullTotal;
+            $preorderMeta = ['is_preorder' => false];
         }
 
         $kodeOrder = $this->generateKodeOrder();
 
         try {
-            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder) {
-                $order = Order::create([
+            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta) {
+                $orderData = [
                     'kode_order' => $kodeOrder,
                     'nama_pembeli' => $request->nama,
                     'email_pembeli' => $request->email,
                     'wa_pembeli' => $request->wa,
                     'total_harga' => $total,
                     'status' => 'pending',
-                ]);
+                ] + $preorderMeta;
+
+                $order = Order::create($orderData);
 
                 foreach ($items as $item) {
                     OrderItem::create([
@@ -106,6 +164,8 @@ class CheckoutController extends Controller
                 return $order;
             });
 
+            // Untuk Tripay items payload: pakai line full price sebagai informational.
+            // Tripay signature validasi amount total — yang kita set ke DP untuk pre-order.
             $tripayItems = $items->map(fn ($i) => [
                 'sku' => (string) $i->product_id,
                 'name' => $i->product->nama,

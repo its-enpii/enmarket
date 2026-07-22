@@ -78,13 +78,13 @@ export function PaymentPoller({
 
   // Polling — pause saat tab hidden (hemat baterai + bandwidth mobile).
   useEffect(() => {
-    if (status === 'paid') {
+    if (status === 'paid' || status === 'preorder_deposit_paid') {
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
       }
-      // Auto-redirect ke halaman sukses. Kasih jeda 1.2s biar banner
-      // "Payment received—redirecting…" terbaca dulu sebelum navigasi.
+      // Auto-redirect ke halaman sukses. Sama untuk `paid` (order paid biasa)
+      // dan `preorder_deposit_paid` (DP dibayar, fulfillment di-defer sampai release).
       const t = setTimeout(() => router.push(`/pesanan-sukses/${kodeOrder}`), 1200);
       return () => clearTimeout(t);
     }
@@ -108,7 +108,7 @@ export function PaymentPoller({
         if (data.status !== status) {
           setStatus(data.status);
         }
-        if (data.status === 'paid') {
+        if (data.status === 'paid' || data.status === 'preorder_deposit_paid') {
           router.push(`/pesanan-sukses/${kodeOrder}`);
         } else if (data.status === 'expired' || data.status === 'failed') {
           setStatus(data.status);
@@ -151,7 +151,7 @@ export function PaymentPoller({
       if (!res.ok) return;
       const json = (await res.json()) as { data: OrderStatusSummary };
       setStatus(json.data.status);
-      if (json.data.status === 'paid') {
+      if (json.data.status === 'paid' || json.data.status === 'preorder_deposit_paid') {
         router.push(`/pesanan-sukses/${kodeOrder}`);
       }
     } catch {

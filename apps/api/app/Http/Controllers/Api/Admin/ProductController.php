@@ -237,6 +237,12 @@ class ProductController extends Controller
             'fitur' => ['nullable'],
             'status' => ['required', 'in:aktif,draft,tidak_dijual'],
             'is_featured' => ['nullable', 'boolean'],
+            // Pre-order fields. Uncontrolled checkbox submit value="1" kalau dicentang,
+            // tidak ada field kalau tidak dicentang. `nullable + boolean` handle keduanya.
+            // `required_if:is_pre_order,1,1` (Laravel pakai boolean coerce dari '1' string).
+            'is_pre_order' => ['nullable', 'boolean'],
+            'release_date' => ['nullable', 'date', 'after_or_equal:today', 'required_if:is_pre_order,1'],
+            'preorder_deposit_percent' => ['nullable', 'integer', 'min:1', 'max:100', 'required_if:is_pre_order,1'],
             'file' => [
                 'nullable',
                 'file',
@@ -249,6 +255,11 @@ class ProductController extends Controller
             'linked_posts' => ['nullable'],
         ], [
             'file.required_if' => 'File produk wajib di-upload untuk tipe download atau bundle.',
+            'release_date.required_if' => 'Tanggal rilis wajib diisi untuk produk pre-order.',
+            'preorder_deposit_percent.required_if' => 'Persentase DP wajib diisi untuk produk pre-order.',
+            'release_date.after_or_equal' => 'Tanggal rilis tidak boleh di masa lalu.',
+            'preorder_deposit_percent.min' => 'Persentase DP minimal 1%.',
+            'preorder_deposit_percent.max' => 'Persentase DP maksimal 100%.',
         ]);
     }
 

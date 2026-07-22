@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\MaintenanceController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\OrderResendController;
 use App\Http\Controllers\Api\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Api\Admin\PreorderController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\Admin\SettingsController;
@@ -148,6 +149,16 @@ Route::prefix('admin')->group(function () {
         Route::get('account-provisionings/{id}', [AccountProvisioningController::class, 'show'])
             ->whereNumber('id');
         Route::get('account-provisionings', [AccountProvisioningController::class, 'index']);
+
+        // Pre-order release queue (manual release trigger by admin).
+        // Pakai {order} sebagai kode_order (string, format EPS-YYYYMMDD-XXXXX) supaya
+        // bisa release langsung dari URL `/admin/orders/{kodeOrder}` pattern.
+        // stats HARUS sebelum show route untuk konsistensi.
+        Route::get('preorders/stats', [PreorderController::class, 'stats']);
+        Route::post('preorders/{order}/release-now', [PreorderController::class, 'releaseNow']);
+        Route::post('preorders/{order}/update-release-date', [PreorderController::class, 'updateReleaseDate']);
+        Route::get('preorders/{order}', [PreorderController::class, 'show']);
+        Route::get('preorders', [PreorderController::class, 'index']);
 
         // Site settings (identity, social, footer, payment, channels)
         Route::get('settings', [SettingsController::class, 'index']);

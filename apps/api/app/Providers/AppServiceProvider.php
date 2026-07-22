@@ -72,6 +72,9 @@ class AppServiceProvider extends ServiceProvider
         // Bind OrderDeliveryService (orchestrator)
         $this->app->singleton(OrderDeliveryService::class);
 
+        // Bind PreorderReleaseService (orchestrator for manual preorder release trigger)
+        $this->app->singleton(\App\Services\Delivery\PreorderReleaseService::class);
+
         // Bind SiteSettings service (cached key/value accessor)
         $this->app->singleton(SiteSettings::class, fn () => new SiteSettings);
     }

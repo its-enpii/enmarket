@@ -121,6 +121,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
     });
   }
   if (product.is_featured) specs.push({ label: t('status'), value: t('studioPickLabel') });
+  if (product.is_pre_order && product.release_date) {
+    specs.push({ label: t('release'), value: t('releaseDateLong', { date: product.release_date }) });
+  }
 
   return (
     <>
@@ -176,6 +179,11 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   {t('studioPick')}
                 </Badge>
               )}
+              {product.is_pre_order && (
+                <Badge tone="primary" size="md" className="shadow-[2px_2px_0_0_var(--color-ink)]">
+                  {t('preorderBadge')}
+                </Badge>
+              )}
               <Badge tone="ink" size="md" shadow={false}>
                 {tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}
               </Badge>
@@ -198,21 +206,36 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </p>
             )}
 
-            {/* Price — small gold tag, NOT a big banner */}
-            <div className="flex items-baseline gap-3">
-              <Badge tone="accent" size="lg">
-                {formatRupiah(product.harga)}
-              </Badge>
-              {product.needs_license_key && (
-                <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
-                  {t('licenseIncluded')}
-                </span>
+            {/* Price — small gold tag. Untuk pre-order tampilkan DP + sisa. */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline gap-3">
+                <Badge tone="accent" size="lg">
+                  {product.is_pre_order && product.deposit_amount
+                    ? t('dpLabel', { percent: product.deposit_percent ?? 50 })
+                    : formatRupiah(product.harga)}
+                </Badge>
+                {product.needs_license_key && (
+                  <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
+                    {t('licenseIncluded')}
+                  </span>
+                )}
+              </div>
+              {product.is_pre_order && product.deposit_amount && (
+                <p className="font-label text-label-sm uppercase text-ink/70">
+                  {t('dpLabel', { percent: product.deposit_percent ?? 50 })}: <span className="font-bold">{formatRupiah(product.deposit_amount)}</span>
+                  {' · '}
+                  {t('remainingLabel')}: <span className="font-bold">{formatRupiah(product.remaining_amount ?? 0)}</span>
+                </p>
               )}
             </div>
 
             {/* CTA — understated bordered button */}
             <div className="pt-2">
-              <AddToCartControls productId={product.id} />
+              <AddToCartControls
+                productId={product.id}
+                isPreOrder={product.is_pre_order}
+                depositPercent={product.deposit_percent}
+              />
             </div>
           </div>
         </SectionContainer>

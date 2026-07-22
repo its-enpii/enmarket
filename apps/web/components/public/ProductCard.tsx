@@ -41,11 +41,18 @@ export async function ProductCard({ product }: Props) {
           </div>
         )}
 
-        {product.is_featured && (
-          <Badge tone="accent" size="sm" className="absolute top-2 left-2 font-bold">
-            {t('featured')}
-          </Badge>
-        )}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {product.is_featured && (
+            <Badge tone="accent" size="sm" className="font-bold">
+              {t('featured')}
+            </Badge>
+          )}
+          {product.is_pre_order && (
+            <Badge tone="primary" size="sm" className="font-bold">
+              {t('preorderBadge')}
+            </Badge>
+          )}
+        </div>
 
         <Badge tone="ink" size="sm" className="absolute top-2 right-2 font-bold">
           {t(`tipe.${product.tipe}`)}
