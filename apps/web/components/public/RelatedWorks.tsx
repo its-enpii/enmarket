@@ -13,6 +13,7 @@
 
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
+import { SectionContainer } from './SectionContainer';
 import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
@@ -51,7 +52,7 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
 
   return (
     <section className="border-t-4 border-ink bg-surface">
-      <div className="px-6 md:px-12 py-16 md:py-20">
+      <SectionContainer py="lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
@@ -81,7 +82,7 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
             />
           ))}
         </div>
-      </div>
+      </SectionContainer>
     </section>
   );
 }

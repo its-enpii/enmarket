@@ -78,8 +78,7 @@
       "orders": "Track Order",
       "admin": "Admin"
     },
-    "copyright": "© {year} enpiistudio. Every work here is made on purpose.",
-    "poweredBy": "Built with Next.js"
+    "copyright": "© {year} enpiistudio. Every work here is made on purpose."
   },
   "cart": {
     "badge": {
@@ -104,10 +103,12 @@
     "featuredTitle": "Featured Developments",
     "featuredSubtitle": "The latest picks from Develop—finished and ready to use.",
     "featuredFallback": "A digital artifact from enpii studio, ready to use and build upon.",
+    "featuredEmpty": "No featured works yet. Check back soon.",
     "viewAllDevelop": "View All Develop →",
     "journalTitle": "Latest / Display",
     "journalSubtitle": "Brief notes from the workbench.",
     "journalCategory": "Journal",
+    "journalEmpty": "No new notes yet.",
     "viewAllJournal": "View All Notes →"
   },
   "discover": {
@@ -233,6 +234,7 @@
   "displayList": {
     "title": "Display",
     "subtitle": "Brief notes from the workbench.",
+    "empty": "No notes yet.",
     "subtitleLong": "Notes from the studio — process, thoughts, and things in progress. Not release notes. Not a weekly newsletter. This is a working notebook that happens to be published.",
     "eyebrow": "✎ Display",
     "tagsLabel": "Tags →",

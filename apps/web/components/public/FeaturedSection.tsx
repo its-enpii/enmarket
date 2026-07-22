@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
+import { SectionContainer } from '@/components/public/SectionContainer';
 
 import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
@@ -16,6 +17,9 @@ interface Props {
  * Featured Developments — Neobrutalism enpiistudio.
  *
  * Translated via next-intl 'home' namespace.
+ *
+ * ponytail: kalau products kosong (mis. seed baru / API down), render
+ * empty state hint supaya section tidak lowong confusing di homepage.
  */
 export function FeaturedSection({ products }: Props) {
   const t = useTranslations('home');
@@ -31,26 +35,34 @@ export function FeaturedSection({ products }: Props) {
   }));
 
   return (
-    <section id="featured" className="py-24 px-6 md:px-12 border-b-4 border-ink">
-      <div className="flex justify-between items-end mb-16">
-        <h2 className="font-display text-headline-lg text-ink uppercase leading-none">
-          {t('featuredTitle')}
-        </h2>
-        <div className="hidden md:block font-label text-label-sm uppercase tracking-widest text-ink/70 pb-2">
-          {t('featuredSubtitle')}
+    <section id="featured" className="border-b-4 border-ink">
+      <SectionContainer py="xl">
+        <div className="flex justify-between items-end mb-16">
+          <h2 className="font-display text-headline-lg text-ink uppercase leading-none">
+            {t('featuredTitle')}
+          </h2>
+          <div className="hidden md:block font-label text-label-sm uppercase tracking-widest text-ink/70 pb-2">
+            {t('featuredSubtitle')}
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-col gap-24">
-        {data.map((item, i) => (
-          <FeaturedRow
-            key={item.href}
-            item={item}
-            flip={i % 2 === 1}
-            viewLabel={tProduct('view')}
-          />
-        ))}
-      </div>
+        {data.length === 0 ? (
+          <p className="font-body text-body-md text-ink/60 italic">
+            {t('featuredEmpty')}
+          </p>
+        ) : (
+          <div className="flex flex-col gap-24">
+            {data.map((item, i) => (
+              <FeaturedRow
+                key={item.href}
+                item={item}
+                flip={i % 2 === 1}
+                viewLabel={tProduct('view')}
+              />
+            ))}
+          </div>
+        )}
+      </SectionContainer>
     </section>
   );
 }

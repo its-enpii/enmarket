@@ -4,18 +4,19 @@
  * tags, reaction strip, related notes.
  */
 export default function DisplayDetailLoading() {
+  const SC = 'mx-auto max-w-screen-2xl px-6 md:px-12';
   return (
     <div className="animate-pulse">
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="bg-surface border-b-2 border-ink/20">
-        <div className="px-6 md:px-12 py-4">
+        <div className={`${SC} py-4`}>
           <div className="h-4 w-32 bg-ink/10" />
         </div>
       </div>
 
       {/* ───── 2. COVER ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-8 md:py-12">
+        <div className={`${SC} py-8 md:py-12`}>
           <div className="relative">
             <div className="bg-surface border-4 border-ink shadow-[12px_12px_0_0_var(--color-ink)] overflow-hidden -rotate-1">
               <div className="w-full aspect-[16/9] bg-primary/10" />
@@ -26,7 +27,7 @@ export default function DisplayDetailLoading() {
 
       {/* ───── 3. TITLE + BYLINE ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-12 md:py-16">
+        <div className={`${SC} py-12 md:py-16`}>
           <div className="h-3 w-24 bg-accent/40 mb-6" />
           <div className="space-y-3 max-w-5xl">
             <div className="h-16 w-full bg-ink/15" />
@@ -46,7 +47,7 @@ export default function DisplayDetailLoading() {
 
       {/* ───── 4. ARTICLE BODY ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-12 md:py-20">
+        <div className={`${SC} py-12 md:py-20`}>
           <div className="max-w-3xl mx-auto space-y-4">
             <div className="h-4 w-full bg-ink/10" />
             <div className="h-4 w-11/12 bg-ink/10" />
@@ -63,7 +64,7 @@ export default function DisplayDetailLoading() {
 
       {/* ───── 5. TAGS ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-8 md:py-10">
+        <div className={`${SC} py-8 md:py-10`}>
           <div className="max-w-3xl mx-auto">
             <div className="h-3 w-28 bg-ink/10 mb-4" />
             <div className="flex flex-wrap gap-2">
@@ -77,7 +78,7 @@ export default function DisplayDetailLoading() {
 
       {/* ───── 6. REACTION STRIP ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-10 md:py-12">
+        <div className={`${SC} py-10 md:py-12`}>
           <div className="max-w-3xl mx-auto">
             <div className="h-3 w-32 bg-ink/15 mb-4" />
             <div className="flex gap-3">
@@ -90,7 +91,7 @@ export default function DisplayDetailLoading() {
 
       {/* ───── 7. RELATED NOTES ───── */}
       <section className="border-t-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-12 md:py-16">
+        <div className={`${SC} py-12 md:py-16`}>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
               <div className="h-3 w-32 bg-accent/40 mb-3" />
@@ -118,7 +119,7 @@ export default function DisplayDetailLoading() {
 
       {/* Final CTA — bg-primary section */}
       <section className="bg-primary text-surface animate-pulse">
-        <div className="px-6 md:px-12 py-12 md:py-16 text-center">
+        <div className={`${SC} py-12 md:py-16 text-center`}>
           <div className="h-3 w-40 bg-accent/40 mx-auto mb-4" />
           <div className="space-y-3 mb-6 max-w-3xl mx-auto">
             <div className="h-10 w-3/4 mx-auto bg-surface/30" />

@@ -61,11 +61,19 @@ export function PillarsSection() {
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 border-b-4 border-ink">
-      {PILLARS.slice(0, 2).map((p) => (
+      {PILLARS.slice(0, 2).map((p, i) => (
         <Link
           key={p.href}
           href={p.href}
-          className="group block bg-surface border-b-4 md:border-b-0 md:border-r-4 last:border-r-0 border-ink p-12 md:p-20 transition-all hover:bg-accent"
+          className={[
+            'group block bg-surface border-b-4 md:border-b-0 border-ink py-12 md:py-20 transition-all hover:bg-accent',
+            // Cell pertama (Discover): padding kiri mepet viewport + border
+            // kanan vertikal tengah. Cell kedua (Develop): padding kanan mepet
+            // viewport, TANPA border tambahan.
+            i === 0
+              ? 'pl-6 md:pl-12 pr-12 md:pr-20 md:border-r-4'
+              : 'pl-12 md:pl-20 pr-0',
+          ].join(' ')}
         >
           <article className="flex flex-col gap-6">
             <div

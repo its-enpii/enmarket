@@ -23,6 +23,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import { RelatedWorks } from '@/components/public/RelatedWorks';
+import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
@@ -125,7 +126,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
     <>
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="relative z-0 bg-surface border-b-2 border-ink/20">
-        <div className="px-6 md:px-12 py-4">
+        <SectionContainer py="sm">
           <NLink
             href="/develop"
             variant="default"
@@ -139,12 +140,13 @@ export default async function WorkDetailPage({ params }: PageProps) {
               · {kategori.nama}
             </span>
           )}
-        </div>
+        </SectionContainer>
+      </div>
       </div>
 
       {/* ───── 2. HERO ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10 lg:gap-16 items-center">
+        <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10 lg:gap-16 items-center">
           {/* Image — large, thick border, hard shadow, slightly rotated */}
           <div className="relative">
             <div className="bg-surface border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
@@ -213,13 +215,13 @@ export default async function WorkDetailPage({ params }: PageProps) {
               <AddToCartControls productId={product.id} />
             </div>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 3. ABOUT (asymmetric 2-col) ───── */}
       {paragraphs.length > 0 && (
         <section className="border-b-4 border-ink">
-          <div className="px-6 md:px-12 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
+          <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
             {/* Pull-quote column — dominant */}
             <div>
               <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
@@ -304,13 +306,13 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </div>
             </div>
           </div>
-        </section>
+        </SectionContainer>
       )}
 
       {/* ───── 4. DETAILS (bordered checklist grid) ───── */}
       {specs.length > 0 && (
         <section className="border-b-4 border-ink bg-surface">
-          <div className="px-6 md:px-12 py-16 md:py-20">
+          <SectionContainer py="lg">
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
               {t('details')}
             </p>
@@ -362,13 +364,13 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </div>
             )}
           </div>
-        </section>
+        </SectionContainer>
       )}
 
       {/* ───── 5. GALLERY (irregular grid) ───── */}
       {product.preview_images && product.preview_images.length > 1 && (
         <section className="border-b-4 border-ink">
-          <div className="px-6 md:px-12 py-16 md:py-20">
+          <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
@@ -389,13 +391,13 @@ export default async function WorkDetailPage({ params }: PageProps) {
               title={product.nama}
             />
           </div>
-        </section>
+        </SectionContainer>
       )}
 
       {/* ───── 6. LINKED POSTS (panduan, warning, catatan admin) ───── */}
       {product.linked_posts && product.linked_posts.length > 0 && (
         <section className="border-b-4 border-ink bg-surface">
-          <div className="px-6 md:px-12 py-16 md:py-20">
+          <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
@@ -417,7 +419,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                     href={`/display/${p.slug}`}
                     variant="default"
                     underline="hover"
-                    className="block border-4 border-ink bg-surface p-5 shadow-[5px_5px_0_0_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_var(--color-ink)] transition-all h-full"
+                    className="block border-4 border-ink bg-surface p-5 neo-btn neo-btn-ink h-full"
                   >
                     <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-2">
                       → {t('linkedPostsRead')}
@@ -435,7 +437,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               ))}
             </ul>
           </div>
-        </section>
+        </SectionContainer>
       )}
 
       {/* ───── 7. RELATED WORKS ───── */}
@@ -443,7 +445,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
       {/* Final CTA — re-invoke primary action */}
       <section className="bg-primary text-surface">
-        <div className="px-6 md:px-12 py-16 md:py-20 text-center">
+        <SectionContainer py="lg" className="text-center">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
             {t('finalEyebrow', { name: product.nama })}
           </p>
@@ -461,7 +463,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               {t('backFinal')}
             </Button>
           </div>
-        </div>
+        </SectionContainer>
       </section>
     </>
   );

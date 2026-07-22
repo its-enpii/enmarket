@@ -9,6 +9,8 @@ import { Button, Card } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 
 import { SearchBar } from '@/components/public/SearchBar';
+import { PageHeader } from '@/components/public/PageHeader';
+import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { PaginatedResponse, Post } from '@/lib/types';
 
@@ -79,24 +81,15 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
   return (
     <>
       {/* HEADER */}
-      <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-20 md:py-28">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-            {t('eyebrow')}
-          </p>
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
-            {t('title')}
-            <span className="text-primary">.</span>
-          </h1>
-          <p className="mt-8 font-body text-body-lg italic text-ink/80 max-w-2xl border-l-4 border-accent pl-6">
-            {t('subtitleLong')}
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        subtitle={t('subtitleLong')}
+      />
 
       {/* TAG PILLS + SEARCH */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
               {t('tagsLabel')}
@@ -132,12 +125,12 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
               showIcon={false}
             />
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {featured && (
         <section className="border-b-4 border-ink bg-surface">
-          <div className="px-6 md:px-12 py-12 md:py-16">
+          <SectionContainer py="md">
             <FeaturedCover
               post={featured}
               readEntryLabel={tPost('readEntry')}
@@ -146,26 +139,28 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
               featuredLabel={t('featured')}
               tagLabels={tagLabels}
             />
-          </div>
+          </SectionContainer>
         </section>
       )}
 
       {!featured && rest.length === 0 ? (
-        <section className="px-6 md:px-12 py-24 text-center border-b-4 border-ink">
-          <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
-            {q
-              ? `${t('noResultsFor')} "${q}"`
-              : t('empty')}
-          </p>
-          <p className="font-body text-body-md text-ink/60 max-w-md mx-auto">
-            {q
-              ? t('hintNoResults')
-              : t('hintEmpty')}
-          </p>
+        <section className="border-b-4 border-ink">
+          <SectionContainer py="xl" className="text-center">
+            <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
+              {q
+                ? `${t('noResultsFor')} "${q}"`
+                : t('empty')}
+            </p>
+            <p className="font-body text-body-md text-ink/60 max-w-md mx-auto">
+              {q
+                ? t('hintNoResults')
+                : t('hintEmpty')}
+            </p>
+          </SectionContainer>
         </section>
       ) : rest.length > 0 ? (
         <section className="border-b-4 border-ink">
-          <div className="px-6 md:px-12 py-12 md:py-16">
+          <SectionContainer py="md">
             <div className="space-y-10">
               {rest.map((post, i) => (
                 <PostCardZine
@@ -179,13 +174,13 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
                 />
               ))}
             </div>
-          </div>
+          </SectionContainer>
         </section>
       ) : null}
 
       {/* FOOTER TEASER */}
       <section className="bg-primary text-surface">
-        <div className="px-6 md:px-12 py-16 md:py-20 text-center">
+        <SectionContainer py="lg" className="text-center">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
             {t('footerEyebrow')}
           </p>
@@ -208,7 +203,7 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
           >
             {t('footerCta')}
           </Button>
-        </div>
+        </SectionContainer>
       </section>
     </>
   );

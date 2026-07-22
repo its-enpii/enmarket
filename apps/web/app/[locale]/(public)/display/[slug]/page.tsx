@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
+import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { Post } from '@/lib/types';
 
@@ -117,7 +118,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
     <>
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="relative z-0 bg-surface border-b-2 border-ink/20">
-        <div className="px-6 md:px-12 py-4">
+        <SectionContainer py="sm">
           <NLink
             href="/display"
             variant="default"
@@ -126,13 +127,13 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           >
             {t('backToJournal')}
           </NLink>
-        </div>
+        </SectionContainer>
       </div>
 
       {/* ───── 2. COVER ───── */}
       {post.thumbnail && (
         <section className="border-b-4 border-ink bg-surface relative overflow-hidden">
-          <div className="px-6 md:px-12 py-8 md:py-12">
+          <SectionContainer py="md">
             <div className="relative">
               <div className="bg-surface border-4 border-ink shadow-[12px_12px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -149,7 +150,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 №
               </div>
             </div>
-          </div>
+          </SectionContainer>
         </section>
       )}
 
@@ -157,7 +158,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           tidak ada thumbnail. Tone konsisten dengan brief "raw studio feel". */}
       {!post.thumbnail && (
         <section className="border-b-4 border-ink bg-primary text-surface">
-          <div className="px-6 md:px-12 py-12 md:py-16">
+          <SectionContainer py="md">
             <div className="border-4 border-ink bg-primary shadow-[12px_12px_0_0_var(--color-accent)] p-10 md:p-16 -rotate-1 max-w-4xl">
               <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
                 {t('fallbackEyebrow')}
@@ -166,13 +167,13 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 {t('fallbackCover')}
               </p>
             </div>
-          </div>
+          </SectionContainer>
         </section>
       )}
 
       {/* ───── 3. TITLE + BYLINE ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-12 md:py-16">
+        <SectionContainer py="md">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
             ✎ Display
           </p>
@@ -206,12 +207,12 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               {t('studioNotes')}
             </span>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 4. ARTICLE BODY ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-12 md:py-20">
+        <SectionContainer py="lg">
           <div className="max-w-3xl mx-auto">
             <article className="prose-content">
               <PostContent content={post.content ?? ''} />
@@ -232,13 +233,13 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               <span>{t('end')}</span>
             </div>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* 5. TAGS — small bordered pills (per brief item 5) */}
       {tags.length > 0 && (
         <section className="border-b-4 border-ink bg-surface">
-          <div className="px-6 md:px-12 py-8 md:py-10">
+          <SectionContainer py="md">
             <div className="max-w-3xl mx-auto">
               <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-4">
                 {t('filedUnder')}
@@ -259,23 +260,23 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 ))}
               </div>
             </div>
-          </div>
+          </SectionContainer>
         </section>
       )}
 
       {/* 6. REACTION STRIP — "Was this helpful?" + chunky icon buttons (per brief item 7) */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-10 md:py-12">
+        <SectionContainer py="md">
           <div className="max-w-3xl mx-auto">
             <ReactionStrip postSlug={post.slug} />
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 5. RELATED NOTES ───── */}
       {related.length > 0 && (
         <section className="border-t-4 border-ink bg-surface">
-          <div className="px-6 md:px-12 py-12 md:py-16">
+          <SectionContainer py="md">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
               <div>
                 <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
@@ -305,13 +306,13 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 />
               ))}
             </div>
-          </div>
+          </SectionContainer>
         </section>
       )}
 
       {/* Final CTA — back to Display */}
       <section className="bg-primary text-surface">
-        <div className="px-6 md:px-12 py-12 md:py-16 text-center">
+        <SectionContainer py="md" className="text-center">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
             {t('finalEyebrow')}
           </p>
@@ -337,7 +338,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               {t('viewDevelop')}
             </Button>
           </div>
-        </div>
+        </SectionContainer>
       </section>
     </>
   );

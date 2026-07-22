@@ -7,6 +7,8 @@
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
+import { PageHeader } from '@/components/public/PageHeader';
+import { SectionContainer } from '@/components/public/SectionContainer';
 
 export async function generateMetadata({
   params,
@@ -70,24 +72,15 @@ export default async function DiscoverPage({
   return (
     <>
       {/* ───── 1. HERO ───── */}
-      <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-20 md:py-28">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-            {t('eyebrow')}
-          </p>
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
-            {t('title')}
-            <span className="text-primary">.</span>
-          </h1>
-          <p className="mt-8 font-body text-body-lg italic text-ink/80 max-w-2xl border-l-4 border-accent pl-6">
-            {t('subtitle')}
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        subtitle={t('subtitle')}
+      />
 
       {/* ───── 2. STORY ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
+        <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
           {/* Pull-quote — kolom kiri, dominant. Frasa studio identity (EN),
               dibungkus span dengan background color + hard shadow Neobrutalism. */}
           <blockquote className="font-display text-2xl sm:text-3xl md:text-5xl font-black uppercase leading-[1.05] tracking-tight text-ink break-words">
@@ -111,12 +104,12 @@ export default async function DiscoverPage({
               {t('signature')}
             </p>
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 3. PILLARS ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-16 md:py-20">
+        <SectionContainer py="lg">
           <div className="mb-12 max-w-2xl">
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
               {t('pillarsHeading')}
@@ -149,12 +142,12 @@ export default async function DiscoverPage({
               </article>
             ))}
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 4. VALUES ───── */}
       <section className="border-b-4 border-ink bg-ink text-surface">
-        <div className="px-6 md:px-12 py-14 md:py-16">
+        <SectionContainer py="md">
           <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8 mb-8">
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent shrink-0">
               {t('valuesHeading')}
@@ -179,12 +172,12 @@ export default async function DiscoverPage({
               </li>
             ))}
           </ul>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 5. CTA ───── */}
       <section className="bg-accent border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-24 md:py-32 text-center">
+        <SectionContainer py="xl" className="text-center">
           <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink mb-6">
             {t('ctaEyebrow')}
           </p>
@@ -216,7 +209,7 @@ export default async function DiscoverPage({
               {t('ctaViewJournal')}
             </NLink>
           </div>
-        </div>
+        </SectionContainer>
       </section>
     </>
   );

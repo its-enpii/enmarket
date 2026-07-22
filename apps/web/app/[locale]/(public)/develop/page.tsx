@@ -18,7 +18,9 @@
 import { getTranslations } from 'next-intl/server';
 
 import { DevelopGrid } from '@/components/public/DevelopGrid';
+import { PageHeader } from '@/components/public/PageHeader';
 import { SearchBar } from '@/components/public/SearchBar';
+import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { PaginatedResponse, Product } from '@/lib/types';
@@ -109,23 +111,15 @@ export default async function DevelopPage({ searchParams }: PageProps) {
   return (
     <>
       {/* ───── 1. HEADER ───── */}
-      <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-20 md:py-28">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
-            {t('eyebrow')}
-          </p>
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tight text-ink break-words">
-            Develop<span className="text-primary">.</span>
-          </h1>
-          <p className="mt-8 font-body text-body-lg italic text-ink/80 max-w-2xl border-l-4 border-accent pl-6">
-            {t('listSubtitle')}
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={t('eyebrow')}
+        title="Develop"
+        subtitle={t('listSubtitle')}
+      />
 
       {/* ───── 2. FILTER PILLS (left) + SEARCH (right) ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Filter pills */}
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
@@ -168,37 +162,48 @@ export default async function DevelopPage({ searchParams }: PageProps) {
               showIcon={false}
             />
           </div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* ───── 3. ASYMMETRIC GRID + INFINITE SCROLL ───── */}
       {products.length === 0 ? (
-        <section className="px-6 md:px-12 py-24 text-center border-b-4 border-ink">
-          <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
-            {q ? t('noResults', { query: q }) : t('empty')}
-          </p>
-          <p className="font-body text-body-md text-ink/60 max-w-md mx-auto mb-8">
-            {q ? t('noResultsHint') : t('emptyHint')}
-          </p>
-          <Button href="/develop" variant="primary" size="md">
-            {q ? t('resetSearch') : t('viewAll')}
-          </Button>
+        <section className="border-b-4 border-ink">
+          <SectionContainer py="xl" className="text-center">
+            <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
+              {q ? t('noResults', { query: q }) : t('empty')}
+            </p>
+            <p className="font-body text-body-md text-ink/60 max-w-md mx-auto mb-8">
+              {q ? t('noResultsHint') : t('emptyHint')}
+            </p>
+            {/*
+              Tombol "View All" mengarah ke '/' (homepage) saat katalog kosong,
+              supaya tidak mengarah ke dirinya sendiri. Saat ada query (noResults),
+              tombol "Reset Search" mengarah ke /develop untuk hapus query string.
+             */}
+            <Button
+              href={q ? '/develop' : '/'}
+              variant="primary"
+              size="md"
+            >
+              {q ? t('resetSearch') : t('viewAll')}
+            </Button>
+          </SectionContainer>
         </section>
       ) : (
         <section className="border-b-4 border-ink">
-          <div className="px-6 md:px-12 py-12 md:py-16">
+          <SectionContainer py="md">
             <DevelopGrid
               initialProducts={products}
               initialMeta={meta}
               filterKey={filterKey}
             />
-          </div>
+          </SectionContainer>
         </section>
       )}
 
       {/* ───── 4. FOOTER TEASER ───── */}
       <section className="bg-primary text-surface">
-        <div className="px-6 md:px-12 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <SectionContainer py="lg" className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
             <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
               {t('footerEyebrow')}
@@ -216,7 +221,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
           >
             {t('footerCta')}
           </NLink>
-        </div>
+        </SectionContainer>
       </section>
     </>
   );

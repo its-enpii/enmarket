@@ -1,20 +1,43 @@
 /**
  * Footer — Neobrutalism enpiistudio.
  *
- * Server component; ambil strings via getTranslations.
+ * Server component; ambil strings via getTranslations + dynamic social links
+ * dari /api/public/site-config. Order paid order_id saat admin update
+ * social di /admin/settings akan ter-reflect di sini otomatis (revalidate
+ * ditrack via webhook / settings update path).
+ *
+ * ponytail: kalau storefront butuh logo dinamis, render `<img>` dari
+ * config.logo_url di sini menggantikan teks "ENPII STUDIO" — saat ini
+ * hardcoded brand wordmark dipertahankan untuk konsistensi tipografi.
  */
 
 import { getTranslations } from 'next-intl/server';
 
-import { Card, NLink } from '@/components/ui/neobrutal';
+import { Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
+import { publicApi } from '@/lib/public-api';
 
 export async function Footer() {
   const t = await getTranslations('footer');
   const tNav = await getTranslations('nav');
   const tCommon = await getTranslations('common.site');
+
+  // Ambil config publik (identity + social + footer). Empty fallback aman
+  // kalau endpoint unavailable — footer tetap render dengan section kosong.
+  let tagline: string | null = null;
+  let footerText: string | null = null;
+  let socialLinks: Array<{ label: string; url: string }> = [];
+  try {
+    const res = await publicApi.siteConfig();
+    tagline = res.data.tagline;
+    footerText = res.data.footer.text;
+    socialLinks = res.data.social;
+  } catch {
+    // Network/down: footer tetap jalan dengan hardcoded fallback.
+  }
+
   return (
     <footer className="bg-ink text-surface">
-      <div className="px-6 md:px-12 py-12 md:py-24">
+      <div className="mx-auto max-w-screen-2xl px-6 md:px-12 py-12 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
           {/* Left col: brand */}
           <div className="flex flex-col gap-8">
@@ -23,9 +46,15 @@ export async function Footer() {
               <br />
               STUDIO
             </h3>
-            <p className="font-body text-body-lg text-surface/80 max-w-md">
-              {tCommon('description')}
-            </p>
+            {tagline ? (
+              <p className="font-body text-body-lg text-surface/80 max-w-md">
+                {tagline}
+              </p>
+            ) : (
+              <p className="font-body text-body-lg text-surface/80 max-w-md">
+                {tCommon('description')}
+              </p>
+            )}
 
             {/* Color swatches — brand indicator */}
             <div className="flex gap-6">
@@ -73,22 +102,30 @@ export async function Footer() {
             </Card>
 
             <div className="grid grid-cols-2 gap-8">
+              {/* Social — fully dynamic, dari admin settings.
+                  Pakai <a> native (bukan NLink) supaya tidak ke-wrap locale prefix
+                  dan tidak di-prefetch — sesuai pattern Button external. */}
               <div className="flex flex-col gap-4">
                 <h4 className="font-label text-label-sm font-black uppercase mb-2">
                   {t('connectTitle')}
                 </h4>
-                <NLink href="#" variant="on-dark" underline="none">
-                  {t('links.contact')}
-                </NLink>
-                <NLink href="#" variant="on-dark" underline="none">
-                  {t('links.instagram')}
-                </NLink>
-                <NLink href="#" variant="on-dark" underline="none">
-                  {t('links.arena')}
-                </NLink>
-                <NLink href="#" variant="on-dark" underline="none">
-                  {t('links.twitter')}
-                </NLink>
+                {socialLinks.length === 0 ? (
+                  <p className="font-body text-body-sm text-surface/50">
+                    —
+                  </p>
+                ) : (
+                  socialLinks.map((link) => (
+                    <a
+                      key={`${link.label}-${link.url}`}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 font-bold transition-all ${LINK_VARIANT_CLS['on-dark']}`}
+                    >
+                      {link.label}
+                    </a>
+                  ))
+                )}
               </div>
 
               <div className="flex flex-col gap-4">
@@ -112,9 +149,12 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-surface/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 font-label text-label-sm uppercase text-surface/50">
-          <span>{t('copyright', { year: new Date().getFullYear() })}</span>
-          <span>{t('poweredBy')}</span>
+        <div className="mt-16 pt-8 border-t border-surface/20 font-label text-label-sm uppercase text-surface/50">
+          <span>
+            {footerText
+              ? `${t('copyright', { year: new Date().getFullYear() })} — ${footerText}`
+              : t('copyright', { year: new Date().getFullYear() })}
+          </span>
         </div>
       </div>
     </footer>

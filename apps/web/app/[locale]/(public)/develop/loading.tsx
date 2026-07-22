@@ -6,11 +6,12 @@
  */
 
 export default function DevelopLoading() {
+  const SC = 'mx-auto max-w-screen-2xl px-6 md:px-12';
   return (
     <div className="animate-pulse">
       {/* ───── 1. HEADER ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-20 md:py-28">
+        <div className={`${SC} py-20 md:py-28`}>
           {/* eyebrow */}
           <div className="h-3 w-32 bg-accent/40 mb-6" />
           {/* h1 */}
@@ -22,7 +23,7 @@ export default function DevelopLoading() {
 
       {/* ───── 2. FILTER PILLS (left) + SEARCH (right) ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className={`${SC} py-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between`}>
           {/* Filter pills (left) */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="h-3 w-14 bg-ink/10 mr-2" />
@@ -40,7 +41,7 @@ export default function DevelopLoading() {
 
       {/* ───── 3. ZIGZAG GRID (mirrors DevelopGrid pattern: 7/5 alternating + DividerQuote) ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-12 md:py-16 space-y-12">
+        <div className={`${SC} py-12 md:py-16 space-y-12`}>
           {/* Item 1 — large (image left 7, text right 5) */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="md:col-span-7 aspect-video bg-primary/10 border-2 border-ink" />
@@ -104,7 +105,7 @@ export default function DevelopLoading() {
 
       {/* ───── 4. FOOTER TEASER (bg-primary, text-surface) ───── */}
       <section className="bg-primary text-surface">
-        <div className="px-6 md:px-12 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <div className={`${SC} py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8`}>
           {/* left — heading block */}
           <div className="space-y-3">
             {/* eyebrow */}

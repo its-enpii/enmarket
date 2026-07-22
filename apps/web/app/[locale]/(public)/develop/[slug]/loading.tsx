@@ -7,20 +7,25 @@
  *   - Details checklist grid
  *   - Gallery irregular grid
  *   - Related works 3-col
+ *
+ * Pakai mx-auto max-w-screen-2xl + px-6 md:px-12 inline (bukan
+ * SectionContainer) supaya loading.tsx tetap zero-dependency — tidak
+ * ada import cycle, dan skeleton-nya tidak butuh i18n namespace.
  */
 export default function WorkDetailLoading() {
+  const SC = 'mx-auto max-w-screen-2xl px-6 md:px-12';
   return (
     <div className="animate-pulse">
       {/* Breadcrumb */}
       <div className="border-b-2 border-ink/10">
-        <div className="px-6 md:px-12 py-4">
+        <div className={`${SC} py-4`}>
           <div className="h-4 w-32 bg-ink/10" />
         </div>
       </div>
 
       {/* Hero 2-col */}
       <div className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10">
+        <div className={`${SC} py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10`}>
           <div className="bg-surface border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] -rotate-1">
             <div className="w-full aspect-[4/3] bg-primary/10" />
           </div>
@@ -42,7 +47,7 @@ export default function WorkDetailLoading() {
 
       {/* About 2-col */}
       <div className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10">
+        <div className={`${SC} py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10`}>
           <div className="space-y-4">
             <div className="h-3 w-32 bg-accent/40" />
             <div className="h-12 w-full bg-ink/10" />
@@ -69,7 +74,7 @@ export default function WorkDetailLoading() {
 
       {/* Details grid */}
       <div className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-16 md:py-20">
+        <div className={`${SC} py-16 md:py-20`}>
           <div className="h-3 w-24 bg-accent/40 mb-3" />
           <div className="h-12 w-72 bg-ink/10 mb-10" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -88,7 +93,7 @@ export default function WorkDetailLoading() {
 
       {/* Gallery irregular */}
       <div className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-16 md:py-20">
+        <div className={`${SC} py-16 md:py-20`}>
           <div className="h-3 w-24 bg-accent/40 mb-3" />
           <div className="h-12 w-48 bg-ink/10 mb-10" />
           <div className="grid grid-cols-4 gap-4 md:gap-6">
@@ -105,7 +110,7 @@ export default function WorkDetailLoading() {
 
       {/* Related works */}
       <div className="border-t-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-16 md:py-20">
+        <div className={`${SC} py-16 md:py-20`}>
           <div className="h-3 w-32 bg-accent/40 mb-3" />
           <div className="h-12 w-64 bg-ink/10 mb-10" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -128,7 +133,7 @@ export default function WorkDetailLoading() {
 
       {/* Final CTA — bg-primary section */}
       <section className="bg-primary text-surface animate-pulse">
-        <div className="px-6 md:px-12 py-16 md:py-20 text-center">
+        <div className={`${SC} py-16 md:py-20 text-center`}>
           <div className="h-3 w-56 bg-accent/40 mx-auto mb-4" />
           <div className="space-y-3 mb-8 max-w-3xl mx-auto">
             <div className="h-12 w-3/4 mx-auto bg-surface/30" />

@@ -14,7 +14,9 @@ export default async function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-surface">
+    // bg-transparent: biar dot-grid pattern di <body> (globals.css) kelihatan.
+    // Section yang butuh solid surface pasang `bg-surface` sendiri-sendiri.
+    <div className="min-h-screen flex flex-col bg-transparent">
       <TopNav>
         <CartBadge />
       </TopNav>

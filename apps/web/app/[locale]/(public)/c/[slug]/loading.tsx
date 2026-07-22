@@ -5,7 +5,7 @@
  */
 export default function CategoryAliasLoading() {
   return (
-    <div className="mx-auto max-w-6xl px-6 md:px-12 py-8 sm:py-12 animate-pulse">
+    <div className="mx-auto max-w-screen-2xl px-6 md:px-12 py-8 sm:py-12 animate-pulse">
       <div className="mb-8">
         <div className="h-9 w-32 bg-surface border-2 border-ink" />
         <div className="mt-3 h-4 w-64 bg-surface border-2 border-ink" />

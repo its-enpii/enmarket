@@ -2,6 +2,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
+import { SectionContainer } from '@/components/public/SectionContainer';
 
 import type { Post } from '@/lib/types';
 
@@ -36,25 +37,33 @@ export async function JournalSection({ posts }: Props) {
   }));
 
   return (
-    <section className="py-24 px-6 md:px-12 bg-surface">
-      <div className="flex items-center gap-4 mb-20">
-        <h2 className="font-display text-headline-lg text-ink uppercase shrink-0">
-          {t('journalTitle')}
-        </h2>
-        <div className="h-1 bg-ink w-full" />
-      </div>
+    <section className="bg-surface">
+      <SectionContainer py="xl">
+        <div className="flex items-center gap-4 mb-20">
+          <h2 className="font-display text-headline-lg text-ink uppercase shrink-0">
+            {t('journalTitle')}
+          </h2>
+          <div className="h-1 bg-ink w-full" />
+        </div>
 
-      <div className="flex flex-col gap-16">
-        {data.map((entry, i) => (
-          <JournalEntry
-            key={entry.slug}
-            entry={entry}
-            flip={i % 2 === 1}
-            readMore={tPost('readMore')}
-            publishedOn={tPost('publishedOn')}
-          />
-        ))}
-      </div>
+        {data.length === 0 ? (
+          <p className="font-body text-body-md text-ink/60 italic">
+            {t('journalEmpty')}
+          </p>
+        ) : (
+          <div className="flex flex-col gap-16">
+            {data.map((entry, i) => (
+              <JournalEntry
+                key={entry.slug}
+                entry={entry}
+                flip={i % 2 === 1}
+                readMore={tPost('readMore')}
+                publishedOn={tPost('publishedOn')}
+              />
+            ))}
+          </div>
+        )}
+      </SectionContainer>
     </section>
   );
 }

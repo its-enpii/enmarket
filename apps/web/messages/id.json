@@ -78,8 +78,7 @@
       "orders": "Cek Pesanan",
       "admin": "Admin"
     },
-    "copyright": "© {year} enpiistudio. Karya di sini dibuat dengan sengaja.",
-    "poweredBy": "Dibuat dengan Next.js"
+    "copyright": "© {year} enpiistudio. Karya di sini dibuat dengan sengaja."
   },
   "cart": {
     "badge": {
@@ -104,10 +103,12 @@
     "featuredTitle": "Featured Developments",
     "featuredSubtitle": "Pilihan terbaru dari Develop—sudah jadi dan siap dipakai.",
     "featuredFallback": "Artefak digital dari studio enpii, siap digunakan dan dikembangkan.",
+    "featuredEmpty": "Belum ada karya di-feature. Cek lagi nanti.",
     "viewAllDevelop": "Lihat Semua Develop →",
     "journalTitle": "Latest / Display",
     "journalSubtitle": "Catatan singkat dari meja kerja.",
     "journalCategory": "Jurnal",
+    "journalEmpty": "Belum ada catatan terbaru.",
     "viewAllJournal": "Lihat Semua Catatan →"
   },
   "discover": {
@@ -233,6 +234,7 @@
   "displayList": {
     "title": "Display",
     "subtitle": "Catatan singkat dari meja kerja.",
+    "empty": "Belum ada catatan.",
     "subtitleLong": "Catatan dari meja kerja — proses, pikiran, dan hal yang sedang berjalan. Bukan release notes. Bukan newsletter mingguan. Ini buku catatan kerja yang kebetulan dipublikasi.",
     "eyebrow": "✎ Display",
     "tagsLabel": "Tags →",

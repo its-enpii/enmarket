@@ -4,11 +4,12 @@
  * Layout full-bleed, px-6 md:px-12, border-b-4 border-ink antar section.
  */
 export default function HomeLoading() {
+  const SC = 'mx-auto max-w-screen-2xl px-6 md:px-12';
   return (
     <div className="animate-pulse">
       {/* ===================== 1. HERO ===================== */}
-      <section className="min-h-[80vh] flex flex-col items-center justify-center text-center px-6 md:px-12 py-24 border-b-4 border-ink">
-        <div className="w-full max-w-5xl">
+      <section className="min-h-[80vh] flex flex-col items-center justify-center text-center border-b-4 border-ink">
+        <div className={`${SC} py-24 w-full max-w-5xl`}>
           {/* small accent label */}
           <div className="h-4 w-32 mx-auto bg-accent/40 mb-8" />
 
@@ -73,7 +74,8 @@ export default function HomeLoading() {
       </section>
 
       {/* ===================== 3. FEATURED ===================== */}
-      <section className="py-24 px-6 md:px-12 border-b-4 border-ink">
+      <section className={`py-24 border-b-4 border-ink`}>
+        <div className={SC}>
         {/* Header row */}
         <div className="flex justify-between items-end mb-16">
           <div className="space-y-2">
@@ -121,10 +123,12 @@ export default function HomeLoading() {
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* ===================== 4. JOURNAL ===================== */}
-      <section className="py-24 px-6 md:px-12 bg-surface border-b-4 border-ink">
+      <section className="py-24 bg-surface border-b-4 border-ink">
+        <div className={SC}>
         {/* Heading row */}
         <div className="flex items-center gap-4 mb-20">
           <div className="h-10 w-64 bg-ink/15 shrink-0" />
@@ -169,6 +173,7 @@ export default function HomeLoading() {
               </div>
             </article>
           ))}
+        </div>
         </div>
       </section>
     </div>

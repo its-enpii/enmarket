@@ -6,11 +6,12 @@
  */
 
 export default function DiscoverLoading() {
+  const SC = 'mx-auto max-w-screen-2xl px-6 md:px-12';
   return (
     <div className="animate-pulse">
       {/* ───── 1. HERO ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-20 md:py-28">
+        <div className={`${SC} py-20 md:py-28`}>
           {/* eyebrow */}
           <div className="h-3 w-32 bg-accent/40 mb-6" />
           {/* h1 */}
@@ -22,7 +23,7 @@ export default function DiscoverLoading() {
 
       {/* ───── 2. STORY (asymmetric 2-col) ───── */}
       <section className="border-b-4 border-ink bg-surface">
-        <div className="px-6 md:px-12 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
+        <div className={`${SC} py-20 md:py-28 grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start`}>
           {/* Left — pull-quote column */}
           <div className="space-y-6">
             <div className="h-12 w-full bg-primary/40" />
@@ -64,7 +65,7 @@ export default function DiscoverLoading() {
 
       {/* ───── 3. PILLARS (3-block side by side) ───── */}
       <section className="border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-16 md:py-20">
+        <div className={`${SC} py-16 md:py-20`}>
           {/* heading row */}
           <div className="mb-12 max-w-2xl">
             <div className="h-3 w-24 bg-accent/40 mb-3" />
@@ -111,7 +112,7 @@ export default function DiscoverLoading() {
 
       {/* ───── 4. PROCESS/VALUES (horizontal stamp row on dark bg) ───── */}
       <section className="border-b-4 border-ink bg-ink">
-        <div className="px-6 md:px-12 py-14 md:py-16">
+        <div className={`${SC} py-14 md:py-16`}>
           {/* heading row */}
           <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8 mb-8">
             <div className="h-3 w-32 bg-accent/40" />
@@ -135,7 +136,7 @@ export default function DiscoverLoading() {
 
       {/* ───── 5. CTA FOOTER (bg-accent) ───── */}
       <section className="bg-accent border-b-4 border-ink">
-        <div className="px-6 md:px-12 py-24 md:py-32 text-center">
+        <div className={`${SC} py-24 md:py-32 text-center`}>
           {/* eyebrow */}
           <div className="h-3 w-24 bg-ink/30 mx-auto mb-6" />
           {/* h2 line 1 */}
