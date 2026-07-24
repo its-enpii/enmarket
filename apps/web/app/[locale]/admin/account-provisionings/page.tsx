@@ -122,7 +122,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
             <NLink
               key={f.value || 'all'}
               href={href}
-              variant={isActive ? 'primary' : 'surface'}
+              variant={isActive ? 'primary' : 'default'}
               underline="static"
               className={`text-xs font-bold uppercase px-3 py-1.5 border-2 ${
                 isActive ? 'border-ink bg-primary text-surface' : 'border-ink/30 hover:bg-accent/40'

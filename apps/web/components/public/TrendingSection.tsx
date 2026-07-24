@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Button, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
@@ -180,6 +180,7 @@ const PLACEHOLDER_TRENDING: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: true,
+    is_pre_order: false,
     needs_license_key: false,
     has_downloadable_file: true,
     created_at: null,
@@ -201,6 +202,7 @@ const PLACEHOLDER_TRENDING: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: true,
     has_downloadable_file: false,
     created_at: null,
@@ -222,6 +224,7 @@ const PLACEHOLDER_TRENDING: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: false,
     has_downloadable_file: true,
     created_at: null,
@@ -246,6 +249,7 @@ const PLACEHOLDER_LATEST: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: false,
     has_downloadable_file: true,
     created_at: null,
@@ -267,6 +271,7 @@ const PLACEHOLDER_LATEST: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: true,
     has_downloadable_file: false,
     created_at: null,
@@ -288,6 +293,7 @@ const PLACEHOLDER_LATEST: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: false,
     has_downloadable_file: true,
     created_at: null,
@@ -309,6 +315,7 @@ const PLACEHOLDER_LATEST: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: false,
     has_downloadable_file: true,
     created_at: null,
@@ -330,6 +337,7 @@ const PLACEHOLDER_LATEST: Product[] = [
     fitur: [],
     status: 'aktif',
     is_featured: false,
+    is_pre_order: false,
     needs_license_key: true,
     has_downloadable_file: false,
     created_at: null,

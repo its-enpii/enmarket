@@ -79,7 +79,7 @@ export const publicApi = {
   catalog: (params: {
     category?: string;
     q?: string;
-    tipe?: 'download' | 'license' | 'bundle';
+    tipe?: 'download' | 'license' | 'bundle' | 'account_manual';
     page?: number;
     per_page?: number;
   }) =>
@@ -92,7 +92,7 @@ export const publicApi = {
     }),
 
   /** Homepage: produk berdasarkan tipe (download = source code, license/bundle = karya jadi). */
-  productsByType: (params: { tipe: 'download' | 'license' | 'bundle'; per_page?: number }) =>
+  productsByType: (params: { tipe: 'download' | 'license' | 'bundle' | 'account_manual'; per_page?: number }) =>
     publicFetch<PaginatedResponse<Product>>('/api/public/products', {
       tipe: params.tipe,
       per_page: params.per_page ?? 3,

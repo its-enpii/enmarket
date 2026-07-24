@@ -42,15 +42,15 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
     setError(null);
     setSuccess(null);
 
-    const body: Record<string, unknown> = {
+    const body: { credentials: Record<string, string | undefined>; catatan?: string } = {
       credentials: {
-        username: formData.get('username') || undefined,
-        password: formData.get('password') || undefined,
-        server: formData.get('server') || undefined,
-        profile: formData.get('profile') || undefined,
-        expiry: formData.get('expiry') || undefined,
+        username: (formData.get('username') as string) || undefined,
+        password: (formData.get('password') as string) || undefined,
+        server: (formData.get('server') as string) || undefined,
+        profile: (formData.get('profile') as string) || undefined,
+        expiry: (formData.get('expiry') as string) || undefined,
       },
-      catatan: formData.get('catatan') || undefined,
+      catatan: (formData.get('catatan') as string) || undefined,
     };
 
     startTransition(async () => {

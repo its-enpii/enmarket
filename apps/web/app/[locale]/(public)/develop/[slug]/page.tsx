@@ -145,7 +145,6 @@ export default async function WorkDetailPage({ params }: PageProps) {
           )}
         </SectionContainer>
       </div>
-      </div>
 
       {/* ───── 2. HERO ───── */}
       <section className="border-b-4 border-ink">
@@ -328,8 +327,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 </Link>
               </div>
             </div>
-          </div>
-        </SectionContainer>
+          </SectionContainer>
+        </section>
       )}
 
       {/* ───── 4. DETAILS (bordered checklist grid) ───── */}
@@ -386,8 +385,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 </ul>
               </div>
             )}
-          </div>
-        </SectionContainer>
+          </SectionContainer>
+        </section>
       )}
 
       {/* ───── 5. GALLERY (irregular grid) ───── */}
@@ -413,8 +412,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
               alt={product.nama}
               title={product.nama}
             />
-          </div>
-        </SectionContainer>
+          </SectionContainer>
+        </section>
       )}
 
       {/* ───── 6. LINKED POSTS (panduan, warning, catatan admin) ───── */}
@@ -459,8 +458,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 </li>
               ))}
             </ul>
-          </div>
-        </SectionContainer>
+          </SectionContainer>
+        </section>
       )}
 
       {/* ───── 7. RELATED WORKS ───── */}

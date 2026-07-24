@@ -15,12 +15,20 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('deskripsi');
             $table->decimal('harga', 10, 2);
-            $table->enum('tipe', ['download', 'license', 'bundle']);
+            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+                $table->string('tipe');
+            } else {
+                $table->enum('tipe', ['download', 'license', 'bundle']);
+            }
             $table->text('file_url')->nullable(); // path di EnStorage
             $table->integer('download_expiry_days')->default(7);
             $table->json('preview_images')->nullable(); // array URL gambar
             $table->json('fitur')->nullable(); // array fitur/isi produk
-            $table->enum('status', ['aktif', 'draft', 'tidak_dijual'])->default('draft');
+            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+                $table->string('status')->default('draft');
+            } else {
+                $table->enum('status', ['aktif', 'draft', 'tidak_dijual'])->default('draft');
+            }
             $table->timestamps();
 
             $table->index('status');

@@ -55,7 +55,7 @@ export interface LinkedPost {
   title: string;
   excerpt: string | null;
   thumbnail: string | null;
-  urutan: number;
+  urutan?: number;
 }
 
 export interface PaginationMeta {

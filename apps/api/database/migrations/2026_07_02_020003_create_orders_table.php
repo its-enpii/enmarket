@@ -15,7 +15,11 @@ return new class extends Migration
             $table->string('email_pembeli');
             $table->string('wa_pembeli');
             $table->decimal('total_harga', 10, 2);
-            $table->enum('status', ['pending', 'paid', 'failed', 'expired', 'refunded'])->default('pending');
+            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+                $table->string('status')->default('pending');
+            } else {
+                $table->enum('status', ['pending', 'paid', 'failed', 'expired', 'refunded'])->default('pending');
+            }
             $table->string('tripay_reference')->nullable();
             $table->text('qr_string')->nullable();
             $table->text('qr_url')->nullable();

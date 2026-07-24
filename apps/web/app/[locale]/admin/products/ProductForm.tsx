@@ -232,6 +232,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
         <FormField
+          htmlFor="is_pre_order"
           label={t('fieldPreOrder')}
           hint={t('fieldPreOrderHint')}
           error={fieldErr('is_pre_order')}
@@ -246,6 +247,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
 
         <div className="grid md:grid-cols-2 gap-5">
           <FormField
+            htmlFor="release_date"
             label={t('fieldReleaseDate')}
             hint={t('fieldReleaseDateHint')}
             error={fieldErr('release_date')}
@@ -258,6 +260,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
           </FormField>
 
           <FormField
+            htmlFor="preorder_deposit_percent"
             label={t('fieldDepositPercent')}
             hint={t('fieldDepositPercentHint')}
             error={fieldErr('preorder_deposit_percent')}
@@ -267,7 +270,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
               type="number"
               min={1}
               max={100}
-              defaultValue={initial?.preorder_deposit_percent ?? 50}
+              defaultValue={initial?.deposit_percent ?? 50}
               className="font-mono"
             />
           </FormField>

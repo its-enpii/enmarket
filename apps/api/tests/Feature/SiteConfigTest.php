@@ -66,12 +66,20 @@ class SiteConfigTest extends TestCase
 
     public function test_public_site_config_returns_social_links_array(): void
     {
-        SiteSetting::create(['key' => 'social_instagram', 'value' => 'https://ig.com/x', 'type' => 'string']);
-        SiteSetting::create(['key' => 'social_github', 'value' => 'https://gh.com/x', 'type' => 'string']);
+        SiteSetting::create([
+            'key' => 'social_links',
+            'value' => json_encode([
+                ['label' => 'instagram', 'url' => 'https://ig.com/x'],
+                ['label' => 'github', 'url' => 'https://gh.com/x'],
+            ]),
+            'type' => 'json'
+        ]);
 
         $response = $this->getJson('/api/public/site-config');
-        $response->assertJsonPath('data.social.instagram', 'https://ig.com/x');
-        $response->assertJsonPath('data.social.github', 'https://gh.com/x');
+        $response->assertJsonPath('data.social.0.label', 'instagram');
+        $response->assertJsonPath('data.social.0.url', 'https://ig.com/x');
+        $response->assertJsonPath('data.social.1.label', 'github');
+        $response->assertJsonPath('data.social.1.url', 'https://gh.com/x');
     }
 
     // ───── SettingsController (admin) ─────

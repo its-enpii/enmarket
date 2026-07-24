@@ -57,7 +57,6 @@ export default async function PreordersPage({ searchParams }: Props) {
   const ordersRes = await loadPreorders(params);
   const rows = ordersRes.data ?? [];
   const meta = ordersRes.meta;
-  const activeStatus = params.status ?? 'awaiting';
 
   const columns: Column<Order>[] = [
     {
@@ -154,7 +153,6 @@ export default async function PreordersPage({ searchParams }: Props) {
           dir="asc"
           filters={[{ key: 'status', label: t('filterStatusLabel'), options: STATUS_OPTIONS }]}
           placeholder={t('searchPlaceholder')}
-          activeStatus={activeStatus}
         />
 
         <DataTableArea

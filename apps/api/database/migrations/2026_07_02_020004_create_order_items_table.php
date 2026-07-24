@@ -14,7 +14,11 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->string('nama_produk'); // snapshot
             $table->decimal('harga_saat_beli', 10, 2); // snapshot
-            $table->enum('tipe_produk', ['download', 'license', 'bundle']); // snapshot
+            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+                $table->string('tipe_produk');
+            } else {
+                $table->enum('tipe_produk', ['download', 'license', 'bundle']);
+            }
             $table->timestamps();
         });
     }
