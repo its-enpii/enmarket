@@ -8,6 +8,8 @@ use App\Http\Resources\CartResource;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
+use App\Services\Auth\WhatsappOtpService;
 use App\Services\Cart\CartService;
 use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
@@ -31,7 +33,8 @@ class CheckoutController extends Controller
     public function preview(Request $request): JsonResponse
     {
         $sessionId = $request->cookie('cart_session') ?: (string) Str::uuid();
-        $cart = $this->cartService->getOrCreateCart($sessionId);
+        $userId = $request->user('sanctum')?->id;
+        $cart = $this->cartService->getOrCreateCart($sessionId, $userId);
         $cart->load(['items.product' => fn ($q) => $q->where('status', 'aktif')]);
 
         return response()->json([
@@ -113,6 +116,9 @@ class CheckoutController extends Controller
 
         return response()->json([
             'valid' => true,
+            'code' => $coupon->code,
+            'type' => $coupon->type,
+            'value' => (float) $coupon->value,
             'discount_amount' => $discount,
             'final_total' => $finalTotal,
             'message' => 'Kupon berhasil diterapkan.',
@@ -133,7 +139,15 @@ class CheckoutController extends Controller
             ], 422);
         }
 
-        $cart = $this->cartService->getOrCreateCart($sessionId);
+        $userId = $request->user('sanctum')?->id;
+        if (! $userId && $request->wa) {
+            $user = User::where('phone', $request->wa)
+                ->orWhere('phone', WhatsappOtpService::normalizePhone($request->wa))
+                ->first();
+            $userId = $user?->id;
+        }
+
+        $cart = $this->cartService->getOrCreateCart($sessionId, $userId);
         $items = $cart->items()->with(['product' => fn ($q) => $q->where('status', 'aktif')])->get();
 
         if ($items->isEmpty()) {
@@ -247,8 +261,9 @@ class CheckoutController extends Controller
         $kodeOrder = $this->generateKodeOrder();
 
         try {
-            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $appliedCoupon) {
+            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $appliedCoupon, $userId) {
                 $orderData = [
+                    'user_id' => $userId,
                     'kode_order' => $kodeOrder,
                     'nama_pembeli' => $request->nama,
                     'email_pembeli' => $request->email,
@@ -307,7 +322,7 @@ class CheckoutController extends Controller
             ]);
 
             // Clear cart setelah order berhasil
-            $this->cartService->clear($sessionId);
+            $this->cartService->clear($sessionId, $userId);
 
             return response()->json([
                 'data' => [

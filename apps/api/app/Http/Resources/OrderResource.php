@@ -13,6 +13,8 @@ class OrderResource extends JsonResource
         $publicView = $request->input('public_view') ?? ($this->additional['public_view'] ?? null);
 
         $arr = [
+            'id' => $this->id,
+            'user_id' => $this->user_id,
             'kode_order' => $this->kode_order,
             'nama_pembeli' => $this->nama_pembeli,
             'email_pembeli' => $this->email_pembeli,

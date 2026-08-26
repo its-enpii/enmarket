@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
@@ -13,6 +14,7 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
+        'user_id',
         'kode_order',
         'nama_pembeli',
         'email_pembeli',
@@ -43,6 +45,11 @@ class Order extends Model
         'qr_expired_at' => 'datetime',
         'paid_at' => 'datetime',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Item-item dalam order ini.

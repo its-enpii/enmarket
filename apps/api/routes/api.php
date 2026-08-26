@@ -15,6 +15,12 @@ use App\Http\Controllers\Api\Admin\PreorderController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\Admin\SettingsController;
+use App\Http\Controllers\Api\Customer\Auth\LoginController as CustomerLoginController;
+use App\Http\Controllers\Api\Customer\Auth\LogoutController as CustomerLogoutController;
+use App\Http\Controllers\Api\Customer\Auth\MeController as CustomerMeController;
+use App\Http\Controllers\Api\Customer\Auth\ProfileController as CustomerProfileController;
+use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
+use App\Http\Controllers\Api\Customer\WishlistController as CustomerWishlistController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
@@ -67,6 +73,26 @@ Route::prefix('public')->group(function () {
     Route::get('site-config', [SiteConfigController::class, 'show']);
 });
 
+// ───── Customer Auth & Account ─────
+Route::prefix('customer')->group(function () {
+    // Public OTP Auth
+    Route::post('auth/request-otp', [CustomerLoginController::class, 'requestOtp']);
+    Route::post('auth/verify-otp', [CustomerLoginController::class, 'verifyOtp']);
+
+    // Protected Customer Routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('auth/logout', [CustomerLogoutController::class, 'logout']);
+        Route::get('auth/me', [CustomerMeController::class, 'me']);
+        Route::put('auth/profile', [CustomerProfileController::class, 'update']);
+
+        Route::get('orders', [CustomerOrderController::class, 'index']);
+
+        Route::get('wishlist', [CustomerWishlistController::class, 'index']);
+        Route::post('wishlist/toggle', [CustomerWishlistController::class, 'toggle']);
+        Route::delete('wishlist/{productId}', [CustomerWishlistController::class, 'destroy']);
+    });
+});
+
 // ───── Wishlist (public, no auth, pakai cookie) ─────
 Route::get('/wishlist', [WishlistController::class, 'index']);
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
@@ -105,8 +131,9 @@ Route::get('/download/{token}', [DownloadController::class, 'show'])
     ->where('token', '[a-f0-9]+')
     ->middleware('throttle:download');
 
-// ───── Admin auth (login/logout publik; me butuh token) ─────
+// ───── Admin area (protected via VerifyAdminToken) ─────
 Route::prefix('admin')->group(function () {
+    // Auth admin: login (publik), logout & me (auth)
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('admin');
     Route::get('/me', [AuthController::class, 'me'])->middleware('admin');

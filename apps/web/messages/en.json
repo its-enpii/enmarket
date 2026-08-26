@@ -66,7 +66,9 @@
     "menu": "Menu",
     "layanan": "Services",
     "wishlist": "Wishlist",
-    "wishlistCount": "Wishlist items"
+    "wishlistCount": "Wishlist items",
+    "login": "Login",
+    "account": "Account"
   },
   "footer": {
     "brandTitle": "enpiistudio",
@@ -1518,5 +1520,66 @@
     "successTitle": "Project Request Sent!",
     "successBody": "Thank you! We have received your project requirements and will reach out via WhatsApp or Email shortly for technical discussions.",
     "errorGeneric": "An error occurred while submitting the form. Please check your inputs or try again shortly."
+  },
+  "customer": {
+    "login": {
+      "title": "Login with WhatsApp",
+      "subtitle": "Enter your WhatsApp number to receive an OTP code.",
+      "phoneLabel": "WhatsApp Number",
+      "phonePlaceholder": "08123456789",
+      "phoneHint": "We will send a 6-digit verification code to this number.",
+      "requestOtp": "Send OTP Code",
+      "resendOtp": "Resend Code",
+      "otpLabel": "Verification Code (OTP)",
+      "otpHint": "Enter the 6-digit code sent to your WhatsApp.",
+      "verifyOtp": "Verify & Login",
+      "errors": {
+        "invalidPhone": "Invalid WhatsApp number. Please enter a valid number.",
+        "invalidOtp": "Invalid or incorrect OTP code.",
+        "expiredOtp": "OTP code has expired. Please request a new code.",
+        "tooManyAttempts": "Too many failed attempts.",
+        "rateLimited": "Too many OTP requests. Please wait a moment."
+      },
+      "success": "Successfully logged in.",
+      "welcomeBack": "Welcome back!"
+    }
+  },
+  "account": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "My Orders",
+      "wishlist": "Wishlist",
+      "profile": "Profile Settings",
+      "logout": "Logout"
+    },
+    "dashboard": {
+      "title": "Account Dashboard",
+      "subtitle": "Manage your orders, wishlist, and profile in one place.",
+      "welcomeGreeting": "Hello, {name}!"
+    },
+    "orders": {
+      "title": "Order History",
+      "empty": "No orders yet.",
+      "viewDetail": "View Detail",
+      "status": {
+        "pending": "Pending Payment",
+        "paid": "Paid",
+        "preorder_deposit_paid": "Deposit Received",
+        "failed": "Failed",
+        "expired": "Expired",
+        "refunded": "Refunded"
+      }
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "nameLabel": "Full Name",
+      "phoneLabel": "WhatsApp Number",
+      "saveProfile": "Save Changes",
+      "profileUpdated": "Profile updated successfully."
+    },
+    "logout": {
+      "confirm": "Are you sure you want to log out?",
+      "loggedOut": "You have been logged out."
+    }
   }
 }

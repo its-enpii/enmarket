@@ -13,17 +13,24 @@ use Illuminate\Support\Str;
 class WishlistController extends Controller
 {
     /**
-     * GET /api/wishlist — ambil list wishlist by cookie wishlist_session.
+     * GET /api/wishlist — ambil list wishlist by user_id atau cookie wishlist_session.
      */
     public function index(Request $request): JsonResponse
     {
+        $user = $request->user('sanctum');
         $sessionId = $this->resolveSessionId($request);
 
-        $items = Wishlist::where('session_id', $sessionId)
-            ->whereHas('product', fn ($q) => $q->active())
+        $query = Wishlist::whereHas('product', fn ($q) => $q->active())
             ->with(['product.category:id,nama,slug'])
-            ->latest()
-            ->get();
+            ->latest('id');
+
+        if ($user) {
+            $query->where('user_id', $user->id);
+        } else {
+            $query->where('session_id', $sessionId);
+        }
+
+        $items = $query->get();
 
         return $this->withCookie(
             response()->json([
@@ -51,26 +58,39 @@ class WishlistController extends Controller
             ], 422);
         }
 
+        $user = $request->user('sanctum');
         $sessionId = $this->resolveSessionId($request);
 
-        $existing = Wishlist::where('session_id', $sessionId)
-            ->where('product_id', $product->id)
-            ->first();
+        if ($user) {
+            $existing = Wishlist::where('user_id', $user->id)
+                ->where('product_id', $product->id)
+                ->first();
+        } else {
+            $existing = Wishlist::where('session_id', $sessionId)
+                ->where('product_id', $product->id)
+                ->first();
+        }
 
         if ($existing) {
             $existing->delete();
             $added = false;
         } else {
             Wishlist::create([
+                'user_id' => $user?->id,
                 'session_id' => $sessionId,
                 'product_id' => $product->id,
             ]);
             $added = true;
         }
 
-        $count = Wishlist::where('session_id', $sessionId)
-            ->whereHas('product', fn ($q) => $q->active())
-            ->count();
+        $countQuery = Wishlist::whereHas('product', fn ($q) => $q->active());
+        if ($user) {
+            $countQuery->where('user_id', $user->id);
+        } else {
+            $countQuery->where('session_id', $sessionId);
+        }
+
+        $count = $countQuery->count();
 
         return $this->withCookie(
             response()->json([
@@ -87,15 +107,26 @@ class WishlistController extends Controller
      */
     public function destroy(Request $request, int $productId): JsonResponse
     {
+        $user = $request->user('sanctum');
         $sessionId = $this->resolveSessionId($request);
 
-        Wishlist::where('session_id', $sessionId)
-            ->where('product_id', $productId)
-            ->delete();
+        if ($user) {
+            Wishlist::where('user_id', $user->id)
+                ->where('product_id', $productId)
+                ->delete();
 
-        $count = Wishlist::where('session_id', $sessionId)
-            ->whereHas('product', fn ($q) => $q->active())
-            ->count();
+            $count = Wishlist::where('user_id', $user->id)
+                ->whereHas('product', fn ($q) => $q->active())
+                ->count();
+        } else {
+            Wishlist::where('session_id', $sessionId)
+                ->where('product_id', $productId)
+                ->delete();
+
+            $count = Wishlist::where('session_id', $sessionId)
+                ->whereHas('product', fn ($q) => $q->active())
+                ->count();
+        }
 
         return $this->withCookie(
             response()->json([

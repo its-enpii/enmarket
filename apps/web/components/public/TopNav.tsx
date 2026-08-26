@@ -30,9 +30,19 @@ function isActive(pathname: string | null, href: string): boolean {
 
 export function TopNav({ children }: Props) {
   const [open, setOpen] = useState(false);
+  const [hasCustomerToken, setHasCustomerToken] = useState(false);
   const pathname = usePathname();
   const t = useTranslations('nav');
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const hasToken =
+        /(^| )customer_token=([^;]+)/.test(document.cookie) ||
+        !!localStorage.getItem('customer_token');
+      setHasCustomerToken(hasToken);
+    }
+  }, [pathname]);
 
   // Lock body scroll saat mobile menu open (iOS Safari friendly).
   useEffect(() => {
@@ -56,7 +66,7 @@ export function TopNav({ children }: Props) {
       <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 py-4">
         <NLink
           href="/"
-          variant="default"
+          variant="primary"
           underline="none"
           className="font-display text-2xl md:text-headline-md font-black uppercase tracking-tighter min-h-[44px] inline-flex items-center"
         >
@@ -64,14 +74,14 @@ export function TopNav({ children }: Props) {
         </NLink>
 
         {/* Desktop nav (≥md) */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           {navItems.map((item) => {
             const active = isActive(pathname, item.href);
             return (
               <NLink
                 key={item.href}
                 href={item.href}
-                variant="default"
+                variant="primary"
                 underline={active ? 'static' : 'hover'}
                 aria-current={active ? 'page' : undefined}
                 className={`font-label text-label-sm uppercase font-bold min-h-[44px] inline-flex items-center pb-1 ${
@@ -83,6 +93,17 @@ export function TopNav({ children }: Props) {
             );
           })}
           {children}
+
+          {hasCustomerToken ? (
+            <Button variant="primary" size="sm" href="/akun">
+              {t('account')}
+            </Button>
+          ) : (
+            <Button variant="primary" size="sm" href="/masuk">
+              {t('login')}
+            </Button>
+          )}
+
           <Button variant="surface" size="sm" href="/login">
             {t('admin')}
           </Button>
@@ -122,6 +143,29 @@ export function TopNav({ children }: Props) {
                 </Link>
               );
             })}
+
+            {hasCustomerToken ? (
+              <Button
+                href="/akun"
+                variant="primary"
+                size="md"
+                onClick={() => setOpen(false)}
+                className="block text-center w-full"
+              >
+                {t('account')}
+              </Button>
+            ) : (
+              <Button
+                href="/masuk"
+                variant="primary"
+                size="md"
+                onClick={() => setOpen(false)}
+                className="block text-center w-full"
+              >
+                {t('login')}
+              </Button>
+            )}
+
             <Button
               href="/login"
               variant="surface"

@@ -15,12 +15,13 @@ class CartController extends Controller
     public function __construct(private readonly CartService $cartService) {}
 
     /**
-     * GET /api/cart — ambil cart by cookie cart_session.
+     * GET /api/cart — ambil cart by cookie cart_session atau auth user.
      */
     public function index(Request $request): JsonResponse
     {
         $sessionId = $this->resolveSessionId($request);
-        $cart = $this->cartService->getOrCreateCart($sessionId);
+        $userId = $request->user('sanctum')?->id;
+        $cart = $this->cartService->getOrCreateCart($sessionId, $userId);
         $cart->load(['items.product' => fn ($q) => $q->where('status', 'aktif')]);
 
         return response()->json([
@@ -39,6 +40,7 @@ class CartController extends Controller
         ]);
 
         $sessionId = $this->resolveSessionId($request);
+        $userId = $request->user('sanctum')?->id;
 
         // Cegah produk non-aktif masuk cart
         $product = Product::find($data['product_id']);
@@ -48,7 +50,7 @@ class CartController extends Controller
             ], 422);
         }
 
-        $cart = $this->cartService->addItem($sessionId, $data['product_id'], $data['qty'] ?? 1);
+        $cart = $this->cartService->addItem($sessionId, $data['product_id'], $data['qty'] ?? 1, $userId);
         $cart->load(['items.product']);
 
         return response()->json([
@@ -67,7 +69,8 @@ class CartController extends Controller
         ]);
 
         $sessionId = $this->resolveSessionId($request);
-        $cart = $this->cartService->updateQty($sessionId, $productId, $data['qty']);
+        $userId = $request->user('sanctum')?->id;
+        $cart = $this->cartService->updateQty($sessionId, $productId, $data['qty'], $userId);
         $cart->load(['items.product']);
 
         return response()->json([
@@ -81,7 +84,8 @@ class CartController extends Controller
     public function destroyItem(Request $request, int $productId): JsonResponse
     {
         $sessionId = $this->resolveSessionId($request);
-        $cart = $this->cartService->removeItem($sessionId, $productId);
+        $userId = $request->user('sanctum')?->id;
+        $cart = $this->cartService->removeItem($sessionId, $productId, $userId);
         $cart->load(['items.product']);
 
         return response()->json([

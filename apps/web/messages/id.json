@@ -66,7 +66,9 @@
     "menu": "Menu",
     "layanan": "Layanan",
     "wishlist": "Wishlist",
-    "wishlistCount": "Item di wishlist"
+    "wishlistCount": "Item di wishlist",
+    "login": "Masuk",
+    "account": "Akun"
   },
   "footer": {
     "brandTitle": "enpiistudio",
@@ -1518,5 +1520,66 @@
     "successTitle": "Permintaan Proyek Terkirim!",
     "successBody": "Terima kasih! Kami telah menerima detail kebutuhan Anda dan akan segera menghubungi via WhatsApp atau Email untuk tahapan diskusi teknis lebih lanjut.",
     "errorGeneric": "Terjadi kesalahan saat mengirim formulir. Silakan periksa kembali isian Anda atau coba beberapa saat lagi."
+  },
+  "customer": {
+    "login": {
+      "title": "Masuk dengan WhatsApp",
+      "subtitle": "Masukkan nomor WhatsApp Anda untuk menerima kode OTP.",
+      "phoneLabel": "Nomor WhatsApp",
+      "phonePlaceholder": "08123456789",
+      "phoneHint": "Kami akan mengirimkan 6 digit kode verifikasi ke nomor ini.",
+      "requestOtp": "Kirim Kode OTP",
+      "resendOtp": "Kirim Ulang Kode",
+      "otpLabel": "Kode Verifikasi (OTP)",
+      "otpHint": "Masukkan 6 digit kode yang dikirim ke WhatsApp Anda.",
+      "verifyOtp": "Verifikasi & Masuk",
+      "errors": {
+        "invalidPhone": "Nomor WhatsApp tidak valid. Masukkan nomor yang benar.",
+        "invalidOtp": "Kode OTP salah atau tidak sesuai.",
+        "expiredOtp": "Kode OTP sudah kedaluwarsa. Silakan minta kode baru.",
+        "tooManyAttempts": "Terlalu banyak percobaan yang salah.",
+        "rateLimited": "Terlalu banyak permintaan OTP. Silakan tunggu beberapa saat."
+      },
+      "success": "Berhasil masuk ke akun.",
+      "welcomeBack": "Selamat datang kembali!"
+    }
+  },
+  "account": {
+    "nav": {
+      "dashboard": "Dasbor",
+      "orders": "Pesanan Saya",
+      "wishlist": "Wishlist",
+      "profile": "Pengaturan Profil",
+      "logout": "Keluar"
+    },
+    "dashboard": {
+      "title": "Dasbor Akun",
+      "subtitle": "Kelola pesanan, wishlist, dan profil Anda di satu tempat.",
+      "welcomeGreeting": "Halo, {name}!"
+    },
+    "orders": {
+      "title": "Riwayat Pesanan",
+      "empty": "Belum ada pesanan.",
+      "viewDetail": "Lihat Detail",
+      "status": {
+        "pending": "Menunggu Pembayaran",
+        "paid": "Lunas",
+        "preorder_deposit_paid": "DP Diterima",
+        "failed": "Gagal",
+        "expired": "Kedaluwarsa",
+        "refunded": "Dikembalikan"
+      }
+    },
+    "profile": {
+      "title": "Pengaturan Profil",
+      "nameLabel": "Nama Lengkap",
+      "phoneLabel": "Nomor WhatsApp",
+      "saveProfile": "Simpan Perubahan",
+      "profileUpdated": "Profil berhasil diperbarui."
+    },
+    "logout": {
+      "confirm": "Apakah Anda yakin ingin keluar dari akun?",
+      "loggedOut": "Anda telah berhasil keluar."
+    }
   }
 }
