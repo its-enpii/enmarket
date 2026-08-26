@@ -482,7 +482,7 @@
     "title": "Cek Pesanan",
     "subtitle": "Masukkan kode pesanan untuk melihat statusnya.",
     "codeLabel": "Kode Pesanan",
-    "placeholder": "Kode pesanan (mis. EPS-20260715-A3KX)",
+    "placeholder": "Kode pesanan (mis. EPS-20260715-A3K2X)",
     "emailLabel": "Email",
     "emailPlaceholder": "nama@contoh.com",
     "emailHint": "Gunakan email yang dicantumkan saat checkout.",
@@ -1062,7 +1062,7 @@
       "listTitle": "License Keys",
       "listEyebrow": "✎ Studio / Lisensi",
       "listSubtitle": "Semua kunci lisensi yang diterbitkan. Bisa dicabut, diperpanjang masa berlakunya, atau digenerate massal dari sini.",
-      "searchPlaceholder": "EPS-XXXX-…",
+      "searchPlaceholder": "EPS-XXXXX-…",
       "columns": {
         "key": "Key",
         "product": "Produk",
@@ -1230,7 +1230,7 @@
       "payment": {
         "listTitle": "Payment Gateway",
         "listEyebrow": "✎ Settings / Payment",
-        "listSubtitle": "Konfigurasi Tripay — payment gateway untuk QRIS dan virtual account. Credentials tersimpan terenkripsi, hanya mode + channel yang bisa diedit tanpa khawatir泄露.",
+        "listSubtitle": "Konfigurasi Tripay — payment gateway untuk QRIS dan virtual account. Kredensial tersimpan terenkripsi, hanya mode + channel yang aman untuk diedit tanpa khawatir bocor.",
         "backendDownTitle": "⚠ Backend belum merespon",
         "modeEyebrow": "✎ Mode",
         "modeProductionTitle": "Production",

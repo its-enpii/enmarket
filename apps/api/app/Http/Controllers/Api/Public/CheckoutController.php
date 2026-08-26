@@ -222,7 +222,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Format kode: EPS-YYYYMMDD-XXXX (4 char alphanumeric uppercase).
+     * Format kode: EPS-YYYYMMDD-XXXXX (5 char alphanumeric uppercase, tanpa O/0).
      */
     private function generateKodeOrder(): string
     {

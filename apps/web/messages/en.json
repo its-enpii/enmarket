@@ -482,7 +482,7 @@
     "title": "Track Order",
     "subtitle": "Enter your order code to check its status.",
     "codeLabel": "Order Code",
-    "placeholder": "Order code (e.g. EPS-20260715-A3KX)",
+    "placeholder": "Order code (e.g. EPS-20260715-A3K2X)",
     "emailLabel": "Email",
     "emailPlaceholder": "name@example.com",
     "emailHint": "Use the email address entered at checkout.",
@@ -1062,7 +1062,7 @@
       "listTitle": "License Keys",
       "listEyebrow": "✎ Studio / Licenses",
       "listSubtitle": "All issued license keys. Revoke, extend their validity, or generate them in bulk from here.",
-      "searchPlaceholder": "EPS-XXXX-…",
+      "searchPlaceholder": "EPS-XXXXX-…",
       "columns": {
         "key": "Key",
         "product": "Product",

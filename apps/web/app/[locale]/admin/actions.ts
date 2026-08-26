@@ -13,7 +13,8 @@ export async function logoutAction() {
   try {
     await apiPost('/api/admin/logout');
   } catch (err) {
-    // 即使Laravel端失败，只要本地cookie被清掉就够了
+    // Even kalau Laravel-side gagal, local cookie harus tetap di-clear
+    // supaya user tidak stuck di state "seolah-olah masih login".
     if (!(err instanceof ApiRequestError)) {
       // network error — still proceed to clear local cookie
     }
