@@ -12,11 +12,18 @@ import type { ApiError } from './types';
 
 /**
  * Server-side base URL: pakai internal Docker hostname `api` ketika Next.js
- * berjalan di dalam container `web`. Fallback ke host port 8030 untuk lokal
+ * berjalan di dalam container `web`. Fallback ke host port untuk lokal
  * di luar Docker (mis. `npm run dev` langsung di workstation).
+ *
+ * Order:
+ * 1. API_INTERNAL_URL env (explicit override — recommended)
+ * 2. NEXT_PUBLIC_API_URL (kalau di-set, pakai itu)
+ * 3. http://api:8000 (Docker internal network)
+ * 4. http://localhost:8000 (host dev fallback)
  */
 const API_URL =
   process.env.API_INTERNAL_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
   (process.env.NEXT_PUBLIC_API_URL?.startsWith('http://api')
     ? process.env.NEXT_PUBLIC_API_URL
     : `http://api:8000`) ||
