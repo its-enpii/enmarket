@@ -11,18 +11,39 @@ import { revalidatePath } from 'next/cache';
 import { getTranslations } from 'next-intl/server';
 
 import { ApiRequestError, apiPost } from '@/lib/api';
-import type { Cart, SingleResponse } from '@/lib/types';
+import type { ApplyCouponResult, Cart, SingleResponse } from '@/lib/types';
 
 interface CheckoutInput {
   nama: string;
   email: string;
   wa: string;
+  coupon_code?: string;
 }
 
 interface CheckoutResult {
   kode_order?: string;
   error?: string;
   fieldErrors?: Record<string, string[]>;
+}
+
+export async function applyCouponAction(
+  code: string,
+  cartTotal: number,
+): Promise<ApplyCouponResult> {
+  try {
+    const res = await apiPost<ApplyCouponResult>('/api/checkout/apply-coupon', {
+      code,
+      cart_total: cartTotal,
+    });
+    return res;
+  } catch (err) {
+    return {
+      valid: false,
+      discount_amount: 0,
+      final_total: cartTotal,
+      message: err instanceof Error ? err.message : 'Gagal menerapkan kupon.',
+    };
+  }
 }
 
 export async function checkoutAction(input: CheckoutInput): Promise<CheckoutResult> {

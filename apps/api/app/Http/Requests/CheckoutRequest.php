@@ -18,6 +18,7 @@ class CheckoutRequest extends FormRequest
             'email' => ['required', 'email:rfc', 'max:100'],
             'wa' => ['required', 'string', 'min:8', 'max:20', 'regex:/^[0-9+\-\s]+$/'],
             'session_id' => ['nullable', 'string', 'max:64'],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
         ];
     }
 

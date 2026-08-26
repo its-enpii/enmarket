@@ -1,13 +1,14 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
+import { formatRupiah } from '@/lib/format';
 
-import { checkoutAction } from './actions';
+import { applyCouponAction, checkoutAction } from './actions';
 
 interface State {
   error?: string;
@@ -16,20 +17,58 @@ interface State {
 
 interface Props {
   defaultEmail?: string;
+  cartTotal?: number;
 }
 
-export function CheckoutForm({ defaultEmail }: Props) {
+export function CheckoutForm({ defaultEmail, cartTotal = 0 }: Props) {
   const t = useTranslations('checkout');
+  const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount_amount: number;
+    final_total: number;
+  } | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
+  const [isApplyingCoupon, startCouponTransition] = useTransition();
 
-  // FormData → CheckoutInput: server action expect object {nama,email,wa},
-  // bukan FormData. Wrapper ini tetap di-handle client-side biar input object
-  // sampai utuh. NEXT_REDIRECT di-rethrow biar Next.js follow redirect().
+  const handleApplyCoupon = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!couponCodeInput.trim()) return;
+
+    setCouponError(null);
+    setCouponSuccess(null);
+
+    startCouponTransition(async () => {
+      const res = await applyCouponAction(couponCodeInput.trim(), cartTotal);
+      if (res.valid) {
+        setAppliedCoupon({
+          code: couponCodeInput.trim().toUpperCase(),
+          discount_amount: res.discount_amount,
+          final_total: res.final_total,
+        });
+        setCouponSuccess(res.message || t('couponApplied'));
+      } else {
+        setCouponError(res.message || t('couponInvalid'));
+      }
+    });
+  };
+
+  const handleRemoveCoupon = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setAppliedCoupon(null);
+    setCouponCodeInput('');
+    setCouponError(null);
+    setCouponSuccess(null);
+  };
+
   const [state, formAction, pending] = useActionState<State | undefined, FormData>(
     async (_prev, formData) =>
       checkoutAction({
         nama: (formData.get('nama') as string) ?? '',
         email: (formData.get('email') as string) ?? '',
         wa: (formData.get('wa') as string) ?? '',
+        coupon_code: appliedCoupon?.code || (formData.get('coupon_code') as string) || undefined,
       }).catch((err) => {
         if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
         return { error: t('errorGeneric') };
@@ -95,6 +134,62 @@ export function CheckoutForm({ defaultEmail }: Props) {
         />
         <FormHint>{t('phoneHint')}</FormHint>
         <FormError>{state?.fieldErrors?.wa?.[0]}</FormError>
+      </div>
+
+      {/* Coupon section */}
+      <div className="border-t-2 border-ink/10 pt-4">
+        <label htmlFor="coupon_code" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
+          {t('couponLabel')}
+        </label>
+        <div className="flex gap-2">
+          <Input
+            id="coupon_code"
+            name="coupon_code"
+            type="text"
+            value={couponCodeInput}
+            onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
+            disabled={!!appliedCoupon || isApplyingCoupon}
+            placeholder="DISKON10"
+            className="uppercase font-mono font-bold"
+          />
+          {appliedCoupon ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="md"
+              onClick={handleRemoveCoupon}
+            >
+              ✕
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              variant="surface"
+              size="md"
+              disabled={isApplyingCoupon || !couponCodeInput.trim()}
+              onClick={handleApplyCoupon}
+            >
+              {isApplyingCoupon ? '…' : t('couponApply')}
+            </Button>
+          )}
+        </div>
+
+        {couponSuccess && (
+          <p className="mt-2 text-xs font-bold text-green-600 dark:text-green-400">
+            ✓ {couponSuccess}
+          </p>
+        )}
+        {couponError && (
+          <p className="mt-2 text-xs font-bold text-red-600">
+            ✕ {couponError}
+          </p>
+        )}
+        {appliedCoupon && (
+          <Card variant="filled-accent" hoverable={false} className="mt-3 p-3 text-xs font-bold flex justify-between items-center">
+            <span>{t('discount')}: {appliedCoupon.code}</span>
+            <span>− {formatRupiah(appliedCoupon.discount_amount)}</span>
+          </Card>
+        )}
       </div>
 
       {state?.error && !state.fieldErrors && (

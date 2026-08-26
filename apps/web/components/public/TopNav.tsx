@@ -48,6 +48,7 @@ export function TopNav({ children }: Props) {
     { key: 'discover', href: '/discover' },
     { key: 'develop', href: '/develop' },
     { key: 'display', href: '/display' },
+    { key: 'layanan', href: '/layanan' },
   ] as const;
 
   return (

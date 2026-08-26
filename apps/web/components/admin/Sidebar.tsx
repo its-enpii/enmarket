@@ -11,6 +11,8 @@ const NAV_HREFS = [
   '/admin',
   '/admin/categories',
   '/admin/products',
+  '/admin/coupons',
+  '/admin/custom-requests',
   '/admin/posts',
   '/admin/orders',
   '/admin/preorders',
@@ -19,7 +21,7 @@ const NAV_HREFS = [
   '/admin/settings',
 ] as const;
 
-const NAV_ICONS = ['◆', '◧', '▤', '✎', '◊', '◷', '⚷', '◰', '⚙'];
+const NAV_ICONS = ['◆', '◧', '▤', '✂', '✉', '✎', '◊', '◷', '⚷', '◰', '⚙'];
 
 interface Props {
   currentPath: string;
@@ -41,7 +43,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
     '',
   ) || '/';
 
-  const navKeys = ['dashboard', 'categories', 'products', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings'] as const;
+  const navKeys = ['dashboard', 'categories', 'products', 'coupons', 'customRequests', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings'] as const;
 
   return (
     <>
@@ -88,7 +90,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
           </Button>
         </div>
 
-        <nav className="flex-1 p-3">
+        <nav className="flex-1 p-3 overflow-y-auto">
           <ul className="flex flex-col gap-1">
           {NAV_HREFS.map((href, idx) => {
             const active =

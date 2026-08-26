@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Resources\CartResource;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\Cart\CartService;
@@ -35,6 +36,86 @@ class CheckoutController extends Controller
 
         return response()->json([
             'data' => new CartResource($cart),
+        ]);
+    }
+
+    /**
+     * POST /api/checkout/apply-coupon — validasi kupon dan kalkulasi diskon.
+     */
+    public function applyCoupon(Request $request): JsonResponse
+    {
+        $request->validate([
+            'code' => ['required', 'string'],
+            'cart_total' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $code = strtoupper(trim((string) $request->input('code')));
+        $cartTotal = (float) $request->input('cart_total');
+
+        $coupon = Coupon::where('code', $code)->first();
+
+        if (! $coupon) {
+            return response()->json([
+                'valid' => false,
+                'discount_amount' => 0,
+                'final_total' => (int) $cartTotal,
+                'message' => 'Kode kupon tidak ditemukan.',
+            ]);
+        }
+
+        if (! $coupon->active) {
+            return response()->json([
+                'valid' => false,
+                'discount_amount' => 0,
+                'final_total' => (int) $cartTotal,
+                'message' => 'Kupon sudah tidak aktif.',
+            ]);
+        }
+
+        if ($coupon->valid_from && $coupon->valid_from->isFuture()) {
+            return response()->json([
+                'valid' => false,
+                'discount_amount' => 0,
+                'final_total' => (int) $cartTotal,
+                'message' => 'Kupon belum dapat digunakan.',
+            ]);
+        }
+
+        if ($coupon->valid_until && $coupon->valid_until->isPast()) {
+            return response()->json([
+                'valid' => false,
+                'discount_amount' => 0,
+                'final_total' => (int) $cartTotal,
+                'message' => 'Kupon sudah kadaluarsa.',
+            ]);
+        }
+
+        if ($coupon->max_uses !== null && $coupon->used_count >= $coupon->max_uses) {
+            return response()->json([
+                'valid' => false,
+                'discount_amount' => 0,
+                'final_total' => (int) $cartTotal,
+                'message' => 'Batas pemakaian kupon telah habis.',
+            ]);
+        }
+
+        if ($coupon->min_order !== null && $cartTotal < (float) $coupon->min_order) {
+            return response()->json([
+                'valid' => false,
+                'discount_amount' => 0,
+                'final_total' => (int) $cartTotal,
+                'message' => 'Minimal belanja untuk kupon ini adalah Rp '.number_format((float) $coupon->min_order, 0, ',', '.').'.',
+            ]);
+        }
+
+        $discount = $coupon->calculateDiscount($cartTotal);
+        $finalTotal = max(0, (int) round($cartTotal - $discount));
+
+        return response()->json([
+            'valid' => true,
+            'discount_amount' => $discount,
+            'final_total' => $finalTotal,
+            'message' => 'Kupon berhasil diterapkan.',
         ]);
     }
 
@@ -136,10 +217,37 @@ class CheckoutController extends Controller
             $preorderMeta = ['is_preorder' => false];
         }
 
+        // Coupon handling
+        $appliedCoupon = null;
+        if ($request->filled('coupon_code')) {
+            $code = strtoupper(trim((string) $request->input('coupon_code')));
+            $appliedCoupon = Coupon::where('code', $code)->first();
+
+            if (! $appliedCoupon || ! $appliedCoupon->active) {
+                return response()->json([
+                    'message' => 'Kupon tidak valid atau tidak aktif.',
+                    'code' => 'invalid_coupon',
+                ], 422);
+            }
+
+            if (($appliedCoupon->valid_from && $appliedCoupon->valid_from->isFuture()) ||
+                ($appliedCoupon->valid_until && $appliedCoupon->valid_until->isPast()) ||
+                ($appliedCoupon->max_uses !== null && $appliedCoupon->used_count >= $appliedCoupon->max_uses) ||
+                ($appliedCoupon->min_order !== null && $total < (float) $appliedCoupon->min_order)) {
+                return response()->json([
+                    'message' => 'Kupon tidak dapat digunakan untuk pesanan ini.',
+                    'code' => 'coupon_conditions_not_met',
+                ], 422);
+            }
+
+            $discount = $appliedCoupon->calculateDiscount($total);
+            $total = max(100, $total - $discount);
+        }
+
         $kodeOrder = $this->generateKodeOrder();
 
         try {
-            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta) {
+            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $appliedCoupon) {
                 $orderData = [
                     'kode_order' => $kodeOrder,
                     'nama_pembeli' => $request->nama,
@@ -159,6 +267,10 @@ class CheckoutController extends Controller
                         'harga_saat_beli' => $item->product->harga,
                         'tipe_produk' => $item->product->tipe,
                     ]);
+                }
+
+                if ($appliedCoupon) {
+                    $appliedCoupon->increment('used_count');
                 }
 
                 return $order;

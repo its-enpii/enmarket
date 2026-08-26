@@ -63,7 +63,10 @@
     "display": "Display",
     "admin": "Admin",
     "search": "Cari",
-    "menu": "Menu"
+    "menu": "Menu",
+    "layanan": "Layanan",
+    "wishlist": "Wishlist",
+    "wishlistCount": "Item di wishlist"
   },
   "footer": {
     "brandTitle": "enpiistudio",
@@ -410,7 +413,12 @@
     "total": "Total",
     "paymentMethod": "Metode pembayaran: QRIS melalui Tripay",
     "errorLoad": "Gagal memuat keranjang",
-    "phonePlaceholder": "08123456789"
+    "phonePlaceholder": "08123456789",
+    "couponLabel": "Kode Kupon / Diskon",
+    "couponApply": "Terapkan",
+    "couponApplied": "Kupon berhasil diterapkan.",
+    "couponInvalid": "Kode kupon tidak valid atau tidak dapat digunakan.",
+    "discount": "Diskon Kupon"
   },
   "payment": {
     "title": "Pembayaran",
@@ -556,7 +564,9 @@
       "licenseKeys": "License Keys",
       "accountProvisionings": "Aktivasi Akun",
       "media": "Media",
-      "settings": "Pengaturan"
+      "settings": "Pengaturan",
+      "coupons": "Kupon",
+      "customRequests": "Permintaan Layanan"
     },
     "topbar": {
       "viewSite": "Lihat Situs",
@@ -723,7 +733,11 @@
       "settingsPaymentSubtitle": "Konfigurasi Tripay gateway.",
       "settingsMaintenance": "Settings — Maintenance",
       "settingsMaintenanceSubtitle": "Toggle maintenance mode toko.",
-      "fallback": "Admin"
+      "fallback": "Admin",
+      "coupons": "Kupon Diskon",
+      "couponsSubtitle": "Kelola kode kupon dan diskon potongan harga.",
+      "customRequests": "Permintaan Layanan",
+      "customRequestsSubtitle": "Daftar permintaan custom build dari pembeli."
     },
     "categories": {
       "_batch": "3",
@@ -1288,6 +1302,107 @@
         "submitInactive": "Matikan Maintenance",
         "submitPending": "Memproses…"
       }
+    },
+    "coupons": {
+      "listTitle": "Kupon Diskon",
+      "listEyebrow": "Studio / Diskon",
+      "listSubtitle": "Kelola kode promo dan diskon harga untuk checkout pembeli.",
+      "newTitle": "Kupon Baru",
+      "newSubtitle": "Buat kode kupon diskon baru dengan batasan kuota atau minimal belanja.",
+      "editTitle": "Edit Kupon",
+      "editEyebrow": "Studio / Diskon / Edit",
+      "editSubtitle": "Perbarui kuota, tanggal kedaluwarsa, atau status kupon.",
+      "searchPlaceholder": "Cari kode kupon…",
+      "newButton": "+ Kupon Baru",
+      "deleteConfirm": "Nonaktifkan kupon \"{code}\"?",
+      "columns": {
+        "code": "Kode",
+        "type": "Tipe",
+        "value": "Nilai",
+        "usage": "Pemakaian",
+        "validity": "Masa Berlaku",
+        "status": "Status",
+        "actions": "Aksi"
+      },
+      "stats": {
+        "total": "Total Kupon",
+        "active": "Aktif",
+        "inactive": "Nonaktif",
+        "expired": "Kedaluwarsa"
+      },
+      "status": {
+        "active": "Aktif",
+        "inactive": "Nonaktif"
+      },
+      "form": {
+        "fieldCode": "Kode Kupon",
+        "fieldType": "Tipe Potongan",
+        "typePercent": "Persentase (%)",
+        "typeFixed": "Nominal Tetap (Rp)",
+        "fieldValue": "Nilai Potongan",
+        "fieldMinOrder": "Minimal Belanja (Rp)",
+        "fieldMinOrderHint": "Kosongkan jika tanpa minimal belanja.",
+        "fieldMaxUses": "Batas Maksimal Penggunaan",
+        "fieldMaxUsesHint": "Kosongkan jika tanpa batas kuota.",
+        "fieldValidFrom": "Berlaku Mulai",
+        "fieldValidUntil": "Berlaku Hingga",
+        "fieldActive": "Status Kupon Aktif",
+        "submitCreate": "Buat Kupon",
+        "submitSave": "Simpan Perubahan",
+        "submitPending": "Menyimpan…"
+      },
+      "empty": {
+        "noResults": "Tidak ada kupon untuk \"{query}\"",
+        "noResultsHint": "Coba cari dengan kode lain atau hapus pencarian.",
+        "noneYet": "Belum ada kupon",
+        "noneYetHint": "Buat kupon promo pertama Anda sekarang."
+      }
+    },
+    "customRequests": {
+      "listTitle": "Permintaan Layanan",
+      "listEyebrow": "Studio / Permintaan Kustom",
+      "listSubtitle": "Kelola daftar leads dan permintaan custom build software dari calon klien.",
+      "searchPlaceholder": "Cari nama, email, wa, atau deskripsi…",
+      "detailTitle": "Detail Permintaan",
+      "detailEyebrow": "Studio / Permintaan Kustom / Detail",
+      "projectDetail": "Informasi Kebutuhan Proyek",
+      "clientDetail": "Kontak Klien",
+      "updateStatus": "Perbarui Status & Catatan",
+      "updateSuccess": "Status permintaan berhasil diperbarui.",
+      "submitting": "Menyimpan…",
+      "columns": {
+        "client": "Klien",
+        "project": "Kebutuhan Proyek",
+        "budget": "Budget & Timeline",
+        "status": "Status",
+        "created": "Diajukan",
+        "actions": "Aksi"
+      },
+      "stats": {
+        "total": "Total Permintaan",
+        "baru": "Baru",
+        "diproses": "Diproses",
+        "selesai": "Selesai",
+        "dibatalkan": "Dibatalkan"
+      },
+      "status": {
+        "baru": "Baru",
+        "diproses": "Diproses",
+        "selesai": "Selesai",
+        "dibatalkan": "Dibatalkan"
+      },
+      "fields": {
+        "status": "Status Permintaan",
+        "notes": "Catatan Internal Admin",
+        "notesHint": "Catatan progres, riwayat kontak WhatsApp, atau link proposal.",
+        "notesPlaceholder": "Tulis catatan tindak lanjut di sini…"
+      },
+      "empty": {
+        "noResults": "Tidak ada permintaan untuk \"{query}\"",
+        "noResultsHint": "Coba gunakan kata kunci pencarian lain.",
+        "noneYet": "Belum ada permintaan kustom masuk",
+        "noneYetHint": "Permintaan yang dikirim dari halaman Layanan akan muncul di sini."
+      }
     }
   },
   "trending": {
@@ -1350,5 +1465,58 @@
     "waSupport": "BANTUAN WA",
     "freeUpdates": "UPDATE GRATIS",
     "studioWorks": "KARYA STUDIO ENPII"
+  },
+  "wishlist": {
+    "add": "Ditambahkan ke wishlist",
+    "remove": "Dihapus dari wishlist",
+    "title": "Wishlist",
+    "empty": "Wishlist Anda masih kosong",
+    "cta": "Jelajahi Katalog"
+  },
+  "coupons": {
+    "title": "Kupon & Diskon",
+    "apply": "Terapkan",
+    "applied": "Kupon berhasil diterapkan",
+    "invalid": "Kupon tidak valid atau kadaluarsa"
+  },
+  "customBuild": {
+    "eyebrow": "Jasa Pembuatan Software & Aplikasi",
+    "title": "Layanan Custom Build",
+    "subtitle": "Punya ide produk software, SaaS, atau aplikasi bisnis khusus? Kami siap membangunnya dari nol sesuai kebutuhan spesifik Anda.",
+    "intro": "Selain produk digital siap pakai di katalog, kami juga melayani jasa konsultasi, desain arsitektur, dan pembuatan software kustom end-to-end (website modern, SaaS, aplikasi mobile, serta otomasi bisnis). Silakan lengkapi formulir di bawah ini untuk konsultasi awal dan penawaran estimasi.",
+    "formTitle": "Formulir Permintaan Proyek Kustom",
+    "fields": {
+      "nama": "Nama Lengkap",
+      "email": "Alamat Email",
+      "wa": "Nomor WhatsApp",
+      "jenisProyek": {
+        "label": "Jenis Proyek",
+        "website": "Website & Portofolio",
+        "webapp": "Web Application / SaaS",
+        "mobileApp": "Mobile App (iOS / Android)",
+        "automation": "Otomasi & Tooling",
+        "other": "Lainnya"
+      },
+      "deskripsi": "Deskripsi Kebutuhan & Fitur",
+      "budgetRange": {
+        "label": "Estimasi Budget",
+        "under5m": "< Rp 5 Juta",
+        "5to15m": "Rp 5 - 15 Juta",
+        "15to50m": "Rp 15 - 50 Juta",
+        "above50m": "> Rp 50 Juta",
+        "discuss": "Diskusi / Fleksibel"
+      },
+      "timeline": {
+        "label": "Target Timeline",
+        "under2w": "< 2 Minggu",
+        "2to4w": "2 - 4 Minggu",
+        "1to3m": "1 - 3 Bulan",
+        "3to6m": "3 - 6 Bulan",
+        "flexible": "Fleksibel"
+      }
+    },
+    "successTitle": "Permintaan Proyek Terkirim!",
+    "successBody": "Terima kasih! Kami telah menerima detail kebutuhan Anda dan akan segera menghubungi via WhatsApp atau Email untuk tahapan diskusi teknis lebih lanjut.",
+    "errorGeneric": "Terjadi kesalahan saat mengirim formulir. Silakan periksa kembali isian Anda atau coba beberapa saat lagi."
   }
 }

@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
+import { WishlistHeartButton } from '@/components/public/WishlistHeartButton';
 
 interface Props {
   product: Product;
@@ -41,7 +42,7 @@ export async function ProductCard({ product }: Props) {
           </div>
         )}
 
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
+        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
           {product.is_featured && (
             <Badge tone="accent" size="sm" className="font-bold">
               {t('featured')}
@@ -54,9 +55,12 @@ export async function ProductCard({ product }: Props) {
           )}
         </div>
 
-        <Badge tone="ink" size="sm" className="absolute top-2 right-2 font-bold">
-          {t(`tipe.${product.tipe}`)}
-        </Badge>
+        <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
+          <WishlistHeartButton productId={product.id} />
+          <Badge tone="ink" size="sm" className="font-bold">
+            {t(`tipe.${product.tipe}`)}
+          </Badge>
+        </div>
       </div>
 
       <div className="p-4">

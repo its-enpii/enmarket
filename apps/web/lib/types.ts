@@ -372,3 +372,83 @@ export const POST_STATUS_LABEL: Record<PostStatus, string> = {
   published: 'Published',
   archived: 'Diarsipkan',
 };
+// ───── Wishlist ─────
+
+export interface WishlistItem {
+  id: number;
+  session_id: string;
+  product_id: number;
+  product: Product;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface WishlistResponse {
+  data: WishlistItem[];
+  count: number;
+}
+
+// ───── Coupons ─────
+
+export type CouponType = 'percent' | 'fixed';
+
+export interface Coupon {
+  id: number;
+  code: string;
+  type: CouponType;
+  value: number;
+  min_order: number | null;
+  max_uses: number | null;
+  used_count: number;
+  valid_from: string | null;
+  valid_until: string | null;
+  active: boolean;
+  is_valid?: boolean;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface CouponStats {
+  total: number;
+  active: number;
+  inactive: number;
+  expired: number;
+}
+
+export interface ApplyCouponResult {
+  valid: boolean;
+  discount_amount: number;
+  final_total: number;
+  message: string;
+}
+
+// ───── Custom Requests ─────
+
+export type JenisProyek = 'website' | 'mobile-app' | 'webapp' | 'automation' | 'other';
+export type BudgetRange = '<5jt' | '5-15jt' | '15-50jt' | '50jt+' | 'discuss';
+export type Timeline = '<2minggu' | '2-4minggu' | '1-3bulan' | '3-6bulan' | 'flexible';
+export type CustomRequestStatus = 'baru' | 'diproses' | 'selesai' | 'dibatalkan';
+
+export interface CustomRequest {
+  id: number;
+  nama: string;
+  email: string;
+  wa: string;
+  jenis_proyek: JenisProyek;
+  deskripsi: string;
+  budget_range: BudgetRange;
+  timeline: Timeline;
+  status: CustomRequestStatus;
+  status_label?: string;
+  notes: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface CustomRequestStats {
+  total: number;
+  baru: number;
+  diproses: number;
+  selesai: number;
+  dibatalkan: number;
+}

@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\Admin\AccountProvisioningController;
 use App\Http\Controllers\Api\Admin\ActivityController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\CouponController;
+use App\Http\Controllers\Api\Admin\CustomRequestController as AdminCustomRequestController;
 use App\Http\Controllers\Api\Admin\LicenseKeyController;
 use App\Http\Controllers\Api\Admin\MaintenanceController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
@@ -17,12 +19,14 @@ use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\CheckoutController;
+use App\Http\Controllers\Api\Public\CustomRequestController;
 use App\Http\Controllers\Api\Public\DownloadController;
 use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\PostController as PublicPostController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
 use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
+use App\Http\Controllers\Api\Public\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +67,14 @@ Route::prefix('public')->group(function () {
     Route::get('site-config', [SiteConfigController::class, 'show']);
 });
 
+// ───── Wishlist (public, no auth, pakai cookie) ─────
+Route::get('/wishlist', [WishlistController::class, 'index']);
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle']);
+Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy']);
+
+// ───── Custom Request (public, no auth) ─────
+Route::post('/custom-requests', [CustomRequestController::class, 'store']);
+
 // ───── Cart + Checkout + Orders (public, no auth, pakai cookie) ─────
 Route::middleware('throttle:cart')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
@@ -72,6 +84,7 @@ Route::middleware('throttle:cart')->group(function () {
 });
 
 Route::get('/checkout', [CheckoutController::class, 'preview']); // preview low-risk, no throttle
+Route::post('/checkout/apply-coupon', [CheckoutController::class, 'applyCoupon']);
 Route::post('/checkout', [CheckoutController::class, 'store'])
     ->middleware('throttle:checkout');
 
@@ -110,6 +123,14 @@ Route::prefix('admin')->group(function () {
         // Preview image sub-resource (append/remove)
         Route::post('products/{product}/preview-images', [ProductImageController::class, 'store']);
         Route::delete('products/{product}/preview-images', [ProductImageController::class, 'destroy']);
+
+        // Coupons CRUD (stats HARUS sebelum coupons/{coupon})
+        Route::get('coupons/stats', [CouponController::class, 'stats']);
+        Route::apiResource('coupons', CouponController::class);
+
+        // Custom Requests (stats HARUS sebelum {customRequest})
+        Route::get('custom-requests/stats', [AdminCustomRequestController::class, 'stats']);
+        Route::apiResource('custom-requests', AdminCustomRequestController::class)->only(['index', 'show', 'update']);
 
         // Order resend notification (manual retry email/WA)
         Route::post('orders/{kodeOrder}/resend', [OrderResendController::class, 'resend']);

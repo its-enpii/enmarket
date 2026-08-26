@@ -76,7 +76,7 @@ export default async function CheckoutPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-8">
         <Card variant="surface" thick hoverable={false} className="p-6">
-          <CheckoutForm />
+          <CheckoutForm cartTotal={cart.total} />
         </Card>
 
         <Card variant="filled-primary" as="aside" thick hoverable={false} className="p-5 h-fit">
