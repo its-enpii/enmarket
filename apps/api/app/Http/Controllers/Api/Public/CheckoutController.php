@@ -227,7 +227,7 @@ class CheckoutController extends Controller
     private function generateKodeOrder(): string
     {
         $date = now()->format('Ymd');
-        $chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'; // exclude O/0 untuk keterbacaan
+        $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // exclude I/O/0/1 untuk keterbacaan
         do {
             $rand = '';
             for ($i = 0; $i < 5; $i++) {
