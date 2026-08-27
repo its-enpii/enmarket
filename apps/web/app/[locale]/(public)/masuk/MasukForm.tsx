@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
+import { AuthProvider } from '@/components/customer/AuthProvider';
 import { OtpRequestForm } from '@/components/customer/OtpRequestForm';
 import { OtpVerifyForm } from '@/components/customer/OtpVerifyForm';
 
@@ -30,23 +31,23 @@ export function MasukForm({ locale }: Props) {
     router.refresh();
   };
 
-  if (step === 'verify') {
-    return (
-      <OtpVerifyForm
-        phone={phone}
-        initialCooldown={cooldown}
-        onSuccess={handleVerifySuccess}
-        onChangePhone={() => setStep('phone')}
-        locale={locale}
-      />
-    );
-  }
-
   return (
-    <OtpRequestForm
-      initialPhone={phone}
-      onSuccess={handleRequestSuccess}
-      locale={locale}
-    />
+    <AuthProvider>
+      {step === 'verify' ? (
+        <OtpVerifyForm
+          phone={phone}
+          initialCooldown={cooldown}
+          onSuccess={handleVerifySuccess}
+          onChangePhone={() => setStep('phone')}
+          locale={locale}
+        />
+      ) : (
+        <OtpRequestForm
+          initialPhone={phone}
+          onSuccess={handleRequestSuccess}
+          locale={locale}
+        />
+      )}
+    </AuthProvider>
   );
 }
