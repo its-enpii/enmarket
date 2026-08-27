@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, useTransition } from 'react';
 import { createPortal } from 'react-dom';
@@ -32,6 +32,8 @@ export function MediaPickerModal({
 }: Props) {
   const t = useTranslations('admin.media');
   const tShared = useTranslations('admin.shared');
+  const tCommon = useTranslations('common.ui');
+  const tBtn = useTranslations('common.buttons');
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [items, setItems] = useState<MediaItem[]>([]);
@@ -48,177 +50,168 @@ export function MediaPickerModal({
   }, []);
 
   useEffect(() => {
-    if (open && !fetched) {
-      startTransition(async () => {
-        const data = await fetchMediaLibrary();
-        setItems(data);
+    if (!open || fetched) return;
+    startTransition(async () => {
+      const res = await fetchMediaLibrary();
+      if (res.ok) {
+        setItems(res.items);
         setFetched(true);
-      });
-    }
+      }
+    });
   }, [open, fetched]);
 
   useEffect(() => {
-    if (!open) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape' && open) setOpen(false);
     }
-    window.addEventListener('keydown', onKey);
-
+    if (open) {
+      document.addEventListener('keydown', onKey);
+      document.body.style.overflow = 'hidden';
+    }
     return () => {
-      document.body.style.overflow = prevOverflow;
-      window.removeEventListener('keydown', onKey);
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
     };
   }, [open]);
+
+  const filtered = filterMedia(items, filters);
 
   function handleSelect(url: string) {
     onPick(url);
     setOpen(false);
   }
 
-  const filtered = filterMedia(items, filters);
-
-  const modalJsx = open ? (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8">
-      {/* Dark Backdrop */}
+  const modal = open ? (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="media-picker-title"
+      className="fixed inset-0 z-[120] flex items-center justify-center p-4"
+    >
       <button
         type="button"
         tabIndex={-1}
-        aria-label="Tutup modal"
+        aria-label={tCommon('closeDialog')}
         onClick={() => setOpen(false)}
-        className="fixed inset-0 bg-ink/75 backdrop-blur-xs cursor-default"
+        className="absolute inset-0 bg-ink/70 cursor-default animate-fade-in"
       />
 
-      {/* Modal Dialog Box */}
-      <div className="relative z-10 bg-surface border-4 border-ink shadow-[12px_12px_0_0_var(--color-ink)] w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b-4 border-ink p-4 md:p-5 bg-surface shrink-0">
+      <div className="relative bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] w-full max-w-4xl max-h-[85vh] flex flex-col z-10 animate-scale-in">
+        <div className="flex items-center justify-between border-b-3 border-ink px-5 py-4 bg-accent/20">
           <div>
-            <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-1">
-              ✎ {t('listEyebrow')}
+            <h2 id="media-picker-title" className="text-lg font-black uppercase text-ink">
+              {t('modalTitle')}
+            </h2>
+            <p className="text-xs text-ink/70">
+              {t('modalSubtitle')}
             </p>
-            <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink">
-              {t('pickerBadge')}
-            </h3>
           </div>
-          <Button
+          <button
             type="button"
-            variant="accent"
-            size="sm"
-            flat
             onClick={() => setOpen(false)}
-            aria-label="Tutup"
+            aria-label={tCommon('dismiss')}
+            className="w-8 h-8 flex items-center justify-center border-2 border-ink bg-surface font-bold text-ink hover:bg-primary hover:text-surface transition-colors shadow-[2px_2px_0_0_var(--color-ink)]"
           >
             ✕
-          </Button>
+          </button>
         </div>
 
-        {/* Filter Bar */}
-        <div className="p-4 border-b-2 border-ink bg-surface/50 shrink-0 flex flex-wrap gap-3 items-end">
-          <div className="flex-1 min-w-[200px]">
-            <Input
-              type="search"
-              value={filters.q ?? ''}
-              placeholder={t('searchPlaceholder')}
-              onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
-            />
-          </div>
-          <div className="w-48">
-            <SelectSearch
-              name="media_source_filter"
-              value={filters.source ?? 'all'}
-              placeholder={t('source.all')}
-              options={[
-                { value: 'all', label: t('source.all') },
-                { value: 'product', label: t('source.product') },
-                { value: 'post', label: t('source.post') },
-              ]}
-              onChange={(v) =>
-                setFilters((f) => ({
-                  ...f,
-                  source: v as 'all' | 'product' | 'post',
-                }))
-              }
-              clearable={false}
-            />
-          </div>
+        <div className="p-4 border-b-2 border-ink bg-surface/50 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Input
+            value={filters.q}
+            onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
+            placeholder={tShared('searchPlaceholderDefault')}
+            className="w-full text-xs"
+          />
+          <SelectSearch
+            options={[
+              { value: 'all', label: t('filterSourceAll') },
+              { value: 'products', label: t('filterSourceProducts') },
+              { value: 'posts', label: t('filterSourcePosts') },
+              { value: 'settings', label: t('filterSourceSettings') },
+            ]}
+            value={filters.source}
+            onChange={(val) =>
+              setFilters((f) => ({
+                ...f,
+                source: (val as FilterMediaOptions['source']) || 'all',
+              }))
+            }
+            aria-label={t('filterSourceAria')}
+          />
+          <SelectSearch
+            options={[
+              { value: 'all', label: t('filterTypeAll') },
+              { value: 'image', label: t('filterTypeImage') },
+              { value: 'file', label: t('filterTypeFile') },
+            ]}
+            value={filters.type}
+            onChange={(val) =>
+              setFilters((f) => ({
+                ...f,
+                type: (val as FilterMediaOptions['type']) || 'all',
+              }))
+            }
+            aria-label={t('filterTypeAria')}
+          />
         </div>
 
-        {/* Content / Gallery Grid */}
-        <div className="p-4 md:p-6 overflow-y-auto flex-1 min-h-[320px]">
-          {loading && !fetched ? (
-            <div className="flex flex-col items-center justify-center h-64 text-center">
-              <span className="font-display text-3xl animate-bounce mb-2">⏳</span>
-              <p className="font-body text-sm font-bold text-ink/70">
-                Memuat media dari library…
-              </p>
-            </div>
-          ) : items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-64 text-center p-6 border-2 border-dashed border-ink/30 bg-surface/40">
-              <span className="font-display text-4xl mb-2">🖼️</span>
-              <p className="font-display text-xl font-black uppercase text-ink">
-                Belum Ada Gambar di Library
-              </p>
-              <p className="text-xs text-ink/60 mt-1 max-w-sm">
-                Library media masih kosong. Upload file dari tombol &quot;Choose Files&quot; terlebih dahulu atau buat produk/post dengan gambar.
+        <div className="p-5 overflow-y-auto flex-1 min-h-[260px]">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-16 gap-2 text-ink/60">
+              <span className="animate-spin text-2xl">⏳</span>
+              <p className="text-xs font-bold uppercase tracking-wider">
+                {tShared('loadingMedia')}
               </p>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-64 text-center">
-              <p className="font-display text-2xl font-black uppercase text-ink">
-                {t('empty.titleMatch')}
-              </p>
-              <p className="text-xs text-ink/60 mt-1 max-w-sm">
-                {t('empty.hintMatch')}
+            <div className="flex flex-col items-center justify-center py-16 text-center max-w-sm mx-auto">
+              <span className="text-4xl mb-2">📁</span>
+              <p className="text-sm font-bold text-ink mb-1">{t('emptyTitle')}</p>
+              <p className="text-xs text-ink/60 leading-relaxed">
+                {items.length === 0
+                  ? tShared('emptyMedia')
+                  : tCommon('noResults')}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {filtered.map((item, i) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {filtered.map((it) => (
                 <button
-                  key={`${item.url}-${i}`}
+                  key={`${it.source}-${it.id}-${it.url}`}
                   type="button"
-                  onClick={() => handleSelect(item.url)}
-                  className="group block text-left border-2 border-ink bg-surface hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all cursor-pointer overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary"
+                  onClick={() => handleSelect(it.url)}
+                  className="group relative border-2 border-ink bg-surface p-2 text-left hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-x-0 active:translate-y-0 transition-all flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-primary"
                 >
-                  <div className="aspect-square bg-ink/10 border-b-2 border-ink overflow-hidden relative">
-                    {item.type === 'image' || item.type === 'other' ? (
+                  <div className="aspect-square bg-ink/5 border border-ink/30 mb-2 overflow-hidden flex items-center justify-center relative">
+                    {it.type === 'image' ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={item.url}
-                        alt={item.filename}
+                        src={it.url}
+                        alt={it.label}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-surface text-ink">
-                        <span className="font-display text-2xl">📎</span>
-                      </div>
+                      <span className="text-3xl">📄</span>
                     )}
-
-                    <span
-                      className={
-                        'absolute top-1.5 left-1.5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider border border-ink ' +
-                        (item.source === 'product'
-                          ? 'bg-accent text-ink'
-                          : 'bg-primary text-surface')
-                      }
-                    >
-                      {item.source === 'product'
-                        ? t('sourceBadge.product')
-                        : t('sourceBadge.post')}
+                    <span className="absolute top-1 right-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-ink text-surface">
+                      {it.source}
                     </span>
                   </div>
 
-                  <div className="p-2">
-                    <p className="font-mono text-[11px] text-ink truncate" title={item.filename}>
-                      {item.filename}
-                    </p>
-                    <p className="font-label text-[9px] uppercase tracking-wide text-ink/60 truncate">
-                      {item.sourceLabel}
-                    </p>
+                  <p
+                    className="text-xs font-bold text-ink truncate w-full"
+                    title={it.label}
+                  >
+                    {it.label}
+                  </p>
+                  <p className="text-[10px] text-ink/60 mt-0.5">
+                    {it.type}
+                  </p>
+
+                  <div className="absolute inset-0 bg-primary/90 text-surface font-bold text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    {t('chooseMedia')}
                   </div>
                 </button>
               ))}
@@ -226,13 +219,17 @@ export function MediaPickerModal({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t-4 border-ink bg-surface flex justify-between items-center shrink-0 text-xs">
-          <span className="text-ink/60 font-body">
-            Klik pada gambar untuk menautkan ke produk secara langsung.
-          </span>
-          <Button type="button" variant="surface" size="sm" onClick={() => setOpen(false)}>
-            Batal
+        <div className="flex items-center justify-between border-t-2 border-ink px-5 py-3 bg-surface">
+          <p className="text-xs text-ink/60 font-mono">
+            {t('totalMediaCount', { count: filtered.length })}
+          </p>
+          <Button
+            variant="surface"
+            size="sm"
+            type="button"
+            onClick={() => setOpen(false)}
+          >
+            {tBtn('cancel')}
           </Button>
         </div>
       </div>
@@ -242,16 +239,17 @@ export function MediaPickerModal({
   return (
     <>
       <Button
-        type="button"
         variant={variant}
         size="sm"
+        type="button"
         disabled={disabled}
         onClick={() => setOpen(true)}
       >
-        ◰ {triggerLabel ?? tShared('pickerUseLibrary')}
+        {triggerLabel ?? tShared('pickerButton')}
       </Button>
-
-      {mounted && modalJsx && createPortal(modalJsx, document.body)}
+      {mounted && typeof document !== 'undefined'
+        ? createPortal(modal, document.body)
+        : null}
     </>
   );
 }

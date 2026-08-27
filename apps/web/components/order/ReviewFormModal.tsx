@@ -1,0 +1,256 @@
+﻿'use client';
+
+import React, { useEffect, useState, useTransition } from 'react';
+import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
+
+import { Button, Card } from '@/components/ui/neobrutal';
+import { FormError } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { reviewApi } from '@/lib/review-api';
+import { toast } from '@/components/ui/toast-store';
+
+interface Props {
+  kodeOrder: string;
+  productId: number;
+  productName: string;
+  defaultEmailOrPhone?: string;
+  defaultBuyerName?: string;
+  onSuccess?: () => void;
+  triggerLabel?: string;
+}
+
+export function ReviewFormModal({
+  kodeOrder,
+  productId,
+  productName,
+  defaultEmailOrPhone,
+  defaultBuyerName,
+  onSuccess,
+  triggerLabel,
+}: Props) {
+  const t = useTranslations('reviews');
+  const tCommon = useTranslations('common.ui');
+  const tBtn = useTranslations('common.buttons');
+
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [rating, setRating] = useState<number>(5);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [comment, setComment] = useState('');
+  const [buyerName, setBuyerName] = useState(defaultBuyerName || '');
+  const [emailOrPhone, setEmailOrPhone] = useState(defaultEmailOrPhone || '');
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape' && open) setOpen(false);
+    }
+    if (open) {
+      document.addEventListener('keydown', onKey);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    startTransition(async () => {
+      try {
+        await reviewApi.submitReview({
+          kode_order: kodeOrder,
+          product_id: productId,
+          rating,
+          comment: comment.trim() || undefined,
+          buyer_name: buyerName.trim() || undefined,
+          email_or_phone: emailOrPhone.trim() || undefined,
+        });
+
+        setSubmitted(true);
+        toast.success(t('submitSuccess'));
+        onSuccess?.();
+        setTimeout(() => {
+          setOpen(false);
+          setSubmitted(false);
+        }, 1500);
+      } catch (err: any) {
+        setError(err?.message || t('submitError'));
+      }
+    });
+  };
+
+  const modal = open ? (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="review-modal-title"
+      className="fixed inset-0 z-[120] flex items-center justify-center p-4"
+    >
+      <button
+        type="button"
+        tabIndex={-1}
+        aria-label={tCommon('closeDialog')}
+        onClick={() => setOpen(false)}
+        className="absolute inset-0 bg-ink/70 cursor-default animate-fade-in"
+      />
+
+      <div className="relative bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] w-full max-w-lg max-h-[90vh] overflow-y-auto z-10 animate-scale-in p-6">
+        <div className="flex items-center justify-between border-b-2 border-ink pb-4 mb-5">
+          <div>
+            <h2 id="review-modal-title" className="text-xl font-black uppercase text-ink">
+              {t('modalTitle')}
+            </h2>
+            <p className="text-xs text-ink/70 mt-0.5 truncate max-w-xs sm:max-w-sm">
+              {productName}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label={tCommon('dismiss')}
+            className="w-8 h-8 flex items-center justify-center border-2 border-ink bg-surface font-bold text-ink hover:bg-primary hover:text-surface transition-colors shadow-[2px_2px_0_0_var(--color-ink)]"
+          >
+            ✕
+          </button>
+        </div>
+
+        {submitted ? (
+          <div className="py-8 text-center space-y-3">
+            <span className="text-5xl select-none" role="img" aria-label="success">🌟</span>
+            <h3 className="text-2xl font-black text-ink">{t('thankYou')}</h3>
+            <p className="text-sm text-ink/70">{t('submitSuccess')}</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Interactive 5 Star Selector */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
+                {t('ratingLabel')} *
+              </label>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const active = (hoverRating || rating) >= star;
+                  return (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      className="text-3xl transition-transform hover:scale-125 focus:outline-none"
+                      aria-label={`${star} ${t('stars')}`}
+                    >
+                      <span className={active ? 'text-accent drop-shadow-[2px_2px_0_var(--color-ink)]' : 'text-ink/20'}>
+                        ★
+                      </span>
+                    </button>
+                  );
+                })}
+                <span className="font-mono font-bold text-sm text-ink ml-2">
+                  {rating} / 5
+                </span>
+              </div>
+            </div>
+
+            {/* Comment Textarea */}
+            <div>
+              <label htmlFor="comment" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
+                {t('commentLabel')}
+              </label>
+              <Textarea
+                id="comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={4}
+                placeholder={t('commentPlaceholder')}
+                className="text-sm"
+              />
+            </div>
+
+            {/* Buyer Name */}
+            <div>
+              <label htmlFor="buyerName" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
+                {t('buyerNameLabel')}
+              </label>
+              <Input
+                id="buyerName"
+                value={buyerName}
+                onChange={(e) => setBuyerName(e.target.value)}
+                placeholder={t('buyerNamePlaceholder')}
+              />
+            </div>
+
+            {/* Verification hint if no email / phone default */}
+            {!defaultEmailOrPhone && (
+              <div>
+                <label htmlFor="emailOrPhone" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
+                  {t('verificationLabel')} *
+                </label>
+                <Input
+                  id="emailOrPhone"
+                  value={emailOrPhone}
+                  onChange={(e) => setEmailOrPhone(e.target.value)}
+                  placeholder="Email atau No. WhatsApp saat checkout"
+                  required
+                />
+                <p className="text-[11px] text-ink/60 mt-1">
+                  {t('verificationHint')}
+                </p>
+              </div>
+            )}
+
+            {error && <FormError variant="box">{error}</FormError>}
+
+            <div className="flex justify-end gap-3 pt-3 border-t-2 border-ink">
+              <Button
+                type="button"
+                variant="surface"
+                size="sm"
+                onClick={() => setOpen(false)}
+                disabled={pending}
+              >
+                {tBtn('cancel')}
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={pending}
+              >
+                {pending ? t('submitting') : t('submitCta')}
+              </Button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  ) : null;
+
+  return (
+    <>
+      <Button
+        type="button"
+        variant="accent"
+        size="sm"
+        onClick={() => setOpen(true)}
+      >
+        ★ {triggerLabel ?? t('writeReview')}
+      </Button>
+      {mounted && typeof document !== 'undefined'
+        ? createPortal(modal, document.body)
+        : null}
+    </>
+  );
+}

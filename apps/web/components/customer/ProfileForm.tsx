@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -30,7 +30,7 @@ export function ProfileForm() {
       });
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || 'Gagal memperbarui profil.');
+      setError(err.message || t('errorGeneric'));
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export function ProfileForm() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nama Lengkap"
+          placeholder={t('nameLabel')}
           disabled={loading}
           className="w-full px-4 py-3 border-3 border-ink bg-surface text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
         />
@@ -79,13 +79,13 @@ export function ProfileForm() {
           className="w-full px-4 py-3 border-3 border-ink bg-surface text-ink font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
         />
         <p className="mt-1 text-xs text-ink/70">
-          Nomor ini digunakan untuk login WhatsApp OTP.
+          {t('phoneHint')}
         </p>
       </div>
 
       <div>
         <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-          Email (Opsional)
+          {t('emailLabel')}
         </label>
         <input
           id="email"

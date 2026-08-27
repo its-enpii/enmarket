@@ -29,6 +29,7 @@ class ProductResource extends JsonResource
             'fitur' => $this->fitur ?? [],
             'status' => $this->status,
             'is_featured' => (bool) $this->is_featured,
+            'rating_summary' => $this->ratingSummary(),
             // Produk gratis: label "Gratis" di-render frontend (via translation key
             // product.price.free) ketika flag ini true. harga selalu 0 di DB
             // (auto-set di ProductController). Backend TIDAK localize di sini —

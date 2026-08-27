@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
@@ -19,6 +22,7 @@ interface Props {
  * Tone: marketplace, bukan studio lagi.
  */
 export function TrendingSection({ trending, latest }: Props) {
+  const t = useTranslations('trending');
   // Pakai fallback placeholder kalau data kosong — biar section tetap
   // punya visual marketplace yang kaya, tidak hilang begitu saja.
   const trendingData = trending.length > 0 ? trending : PLACEHOLDER_TRENDING;
@@ -30,19 +34,19 @@ export function TrendingSection({ trending, latest }: Props) {
   const sideCards = rest.slice(0, 2);
 
   return (
-    <section id="trending" aria-label="Trending dan terbaru" className="space-y-8">
+    <section id="trending" aria-label={t('ariaLabel')} className="space-y-8">
       <div className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <div>
             <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-accent">
-              🔥 Trending
+              {t('eyebrow')}
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-ink leading-tight">
-              {trendingIsPlaceholder ? 'Pilihan studio untuk kamu' : 'Pilihan minggu ini'}
+              {trendingIsPlaceholder ? t('headingPlaceholder') : t('headingReal')}
             </h2>
             {trendingIsPlaceholder && (
               <p className="text-xs text-ink/60 mt-1">
-                Contoh etalase — tambahkan produk dari admin untuk isi nyata.
+                {t('placeholderHint')}
               </p>
             )}
           </div>
@@ -53,7 +57,7 @@ export function TrendingSection({ trending, latest }: Props) {
             arrow
             className="shrink-0 text-xs sm:text-sm"
           >
-            Lihat semua
+            {t('viewAll')}
           </NLink>
         </div>
 
@@ -69,7 +73,7 @@ export function TrendingSection({ trending, latest }: Props) {
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider">📦 Paket Hemat</p>
                   <p className="mt-1 font-bold text-lg leading-snug">
-                    Beberapa karya dijual sebagai paket dengan harga lebih hemat.
+                    {t('bundleBody')}
                   </p>
                 </div>
                 <Button
@@ -78,21 +82,21 @@ export function TrendingSection({ trending, latest }: Props) {
                   size="sm"
                   className="mt-3 self-start"
                 >
-                  Lihat paket →
+                  {t('bundleCta')}
                 </Button>
               </Card>
             )}
             {sideCards.length === 0 && (
               <div className="flex-1 bg-surface border-2 border-dashed border-ink p-4 text-center text-ink/60 flex flex-col justify-center min-h-[120px]">
-                <p className="font-bold text-sm">Etalase lagi disiapkan</p>
-                <p className="text-xs mt-1">Tambah produk dari dashboard admin.</p>
+                <p className="font-bold text-sm">{t('emptyTitle')}</p>
+                <p className="text-xs mt-1">{t('emptyHint')}</p>
                 <NLink
                   href="/login"
                   variant="primary"
                   underline="static"
                   className="mt-2 self-center text-xs"
                 >
-                  Login admin →
+                  {t('emptyLogin')}
                 </NLink>
               </div>
             )}
@@ -104,10 +108,10 @@ export function TrendingSection({ trending, latest }: Props) {
         <div className="flex items-baseline justify-between gap-3">
           <div>
             <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              ✨ Terbaru
+              {t('latestEyebrow')}
             </p>
             <h2 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
-              Baru masuk etalase
+              {t('latestHeading')}
             </h2>
           </div>
         </div>
@@ -372,12 +376,12 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary/30 text-surface font-bold uppercase tracking-wider">
-            Tanpa Gambar
+            {t('noImage')}
           </div>
         )}
         {product.is_featured && (
           <Badge tone="accent" size="sm" className="absolute top-3 left-3 px-2.5 py-1 font-bold">
-            ★ Unggulan
+            {t('featured')}
           </Badge>
         )}
         <Badge tone="ink" size="sm" className="absolute top-3 right-3 px-2.5 py-1 font-bold">
@@ -386,7 +390,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
       </div>
       <div className="p-5 flex-1 flex flex-col">
         <p className="text-[10px] font-bold uppercase tracking-wider text-accent">
-          {product.category?.nama ?? 'Tanpa kategori'}
+          {product.category?.nama ?? t('noCategory')}
         </p>
         <h3 className="mt-2 text-2xl sm:text-3xl font-bold leading-tight text-surface line-clamp-2">
           {product.nama}
@@ -396,13 +400,13 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
         </p>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-surface/70">Harga</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-surface/70">{t('priceLabel')}</p>
             <p className="font-mono text-2xl sm:text-3xl font-bold leading-none text-accent">
               {formatRupiah(product.harga)}
             </p>
           </div>
           <span className="inline-flex items-center gap-1 bg-accent text-ink border-2 border-ink px-3 py-2 text-xs font-bold shadow-[3px_3px_0_0_var(--color-ink)] group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all">
-            Lihat →
+            {t('viewCta')}
           </span>
         </div>
       </div>
@@ -431,7 +435,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
               <span className="font-bold text-[10px] uppercase tracking-wider opacity-80">
-                Tanpa Gambar
+                {t('noImage')}
               </span>
             </div>
           )}
@@ -439,7 +443,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
         <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between min-w-0">
           <div className="min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-wider text-ink/60">
-              {product.category?.nama ?? 'Tanpa kategori'}
+              {product.category?.nama ?? t('noCategory')}
             </p>
             <h3 className="mt-1 font-bold text-sm sm:text-base leading-tight text-ink line-clamp-2 group-hover:text-primary transition-colors">
               {product.nama}

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -30,7 +30,7 @@ export function CustomBuildForm() {
           {t('successBody')}
         </p>
         <Button variant="surface" size="md" href="/katalog" className="mt-4">
-          Lihat Katalog Digital →
+          {t('viewCatalog')}
         </Button>
       </Card>
     );
@@ -51,7 +51,7 @@ export function CustomBuildForm() {
           <label htmlFor="nama" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
             {t('fields.nama')} *
           </label>
-          <Input id="nama" name="nama" type="text" required placeholder="Nama lengkap Anda" />
+          <Input id="nama" name="nama" type="text" required placeholder={t('fields.namaPlaceholder')} />
           <FormError>{fieldErr('nama')}</FormError>
         </div>
 
@@ -59,7 +59,7 @@ export function CustomBuildForm() {
           <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
             {t('fields.email')} *
           </label>
-          <Input id="email" name="email" type="email" required placeholder="nama@email.com" />
+          <Input id="email" name="email" type="email" required placeholder={t('fields.emailPlaceholder')} />
           <FormError>{fieldErr('email')}</FormError>
         </div>
       </div>
@@ -70,7 +70,7 @@ export function CustomBuildForm() {
             {t('fields.wa')} *
           </label>
           <Input id="wa" name="wa" type="tel" required placeholder="08123456789" />
-          <FormHint>Untuk diskusi teknis</FormHint>
+          <FormHint>{t('fields.waHint')}</FormHint>
           <FormError>{fieldErr('wa')}</FormError>
         </div>
 
@@ -126,7 +126,7 @@ export function CustomBuildForm() {
           name="deskripsi"
           rows={5}
           required
-          placeholder="Jelaskan kebutuhan software/aplikasi, fitur utama, dan ekspektasi hasil proyek Anda..."
+          placeholder={t('fields.deskripsiPlaceholder')}
         />
         <FormError>{fieldErr('deskripsi')}</FormError>
       </div>
@@ -142,7 +142,7 @@ export function CustomBuildForm() {
         disabled={pending}
         className="w-full"
       >
-        {pending ? 'Mengirim Permintaan…' : 'Kirim Permintaan Build →'}
+        {pending ? t('submitting') : t('submit')}
       </Button>
     </form>
   );

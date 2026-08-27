@@ -43,7 +43,18 @@
       "dismiss": "Tutup",
       "clear": "Hapus",
       "noResults": "Tidak ada hasil.",
-      "pickDate": "Pilih tanggal"
+      "pickDate": "Pilih tanggal",
+      "datePlaceholder": "Pilih tanggal?",
+      "noData": "Tidak ada data."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Konfirmasi Hapus",
+      "deleteConfirm": "Hapus",
+      "deleteSuccess": "Berhasil dihapus.",
+      "deletePrompt": "Hapus {item}? Tindakan ini tidak bisa dibatalkan.",
+      "confirm": "Konfirmasi",
+      "cancel": "Batal",
+      "ok": "OK"
     }
   },
   "errors": {
@@ -535,7 +546,8 @@
     "typeAccount": "Aktivasi Akun",
     "downloadFile": "Unduh Berkas",
     "expiredDownload": "⏰ Tautan telah kedaluwarsa. Hubungi kami.",
-    "continuePayment": "Lanjutkan Pembayaran →"
+    "continuePayment": "Lanjutkan Pembayaran →",
+    "reviewedBadge": "Ulasan Diberikan"
   },
   "accountProvisioning": {
     "statusPending": "Menunggu Aktivasi",
@@ -574,7 +586,8 @@
       "media": "Media",
       "settings": "Pengaturan",
       "coupons": "Kupon",
-      "customRequests": "Permintaan Layanan"
+      "customRequests": "Permintaan Layanan",
+      "reviews": "Ulasan"
     },
     "topbar": {
       "viewSite": "Lihat Situs",
@@ -668,7 +681,8 @@
       "brandTitle": "enpiistudio",
       "brandSubtitle": "Admin",
       "openMenu": "Buka menu",
-      "closeMenu": "Tutup menu"
+      "closeMenu": "Tutup menu",
+      "reviews": "Ulasan Pembeli"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -711,7 +725,13 @@
       "pickerConfirmMessage": "Hapus preview image ini?",
       "pickerConfirmAction": "Hapus",
       "pickerUseLibrary": "◰ Pakai dari Library",
-      "pickerComingSoon": "Coming soon"
+      "pickerComingSoon": "Coming soon",
+      "emptyFallback": "Tidak ada data.",
+      "filePreview": "Preview:",
+      "fileAttached": "File terlampir",
+      "clearSelection": "Hapus pilihan",
+      "loadingMedia": "Memuat media dari library?",
+      "emptyMedia": "Library media masih kosong. Upload file terlebih dahulu atau buat produk/post dengan gambar."
     },
     "settingsNav": {
       "identity": "Site Identity",
@@ -1405,13 +1425,56 @@
         "status": "Status Permintaan",
         "notes": "Catatan Internal Admin",
         "notesHint": "Catatan progres, riwayat kontak WhatsApp, atau link proposal.",
-        "notesPlaceholder": "Tulis catatan tindak lanjut di sini…"
+        "notesPlaceholder": "Tulis catatan tindak lanjut di sini…",
+        "projectType": "Jenis Proyek",
+        "budget": "Estimasi Budget",
+        "timeline": "Target Timeline",
+        "description": "Deskripsi Kebutuhan"
       },
       "empty": {
         "noResults": "Tidak ada permintaan untuk \"{query}\"",
         "noResultsHint": "Coba gunakan kata kunci pencarian lain.",
         "noneYet": "Belum ada permintaan kustom masuk",
         "noneYetHint": "Permintaan yang dikirim dari halaman Layanan akan muncul di sini."
+      }
+    },
+    "reviews": {
+      "listTitle": "Ulasan & Rating",
+      "searchPlaceholder": "Cari nama pembeli, produk, kode order, atau ulasan?",
+      "filterStatus": "Status Publikasi",
+      "filterAllStatus": "Semua Status",
+      "filterRating": "Rating Bintang",
+      "filterAllRating": "Semua Bintang",
+      "published": "Dipublikasikan",
+      "hidden": "Disembunyikan",
+      "publish": "Publikasikan",
+      "hide": "Sembunyikan",
+      "publishSuccess": "Ulasan berhasil dipublikasikan.",
+      "hideSuccess": "Ulasan berhasil disembunyikan.",
+      "noComment": "Tanpa komentar tertulis",
+      "confirmDeleteTitle": "Hapus Ulasan",
+      "confirmDeleteMessage": "Apakah Anda yakin ingin menghapus ulasan ini secara permanen?",
+      "deleteConfirm": "Hapus Ulasan",
+      "deleteSuccess": "Ulasan berhasil dihapus.",
+      "columns": {
+        "product": "Produk & Order",
+        "buyer": "Pembeli",
+        "rating": "Rating",
+        "comment": "Ulasan",
+        "status": "Status",
+        "actions": "Aksi"
+      },
+      "stats": {
+        "total": "Total Ulasan",
+        "avgRating": "Rata-rata Rating",
+        "published": "Aktif / Publik",
+        "hidden": "Disembunyikan"
+      },
+      "empty": {
+        "noResults": "Tidak ada ulasan untuk \"{query}\"",
+        "noResultsHint": "Coba gunakan kata kunci pencarian lain atau ubah filter.",
+        "noneYet": "Belum ada ulasan yang masuk",
+        "noneYetHint": "Ulasan dari pembeli terverifikasi akan muncul di sini."
       }
     }
   },
@@ -1523,11 +1586,26 @@
         "1to3m": "1 - 3 Bulan",
         "3to6m": "3 - 6 Bulan",
         "flexible": "Fleksibel"
-      }
+      },
+      "namaPlaceholder": "Nama lengkap Anda",
+      "emailPlaceholder": "nama@email.com",
+      "waHint": "Untuk diskusi teknis",
+      "deskripsiPlaceholder": "Jelaskan kebutuhan software/aplikasi, fitur utama, dan ekspektasi hasil proyek Anda..."
     },
     "successTitle": "Permintaan Proyek Terkirim!",
     "successBody": "Terima kasih! Kami telah menerima detail kebutuhan Anda dan akan segera menghubungi via WhatsApp atau Email untuk tahapan diskusi teknis lebih lanjut.",
-    "errorGeneric": "Terjadi kesalahan saat mengirim formulir. Silakan periksa kembali isian Anda atau coba beberapa saat lagi."
+    "errorGeneric": "Terjadi kesalahan saat mengirim formulir. Silakan periksa kembali isian Anda atau coba beberapa saat lagi.",
+    "submit": "Kirim Permintaan Build ?",
+    "submitting": "Mengirim Permintaan?",
+    "viewCatalog": "Lihat Katalog Digital ?",
+    "services": {
+      "fullstackTitle": "Full-Stack Development",
+      "fullstackDesc": "Membangun web app modern dengan Next.js, Laravel API, PostgreSQL, dan arsitektur scalable.",
+      "mobileTitle": "Mobile & Desktop Apps",
+      "mobileDesc": "Aplikasi cross-platform Flutter/React Native yang terintegrasi langsung dengan backend bisnis Anda.",
+      "automationTitle": "Custom Automation & Tooling",
+      "automationDesc": "Bot otomasi, integrasi API pihak ketiga (Payment, WA Gateway, n8n), dan tooling internal tim."
+    }
   },
   "customer": {
     "login": {
@@ -1558,12 +1636,21 @@
       "orders": "Pesanan Saya",
       "wishlist": "Wishlist",
       "profile": "Pengaturan Profil",
-      "logout": "Keluar"
+      "logout": "Keluar",
+      "customerAccount": "Akun Pelanggan"
     },
     "dashboard": {
       "title": "Dasbor Akun",
       "subtitle": "Kelola pesanan, wishlist, dan profil Anda di satu tempat.",
-      "welcomeGreeting": "Halo, {name}!"
+      "welcomeGreeting": "Halo, {name}!",
+      "defaultCustomerName": "Pelanggan",
+      "totalOrders": "Total Pesanan",
+      "viewAllOrders": "Lihat Semua ?",
+      "openWishlist": "Buka Wishlist ?",
+      "verificationStatus": "Status Verifikasi",
+      "verifiedWA": "Terverifikasi WA",
+      "exploreCatalog": "Jelajahi Katalog",
+      "viewAll": "Lihat Semua"
     },
     "orders": {
       "title": "Riwayat Pesanan",
@@ -1576,18 +1663,77 @@
         "failed": "Gagal",
         "expired": "Kedaluwarsa",
         "refunded": "Dikembalikan"
-      }
+      },
+      "subtitle": "Daftar riwayat semua pesanan digital dan lisensi Anda di enpiistudio.",
+      "emptyHint": "Anda belum pernah membuat pesanan dengan akun ini.",
+      "startShopping": "Mulai Belanja",
+      "pageInfo": "Halaman {page} dari {lastPage}",
+      "prev": "? Sebelumnya",
+      "next": "Selanjutnya ?",
+      "totalLabel": "Total"
     },
     "profile": {
       "title": "Pengaturan Profil",
       "nameLabel": "Nama Lengkap",
       "phoneLabel": "Nomor WhatsApp",
       "saveProfile": "Simpan Perubahan",
-      "profileUpdated": "Profil berhasil diperbarui."
+      "profileUpdated": "Profil berhasil diperbarui.",
+      "emailLabel": "Email (Opsional)",
+      "phoneHint": "Nomor ini digunakan untuk login WhatsApp OTP.",
+      "errorGeneric": "Gagal memperbarui profil."
     },
     "logout": {
       "confirm": "Apakah Anda yakin ingin keluar dari akun?",
       "loggedOut": "Anda telah berhasil keluar."
+    },
+    "loading": "Memuat data akun...",
+    "loadingOrders": "Memuat riwayat pesanan...",
+    "loadingWishlist": "Memuat wishlist...",
+    "totalOrders": "Total Pesanan",
+    "wishlistPage": {
+      "viewProduct": "Lihat Produk",
+      "remove": "Hapus",
+      "subtitle": "Daftar produk yang Anda simpan untuk dibeli nanti.",
+      "emptyTitle": "Wishlist Anda kosong.",
+      "emptyHint": "Jelajahi produk kami dan klik ikon hati untuk menyimpan produk favorit Anda.",
+      "exploreCatalog": "Jelajahi Katalog",
+      "defaultCategory": "Digital"
     }
+  },
+  "promoBanner": {
+    "badge": "?? PROMO",
+    "instantDownload": "Instant download ? bayar, langsung unduh",
+    "officialLicense": "Lisensi resmi & garansi update",
+    "bundleDeal": "Bundle hemat untuk karya favorit",
+    "waSupport": "Bantuan via WhatsApp setiap hari",
+    "freeSample": "Sample gratis untuk pemula"
+  },
+  "reviews": {
+    "eyebrow": "Social Proof & Reputasi",
+    "sectionTitle": "Ulasan & Rating Pembeli",
+    "basedOnReviews": "Berdasarkan {count} ulasan pembeli terverifikasi",
+    "verifiedBuyersScore": "Skor dari pembeli terverifikasi",
+    "filterAll": "Semua Rating",
+    "loadingReviews": "Memuat ulasan pembeli?",
+    "emptyTitle": "Belum ada ulasan untuk karya ini",
+    "emptyHint": "Jadilah yang pertama memberikan ulasan dan rating setelah melakukan pembelian!",
+    "verifiedBuyer": "Pembeli Terverifikasi",
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya",
+    "modalTitle": "Beri Ulasan Produk",
+    "writeReview": "Beri Ulasan",
+    "thankYou": "Terima Kasih!",
+    "ratingLabel": "Pilih Rating Bintang",
+    "stars": "bintang",
+    "commentLabel": "Ulasan & Pengalaman Penggunaan",
+    "commentPlaceholder": "Ceritakan pengalaman Anda menggunakan karya ini, kemudahan instalasi, atau kualitas kodenya?",
+    "buyerNameLabel": "Nama yang Ditampilkan",
+    "buyerNamePlaceholder": "Nama Anda (opsional)",
+    "verificationLabel": "Email / WhatsApp Pemesan",
+    "verificationHint": "Digunakan untuk memvalidasi kepemilikan pesanan.",
+    "submitting": "Mengirimkan?",
+    "submitCta": "Kirim Ulasan",
+    "submitSuccess": "Ulasan Anda berhasil dikirim dan dipublikasikan!",
+    "submitError": "Gagal mengirimkan ulasan. Silakan periksa kembali isian Anda."
   }
 }

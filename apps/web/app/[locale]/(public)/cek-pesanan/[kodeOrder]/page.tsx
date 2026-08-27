@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
+import { ReviewFormModal } from '@/components/order/ReviewFormModal';
+import { reviewApi } from '@/lib/review-api';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
@@ -154,6 +156,24 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
                     <p className="mt-2 text-xs font-mono bg-ink text-surface px-2 py-1 inline-block break-words">{delivery!.license_key}</p>
                   )}
                   {provisioning && <AccountProvisioningBox provisioning={provisioning} />}
+
+                  {(order.status === 'paid' || order.status === 'free') && (
+                    <div className="mt-3 pt-2 border-t border-ink/10 flex items-center justify-between gap-2">
+                      {reviewedProductIds.includes(item.product_id) ? (
+                        <span className="text-xs font-bold text-green-800 flex items-center gap-1">
+                          ? {t('reviewedBadge') || 'Ulasan Diberikan'}
+                        </span>
+                      ) : (
+                        <ReviewFormModal
+                          kodeOrder={order.kode_order}
+                          productId={item.product_id}
+                          productName={item.nama_produk}
+                          defaultBuyerName={order.nama_pembeli}
+                          defaultEmailOrPhone={order.email_pembeli || order.wa_pembeli}
+                        />
+                      )}
+                    </div>
+                  )}
                 </li>
               );
             })}

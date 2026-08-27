@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useSyncExternalStore } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 
@@ -23,11 +24,13 @@ export function DialogContainer() {
 }
 
 function Modal({ state }: { state: DialogState }) {
+  const t = useTranslations('common.dialog');
+  const tCommon = useTranslations('common.ui');
   const isConfirm = state.kind === 'confirm';
   const opts = isConfirm ? state.opts : (state as Extract<DialogState, { kind: 'alert' }>).opts;
   const danger = isConfirm ? opts.danger : false;
-  const confirmLabel = opts.confirmLabel ?? (isConfirm ? 'Konfirmasi' : 'OK');
-  const cancelLabel = opts.cancelLabel ?? 'Batal';
+  const confirmLabel = opts.confirmLabel ?? (isConfirm ? t('confirm') : t('ok'));
+  const cancelLabel = opts.cancelLabel ?? t('cancel');
 
   function close(result: boolean | 'cancel') {
     if (state.kind === 'confirm') {
@@ -59,7 +62,7 @@ function Modal({ state }: { state: DialogState }) {
       <button
         type="button"
         tabIndex={-1}
-        aria-label="Close dialog"
+        aria-label={tCommon('closeDialog')}
         onClick={() => close('cancel')}
         className="absolute inset-0 bg-ink/60 cursor-default"
       />

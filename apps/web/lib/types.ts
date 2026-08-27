@@ -45,6 +45,7 @@ export interface Product {
   remaining_amount?: number | null;
   needs_license_key: boolean;
   has_downloadable_file: boolean;
+  rating_summary?: ProductRatingSummary;
   /** Blog posts yang di-link dari produk ini (panduan, warning, catatan teknis). */
   linked_posts?: LinkedPost[];
   created_at: string | null;
@@ -469,4 +470,45 @@ export interface CustomerUser {
   email_verified_at: string | null;
   last_login_at: string | null;
   created_at: string | null;
+}
+
+// ????? Reviews ?????
+
+export interface ProductRatingSummary {
+  average: number;
+  count: number;
+  distribution: {
+    '1': number;
+    '2': number;
+    '3': number;
+    '4': number;
+    '5': number;
+  };
+}
+
+export interface Review {
+  id: number;
+  product_id: number;
+  product?: {
+    id: number;
+    nama: string;
+    slug: string;
+  };
+  order_id: number;
+  order_kode?: string;
+  user_id?: number | null;
+  buyer_name: string;
+  rating: number;
+  comment?: string | null;
+  is_published: boolean;
+  admin_notes?: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface ReviewStats {
+  total: number;
+  published: number;
+  hidden: number;
+  average_rating: number;
 }

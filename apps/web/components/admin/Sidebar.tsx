@@ -13,6 +13,7 @@ const NAV_HREFS = [
   '/admin/products',
   '/admin/coupons',
   '/admin/custom-requests',
+  '/admin/reviews',
   '/admin/posts',
   '/admin/orders',
   '/admin/preorders',
@@ -43,7 +44,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
     '',
   ) || '/';
 
-  const navKeys = ['dashboard', 'categories', 'products', 'coupons', 'customRequests', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings'] as const;
+  const navKeys = ['dashboard', 'categories', 'products', 'coupons', 'customRequests', 'reviews', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings'] as const;
 
   return (
     <>

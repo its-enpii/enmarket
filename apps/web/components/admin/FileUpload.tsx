@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * Client component untuk upload file.
@@ -6,6 +6,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   name: string;
@@ -24,6 +25,7 @@ export function FileUpload({
   onChange,
   defaultPreview,
 }: Props) {
+  const t = useTranslations('admin.shared');
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +68,7 @@ export function FileUpload({
         {previewUrl && (
           <div className="mt-3">
             <p className="text-xs text-ink/60 mb-1.5 font-bold uppercase tracking-wide">
-              Preview:
+              {t('filePreview')}
             </p>
             {files[0]?.type.startsWith('image/') || defaultPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -77,7 +79,7 @@ export function FileUpload({
               />
             ) : (
               <div className="border-2 border-ink px-3 py-2 text-sm bg-surface">
-                📎 {files[0]?.name ?? 'File terlampir'}
+                📎 {files[0]?.name ?? t('fileAttached')}
               </div>
             )}
           </div>
@@ -89,7 +91,7 @@ export function FileUpload({
             onClick={clearFile}
             className="mt-3 text-xs underline text-primary font-bold hover:text-accent"
           >
-            Hapus pilihan
+            {t('clearSelection')}
           </button>
         )}
       </div>

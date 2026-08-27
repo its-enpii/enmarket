@@ -241,4 +241,58 @@ class Product extends Model
 
         return $harga - $this->depositAmount();
     }
+    /**
+     * Semua review untuk produk ini.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Review yang dipublikasikan.
+     */
+    public function publishedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->where('is_published', true);
+    }
+
+    /**
+     * Hitung aggregate rating (rata-rata, total count, distribusi bintang 1-5).
+     */
+    public function ratingSummary(): array
+    {
+        $published = $this->publishedReviews;
+        $total = $published->count();
+
+        if ($total === 0) {
+            return [
+                'average' => 0.0,
+                'count' => 0,
+                'distribution' => [
+                    '5' => 0,
+                    '4' => 0,
+                    '3' => 0,
+                    '2' => 0,
+                    '1' => 0,
+                ],
+            ];
+        }
+
+        $avg = round($published->avg('rating'), 1);
+        $counts = $published->groupBy('rating')->map->count();
+
+        return [
+            'average' => (float) $avg,
+            'count' => $total,
+            'distribution' => [
+                '5' => (int) ($counts->get(5) ?? 0),
+                '4' => (int) ($counts->get(4) ?? 0),
+                '3' => (int) ($counts->get(3) ?? 0),
+                '2' => (int) ($counts->get(2) ?? 0),
+                '1' => (int) ($counts->get(1) ?? 0),
+            ],
+        ];
+    }
+
 }

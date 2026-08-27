@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -10,7 +10,9 @@ import type { Order } from '@/lib/types';
 
 export default function AkunDashboardPage() {
   const t = useTranslations('account.dashboard');
+  const tNav = useTranslations('account.nav');
   const tOrders = useTranslations('account.orders');
+  const tAcc = useTranslations('account');
   const { user, isLoading } = useAuth();
 
   const [orders, setOrders] = useState<Order[]>([]);
@@ -48,12 +50,12 @@ export default function AkunDashboardPage() {
   if (isLoading) {
     return (
       <Card variant="surface" hoverable={false} className="p-8 text-center">
-        <p className="text-sm font-bold text-ink">Memuat data akun...</p>
+        <p className="text-sm font-bold text-ink">{tAcc('loading')}</p>
       </Card>
     );
   }
 
-  const name = user?.name || 'Pelanggan';
+  const name = user?.name || t('defaultCustomerName');
 
   return (
     <div className="space-y-6">
@@ -72,33 +74,33 @@ export default function AkunDashboardPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card variant="surface" hoverable={false} className="p-5">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">Total Pesanan</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('totalOrders')}</p>
           <p className="text-3xl font-black font-mono text-ink mt-2">
             {loadingStats ? '-' : orders.length}
           </p>
           <div className="mt-3">
             <Button variant="primary" size="sm" href="/akun/pesanan">
-              Lihat Semua →
+              {t('viewAllOrders')}
             </Button>
           </div>
         </Card>
 
         <Card variant="surface" hoverable={false} className="p-5">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">Wishlist</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{tNav('wishlist')}</p>
           <p className="text-3xl font-black font-mono text-ink mt-2">
             {loadingStats ? '-' : wishlistCount}
           </p>
           <div className="mt-3">
             <Button variant="primary" size="sm" href="/akun/wishlist">
-              Buka Wishlist →
+              {t('openWishlist')}
             </Button>
           </div>
         </Card>
 
         <Card variant="surface" hoverable={false} className="p-5">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">Status Verifikasi</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('verificationStatus')}</p>
           <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-100 border-2 border-green-700 text-green-900 text-xs font-bold uppercase">
-            <span>✓</span> Terverifikasi WA
+            <span>✓</span> {t('verifiedWA')}
           </div>
           <p className="text-xs font-mono text-ink/60 mt-2 truncate">
             {user?.phone}
@@ -114,18 +116,18 @@ export default function AkunDashboardPage() {
           </h2>
           {orders.length > 0 && (
             <Button variant="surface" size="sm" href="/akun/pesanan">
-              Lihat Semua
+              {t('viewAll')}
             </Button>
           )}
         </div>
 
         {loadingStats ? (
-          <p className="text-sm text-ink/70">Memuat pesanan...</p>
+          <p className="text-sm text-ink/70">{tAcc('loadingOrders')}</p>
         ) : orders.length === 0 ? (
           <Card variant="surface" hoverable={false} className="p-8 text-center">
             <p className="text-sm font-semibold text-ink/70 mb-4">{tOrders('empty')}</p>
             <Button variant="primary" size="md" href="/katalog">
-              Jelajahi Katalog
+              {t('exploreCatalog')}
             </Button>
           </Card>
         ) : (

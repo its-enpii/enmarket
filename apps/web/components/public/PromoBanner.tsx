@@ -1,4 +1,7 @@
+﻿'use client';
+
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 /**
  * Strip promo tipis di paling atas homepage — marketplace vibe.
@@ -8,12 +11,13 @@ import Link from 'next/link';
  * Tone: benefit, bukan hard-sell ("Gratis ongkir" / "Lisensi resmi").
  */
 export function PromoBanner() {
+  const t = useTranslations('promoBanner');
   const items: Array<{ icon: string; text: string; href?: string }> = [
-    { icon: '⚡', text: 'Instant download — bayar, langsung unduh' },
-    { icon: '🔑', text: 'Lisensi resmi & garansi update' },
-    { icon: '📦', text: 'Bundle hemat untuk karya favorit' },
-    { icon: '💬', text: 'Bantuan via WhatsApp setiap hari' },
-    { icon: '🎁', text: 'Sample gratis untuk pemula' },
+    { icon: '⚡', text: t('instantDownload') },
+    { icon: '🔑', text: t('officialLicense') },
+    { icon: '📦', text: t('bundleDeal') },
+    { icon: '💬', text: t('waSupport') },
+    { icon: '🎁', text: t('freeSample') },
   ];
 
   return (
@@ -21,7 +25,7 @@ export function PromoBanner() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex items-center gap-3 py-2 overflow-x-auto whitespace-nowrap text-xs sm:text-sm font-bold uppercase tracking-wider scrollbar-none">
           <span className="shrink-0 bg-accent text-ink border-2 border-accent px-2 py-0.5 text-[10px] sm:text-xs">
-            🔥 PROMO
+            {t('badge')}
           </span>
           {items.map((it, i) => (
             <span key={i} className="shrink-0 inline-flex items-center gap-1.5">

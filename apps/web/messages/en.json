@@ -43,7 +43,18 @@
       "dismiss": "Dismiss",
       "clear": "Clear",
       "noResults": "No results.",
-      "pickDate": "Pick a date"
+      "pickDate": "Pick a date",
+      "datePlaceholder": "Pick a date?",
+      "noData": "No data."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Confirm Deletion",
+      "deleteConfirm": "Delete",
+      "deleteSuccess": "Successfully deleted.",
+      "deletePrompt": "Delete {item}? This action cannot be undone.",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "ok": "OK"
     }
   },
   "errors": {
@@ -535,7 +546,8 @@
     "typeAccount": "Account Activation",
     "downloadFile": "Download File",
     "expiredDownload": "⏰ This link has expired. Contact us.",
-    "continuePayment": "Continue to Payment →"
+    "continuePayment": "Continue to Payment →",
+    "reviewedBadge": "Review Submitted"
   },
   "accountProvisioning": {
     "statusPending": "Awaiting Activation",
@@ -574,7 +586,8 @@
       "media": "Media",
       "settings": "Settings",
       "coupons": "Coupons",
-      "customRequests": "Custom Requests"
+      "customRequests": "Custom Requests",
+      "reviews": "Reviews"
     },
     "topbar": {
       "viewSite": "View Site",
@@ -668,7 +681,8 @@
       "brandTitle": "enpiistudio",
       "brandSubtitle": "Admin",
       "openMenu": "Open menu",
-      "closeMenu": "Close menu"
+      "closeMenu": "Close menu",
+      "reviews": "Customer Reviews"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -711,7 +725,13 @@
       "pickerConfirmMessage": "Remove this preview image?",
       "pickerConfirmAction": "Remove",
       "pickerUseLibrary": "◰ Use from Library",
-      "pickerComingSoon": "Coming soon"
+      "pickerComingSoon": "Coming soon",
+      "emptyFallback": "No data.",
+      "filePreview": "Preview:",
+      "fileAttached": "File attached",
+      "clearSelection": "Clear selection",
+      "loadingMedia": "Loading media from library?",
+      "emptyMedia": "Media library is empty. Upload files first or create products/posts with images."
     },
     "settingsNav": {
       "identity": "Site Identity",
@@ -1405,13 +1425,56 @@
         "status": "Request Status",
         "notes": "Admin Internal Notes",
         "notesHint": "Progress notes, WhatsApp conversation history, or proposal links.",
-        "notesPlaceholder": "Write follow-up notes here…"
+        "notesPlaceholder": "Write follow-up notes here…",
+        "projectType": "Project Type",
+        "budget": "Estimated Budget",
+        "timeline": "Target Timeline",
+        "description": "Requirements Description"
       },
       "empty": {
         "noResults": "No requests found for \"{query}\"",
         "noResultsHint": "Try using different search keywords.",
         "noneYet": "No custom requests yet",
         "noneYetHint": "Submissions from the Services page will appear here."
+      }
+    },
+    "reviews": {
+      "listTitle": "Reviews & Ratings",
+      "searchPlaceholder": "Search buyer name, product, order code, or comment?",
+      "filterStatus": "Publication Status",
+      "filterAllStatus": "All Statuses",
+      "filterRating": "Star Rating",
+      "filterAllRating": "All Stars",
+      "published": "Published",
+      "hidden": "Hidden",
+      "publish": "Publish",
+      "hide": "Hide",
+      "publishSuccess": "Review published successfully.",
+      "hideSuccess": "Review hidden successfully.",
+      "noComment": "No written comment",
+      "confirmDeleteTitle": "Delete Review",
+      "confirmDeleteMessage": "Are you sure you want to permanently delete this review?",
+      "deleteConfirm": "Delete Review",
+      "deleteSuccess": "Review deleted successfully.",
+      "columns": {
+        "product": "Product & Order",
+        "buyer": "Buyer",
+        "rating": "Rating",
+        "comment": "Review",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "stats": {
+        "total": "Total Reviews",
+        "avgRating": "Average Rating",
+        "published": "Active / Published",
+        "hidden": "Hidden"
+      },
+      "empty": {
+        "noResults": "No reviews found for \"{query}\"",
+        "noResultsHint": "Try different search terms or change filters.",
+        "noneYet": "No reviews received yet",
+        "noneYetHint": "Reviews from verified buyers will appear here."
       }
     }
   },
@@ -1523,11 +1586,26 @@
         "1to3m": "1 - 3 Months",
         "3to6m": "3 - 6 Months",
         "flexible": "Flexible"
-      }
+      },
+      "namaPlaceholder": "Your full name",
+      "emailPlaceholder": "name@email.com",
+      "waHint": "For technical discussion",
+      "deskripsiPlaceholder": "Describe your software/application needs, key features, and expected outcomes..."
     },
     "successTitle": "Project Request Sent!",
     "successBody": "Thank you! We have received your project requirements and will reach out via WhatsApp or Email shortly for technical discussions.",
-    "errorGeneric": "An error occurred while submitting the form. Please check your inputs or try again shortly."
+    "errorGeneric": "An error occurred while submitting the form. Please check your inputs or try again shortly.",
+    "submit": "Submit Build Request ?",
+    "submitting": "Submitting Request?",
+    "viewCatalog": "Browse Digital Catalog ?",
+    "services": {
+      "fullstackTitle": "Full-Stack Development",
+      "fullstackDesc": "Building modern web apps with Next.js, Laravel API, PostgreSQL, and scalable architectures.",
+      "mobileTitle": "Mobile & Desktop Apps",
+      "mobileDesc": "Cross-platform Flutter/React Native apps integrated seamlessly with your business backend.",
+      "automationTitle": "Custom Automation & Tooling",
+      "automationDesc": "Automation bots, third-party API integrations (Payment, WA Gateway, n8n), and internal team tooling."
+    }
   },
   "customer": {
     "login": {
@@ -1558,12 +1636,21 @@
       "orders": "My Orders",
       "wishlist": "Wishlist",
       "profile": "Profile Settings",
-      "logout": "Logout"
+      "logout": "Logout",
+      "customerAccount": "Customer Account"
     },
     "dashboard": {
       "title": "Account Dashboard",
       "subtitle": "Manage your orders, wishlist, and profile in one place.",
-      "welcomeGreeting": "Hello, {name}!"
+      "welcomeGreeting": "Hello, {name}!",
+      "defaultCustomerName": "Customer",
+      "totalOrders": "Total Orders",
+      "viewAllOrders": "View All ?",
+      "openWishlist": "Open Wishlist ?",
+      "verificationStatus": "Verification Status",
+      "verifiedWA": "WA Verified",
+      "exploreCatalog": "Explore Catalog",
+      "viewAll": "View All"
     },
     "orders": {
       "title": "Order History",
@@ -1576,18 +1663,77 @@
         "failed": "Failed",
         "expired": "Expired",
         "refunded": "Refunded"
-      }
+      },
+      "subtitle": "History of all your digital orders and licenses at enpiistudio.",
+      "emptyHint": "You have not placed any orders with this account yet.",
+      "startShopping": "Start Shopping",
+      "pageInfo": "Page {page} of {lastPage}",
+      "prev": "? Previous",
+      "next": "Next ?",
+      "totalLabel": "Total"
     },
     "profile": {
       "title": "Profile Settings",
       "nameLabel": "Full Name",
       "phoneLabel": "WhatsApp Number",
       "saveProfile": "Save Changes",
-      "profileUpdated": "Profile updated successfully."
+      "profileUpdated": "Profile updated successfully.",
+      "emailLabel": "Email (Optional)",
+      "phoneHint": "This phone number is used for WhatsApp OTP login.",
+      "errorGeneric": "Failed to update profile."
     },
     "logout": {
       "confirm": "Are you sure you want to log out?",
       "loggedOut": "You have been logged out."
+    },
+    "loading": "Loading account data...",
+    "loadingOrders": "Loading order history...",
+    "loadingWishlist": "Loading wishlist...",
+    "totalOrders": "Total Orders",
+    "wishlistPage": {
+      "viewProduct": "View Product",
+      "remove": "Remove",
+      "subtitle": "List of products you saved to purchase later.",
+      "emptyTitle": "Your wishlist is empty.",
+      "emptyHint": "Explore our products and click the heart icon to save your favorites.",
+      "exploreCatalog": "Explore Catalog",
+      "defaultCategory": "Digital"
     }
+  },
+  "promoBanner": {
+    "badge": "?? PROMO",
+    "instantDownload": "Instant download ? pay and get it immediately",
+    "officialLicense": "Official license & free updates",
+    "bundleDeal": "Value bundles for favorite items",
+    "waSupport": "WhatsApp support available daily",
+    "freeSample": "Free sample for newcomers"
+  },
+  "reviews": {
+    "eyebrow": "Social Proof & Reputation",
+    "sectionTitle": "Customer Reviews & Ratings",
+    "basedOnReviews": "Based on {count} verified buyer reviews",
+    "verifiedBuyersScore": "Score from verified buyers",
+    "filterAll": "All Ratings",
+    "loadingReviews": "Loading customer reviews?",
+    "emptyTitle": "No reviews yet for this work",
+    "emptyHint": "Be the first to leave a review and rating after purchasing!",
+    "verifiedBuyer": "Verified Buyer",
+    "prev": "Previous",
+    "next": "Next",
+    "modalTitle": "Write a Product Review",
+    "writeReview": "Write Review",
+    "thankYou": "Thank You!",
+    "ratingLabel": "Select Star Rating",
+    "stars": "stars",
+    "commentLabel": "Review & Experience",
+    "commentPlaceholder": "Share your experience using this digital product, ease of setup, or code quality?",
+    "buyerNameLabel": "Display Name",
+    "buyerNamePlaceholder": "Your name (optional)",
+    "verificationLabel": "Order Email / WhatsApp",
+    "verificationHint": "Used to verify order ownership.",
+    "submitting": "Submitting?",
+    "submitCta": "Submit Review",
+    "submitSuccess": "Your review has been submitted and published!",
+    "submitError": "Failed to submit review. Please check your inputs."
   }
 }

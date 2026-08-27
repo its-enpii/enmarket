@@ -1,3 +1,7 @@
+﻿'use client';
+
+import { useTranslations } from 'next-intl';
+
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
 
@@ -13,6 +17,7 @@ interface Props {
  * pada discovery cepat.
  */
 export function CategoryRail({ categories }: Props) {
+  const t = useTranslations('categoryRail');
   const isEmpty = categories.length === 0;
   const displayCategories = isEmpty
     ? [
@@ -27,14 +32,14 @@ export function CategoryRail({ categories }: Props) {
   return (
     <Card
       as="section"
-      aria-label="Kategori populer"
+      aria-label={t('ariaLabel')}
       variant="surface"
       hoverable={false}
       className="!shadow-[4px_4px_0_0_var(--color-ink)]"
     >
       <div className="flex items-center justify-between gap-2 border-b-2 border-ink px-4 py-3">
         <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-ink">
-          Jelajahi Kategori
+          {t('heading')}
         </h2>
         <NLink
           href="/katalog"
@@ -43,7 +48,7 @@ export function CategoryRail({ categories }: Props) {
           arrow
           className="text-xs"
         >
-          Lihat semua
+          {t('viewAll')}
         </NLink>
       </div>
       <div className="px-3 py-3 overflow-x-auto scrollbar-none">
@@ -63,7 +68,7 @@ export function CategoryRail({ categories }: Props) {
                   <span className="font-bold text-sm leading-tight">{cat.nama}</span>
                   {typeof cat.products_count === 'number' && (
                     <span className="text-[10px] font-bold uppercase tracking-wider text-ink/60">
-                      {cat.products_count} karya
+                      {cat.products_count} {t('suffix')}
                     </span>
                   )}
                 </span>
@@ -74,7 +79,7 @@ export function CategoryRail({ categories }: Props) {
       </div>
       {isEmpty && (
         <p className="text-[10px] text-ink/50 px-4 pb-3 italic">
-          *Contoh kategori — data asli akan tampil setelah admin menambah karya.
+          {t('placeholderHint')}
         </p>
       )}
     </Card>

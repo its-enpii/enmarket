@@ -23,6 +23,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import { RelatedWorks } from '@/components/public/RelatedWorks';
+import { ProductReviewsSection } from '@/components/public/ProductReviewsSection';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
@@ -144,7 +145,17 @@ export default async function WorkDetailPage({ params }: PageProps) {
           >
             {t('back')}
           </NLink>
-          {kategori && (
+          {product.rating_summary && product.rating_summary.count > 0 && (
+                <a
+                  href="#reviews"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent transition-colors"
+                >
+                  <span className="text-accent">?</span>
+                  <span>{product.rating_summary.average.toFixed(1)}</span>
+                  <span className="text-ink/60">({product.rating_summary.count})</span>
+                </a>
+              )}
+              {kategori && (
             <span className="ml-4 font-label text-label-sm uppercase text-ink/40">
               · {kategori.nama}
             </span>
@@ -192,6 +203,16 @@ export default async function WorkDetailPage({ params }: PageProps) {
               <Badge tone="ink" size="md" shadow={false}>
                 {tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}
               </Badge>
+              {product.rating_summary && product.rating_summary.count > 0 && (
+                <a
+                  href="#reviews"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent transition-colors"
+                >
+                  <span className="text-accent">?</span>
+                  <span>{product.rating_summary.average.toFixed(1)}</span>
+                  <span className="text-ink/60">({product.rating_summary.count})</span>
+                </a>
+              )}
               {kategori && (
                 <Badge tone="surface" size="md" shadow={false}>
                   {kategori.nama}
@@ -286,7 +307,17 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   <dt className="font-label text-label-sm uppercase text-ink/60">{t('type')}</dt>
                   <dd className="font-bold text-ink">{tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}</dd>
                 </div>
-                {kategori && (
+                {product.rating_summary && product.rating_summary.count > 0 && (
+                <a
+                  href="#reviews"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent transition-colors"
+                >
+                  <span className="text-accent">?</span>
+                  <span>{product.rating_summary.average.toFixed(1)}</span>
+                  <span className="text-ink/60">({product.rating_summary.count})</span>
+                </a>
+              )}
+              {kategori && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
                     <dt className="font-label text-label-sm uppercase text-ink/60">{t('category')}</dt>
                     <dd>

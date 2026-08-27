@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 /**
  * Delete button dengan confirm dialog. Pakai Server Action atau function
@@ -6,6 +6,7 @@
  */
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
@@ -27,13 +28,16 @@ export function DeleteButton({
   className,
 }: Props) {
   const [pending, startTransition] = useTransition();
+  const t = useTranslations('common.dialog');
+  const tBtn = useTranslations('common.buttons');
 
   async function handleClick() {
-    const msg = confirmMessage ?? `Hapus${itemName ? ` "${itemName}"` : ''}? Tindakan ini tidak bisa dibatalkan.`;
+    const msg = confirmMessage ?? t('deletePrompt', { item: itemName ? `"${itemName}"` : '' });
     const ok = await confirmDialog({
-      title: 'Konfirmasi Hapus',
+      title: t('confirmDeleteTitle'),
       message: msg,
-      confirmLabel: 'Hapus',
+      confirmLabel: t('deleteConfirm'),
+      cancelLabel: t('cancel'),
       danger: true,
     });
     if (!ok) return;
@@ -47,7 +51,7 @@ export function DeleteButton({
       } else if (res && 'message' in res && res.message) {
         toast.success(res.message);
       } else {
-        toast.success('Berhasil dihapus.');
+        toast.success(t('deleteSuccess'));
       }
     });
   }
@@ -61,7 +65,7 @@ export function DeleteButton({
       disabled={pending}
       className={className}
     >
-      {pending ? '…' : 'Hapus'}
+      {pending ? '…' : tBtn('delete')}
     </Button>
   );
 }

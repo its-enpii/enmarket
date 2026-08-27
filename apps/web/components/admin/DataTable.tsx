@@ -1,4 +1,7 @@
+﻿'use client';
+
 import { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
 
@@ -24,6 +27,8 @@ interface Props<T> {
 }
 
 export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }: Props<T>) {
+  const t = useTranslations('admin.shared');
+
   if (rows.length === 0) {
     if (emptyState) {
       return <>{emptyState}</>;
@@ -31,7 +36,7 @@ export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }
     return (
       <Card variant="surface" hoverable={false} className="px-6 py-12 text-center">
         <p className="text-ink/60 font-medium">
-          {emptyMessage ?? 'Tidak ada data.'}
+          {emptyMessage ?? t('emptyFallback')}
         </p>
       </Card>
     );
@@ -50,25 +55,27 @@ export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  style={col.width ? { width: col.width } : undefined}
-                  className="text-left px-4 py-3 font-bold uppercase tracking-wide text-xs border-b-2 border-ink"
+                  style={{ width: col.width }}
+                  className="px-4 py-3 text-left font-mono font-bold uppercase tracking-wider text-xs border-b-2 border-ink first:pl-5 last:pr-5"
                 >
                   {col.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            {rows.map((row, i) => (
+          <tbody className="divide-y-2 divide-ink/15">
+            {rows.map((row, idx) => (
               <tr
                 key={rowKey(row)}
-                className={
-                  'border-b border-ink/20 last:border-b-0 ' +
-                  (i % 2 === 0 ? 'bg-surface' : 'bg-surface/50')
-                }
+                className={`hover:bg-primary/5 transition-colors ${
+                  idx % 2 === 0 ? 'bg-surface' : 'bg-surface/50'
+                }`}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 text-ink align-middle">
+                  <td
+                    key={col.key}
+                    className="px-4 py-3 text-ink align-middle first:pl-5 last:pr-5"
+                  >
                     {col.render(row)}
                   </td>
                 ))}

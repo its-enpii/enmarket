@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
@@ -43,23 +43,23 @@ export default async function LayananPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card variant="surface" hoverable={false} className="p-6">
           <p className="font-label text-2xl mb-2">⚡</p>
-          <h3 className="font-bold text-lg text-ink">Full-Stack Development</h3>
+          <h3 className="font-bold text-lg text-ink">{t('services.fullstackTitle')}</h3>
           <p className="mt-2 text-xs text-ink/70 leading-relaxed">
-            Membangun web app modern dengan Next.js, Laravel API, PostgreSQL, dan arsitektur scalable.
+            {t('services.fullstackDesc')}
           </p>
         </Card>
         <Card variant="surface" hoverable={false} className="p-6">
           <p className="font-label text-2xl mb-2">📱</p>
-          <h3 className="font-bold text-lg text-ink">Mobile & Desktop Apps</h3>
+          <h3 className="font-bold text-lg text-ink">{t('services.mobileTitle')}</h3>
           <p className="mt-2 text-xs text-ink/70 leading-relaxed">
-            Aplikasi cross-platform Flutter/React Native yang terintegrasi langsung dengan backend bisnis Anda.
+            {t('services.mobileDesc')}
           </p>
         </Card>
         <Card variant="surface" hoverable={false} className="p-6">
-          <p className="font-label text-2xl mb-2">⚙</p>
-          <h3 className="font-bold text-lg text-ink">Custom Automation & Tooling</h3>
+          <p className="font-label text-2xl mb-2">⚙️</p>
+          <h3 className="font-bold text-lg text-ink">{t('services.automationTitle')}</h3>
           <p className="mt-2 text-xs text-ink/70 leading-relaxed">
-            Bot otomasi, integrasi API pihak ketiga (Payment, WA Gateway, n8n), dan tooling internal tim.
+            {t('services.automationDesc')}
           </p>
         </Card>
       </div>

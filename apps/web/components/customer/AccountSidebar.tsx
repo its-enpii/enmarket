@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/neobrutal';
 
 export function AccountSidebar() {
   const t = useTranslations('account.nav');
+  const tDash = useTranslations('account.dashboard');
   const tLogout = useTranslations('account.logout');
   const pathname = usePathname();
   const router = useRouter();
@@ -31,9 +32,9 @@ export function AccountSidebar() {
     <aside className="w-full md:w-64 shrink-0">
       <Card variant="surface" hoverable={false} className="p-5">
         <div className="pb-4 mb-4 border-b-2 border-ink">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">Akun Pelanggan</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('customerAccount')}</p>
           <p className="text-lg font-black text-ink truncate mt-1">
-            {user?.name || 'Pelanggan'}
+            {user?.name || tDash('defaultCustomerName')}
           </p>
           <p className="text-xs font-mono text-ink/70 truncate">{user?.phone}</p>
         </div>

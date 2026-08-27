@@ -121,4 +121,12 @@ class Order extends Model
             && $this->status === 'paid'
             && $this->preorder_release_processed_at !== null;
     }
+    /**
+     * Ulasan yang dibuat untuk produk dalam pesanan ini.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
 }
