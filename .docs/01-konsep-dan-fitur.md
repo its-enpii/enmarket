@@ -14,7 +14,7 @@
 | Jenis produk | Produk digital: source code, lisensi, assets, dll |
 | Pembayaran | Payment gateway otomatis via Tripay |
 | Pengiriman produk | Otomatis via email dan/atau WhatsApp setelah pembayaran terkonfirmasi |
-| Integrasi pengiriman | Evolution API + n8n (sudah tersedia di infrastruktur enpiistudio) |
+| Integrasi pengiriman | Laravel Mail + WhatsApp webhook agent enpiistudio (langsung dari backend, tanpa n8n) |
 | Branding | enpiistudio |
 
 **Referensi konsep serupa**: Gumroad, Lemon Squeezy, Creative Market — tapi versi self-hosted dan personal, tanpa platform pihak ketiga.
@@ -78,17 +78,19 @@
 
 ### 2.3 Sistem Otomasi Pengiriman
 
-Setelah Tripay mengirim callback pembayaran sukses ke Laravel:
+Setelah Tripay mengirim callback pembayaran sukses ke Laravel (atau langsung saat checkout produk gratis):
 
 ```
 Tripay callback → Laravel verifikasi signature → update status order
    │
-   ├─→ Trigger n8n workflow "kirim produk"
-   │     ├─→ Kirim email (link download / license key)
-   │     └─→ Kirim WA via Evolution API (ringkasan + link/license)
+   ├─→ Generate & simpan license key (jika produk berlisensi)
    │
-   └─→ Generate & simpan license key (jika produk berlisensi)
+   └─→ NotificationDispatcher kirim notifikasi langsung:
+         ├─→ Email via Laravel Mail (invoice + link download / license key)
+         └─→ WA via WhatsApp webhook agent enpiistudio (ringkasan + link/license)
 ```
+
+**Produk gratis**: produk dengan flag `is_free` dijual Rp 0 — checkout skip payment gateway, order langsung berstatus `free`, dan produk bisa diunduh segera. Cart campuran free+berbayar ditolak (harus dipisah jadi dua pesanan).
 
 ---
 
@@ -102,6 +104,8 @@ Karena yang dijual adalah produk digital dengan berbagai jenis, perlu dibedakan 
 | Lisensi software | License key saja, tanpa file | Ya |
 | Assets (gambar, font, template) | Link download | Tidak |
 | Bundel (code + lisensi) | Link download + license key | Ya |
+| Produk gratis (`is_free`) | Link download / license — checkout skip pembayaran | Opsional |
+| Akun manual (`account_manual`) | Aktivasi manual admin → kredensial dikirim via email & WA | Tidak |
 
 Pembeli mendapatkan **link download yang memiliki batas waktu akses** (bukan link permanen publik) — untuk mencegah link disebarkan bebas. Link di-generate saat pengiriman, bukan link langsung ke file EnStorage.
 
@@ -116,4 +120,5 @@ Pembeli mendapatkan **link download yang memiliki batas waktu akses** (bukan lin
 | Kode diskon / voucher | Nice-to-have, bukan blocker fungsi inti |
 | Afiliasi / referral | Terlalu kompleks untuk v1 |
 | Multi-seller | Bukan tujuan platform ini |
-| Keranjang belanja | Produk digital biasanya dibeli satu per satu — bisa ditambah v2 jika dibutuhkan |
+
+> **Catatan**: keranjang belanja sudah diimplementasikan (berlawanan rencana awal "v1 tanpa keranjang"), termasuk aturan cart all-or-nothing: cart campuran pre-order+reguler atau free+berbayar ditolak saat checkout.

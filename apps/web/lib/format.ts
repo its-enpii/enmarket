@@ -62,6 +62,7 @@ export const TIPE_LABEL: Record<string, string> = {
   download: 'Download',
   license: 'License',
   bundle: 'Bundle',
+  account_manual: 'Aktivasi Manual',
 };
 
 /** Extract relative path dari URL/file_url storage. */

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 return [
 
@@ -79,10 +79,32 @@ return [
     |--------------------------------------------------------------------------
     | n8n orchestrator (Fase 4)
     |--------------------------------------------------------------------------
+    |
+    | Laravel POST ke webhook ini setelah order paid; n8n workflow yang
+    | mengirim email + WhatsApp ke pembeli. Jalur ini sudah tidak dipakai —
+    | notifikasi kini direct Email+WA dari NotificationDispatcher. Config
+    | dibiarkan untuk backward compatibility.
+    |
     */
 
     'n8n' => [
         'webhook_kirim_produk' => env('N8N_WEBHOOK_KIRIM_PRODUK'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp webhook agent (enpiistudio)
+    |--------------------------------------------------------------------------
+    |
+    | Kirim notifikasi WA langsung via webhook agent enpiistudio.
+    | Signature: HMAC-SHA256 atas JSON body dengan secret key.
+    | Kalau WA_WEBHOOK_URL kosong, WhatsApp channel di-skip (log only).
+    |
+    */
+
+    'whatsapp' => [
+        'webhook_url' => env('WA_WEBHOOK_URL'),
+        'webhook_secret' => env('WA_WEBHOOK_SECRET', 'enmarket.webhook'),
     ],
 
     /*

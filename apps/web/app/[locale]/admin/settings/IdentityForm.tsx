@@ -60,6 +60,12 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
   // bisa sync via single source of truth (controlled).
   const [logoUrl, setLogoUrl] = useState<string | null>(initial.logo_url);
 
+  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
+  // setelah form action selesai. Pakai useState supaya isian tidak hilang
+  // saat validasi gagal.
+  const [studioName, setStudioName] = useState(initial.studio_name ?? 'enpiistudio');
+  const [tagline, setTagline] = useState(initial.tagline ?? '');
+
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
@@ -74,12 +80,13 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
       <form action={action} className="space-y-4">
         <FormError variant="box">{state.error}</FormError>
 
-        <FormField label={t('fieldStudioName')} htmlFor="studio-name" required>
+        <FormField label={t('fieldStudioName')} htmlFor="studio-name">
           <Input
             id="studio-name"
             name="studio_name"
             type="text"
-            defaultValue={initial.studio_name ?? 'enpiistudio'}
+            value={studioName}
+            onChange={(e) => setStudioName(e.target.value)}
             placeholder="enpiistudio"
           />
         </FormField>
@@ -93,7 +100,8 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
             id="tagline"
             name="tagline"
             type="text"
-            defaultValue={initial.tagline ?? ''}
+            value={tagline}
+            onChange={(e) => setTagline(e.target.value)}
             placeholder={t('fieldTaglinePlaceholder')}
             maxLength={80}
           />
@@ -205,7 +213,6 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
                   size="sm"
                   flat
                   onClick={() => removeLink(idx)}
-                  className="shrink-0"
                   disabled={links.length === 1}
                   aria-label={t('linkRemoveAria')}
                 >
@@ -243,6 +250,9 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
     INITIAL,
   );
 
+  // Controlled state supaya isian tidak hilang saat submit gagal.
+  const [footerText, setFooterText] = useState(initial.text ?? '');
+
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
@@ -265,7 +275,8 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
           <Textarea
             id="footer-text"
             name="footer_text"
-            defaultValue={initial.text ?? ''}
+            value={footerText}
+            onChange={(e) => setFooterText(e.target.value)}
             rows={3}
           />
         </FormField>

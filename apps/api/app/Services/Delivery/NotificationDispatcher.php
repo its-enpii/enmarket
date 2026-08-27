@@ -2,82 +2,89 @@
 
 namespace App\Services\Delivery;
 
+use App\Mail\OrderInvoiceMail;
 use App\Models\AccountProvisioning;
 use App\Models\Order;
 use App\Models\OrderDelivery;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Http;
+use App\Services\WhatsApp\MessageBuilder;
+use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /**
- * Dispatch notifikasi ke n8n (email + WA).
+ * Dispatch notifikasi invoice ke pembeli via Email + WhatsApp.
  *
  * Tiga event yang di-dispatch:
- *   - order.paid        → delivery file/license siap di-download (order paid biasa)
- *   - account.ready     → admin sudah aktivasi akun, kredensial siap di-deliver
- *   - preorder.ready    → release pre-order: license/file siap (different event untuk n8n template)
+ *   - order.paid        -> delivery file/license siap di-download
+ *   - preorder.ready    -> release pre-order: license/file siap
+ *   - account.ready     -> admin sudah aktivasi akun, kredensial siap
  *
- * Mode dev (N8N_WEBHOOK_KIRIM_PRODUK kosong): log only + auto-mark email_sent_at / wa_sent_at.
- * Mode prod: POST payload ke n8n webhook, n8n yang kirim email & WA.
+ * Channels:
+ *   - Email: Laravel Mail (SMTP/Postmark/etc) — kirim OrderInvoiceMail
+ *   - WhatsApp: WhatsAppClient via enpiistudio webhook agent
  *
- * n8n payload contract (order.paid / preorder.ready):
- * {
- *   "event": "order.paid" | "preorder.ready",
- *   "order": { kode_order, nama_pembeli, email_pembeli, wa_pembeli, total_harga, status,
- *              paid_at, release_date? },
- *   "deliveries": [
- *     { product: { nama, tipe }, download_url, download_token, token_expired_at,
- *       license_key (string|null) }
- *   ],
- *   "channels": ["email", "wa"]
- * }
+ * Dev mode: jika kedua channel tidak dikonfigurasi, log payload saja.
  */
 class NotificationDispatcher
 {
     public function __construct(
         private readonly ?string $n8nWebhookUrl,
+        private readonly ?WhatsAppClient $waClient = null,
+        private readonly ?MessageBuilder $waMessageBuilder = null,
+        private readonly ?string $siteUrl = null,
         private readonly int $timeout = 10,
     ) {}
 
     /**
-     * Dispatch payload ke n8n (atau log kalau dev mode).
-     * Update email_sent_at / wa_sent_at timestamps pada deliveries.
+     * Dispatch notifikasi order paid ke buyer.
      *
      * @param  array<int, OrderDelivery>  $deliveries
      */
     public function dispatchOrderPaid(Order $order, array $deliveries): void
     {
-        $payload = $this->buildOrderPaidPayload($order, $deliveries);
-
-        $sent = $this->postToN8n($payload);
-
-        if ($sent) {
-            $this->markDeliveriesSent($deliveries);
+        foreach ($deliveries as $d) {
+            $d->loadMissing('orderItem', 'licenseKey');
         }
+
+        $emailSent = $this->sendEmail($order, 'order_paid', $deliveries);
+        $waSent = $this->sendWhatsApp(
+            $order->wa_pembeli,
+            fn () => $this->waMessageBuilder?->orderPaid($order, $deliveries),
+        );
+
+        if (! $emailSent && ! $waSent) {
+            $this->logDevMode($this->buildOrderPaidPayload($order, $deliveries));
+        }
+
+        $this->markDeliveriesSent($deliveries, $emailSent, $waSent);
     }
 
     /**
-     * Dispatch notifikasi "pre-order siap di-release" — di-trigger saat admin
-     * manual click Release Now. Payload mirip order.paid tapi event=`preorder.ready`
-     * supaya n8n bisa pakai template berbeda (announce-style, plus release_date context).
+     * Dispatch notifikasi preorder ready ke buyer.
      *
      * @param  array<int, OrderDelivery>  $deliveries
      */
     public function dispatchPreorderReady(Order $order, array $deliveries): void
     {
-        $payload = $this->buildPreorderReadyPayload($order, $deliveries);
-
-        $sent = $this->postToN8n($payload);
-
-        if ($sent) {
-            $this->markDeliveriesSent($deliveries);
+        foreach ($deliveries as $d) {
+            $d->loadMissing('orderItem', 'licenseKey');
         }
+
+        $emailSent = $this->sendEmail($order, 'preorder_ready', $deliveries);
+        $waSent = $this->sendWhatsApp(
+            $order->wa_pembeli,
+            fn () => $this->waMessageBuilder?->preorderReady($order, $deliveries),
+        );
+
+        if (! $emailSent && ! $waSent) {
+            $this->logDevMode($this->buildPreorderReadyPayload($order, $deliveries));
+        }
+
+        $this->markDeliveriesSent($deliveries, $emailSent, $waSent);
     }
 
     /**
-     * Dispatch notifikasi "akun sudah siap" ke buyer.
-     * Payload: order info + 1 item dengan kredensial.
+     * Dispatch notifikasi account ready ke buyer.
      */
     public function dispatchAccountReady(AccountProvisioning $prov): void
     {
@@ -93,62 +100,110 @@ class NotificationDispatcher
             return;
         }
 
-        $payload = [
-            'event' => 'account.ready',
-            'order' => [
-                'kode_order' => $order->kode_order,
-                'nama_pembeli' => $order->nama_pembeli,
-                'email_pembeli' => $order->email_pembeli,
-                'wa_pembeli' => $order->wa_pembeli,
-            ],
-            'item' => [
-                'product_nama' => $item->nama_produk,
-                'credentials' => $prov->credentials,
-                'catatan' => $prov->catatan_admin,
-            ],
-            'channels' => ['email', 'wa'],
-        ];
+        $emailSent = $this->sendEmail($order, 'account_ready', [], $prov);
+        $waSent = $this->sendWhatsApp(
+            $order->wa_pembeli,
+            fn () => $this->waMessageBuilder?->accountReady($prov),
+        );
 
-        $sent = $this->postToN8n($payload);
+        if (! $emailSent && ! $waSent) {
+            $this->logDevMode([
+                'event' => 'account.ready',
+                'order' => [
+                    'kode_order' => $order->kode_order,
+                    'nama_pembeli' => $order->nama_pembeli,
+                    'email_pembeli' => $order->email_pembeli,
+                    'wa_pembeli' => $order->wa_pembeli,
+                ],
+                'item' => [
+                    'product_nama' => $item->nama_produk,
+                    'credentials' => $prov->credentials,
+                    'catatan' => $prov->catatan_admin,
+                ],
+            ]);
+        }
 
-        if ($sent) {
-            $now = now();
-            $prov->forceFill([
-                'email_sent_at' => $prov->email_sent_at ?? $now,
-                'wa_sent_at' => $prov->wa_sent_at ?? $now,
-            ])->save();
+        $now = now();
+        $prov->forceFill([
+            'email_sent_at' => $emailSent ? ($prov->email_sent_at ?? $now) : $prov->email_sent_at,
+            'wa_sent_at' => $waSent ? ($prov->wa_sent_at ?? $now) : $prov->wa_sent_at,
+        ])->save();
+    }
+
+    /**
+     * Send email via Laravel Mail.
+     *
+     * @param  array<int, OrderDelivery>  $deliveries
+     */
+    private function sendEmail(
+        Order $order,
+        string $eventType,
+        array $deliveries = [],
+        ?AccountProvisioning $provisioning = null,
+    ): bool {
+        $to = $order->email_pembeli;
+        if (! $to) {
+            return false;
+        }
+
+        try {
+            $mailer = config('mail.default', 'log');
+
+            if ($mailer === 'log') {
+                Log::info('NotificationDispatcher: email would be sent (mail driver=log)', [
+                    'to' => $to,
+                    'event' => $eventType,
+                ]);
+
+                return true;
+            }
+
+            Mail::to($to)->send(new OrderInvoiceMail(
+                order: $order,
+                eventType: $eventType,
+                deliveries: $deliveries,
+                provisioning: $provisioning,
+                siteUrl: $this->siteUrl ?? config('services.next.public_url', ''),
+            ));
+
+            Log::info('NotificationDispatcher: email sent', [
+                'to' => $to,
+                'event' => $eventType,
+            ]);
+
+            return true;
+        } catch (\Throwable $e) {
+            Log::error('NotificationDispatcher: email failed', [
+                'to' => $to,
+                'event' => $eventType,
+                'error' => $e->getMessage(),
+            ]);
+
+            return false;
         }
     }
 
     /**
-     * @param  array<string, mixed>  $payload
+     * Send WhatsApp message via WhatsAppClient.
+     *
+     * @param  callable(): ?string  $messageFactory
      */
-    private function postToN8n(array $payload): bool
+    private function sendWhatsApp(?string $phone, callable $messageFactory): bool
     {
-        if (! $this->n8nWebhookUrl) {
-            $this->logDevMode($payload);
-
-            return true;
+        if (! $phone || ! $this->waClient || ! $this->waMessageBuilder) {
+            return false;
         }
 
         try {
-            $response = Http::timeout($this->timeout)
-                ->acceptJson()
-                ->asJson()
-                ->post($this->n8nWebhookUrl, $payload);
+            $message = $messageFactory();
+            if (! $message) {
+                return false;
+            }
 
-            $response->throw();
-
-            Log::info('NotificationDispatcher: n8n accepted payload', [
-                'event' => $payload['event'] ?? 'unknown',
-                'status' => $response->status(),
-            ]);
-
-            return true;
-        } catch (RequestException|ConnectionException $e) {
-            Log::error('NotificationDispatcher: n8n POST failed', [
-                'event' => $payload['event'] ?? 'unknown',
-                'status' => method_exists($e, 'response') ? $e->response?->status() : null,
+            return $this->waClient->sendMessage($phone, $message);
+        } catch (\Throwable $e) {
+            Log::error('NotificationDispatcher: WhatsApp failed', [
+                'phone' => $phone,
                 'error' => $e->getMessage(),
             ]);
 
@@ -194,9 +249,6 @@ class NotificationDispatcher
     }
 
     /**
-     * Payload untuk event preorder.ready — struktur mirip order.paid tapi event berbeda
-     * (n8n template bisa announce "pre-order kamu sudah rilis!") plus release_date context.
-     *
      * @param  array<int, OrderDelivery>  $deliveries
      * @return array<string, mixed>
      */
@@ -249,14 +301,20 @@ class NotificationDispatcher
      *
      * @param  array<int, OrderDelivery>  $deliveries
      */
-    private function markDeliveriesSent(array $deliveries): void
+    private function markDeliveriesSent(array $deliveries, bool $emailSent = true, bool $waSent = true): void
     {
         $now = now();
         foreach ($deliveries as $d) {
-            $d->forceFill([
-                'email_sent_at' => $d->email_sent_at ?? $now,
-                'wa_sent_at' => $d->wa_sent_at ?? $now,
-            ])->save();
+            $updates = [];
+            if ($emailSent || (! $emailSent && ! $waSent)) {
+                $updates['email_sent_at'] = $d->email_sent_at ?? $now;
+            }
+            if ($waSent || (! $emailSent && ! $waSent)) {
+                $updates['wa_sent_at'] = $d->wa_sent_at ?? $now;
+            }
+            if (! empty($updates)) {
+                $d->forceFill($updates)->save();
+            }
         }
     }
 }

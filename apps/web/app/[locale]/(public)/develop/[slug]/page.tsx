@@ -68,7 +68,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? product.deskripsi.slice(0, 160)
     : t('fallbackDescription', { name: product.nama });
 
-  const ogImage = product.preview_images?.[0];
+  const previewImages = Array.isArray(product.preview_images)
+    ? product.preview_images.filter((img): img is string => typeof img === 'string' && img.trim() !== '')
+    : [];
+  const ogImage = previewImages[0];
 
   return {
     title: `${product.nama} — enpiistudio`,
@@ -105,6 +108,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
     .split(/\r?\n/)
     .filter((p) => p.trim() !== '');
 
+  const previewImages = Array.isArray(product.preview_images)
+    ? product.preview_images.filter((img): img is string => typeof img === 'string' && img.trim() !== '')
+    : [];
   const pullQuoteIdx = paragraphs.length >= 2 ? 1 : -1;
 
   // Specs
@@ -152,10 +158,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
           {/* Image — large, thick border, hard shadow, slightly rotated */}
           <div className="relative">
             <div className="bg-surface border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
-              {product.preview_images?.[0] ? (
+              {previewImages[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={product.preview_images[0]}
+                  src={previewImages[0]}
                   alt={product.nama}
                   className="w-full aspect-[4/3] object-cover"
                 />
@@ -209,9 +215,11 @@ export default async function WorkDetailPage({ params }: PageProps) {
             <div className="flex flex-col gap-2">
               <div className="flex items-baseline gap-3">
                 <Badge tone="accent" size="lg">
-                  {product.is_pre_order && product.deposit_amount
-                    ? t('dpLabel', { percent: product.deposit_percent ?? 50 })
-                    : formatRupiah(product.harga)}
+                  {product.is_free
+                    ? t('free')
+                    : product.is_pre_order && product.deposit_amount
+                      ? t('dpLabel', { percent: product.deposit_percent ?? 50 })
+                      : formatRupiah(product.harga)}
                 </Badge>
                 {product.needs_license_key && (
                   <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
@@ -233,6 +241,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               <AddToCartControls
                 productId={product.id}
                 isPreOrder={product.is_pre_order}
+                isFree={product.is_free}
                 depositPercent={product.deposit_percent}
               />
             </div>
@@ -297,10 +306,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
                     <dd className="font-bold text-ink">{t('items', { count: product.fitur.length })}</dd>
                   </div>
                 )}
-                {product.preview_images && product.preview_images.length > 0 && (
+                {previewImages.length > 0 && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
                     <dt className="font-label text-label-sm uppercase text-ink/60">{t('preview')}</dt>
-                    <dd className="font-bold text-ink">{t('images', { count: product.preview_images.length })}</dd>
+                    <dd className="font-bold text-ink">{t('images', { count: previewImages.length })}</dd>
                   </div>
                 )}
                 {product.has_downloadable_file && product.download_expiry_days && (
@@ -390,7 +399,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
       )}
 
       {/* ───── 5. GALLERY (irregular grid) ───── */}
-      {product.preview_images && product.preview_images.length > 1 && (
+      {previewImages.length > 1 && (
         <section className="border-b-4 border-ink">
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
@@ -408,7 +417,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
             </div>
 
             <WorkGallery
-              images={product.preview_images}
+              images={previewImages}
               alt={product.nama}
               title={product.nama}
             />

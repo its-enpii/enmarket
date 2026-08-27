@@ -52,6 +52,10 @@ products
 ├── preview_images    (JSON array — URL gambar preview/screenshot)
 ├── fitur             (JSON array — daftar fitur/isi produk, untuk halaman detail)
 ├── status            (enum: aktif | draft | tidak_dijual)
+├── is_featured       (boolean — tampil di section unggulan homepage)
+├── is_free           (boolean — produk gratis; backend paksa harga=0,
+│                      checkout skip payment gateway; mutex dengan is_pre_order;
+│                      index composite dengan status: products_is_free_status_idx)
 ├── created_at, updated_at
 ```
 
@@ -68,7 +72,10 @@ orders
 ├── email_pembeli     (varchar)
 ├── wa_pembeli        (varchar)
 ├── total_harga       (decimal 10,2)
-├── status            (enum: pending | paid | failed | expired | refunded)
+├── status            (enum: pending | paid | failed | expired | refunded |
+│                            preorder_deposit_paid | free)
+│                     `free` = checkout produk is_free, skip payment gateway —
+│                     delivery flow identik dengan `paid` (lihat Order::isPaid())
 ├── tripay_reference  (varchar, nullable — reference dari Tripay)
 ├── qr_string         (text, nullable — raw QR string dari Tripay untuk generate QR code)
 ├── qr_url            (text, nullable — URL gambar QR code dari Tripay)

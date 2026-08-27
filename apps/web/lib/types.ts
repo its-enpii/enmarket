@@ -32,6 +32,9 @@ export interface Product {
   fitur: string[];
   status: StatusProduct;
   is_featured: boolean;
+  // Produk gratis: badge "Gratis" menggantikan price display. harga selalu '0'
+  // di DB (auto-set backend). Checkout skip payment gateway, status order='free'.
+  is_free: boolean;
   // Pre-order fields. Null/undefined untuk produk non-pre-order.
   // release_date/deposit_percent/deposit_amount/remaining_amount nullable
   // ketika is_pre_order=false (lihat ProductResource).
@@ -180,7 +183,7 @@ export interface Cart {
 
 // ───── Order ─────
 
-export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded' | 'preorder_deposit_paid';
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded' | 'preorder_deposit_paid' | 'free';
 export type TipeOrder = 'download' | 'license' | 'bundle' | 'account_manual';
 
 export interface OrderDeliveryInfo {
@@ -289,6 +292,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
   expired: 'Expired',
   refunded: 'Refunded',
   preorder_deposit_paid: 'DP Diterima',
+  free: 'Gratis',
 };
 
 /** Status label Indonesia untuk LicenseKey. */

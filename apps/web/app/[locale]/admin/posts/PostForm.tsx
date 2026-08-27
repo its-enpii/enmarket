@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -18,7 +18,9 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/neobrutal';
 import { TiptapEditor } from '@/components/admin/TiptapEditor';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { DatePicker } from '@/components/ui/DatePicker';
 import { slugify } from '@/lib/format';
+import { toast } from '@/components/ui/toast-store';
 import type { Post, PostStatus } from '@/lib/types';
 
 import { createPost, updatePost, ActionResult } from './actions';
@@ -50,34 +52,42 @@ export function PostForm({ initial }: Props) {
   const tBtns = useTranslations('common.buttons');
   const isEdit = !!initial;
 
-  const [state, formAction, pending] = useActionState(
-    async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
-      if (isEdit) {
-        return await updatePost(initial!.id, _prev, fd);
-      }
-      return await createPost(_prev, fd);
-    },
-    {} as ActionResult,
-  );
-
+  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
+  // setelah form action selesai (sukses maupun gagal). Semua field pakai
+  // useState + value supaya isian admin tidak hilang saat validasi gagal.
+  const [title, setTitle] = useState(initial?.title ?? '');
+  const [slug, setSlug] = useState(initial?.slug ?? '');
+  const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '');
   const [status, setStatus] = useState<PostStatus>(initial?.status ?? 'draft');
+
+  // Format published_at untuk input datetime-local (YYYY-MM-DDTHH:mm)
+  const publishedAtInitial = initial?.published_at
+    ? new Date(initial.published_at).toISOString().slice(0, 10)
+    : '';
+  const [publishedAt, setPublishedAt] = useState(publishedAtInitial);
+
+  const actionFn = isEdit ? updatePost.bind(null, initial!.id) : createPost;
+  const [state, formAction, pending] = useActionState(actionFn, {} as ActionResult);
+
+  useEffect(() => {
+    if (state.ok && state.message) {
+      toast.success(state.message, 3000);
+      if (state.redirectTo) {
+        router.push(state.redirectTo);
+      }
+    }
+  }, [state, router]);
 
   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
     if (isEdit) return;
-    const el = document.getElementById('slug') as HTMLInputElement | null;
-    if (el && !el.value) el.value = slugify(e.target.value);
+    if (!slug) setSlug(slugify(e.target.value));
   }
 
   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
 
-  // Format published_at untuk input datetime-local (YYYY-MM-DDTHH:mm)
-  const publishedAtLocal = initial?.published_at
-    ? new Date(initial.published_at).toISOString().slice(0, 16)
-    : '';
-
   return (
     <form action={formAction} className="space-y-8">
-      {/* ───── Title + Slug ───── */}
+      {/* ————— Title + Slug ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
@@ -87,7 +97,8 @@ export function PostForm({ initial }: Props) {
               name="title"
               required
               maxLength={200}
-              defaultValue={initial?.title}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               onBlur={autoSlug}
             />
           </FormField>
@@ -101,7 +112,8 @@ export function PostForm({ initial }: Props) {
             <Input
               id="slug"
               name="slug"
-              defaultValue={initial?.slug ?? ''}
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
               pattern="[a-z0-9-]+"
               className="font-mono"
             />
@@ -109,7 +121,7 @@ export function PostForm({ initial }: Props) {
         </div>
       </section>
 
-      {/* ───── Konten ───── */}
+      {/* ————— Konten ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
         <FormField
@@ -123,7 +135,8 @@ export function PostForm({ initial }: Props) {
             name="excerpt"
             rows={3}
             maxLength={500}
-            defaultValue={initial?.excerpt ?? ''}
+            value={excerpt}
+            onChange={(e) => setExcerpt(e.target.value)}
           />
         </FormField>
 
@@ -142,7 +155,7 @@ export function PostForm({ initial }: Props) {
         </FormField>
       </section>
 
-      {/* ───── Media ───── */}
+      {/* ————— Media ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionMedia')} title={t('sectionMediaTitle')} />
         <FormField
@@ -167,7 +180,7 @@ export function PostForm({ initial }: Props) {
         </FormField>
       </section>
 
-      {/* ───── Publish ───── */}
+      {/* ————— Publish ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionPublish')} title={t('sectionPublishTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
@@ -196,11 +209,10 @@ export function PostForm({ initial }: Props) {
             }
             error={fieldErr('published_at')}
           >
-            <Input
-              id="published_at"
+            <DatePicker
               name="published_at"
-              type="datetime-local"
-              defaultValue={publishedAtLocal}
+              defaultValue={publishedAt}
+              onChange={setPublishedAt}
               disabled={status === 'archived'}
             />
           </FormField>

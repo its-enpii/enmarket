@@ -69,7 +69,7 @@ export async function ProductCard({ product }: Props) {
         </h3>
         <p className="mt-1 text-xs text-ink/60">{kategoriNama}</p>
         <p className="mt-3 font-bold text-primary text-lg sm:text-xl">
-          {formatRupiah(product.harga)}
+          {product.is_free ? t('priceFree') : formatRupiah(product.harga)}
         </p>
       </div>
     </Card>

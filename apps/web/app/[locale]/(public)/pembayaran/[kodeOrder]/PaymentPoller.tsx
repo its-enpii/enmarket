@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
+import { getClientApiBase } from '@/lib/client-api';
 
 interface Props {
   kodeOrder: string;
@@ -78,13 +79,14 @@ export function PaymentPoller({
 
   // Polling — pause saat tab hidden (hemat baterai + bandwidth mobile).
   useEffect(() => {
-    if (status === 'paid' || status === 'preorder_deposit_paid') {
+    if (status === 'paid' || status === 'preorder_deposit_paid' || status === 'free') {
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
       }
-      // Auto-redirect ke halaman sukses. Sama untuk `paid` (order paid biasa)
-      // dan `preorder_deposit_paid` (DP dibayar, fulfillment di-defer sampai release).
+      // Auto-redirect ke halaman sukses. Sama untuk `paid` (order paid biasa),
+      // `preorder_deposit_paid` (DP dibayar, fulfillment di-defer sampai release),
+      // dan `free` (cart is_free, skip payment gateway — sudah paid saat checkout).
       const t = setTimeout(() => router.push(`/pesanan-sukses/${kodeOrder}`), 1200);
       return () => clearTimeout(t);
     }
@@ -98,7 +100,7 @@ export function PaymentPoller({
 
     async function poll() {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const apiBase = getClientApiBase();
         const res = await fetch(`${apiBase}/api/orders/${kodeOrder}/status`, {
           cache: 'no-store',
         });
@@ -108,7 +110,7 @@ export function PaymentPoller({
         if (data.status !== status) {
           setStatus(data.status);
         }
-        if (data.status === 'paid' || data.status === 'preorder_deposit_paid') {
+        if (data.status === 'paid' || data.status === 'preorder_deposit_paid' || data.status === 'free') {
           router.push(`/pesanan-sukses/${kodeOrder}`);
         } else if (data.status === 'expired' || data.status === 'failed') {
           setStatus(data.status);
@@ -144,14 +146,14 @@ export function PaymentPoller({
     if (isChecking) return;
     setIsChecking(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiBase = getClientApiBase();
       const res = await fetch(`${apiBase}/api/orders/${kodeOrder}/status`, {
         cache: 'no-store',
       });
       if (!res.ok) return;
       const json = (await res.json()) as { data: OrderStatusSummary };
       setStatus(json.data.status);
-      if (json.data.status === 'paid' || json.data.status === 'preorder_deposit_paid') {
+      if (json.data.status === 'paid' || json.data.status === 'preorder_deposit_paid' || json.data.status === 'free') {
         router.push(`/pesanan-sukses/${kodeOrder}`);
       }
     } catch {

@@ -17,6 +17,8 @@ use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
+use App\Services\WhatsApp\MessageBuilder;
+use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -62,10 +64,33 @@ class AppServiceProvider extends ServiceProvider
         // Bind CartService (stateless, bisa singleton)
         $this->app->singleton(CartService::class, fn () => new CartService);
 
-        // Bind NotificationDispatcher — null webhook kalau belum dikonfigurasi = dev log mode
-        $this->app->singleton(NotificationDispatcher::class, function () {
+        // Bind WhatsAppClient — null webhook = dev log mode
+        $this->app->singleton(WhatsAppClient::class, function () {
+            $url = config('services.whatsapp.webhook_url') ?: null;
+
+            return new WhatsAppClient(
+                webhookUrl: $url,
+                webhookSecret: (string) config('services.whatsapp.webhook_secret', 'enmarket.webhook'),
+            );
+        });
+
+        // Bind WhatsApp MessageBuilder
+        $this->app->singleton(MessageBuilder::class, function () {
+            return new MessageBuilder(
+                siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
+                storeName: (string) config('app.name', 'Enmarket'),
+            );
+        });
+
+        // Bind NotificationDispatcher — now with WhatsApp + Email channels
+        $this->app->singleton(NotificationDispatcher::class, function ($app) {
+            $waUrl = config('services.whatsapp.webhook_url') ?: null;
+
             return new NotificationDispatcher(
                 n8nWebhookUrl: config('services.n8n.webhook_kirim_produk') ?: null,
+                waClient: $waUrl ? $app->make(WhatsAppClient::class) : null,
+                waMessageBuilder: $waUrl ? $app->make(MessageBuilder::class) : null,
+                siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
             );
         });
 

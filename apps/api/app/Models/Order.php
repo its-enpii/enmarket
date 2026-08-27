@@ -61,10 +61,24 @@ class Order extends Model
 
     /**
      * Apakah order ini sudah dibayar?
+     *
+     * Mencakup `paid` (Tripay callback) dan `free` (cart berisi produk is_free,
+     * skip payment gateway) — keduanya end-state yang siap untuk delivery.
      */
     public function isPaid(): bool
     {
-        return $this->status === 'paid';
+        return in_array($this->status, ['paid', 'free'], true);
+    }
+
+    /**
+     * Apakah order ini free (checkout skip payment gateway)?
+     *
+     * Provenance berbeda dari `paid` (tidak ada Tripay reference), tapi delivery
+     * flow-nya identik — license/file tersedia, notification terkirim.
+     */
+    public function isFree(): bool
+    {
+        return $this->status === 'free';
     }
 
     /**

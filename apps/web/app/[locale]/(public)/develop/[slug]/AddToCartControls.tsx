@@ -12,11 +12,13 @@ interface Props {
   productId: number;
   /** Produk pre-orderable: ganti label CTA + message. */
   isPreOrder?: boolean;
+  /** Produk gratis: ganti label CTA + skip payment wording di checkout. */
+  isFree?: boolean;
   /** Deposit percent (1-100) untuk label CTA. */
   depositPercent?: number | null;
 }
 
-export function AddToCartControls({ productId, isPreOrder = false, depositPercent }: Props) {
+export function AddToCartControls({ productId, isPreOrder = false, isFree = false, depositPercent }: Props) {
   const t = useTranslations('developDetail');
   const [pending, startTransition] = useTransition();
 
@@ -26,7 +28,12 @@ export function AddToCartControls({ productId, isPreOrder = false, depositPercen
       if (!res.ok && res.error) {
         toast.error(res.error);
       } else {
-        toast.success(isPreOrder ? t('preorderAdded') : t('added'));
+        const successMsg = isFree
+          ? t('freeAdded')
+          : isPreOrder
+            ? t('preorderAdded')
+            : t('added');
+        toast.success(successMsg);
       }
     });
   }
@@ -36,21 +43,27 @@ export function AddToCartControls({ productId, isPreOrder = false, depositPercen
       try {
         await addToCartAndGoAction(productId, 1);
       } catch (err) {
-        const msg = err instanceof Error ? err.message : t('addError');
-        toast.error(msg);
+        if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
+        toast.error(err instanceof Error ? err.message : t('addError'));
       }
     });
   }
 
-  // Label CTA: pakai "Pre-Order Sekarang (DP {percent}%)" untuk pre-order.
-  // depositPercent null/undefined → fallback ke '50' sebagai default (lihat Product default).
+  // Label CTA: free > pre-order > normal precedence. Free produk tidak punya
+  // pre-order (ProductController reject kombinasi), jadi branch cuma 2 cabang.
   const dpLabel = depositPercent ?? 50;
   const primaryLabel = pending
     ? t('adding')
+    : isFree
+      ? t('freeCta')
+      : isPreOrder
+        ? t('addToCartPreOrder', { percent: dpLabel })
+        : t('addToCart');
+  const buyNowLabel = isFree
+    ? t('freeBuyNow')
     : isPreOrder
-      ? t('addToCartPreOrder', { percent: dpLabel })
-      : t('addToCart');
-  const buyNowLabel = isPreOrder ? t('buyNowPreOrder') : t('buyNow');
+      ? t('buyNowPreOrder')
+      : t('buyNow');
 
   return (
     <div className="flex flex-col gap-3">

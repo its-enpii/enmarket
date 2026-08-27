@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
@@ -48,11 +48,23 @@ export function LicenseKeyTrigger({ products: _products }: Props) {
 export function LicenseKeyFormCard({ products }: Props) {
   const t = useTranslations('admin.licenseKeys.form');
   const { open, setOpen } = useLicenseKey();
+
+  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
+  // setelah form action selesai. Pakai useState supaya isian tidak hilang
+  // saat validasi gagal.
+  const [count, setCount] = useState('10');
+  const [prefix, setPrefix] = useState('');
+  const [productId, setProductId] = useState('');
+
   const [state, formAction, pending] = useActionState<ActionResult, FormData>(
     async (prev, fd) => {
       const res = await insertLicenseKey(prev, fd);
       if (res.ok) {
         setOpen(false);
+        // Reset fields untuk sesi insert berikutnya
+        setCount('10');
+        setPrefix('');
+        setProductId('');
         if (res.message) toast.success(res.message);
       }
       return res;
@@ -86,7 +98,8 @@ export function LicenseKeyFormCard({ products }: Props) {
           label={t('fieldProduct')}
           required
           placeholder={t('productPlaceholder')}
-          defaultValue=""
+          defaultValue={productId}
+          onChange={(v) => setProductId(v)}
           showAllOption={{ value: '', label: t('productPlaceholder') }}
           options={products.map((p) => ({ value: String(p.id), label: p.nama }))}
           error={state.fieldErrors?.product_id?.[0]}
@@ -100,7 +113,8 @@ export function LicenseKeyFormCard({ products }: Props) {
               type="number"
               min={1}
               max={500}
-              defaultValue={10}
+              value={count}
+              onChange={(e) => setCount(e.target.value)}
               required
             />
           </FormField>
@@ -117,6 +131,8 @@ export function LicenseKeyFormCard({ products }: Props) {
               type="text"
               pattern="[A-Z0-9]{2,10}"
               maxLength={10}
+              value={prefix}
+              onChange={(e) => setPrefix(e.target.value)}
               placeholder="ADMIN"
               className="uppercase font-mono"
             />

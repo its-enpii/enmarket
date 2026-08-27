@@ -70,7 +70,7 @@ export async function CartItem({ item }: { item: CartItemData }) {
               </NLink>
             </div>
             <Badge tone="accent" size="md">
-              {formatRupiah(p.harga)}
+              {p.is_free ? t('free') : formatRupiah(p.harga)}
             </Badge>
           </div>
 

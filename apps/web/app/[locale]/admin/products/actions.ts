@@ -5,13 +5,15 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 import { ApiRequestError, apiDelete, apiPost, apiPostForm, apiPutForm } from '@/lib/api';
 
 export interface ActionResult {
   error?: string;
   fieldErrors?: Record<string, string[]>;
+  ok?: boolean;
+  message?: string;
+  redirectTo?: string;
 }
 
 // ───── Helpers ─────
@@ -37,7 +39,7 @@ export async function createProduct(_prev: ActionResult, formData: FormData): Pr
 
     revalidatePath('/admin/products');
     revalidatePath('/admin');
-    redirect(`/admin/products/${newId}`);
+    return { ok: true, message: 'Produk berhasil dibuat.', redirectTo: `/admin/products/${newId}` };
   } catch (err) {
     if (err instanceof ApiRequestError) {
       return {
@@ -67,14 +69,13 @@ export async function updateProduct(
         fieldErrors: pickFieldError(err),
       };
     }
-    if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
     return { error: 'Gagal memperbarui produk.' };
   }
 
   revalidatePath('/admin/products');
   revalidatePath(`/admin/products/${id}`);
   revalidatePath('/admin');
-  redirect(`/admin/products/${id}`);
+  return { ok: true, message: 'Produk berhasil diperbarui.', redirectTo: `/admin/products/${id}` };
 }
 
 // ───── Delete ─────

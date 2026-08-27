@@ -1,0 +1,3444 @@
+diff --git a/.env.example b/.env.example
+index 32ecd35..6391c45 100644
+--- a/.env.example
++++ b/.env.example
+@@ -1,8 +1,8 @@
+-# ───── enmarket root environment ─────
++# â”€â”€â”€â”€â”€ enmarket root environment â”€â”€â”€â”€â”€
+ # Salin ke .env (jangan commit), lalu edit sesuai kebutuhan.
+ # File ini di-load oleh docker-compose untuk semua service.
+ 
+-# ───── App ─────
++# â”€â”€â”€â”€â”€ App â”€â”€â”€â”€â”€
+ APP_ENV=local
+ APP_URL=http://localhost:8000
+ API_PORT=8000
+@@ -10,7 +10,7 @@ WEB_PORT=3000
+ NEXT_PUBLIC_API_URL=http://localhost:8000
+ NEXT_PUBLIC_SITE_NAME="enpiistudio"
+ 
+-# ───── Database (MySQL) ─────
++# â”€â”€â”€â”€â”€ Database (MySQL) â”€â”€â”€â”€â”€
+ DB_HOST=db
+ DB_PORT=3306
+ DB_DATABASE=enmarket
+@@ -18,7 +18,7 @@ DB_USERNAME=enmarket
+ DB_PASSWORD=secret
+ DB_ROOT_PASSWORD=rootsecret
+ 
+-# ───── Tripay (payment gateway — Fase 3) ─────
++# â”€â”€â”€â”€â”€ Tripay (payment gateway â€” Fase 3) â”€â”€â”€â”€â”€
+ # Daftar di https://tripay.co.id, ambil dari dashboard merchant
+ TRIPAY_API_KEY=
+ TRIPAY_PRIVATE_KEY=
+@@ -26,22 +26,22 @@ TRIPAY_MERCHANT_CODE=
+ TRIPAY_MODE=sandbox
+ TRIPAY_CALLBACK_URL=
+ 
+-# ───── EnStorage (file storage — Fase 4) ─────
++# â”€â”€â”€â”€â”€ EnStorage (file storage â€” Fase 4) â”€â”€â”€â”€â”€
+ # Orchestrator Google Drive enpiistudio.
+ # Kosongkan ENSTORAGE_BASE_URL untuk pakai LocalMockEnStorage (simpan di storage/app/private/).
+ # Isi dengan URL API EnStorage untuk pakai RemoteEnStorage (HTTP upload ke API).
+ ENSTORAGE_BASE_URL=
+ ENSTORAGE_API_KEY=
+ 
+-# ───── Evolution API (WhatsApp — Fase 4) ─────
++# â”€â”€â”€â”€â”€ Evolution API (WhatsApp â€” Fase 4) â”€â”€â”€â”€â”€
+ EVOLUTION_API_URL=
+ EVOLUTION_API_KEY=
+ EVOLUTION_INSTANCE=enpiistudio
+ 
+-# ───── n8n (workflow otomasi — Fase 4) ─────
++# â”€â”€â”€â”€â”€ n8n (workflow otomasi â€” Fase 4) â”€â”€â”€â”€â”€
+ N8N_WEBHOOK_KIRIM_PRODUK=
+ 
+-# ───── Mail (SMTP — Fase 4) ─────
++# â”€â”€â”€â”€â”€ Mail (SMTP â€” Fase 4) â”€â”€â”€â”€â”€
+ MAIL_MAILER=log
+ MAIL_HOST=
+ MAIL_PORT=
+@@ -49,13 +49,16 @@ MAIL_USERNAME=
+ MAIL_PASSWORD=
+ MAIL_FROM_ADDRESS=noreply@enpiistudio.com
+ 
+-# ───── Admin auth (Fase 1) ─────
++# â”€â”€â”€â”€â”€ Admin auth (Fase 1) â”€â”€â”€â”€â”€
+ # Token statis untuk dashboard admin (single user)
+ ADMIN_TOKEN=
+ 
+-# ───── Next.js revalidation (Fase 2) ─────
++# â”€â”€â”€â”€â”€ Next.js revalidation (Fase 2) â”€â”€â”€â”€â”€
+ # Laravel panggil endpoint ini di web container setelah admin CRUD.
+ # Default Docker DNS `http://web:3000` (antar-container di network yg sama).
+ NEXT_PUBLIC_SITE_URL=http://web:3000
+-# Set nilai unik production — entrypoint dev menggunakan dev-revalidate-secret.
+-REVALIDATE_SECRET=
+\ No newline at end of file
++# Set nilai unik production â€” entrypoint dev menggunakan dev-revalidate-secret.
++REVALIDATE_SECRET=
++# ————— WhatsApp webhook agent (enpiistudio) —————
++WA_WEBHOOK_URL=
++WA_WEBHOOK_SECRET=enmarket.webhook
+\ No newline at end of file
+diff --git a/apps/api/.env.example b/apps/api/.env.example
+index c0660ea..d39e0bd 100644
+--- a/apps/api/.env.example
++++ b/apps/api/.env.example
+@@ -1,4 +1,4 @@
+-APP_NAME=Laravel
++﻿APP_NAME=Laravel
+ APP_ENV=local
+ APP_KEY=
+ APP_DEBUG=true
+@@ -63,3 +63,7 @@ AWS_BUCKET=
+ AWS_USE_PATH_STYLE_ENDPOINT=false
+ 
+ VITE_APP_NAME="${APP_NAME}"
++
++# WhatsApp webhook agent (enpiistudio)
++WA_WEBHOOK_URL=
++WA_WEBHOOK_SECRET=enmarket.webhook
+\ No newline at end of file
+diff --git a/apps/api/app/Http/Controllers/Api/Admin/ProductController.php b/apps/api/app/Http/Controllers/Api/Admin/ProductController.php
+index 7c1e1cb..66cba5f 100644
+--- a/apps/api/app/Http/Controllers/Api/Admin/ProductController.php
++++ b/apps/api/app/Http/Controllers/Api/Admin/ProductController.php
+@@ -85,6 +85,22 @@ public function store(Request $request): JsonResponse
+     {
+         $data = $this->validateProduct($request);
+ 
++        // is_free + is_pre_order mutually exclusive (invariant): pre-order selalu
++        // punya DP > 0, free selalu Rp 0 — kombinasi tidak make sense dan bikin
++        // buyer bingung di checkout. Tolak 422 eksplisit (bukan 500).
++        if (! empty($data['is_free']) && ! empty($data['is_pre_order'])) {
++            return response()->json([
++                'message' => 'Produk tidak bisa sekaligus pre-order dan gratis.',
++                'errors' => ['is_free' => ['Tidak bisa digabung dengan pre-order.']],
++            ], 422);
++        }
++
++        // Single source of truth: kalau is_free, harga paksa 0. Admin bisa set
++        // harga berapapun di form (frontend disable field) — backend override.
++        if (! empty($data['is_free'])) {
++            $data['harga'] = 0;
++        }
++
+         // Upload file produk kalau ada
+         if ($request->hasFile('file')) {
+             $file = $request->file('file');
+@@ -98,11 +114,11 @@ public function store(Request $request): JsonResponse
+             abort(422, 'File produk wajib di-upload untuk tipe download atau bundle.');
+         }
+ 
+-        // preview_images: array of URLs (biasanya dari upload terpisah, tapi
+-        // izinkan JSON string atau array)
+-        if (isset($data['preview_images']) && is_string($data['preview_images'])) {
+-            $decoded = json_decode($data['preview_images'], true);
+-            $data['preview_images'] = is_array($decoded) ? $decoded : [];
++        $data['preview_images'] = $this->processPreviewImages($request);
++
++        if (isset($data['fitur']) && is_string($data['fitur'])) {
++            $decoded = json_decode($data['fitur'], true);
++            $data['fitur'] = is_array($decoded) ? $decoded : [];
+         }
+ 
+         $product = Product::create($data);
+@@ -140,6 +156,25 @@ public function update(Request $request, Product $product): JsonResponse
+     {
+         $data = $this->validateProduct($request, $product);
+ 
++        // is_free + is_pre_order mutually exclusive — sama seperti di store().
++        // Resolve effective is_pre_order: kalau field ini tidak dikirim di request
++        // (partial update), pakai nilai existing di DB.
++        $effectivePreorder = array_key_exists('is_pre_order', $data)
++            ? ! empty($data['is_pre_order'])
++            : (bool) $product->is_pre_order;
++
++        if (! empty($data['is_free']) && $effectivePreorder) {
++            return response()->json([
++                'message' => 'Produk tidak bisa sekaligus pre-order dan gratis.',
++                'errors' => ['is_free' => ['Tidak bisa digabung dengan pre-order.']],
++            ], 422);
++        }
++
++        // Single source of truth — sama seperti di store().
++        if (! empty($data['is_free'])) {
++            $data['harga'] = 0;
++        }
++
+         if ($request->hasFile('file')) {
+             // Hapus file lama kalau ada
+             if ($product->file_url) {
+@@ -163,9 +198,11 @@ public function update(Request $request, Product $product): JsonResponse
+             abort(422, 'File produk wajib di-upload untuk tipe download atau bundle.');
+         }
+ 
+-        if (isset($data['preview_images']) && is_string($data['preview_images'])) {
+-            $decoded = json_decode($data['preview_images'], true);
+-            $data['preview_images'] = is_array($decoded) ? $decoded : [];
++        $data['preview_images'] = $this->processPreviewImages($request, $product->preview_images ?? []);
++
++        if (isset($data['fitur']) && is_string($data['fitur'])) {
++            $decoded = json_decode($data['fitur'], true);
++            $data['fitur'] = is_array($decoded) ? $decoded : [];
+         }
+ 
+         $product->update($data);
+@@ -218,6 +255,57 @@ public function destroy(Product $product): JsonResponse
+     /**
+      * Validation rules untuk store & update.
+      */
++    /**
++     * Process preview images from upload files and/or library URLs.
++     */
++    private function processPreviewImages(Request $request, array $existing = []): array
++    {
++        $previewImages = [];
++
++        if ($request->has('preview_images_urls')) {
++            $rawUrls = $request->input('preview_images_urls');
++            if (is_string($rawUrls)) {
++                $decoded = json_decode($rawUrls, true);
++                if (is_array($decoded)) {
++                    foreach ($decoded as $url) {
++                        if (is_string($url) && trim($url) !== '') {
++                            $previewImages[] = trim($url);
++                        }
++                    }
++                }
++            } elseif (is_array($rawUrls)) {
++                foreach ($rawUrls as $url) {
++                    if (is_string($url) && trim($url) !== '') {
++                        $previewImages[] = trim($url);
++                    }
++                }
++            }
++        } else {
++            foreach ($existing as $url) {
++                if (is_string($url) && trim($url) !== '') {
++                    $previewImages[] = trim($url);
++                }
++            }
++        }
++
++        if ($request->hasFile('preview_images')) {
++            $files = $request->file('preview_images');
++            if (! is_array($files)) {
++                $files = [$files];
++            }
++            foreach ($files as $file) {
++                if ($file && $file->isValid()) {
++                    $ext = $file->getClientOriginalExtension() ?: 'jpg';
++                    $filename = Str::random(20).'.'.$ext;
++                    $path = $this->storage->upload($file, "products/previews/{$filename}");
++                    $previewImages[] = $path;
++                }
++            }
++        }
++
++        return array_values(array_unique($previewImages));
++    }
++
+     private function validateProduct(Request $request, ?Product $product = null): array
+     {
+         $uniqueSlugRule = 'unique:products,slug';
+@@ -237,6 +325,9 @@ private function validateProduct(Request $request, ?Product $product = null): ar
+             'fitur' => ['nullable'],
+             'status' => ['required', 'in:aktif,draft,tidak_dijual'],
+             'is_featured' => ['nullable', 'boolean'],
++            // Produk gratis: auto-set harga=0 di store()/update(). Mutex dengan
++            // is_pre_order di-handle setelah validate (di method).
++            'is_free' => ['nullable', 'boolean'],
+             // Pre-order fields. Uncontrolled checkbox submit value="1" kalau dicentang,
+             // tidak ada field kalau tidak dicentang. `nullable + boolean` handle keduanya.
+             // `required_if:is_pre_order,1,1` (Laravel pakai boolean coerce dari '1' string).
+@@ -246,7 +337,7 @@ private function validateProduct(Request $request, ?Product $product = null): ar
+             'file' => [
+                 'nullable',
+                 'file',
+-                'max:512000', // 500MB max
++                'max:1048576', // 1GB max
+                 'required_if:tipe,download,bundle', // tipe download/bundle wajib upload file
+             ],
+             'remove_file' => ['nullable', 'boolean'],
+diff --git a/apps/api/app/Http/Controllers/Api/Admin/ProductImageController.php b/apps/api/app/Http/Controllers/Api/Admin/ProductImageController.php
+index e09dd0f..b496dbd 100644
+--- a/apps/api/app/Http/Controllers/Api/Admin/ProductImageController.php
++++ b/apps/api/app/Http/Controllers/Api/Admin/ProductImageController.php
+@@ -12,9 +12,9 @@
+ 
+ /**
+  * Sub-resource untuk preview images produk.
+- * Append gambar baru atau hapus berdasarkan index.
++ * Append gambar baru (file upload atau attach by URL dari library) atau hapus berdasarkan index.
+  *
+- * POST   /api/admin/products/{product}/preview-images   (multipart: file)
++ * POST   /api/admin/products/{product}/preview-images   (multipart: file, atau JSON: { url })
+  * DELETE /api/admin/products/{product}/preview-images   (body: { index })
+  */
+ class ProductImageController extends Controller
+@@ -24,12 +24,13 @@ class ProductImageController extends Controller
+     public function __construct(private readonly EnStorageClient $storage) {}
+ 
+     /**
+-     * Upload satu preview image dan append ke array.
++     * Upload atau attach satu preview image dan append ke array.
+      */
+     public function store(Request $request, Product $product): JsonResponse
+     {
+         $request->validate([
+-            'file' => ['required', 'image', 'max:10240'], // 10MB
++            'file' => ['nullable', 'image', 'max:10240'], // 10MB
++            'url' => ['nullable', 'string', 'max:1000'],
+         ]);
+ 
+         $current = $product->preview_images ?? [];
+@@ -41,13 +42,26 @@ public function store(Request $request, Product $product): JsonResponse
+             ], 422);
+         }
+ 
+-        $file = $request->file('file');
+-        $ext = $file->getClientOriginalExtension() ?: 'jpg';
+-        $filename = Str::random(20).'.'.$ext;
+-        $path = $this->storage->upload($file, "products/previews/{$product->id}/{$filename}");
++        if ($request->hasFile('file')) {
++            $file = $request->file('file');
++            $ext = $file->getClientOriginalExtension() ?: 'jpg';
++            $filename = Str::random(20).'.'.$ext;
++            $path = $this->storage->upload($file, "products/previews/{$product->id}/{$filename}");
++        } elseif ($request->filled('url')) {
++            $path = $request->input('url');
++        } else {
++            return response()->json([
++                'message' => 'File atau URL gambar wajib diisi.',
++                'code' => 'missing_image',
++            ], 422);
++        }
+ 
+-        $current[] = $path;
+-        $product->preview_images = $current;
++        // Hindari duplikat URL di array
++        if (! in_array($path, $current, true)) {
++            $current[] = $path;
++        }
++
++        $product->preview_images = array_values($current);
+         $product->save();
+ 
+         return response()->json([
+@@ -74,7 +88,11 @@ public function destroy(Request $request, Product $product): JsonResponse
+             ], 404);
+         }
+ 
+-        $this->storage->delete($current[$data['index']]);
++        // Hanya hapus dari storage jika path merupakan file lokal storage (bukan external URL)
++        $targetUrl = $current[$data['index']];
++        if (str_contains($targetUrl, '/storage/') || str_contains($targetUrl, 'products/previews/')) {
++            $this->storage->delete($targetUrl);
++        }
+ 
+         unset($current[$data['index']]);
+         $product->preview_images = array_values($current); // reindex
+@@ -85,4 +103,4 @@ public function destroy(Request $request, Product $product): JsonResponse
+             'message' => 'Preview image dihapus.',
+         ]);
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/apps/api/app/Http/Controllers/Api/Public/CheckoutController.php b/apps/api/app/Http/Controllers/Api/Public/CheckoutController.php
+index 779c127..4c64e63 100644
+--- a/apps/api/app/Http/Controllers/Api/Public/CheckoutController.php
++++ b/apps/api/app/Http/Controllers/Api/Public/CheckoutController.php
+@@ -8,6 +8,7 @@
+ use App\Models\Order;
+ use App\Models\OrderItem;
+ use App\Services\Cart\CartService;
++use App\Services\Delivery\OrderDeliveryService;
+ use App\Services\Tripay\CreateTransactionDto;
+ use App\Services\Tripay\TripayClient;
+ use App\Services\Tripay\TripayException;
+@@ -22,6 +23,7 @@ class CheckoutController extends Controller
+     public function __construct(
+         private readonly CartService $cartService,
+         private readonly TripayClient $tripay,
++        private readonly OrderDeliveryService $deliveryService,
+     ) {}
+ 
+     /**
+@@ -71,6 +73,19 @@ public function store(CheckoutRequest $request): JsonResponse
+             ], 422);
+         }
+ 
++        // Free vs paid cart policy: all-or-nothing (seperti pre-order).
++        // Cart campuran free + berbayar → 422. Pembeli harus pisah cart jadi 2 order.
++        // Checkout free skip payment gateway, jadi tidak bisa diproses sebagian.
++        $hasFree = $items->contains(fn ($i) => $i->product?->isFree());
++        $hasPaid = $items->contains(fn ($i) => $i->product && ! $i->product->isFree());
++
++        if ($hasFree && $hasPaid) {
++            return response()->json([
++                'message' => 'Tidak boleh campur produk gratis dengan produk berbayar dalam satu pesanan.',
++                'code' => 'cart_free_mixed',
++            ], 422);
++        }
++
+         $fullTotal = (int) $items->sum(fn ($i) => $i->product->harga * $i->qty);
+ 
+         // Pre-order handling: cart policy all-or-nothing. Mixed cart → 422.
+@@ -125,6 +140,13 @@ public function store(CheckoutRequest $request): JsonResponse
+                 'preorder_deposit_amount' => $depositTotal,
+                 'preorder_remaining_amount' => $remainingTotal,
+             ];
++        } elseif ($hasFree) {
++            // Free cart: fullTotal == 0 (backend auto-set harga=0 saat is_free).
++            // Skip Tripay — order langsung dibuat dengan status `free` + paid_at.
++            // Delivery di-trigger synchronously di dalam transaction supaya buyer
++            // langsung dapat download token saat landing di /pesanan-sukses.
++            $total = 0;
++            $preorderMeta = ['is_preorder' => false];
+         } else {
+             if ($fullTotal < 100) {
+                 return response()->json([
+@@ -139,14 +161,15 @@ public function store(CheckoutRequest $request): JsonResponse
+         $kodeOrder = $this->generateKodeOrder();
+ 
+         try {
+-            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta) {
++            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $hasFree) {
++                $initialStatus = $hasFree ? 'free' : 'pending';
+                 $orderData = [
+                     'kode_order' => $kodeOrder,
+                     'nama_pembeli' => $request->nama,
+                     'email_pembeli' => $request->email,
+                     'wa_pembeli' => $request->wa,
+                     'total_harga' => $total,
+-                    'status' => 'pending',
++                    'status' => $initialStatus,
+                 ] + $preorderMeta;
+ 
+                 $order = Order::create($orderData);
+@@ -161,6 +184,19 @@ public function store(CheckoutRequest $request): JsonResponse
+                     ]);
+                 }
+ 
++                // Free order: set paid_at synchronously + trigger delivery (idempotent
++                // via OrderDeliveryService) sehingga buyer langsung punya download
++                // token saat sampai di /pesanan-sukses. Tidak ada Tripay callback —
++                // provenance berbeda dari order paid biasa.
++                if ($hasFree) {
++                    $now = now();
++                    $order->forceFill([
++                        'paid_at' => $now,
++                    ])->save();
++
++                    $this->deliveryService->generateForOrder($order->fresh(), 'paid');
++                }
++
+                 return $order;
+             });
+ 
+@@ -173,6 +209,21 @@ public function store(CheckoutRequest $request): JsonResponse
+                 'quantity' => $i->qty,
+             ])->toArray();
+ 
++            // Free order skip Tripay entirely — buyer langsung di-redirect ke payment
++            // page yang akan auto-redirect lagi ke /pesanan-sukses (status sudah 'free'
++            // yang diperlakukan sama dengan 'paid' oleh PaymentPoller).
++            if ($hasFree) {
++                $this->cartService->clear($sessionId);
++
++                return response()->json([
++                    'data' => [
++                        'kode_order' => $kodeOrder,
++                        'redirect_url' => "/pembayaran/{$kodeOrder}",
++                    ],
++                    'message' => 'Order gratis dibuat. Produk siap diunduh.',
++                ], 201);
++            }
++
+             $dto = new CreateTransactionDto(
+                 method: 'QRIS2',
+                 merchantRef: $kodeOrder,
+@@ -187,7 +238,11 @@ public function store(CheckoutRequest $request): JsonResponse
+ 
+             $tripayRes = $this->tripay->createTransaction($dto);
+ 
++            // Perbarui total_harga pesanan agar mencakup fee transaksi Tripay (total tagihan riil)
++            $payableTotal = (int) ($tripayRes['amount_customer'] ?? ($tripayRes['amount'] + ($tripayRes['total_fee'] ?? $tripayRes['fee_customer'] ?? 0)));
++
+             $order->update([
++                'total_harga' => $payableTotal > 0 ? $payableTotal : $total,
+                 'tripay_reference' => $tripayRes['reference'],
+                 'qr_string' => $tripayRes['qr_string'] ?? null,
+                 'qr_url' => $tripayRes['qr_url'] ?? null,
+@@ -244,6 +299,10 @@ private function generateKodeOrder(): string
+      */
+     private function sanitizePhone(string $phone): string
+     {
+-        return preg_replace('/[^0-9]/', '', $phone) ?? $phone;
++        $cleaned = preg_replace('/[^0-9]/', '', $phone) ?? '';
++        if (str_starts_with($cleaned, '628')) {
++            return '0'.substr($cleaned, 2);
++        }
++        return $cleaned;
+     }
+ }
+diff --git a/apps/api/app/Http/Resources/OrderResource.php b/apps/api/app/Http/Resources/OrderResource.php
+index f094763..c42a110 100644
+--- a/apps/api/app/Http/Resources/OrderResource.php
++++ b/apps/api/app/Http/Resources/OrderResource.php
+@@ -20,6 +20,9 @@ public function toArray(Request $request): array
+             'total_harga' => (string) $this->total_harga,
+             'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
+             'status' => $this->status,
++            // True kalau order skip payment gateway (cart is_free). Provenance
++            // berbeda dari 'paid' (tidak ada Tripay reference) tapi delivery flow identik.
++            'is_free' => $this->isFree(),
+             // Pre-order fields. Null untuk non-preorder orders.
+             'is_preorder' => $this->isPreorder(),
+             'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
+@@ -49,6 +52,7 @@ public function toArray(Request $request): array
+                 'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
+                 'is_preorder' => $this->isPreorder(),
+                 'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
++                'is_free' => $this->isFree(),
+                 'item_count' => $this->whenLoaded('items', fn () => $this->items->count()),
+             ];
+         }
+diff --git a/apps/api/app/Http/Resources/ProductResource.php b/apps/api/app/Http/Resources/ProductResource.php
+index 73a6789..45d594b 100644
+--- a/apps/api/app/Http/Resources/ProductResource.php
++++ b/apps/api/app/Http/Resources/ProductResource.php
+@@ -25,10 +25,15 @@ public function toArray(Request $request): array
+             'tipe' => $this->tipe,
+             'file_url' => $this->file_url,
+             'download_expiry_days' => $this->download_expiry_days,
+-            'preview_images' => $this->preview_images ?? [],
++            'preview_images' => is_array($this->preview_images) ? array_values(array_filter($this->preview_images, fn ($item) => is_string($item) && trim($item) !== '')) : [],
+             'fitur' => $this->fitur ?? [],
+             'status' => $this->status,
+             'is_featured' => (bool) $this->is_featured,
++            // Produk gratis: label "Gratis" di-render frontend (via translation key
++            // product.price.free) ketika flag ini true. harga selalu 0 di DB
++            // (auto-set di ProductController). Backend TIDAK localize di sini —
++            // source of truth label adalah translation file frontend.
++            'is_free' => (bool) $this->is_free,
+             // Pre-order fields. Untuk non-preorder products, release_date/deposit_percent
+             // null, deposit_amount/remaining_amount null (whenLoaded-style suppression
+             // untuk hemat bandwidth — frontend branch via is_pre_order).
+diff --git a/apps/api/app/Models/Order.php b/apps/api/app/Models/Order.php
+index bbf0a79..3ceacd2 100644
+--- a/apps/api/app/Models/Order.php
++++ b/apps/api/app/Models/Order.php
+@@ -54,10 +54,24 @@ public function items(): HasMany
+ 
+     /**
+      * Apakah order ini sudah dibayar?
++     *
++     * Mencakup `paid` (Tripay callback) dan `free` (cart berisi produk is_free,
++     * skip payment gateway) — keduanya end-state yang siap untuk delivery.
+      */
+     public function isPaid(): bool
+     {
+-        return $this->status === 'paid';
++        return in_array($this->status, ['paid', 'free'], true);
++    }
++
++    /**
++     * Apakah order ini free (checkout skip payment gateway)?
++     *
++     * Provenance berbeda dari `paid` (tidak ada Tripay reference), tapi delivery
++     * flow-nya identik — license/file tersedia, notification terkirim.
++     */
++    public function isFree(): bool
++    {
++        return $this->status === 'free';
+     }
+ 
+     /**
+diff --git a/apps/api/app/Models/Product.php b/apps/api/app/Models/Product.php
+index af00359..ae962ba 100644
+--- a/apps/api/app/Models/Product.php
++++ b/apps/api/app/Models/Product.php
+@@ -28,6 +28,7 @@ class Product extends Model
+         'fitur',
+         'status',
+         'is_featured',
++        'is_free',
+         'is_pre_order',
+         'release_date',
+         'preorder_deposit_percent',
+@@ -39,6 +40,7 @@ class Product extends Model
+         'fitur' => 'array',
+         'download_expiry_days' => 'integer',
+         'is_featured' => 'boolean',
++        'is_free' => 'boolean',
+         'is_pre_order' => 'boolean',
+         'release_date' => 'date',
+         'preorder_deposit_percent' => 'integer',
+@@ -127,6 +129,26 @@ public function scopeFeatured($query)
+         return $query->where('is_featured', true);
+     }
+ 
++    /**
++     * Scope: hanya produk yang ditandai gratis (is_free=true).
++     *
++     * Backend ProductController auto-set harga=0 saat is_free=true — jadi
++     * filter ini cara yang reliable untuk query "semua produk gratis".
++     */
++    public function scopeFree($query)
++    {
++        return $query->where('is_free', true);
++    }
++
++    /**
++     * Apakah produk ini gratis? Alias guard untuk (bool) $this->is_free —
++     * readable di view + service.
++     */
++    public function isFree(): bool
++    {
++        return (bool) $this->is_free;
++    }
++
+     /**
+      * Generate slug unik berdasarkan nama, exclude current id (untuk update).
+      */
+diff --git a/apps/api/app/Providers/AppServiceProvider.php b/apps/api/app/Providers/AppServiceProvider.php
+index 5a7db19..b51aafa 100644
+--- a/apps/api/app/Providers/AppServiceProvider.php
++++ b/apps/api/app/Providers/AppServiceProvider.php
+@@ -17,6 +17,8 @@
+ use App\Services\Storage\LocalMockEnStorage;
+ use App\Services\Storage\RemoteEnStorage;
+ use App\Services\Tripay\TripayClient;
++use App\Services\WhatsApp\MessageBuilder;
++use App\Services\WhatsApp\WhatsAppClient;
+ use Illuminate\Cache\RateLimiting\Limit;
+ use Illuminate\Http\Request;
+ use Illuminate\Support\Facades\RateLimiter;
+@@ -62,10 +64,33 @@ public function register(): void
+         // Bind CartService (stateless, bisa singleton)
+         $this->app->singleton(CartService::class, fn () => new CartService);
+ 
+-        // Bind NotificationDispatcher — null webhook kalau belum dikonfigurasi = dev log mode
+-        $this->app->singleton(NotificationDispatcher::class, function () {
++        // Bind WhatsAppClient — null webhook = dev log mode
++        $this->app->singleton(WhatsAppClient::class, function () {
++            $url = config('services.whatsapp.webhook_url') ?: null;
++
++            return new WhatsAppClient(
++                webhookUrl: $url,
++                webhookSecret: (string) config('services.whatsapp.webhook_secret', 'enmarket.webhook'),
++            );
++        });
++
++        // Bind WhatsApp MessageBuilder
++        $this->app->singleton(MessageBuilder::class, function () {
++            return new MessageBuilder(
++                siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
++                storeName: (string) config('app.name', 'Enmarket'),
++            );
++        });
++
++        // Bind NotificationDispatcher — now with WhatsApp + Email channels
++        $this->app->singleton(NotificationDispatcher::class, function ($app) {
++            $waUrl = config('services.whatsapp.webhook_url') ?: null;
++
+             return new NotificationDispatcher(
+                 n8nWebhookUrl: config('services.n8n.webhook_kirim_produk') ?: null,
++                waClient: $waUrl ? $app->make(WhatsAppClient::class) : null,
++                waMessageBuilder: $waUrl ? $app->make(MessageBuilder::class) : null,
++                siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
+             );
+         });
+ 
+diff --git a/apps/api/app/Services/Delivery/NotificationDispatcher.php b/apps/api/app/Services/Delivery/NotificationDispatcher.php
+index 4f062f5..366ab9c 100644
+--- a/apps/api/app/Services/Delivery/NotificationDispatcher.php
++++ b/apps/api/app/Services/Delivery/NotificationDispatcher.php
+@@ -2,82 +2,89 @@
+ 
+ namespace App\Services\Delivery;
+ 
++use App\Mail\OrderInvoiceMail;
+ use App\Models\AccountProvisioning;
+ use App\Models\Order;
+ use App\Models\OrderDelivery;
+-use Illuminate\Http\Client\ConnectionException;
+-use Illuminate\Http\Client\RequestException;
+-use Illuminate\Support\Facades\Http;
++use App\Services\WhatsApp\MessageBuilder;
++use App\Services\WhatsApp\WhatsAppClient;
+ use Illuminate\Support\Facades\Log;
++use Illuminate\Support\Facades\Mail;
+ 
+ /**
+- * Dispatch notifikasi ke n8n (email + WA).
++ * Dispatch notifikasi invoice ke pembeli via Email + WhatsApp.
+  *
+  * Tiga event yang di-dispatch:
+- *   - order.paid        → delivery file/license siap di-download (order paid biasa)
+- *   - account.ready     → admin sudah aktivasi akun, kredensial siap di-deliver
+- *   - preorder.ready    → release pre-order: license/file siap (different event untuk n8n template)
++ *   - order.paid        -> delivery file/license siap di-download
++ *   - preorder.ready    -> release pre-order: license/file siap
++ *   - account.ready     -> admin sudah aktivasi akun, kredensial siap
+  *
+- * Mode dev (N8N_WEBHOOK_KIRIM_PRODUK kosong): log only + auto-mark email_sent_at / wa_sent_at.
+- * Mode prod: POST payload ke n8n webhook, n8n yang kirim email & WA.
++ * Channels:
++ *   - Email: Laravel Mail (SMTP/Postmark/etc) — kirim OrderInvoiceMail
++ *   - WhatsApp: WhatsAppClient via enpiistudio webhook agent
+  *
+- * n8n payload contract (order.paid / preorder.ready):
+- * {
+- *   "event": "order.paid" | "preorder.ready",
+- *   "order": { kode_order, nama_pembeli, email_pembeli, wa_pembeli, total_harga, status,
+- *              paid_at, release_date? },
+- *   "deliveries": [
+- *     { product: { nama, tipe }, download_url, download_token, token_expired_at,
+- *       license_key (string|null) }
+- *   ],
+- *   "channels": ["email", "wa"]
+- * }
++ * Dev mode: jika kedua channel tidak dikonfigurasi, log payload saja.
+  */
+ class NotificationDispatcher
+ {
+     public function __construct(
+         private readonly ?string $n8nWebhookUrl,
++        private readonly ?WhatsAppClient $waClient = null,
++        private readonly ?MessageBuilder $waMessageBuilder = null,
++        private readonly ?string $siteUrl = null,
+         private readonly int $timeout = 10,
+     ) {}
+ 
+     /**
+-     * Dispatch payload ke n8n (atau log kalau dev mode).
+-     * Update email_sent_at / wa_sent_at timestamps pada deliveries.
++     * Dispatch notifikasi order paid ke buyer.
+      *
+      * @param  array<int, OrderDelivery>  $deliveries
+      */
+     public function dispatchOrderPaid(Order $order, array $deliveries): void
+     {
+-        $payload = $this->buildOrderPaidPayload($order, $deliveries);
++        foreach ($deliveries as $d) {
++            $d->loadMissing('orderItem', 'licenseKey');
++        }
+ 
+-        $sent = $this->postToN8n($payload);
++        $emailSent = $this->sendEmail($order, 'order_paid', $deliveries);
++        $waSent = $this->sendWhatsApp(
++            $order->wa_pembeli,
++            fn () => $this->waMessageBuilder?->orderPaid($order, $deliveries),
++        );
+ 
+-        if ($sent) {
+-            $this->markDeliveriesSent($deliveries);
++        if (! $emailSent && ! $waSent) {
++            $this->logDevMode($this->buildOrderPaidPayload($order, $deliveries));
+         }
++
++        $this->markDeliveriesSent($deliveries, $emailSent, $waSent);
+     }
+ 
+     /**
+-     * Dispatch notifikasi "pre-order siap di-release" — di-trigger saat admin
+-     * manual click Release Now. Payload mirip order.paid tapi event=`preorder.ready`
+-     * supaya n8n bisa pakai template berbeda (announce-style, plus release_date context).
++     * Dispatch notifikasi preorder ready ke buyer.
+      *
+      * @param  array<int, OrderDelivery>  $deliveries
+      */
+     public function dispatchPreorderReady(Order $order, array $deliveries): void
+     {
+-        $payload = $this->buildPreorderReadyPayload($order, $deliveries);
++        foreach ($deliveries as $d) {
++            $d->loadMissing('orderItem', 'licenseKey');
++        }
+ 
+-        $sent = $this->postToN8n($payload);
++        $emailSent = $this->sendEmail($order, 'preorder_ready', $deliveries);
++        $waSent = $this->sendWhatsApp(
++            $order->wa_pembeli,
++            fn () => $this->waMessageBuilder?->preorderReady($order, $deliveries),
++        );
+ 
+-        if ($sent) {
+-            $this->markDeliveriesSent($deliveries);
++        if (! $emailSent && ! $waSent) {
++            $this->logDevMode($this->buildPreorderReadyPayload($order, $deliveries));
+         }
++
++        $this->markDeliveriesSent($deliveries, $emailSent, $waSent);
+     }
+ 
+     /**
+-     * Dispatch notifikasi "akun sudah siap" ke buyer.
+-     * Payload: order info + 1 item dengan kredensial.
++     * Dispatch notifikasi account ready ke buyer.
+      */
+     public function dispatchAccountReady(AccountProvisioning $prov): void
+     {
+@@ -93,62 +100,110 @@ public function dispatchAccountReady(AccountProvisioning $prov): void
+             return;
+         }
+ 
+-        $payload = [
+-            'event' => 'account.ready',
+-            'order' => [
+-                'kode_order' => $order->kode_order,
+-                'nama_pembeli' => $order->nama_pembeli,
+-                'email_pembeli' => $order->email_pembeli,
+-                'wa_pembeli' => $order->wa_pembeli,
+-            ],
+-            'item' => [
+-                'product_nama' => $item->nama_produk,
+-                'credentials' => $prov->credentials,
+-                'catatan' => $prov->catatan_admin,
+-            ],
+-            'channels' => ['email', 'wa'],
+-        ];
+-
+-        $sent = $this->postToN8n($payload);
++        $emailSent = $this->sendEmail($order, 'account_ready', [], $prov);
++        $waSent = $this->sendWhatsApp(
++            $order->wa_pembeli,
++            fn () => $this->waMessageBuilder?->accountReady($prov),
++        );
+ 
+-        if ($sent) {
+-            $now = now();
+-            $prov->forceFill([
+-                'email_sent_at' => $prov->email_sent_at ?? $now,
+-                'wa_sent_at' => $prov->wa_sent_at ?? $now,
+-            ])->save();
++        if (! $emailSent && ! $waSent) {
++            $this->logDevMode([
++                'event' => 'account.ready',
++                'order' => [
++                    'kode_order' => $order->kode_order,
++                    'nama_pembeli' => $order->nama_pembeli,
++                    'email_pembeli' => $order->email_pembeli,
++                    'wa_pembeli' => $order->wa_pembeli,
++                ],
++                'item' => [
++                    'product_nama' => $item->nama_produk,
++                    'credentials' => $prov->credentials,
++                    'catatan' => $prov->catatan_admin,
++                ],
++            ]);
+         }
++
++        $now = now();
++        $prov->forceFill([
++            'email_sent_at' => $emailSent ? ($prov->email_sent_at ?? $now) : $prov->email_sent_at,
++            'wa_sent_at' => $waSent ? ($prov->wa_sent_at ?? $now) : $prov->wa_sent_at,
++        ])->save();
+     }
+ 
+     /**
+-     * @param  array<string, mixed>  $payload
++     * Send email via Laravel Mail.
++     *
++     * @param  array<int, OrderDelivery>  $deliveries
+      */
+-    private function postToN8n(array $payload): bool
+-    {
+-        if (! $this->n8nWebhookUrl) {
+-            $this->logDevMode($payload);
+-
+-            return true;
++    private function sendEmail(
++        Order $order,
++        string $eventType,
++        array $deliveries = [],
++        ?AccountProvisioning $provisioning = null,
++    ): bool {
++        $to = $order->email_pembeli;
++        if (! $to) {
++            return false;
+         }
+ 
+         try {
+-            $response = Http::timeout($this->timeout)
+-                ->acceptJson()
+-                ->asJson()
+-                ->post($this->n8nWebhookUrl, $payload);
++            $mailer = config('mail.default', 'log');
++
++            if ($mailer === 'log') {
++                Log::info('NotificationDispatcher: email would be sent (mail driver=log)', [
++                    'to' => $to,
++                    'event' => $eventType,
++                ]);
++
++                return true;
++            }
+ 
+-            $response->throw();
++            Mail::to($to)->send(new OrderInvoiceMail(
++                order: $order,
++                eventType: $eventType,
++                deliveries: $deliveries,
++                provisioning: $provisioning,
++                siteUrl: $this->siteUrl ?? config('services.next.public_url', ''),
++            ));
+ 
+-            Log::info('NotificationDispatcher: n8n accepted payload', [
+-                'event' => $payload['event'] ?? 'unknown',
+-                'status' => $response->status(),
++            Log::info('NotificationDispatcher: email sent', [
++                'to' => $to,
++                'event' => $eventType,
+             ]);
+ 
+             return true;
+-        } catch (RequestException|ConnectionException $e) {
+-            Log::error('NotificationDispatcher: n8n POST failed', [
+-                'event' => $payload['event'] ?? 'unknown',
+-                'status' => method_exists($e, 'response') ? $e->response?->status() : null,
++        } catch (\Throwable $e) {
++            Log::error('NotificationDispatcher: email failed', [
++                'to' => $to,
++                'event' => $eventType,
++                'error' => $e->getMessage(),
++            ]);
++
++            return false;
++        }
++    }
++
++    /**
++     * Send WhatsApp message via WhatsAppClient.
++     *
++     * @param  callable(): ?string  $messageFactory
++     */
++    private function sendWhatsApp(?string $phone, callable $messageFactory): bool
++    {
++        if (! $phone || ! $this->waClient || ! $this->waMessageBuilder) {
++            return false;
++        }
++
++        try {
++            $message = $messageFactory();
++            if (! $message) {
++                return false;
++            }
++
++            return $this->waClient->sendMessage($phone, $message);
++        } catch (\Throwable $e) {
++            Log::error('NotificationDispatcher: WhatsApp failed', [
++                'phone' => $phone,
+                 'error' => $e->getMessage(),
+             ]);
+ 
+@@ -194,9 +249,6 @@ private function buildOrderPaidPayload(Order $order, array $deliveries): array
+     }
+ 
+     /**
+-     * Payload untuk event preorder.ready — struktur mirip order.paid tapi event berbeda
+-     * (n8n template bisa announce "pre-order kamu sudah rilis!") plus release_date context.
+-     *
+      * @param  array<int, OrderDelivery>  $deliveries
+      * @return array<string, mixed>
+      */
+@@ -249,14 +301,20 @@ private function logDevMode(array $payload): void
+      *
+      * @param  array<int, OrderDelivery>  $deliveries
+      */
+-    private function markDeliveriesSent(array $deliveries): void
++    private function markDeliveriesSent(array $deliveries, bool $emailSent = true, bool $waSent = true): void
+     {
+         $now = now();
+         foreach ($deliveries as $d) {
+-            $d->forceFill([
+-                'email_sent_at' => $d->email_sent_at ?? $now,
+-                'wa_sent_at' => $d->wa_sent_at ?? $now,
+-            ])->save();
++            $updates = [];
++            if ($emailSent || (! $emailSent && ! $waSent)) {
++                $updates['email_sent_at'] = $d->email_sent_at ?? $now;
++            }
++            if ($waSent || (! $emailSent && ! $waSent)) {
++                $updates['wa_sent_at'] = $d->wa_sent_at ?? $now;
++            }
++            if (! empty($updates)) {
++                $d->forceFill($updates)->save();
++            }
+         }
+     }
+ }
+diff --git a/apps/api/config/services.php b/apps/api/config/services.php
+index eca011d..72e14ec 100644
+--- a/apps/api/config/services.php
++++ b/apps/api/config/services.php
+@@ -41,8 +41,8 @@
+     |--------------------------------------------------------------------------
+     |
+     | Selection otomatis oleh AppServiceProvider:
+-    |   - ENSTORAGE_BASE_URL kosong → LocalMockEnStorage (simpan ke storage/app/private/)
+-    |   - ENSTORAGE_BASE_URL terisi  → RemoteEnStorage (HTTP API call ke EnStorage)
++    |   - ENSTORAGE_BASE_URL kosong â†’ LocalMockEnStorage (simpan ke storage/app/private/)
++    |   - ENSTORAGE_BASE_URL terisi  â†’ RemoteEnStorage (HTTP API call ke EnStorage)
+     |
+     */
+ 
+@@ -107,4 +107,21 @@
+         'webhook_kirim_produk' => env('N8N_WEBHOOK_KIRIM_PRODUK'),
+     ],
+ 
+-];
++
++    /*
++    |--------------------------------------------------------------------------
++    | WhatsApp webhook agent (enpiistudio)
++    |--------------------------------------------------------------------------
++    |
++    | Kirim notifikasi WA langsung via webhook agent enpiistudio.
++    | Signature: HMAC-SHA256 atas JSON body dengan secret key.
++    | Kalau WA_WEBHOOK_URL kosong, WhatsApp channel di-skip (log only).
++    |
++    */
++
++    'whatsapp' => [
++        'webhook_url' => env('WA_WEBHOOK_URL'),
++        'webhook_secret' => env('WA_WEBHOOK_SECRET', 'enmarket.webhook'),
++    ],
++
++];
+\ No newline at end of file
+diff --git a/apps/api/tests/Feature/NotificationDispatcherTest.php b/apps/api/tests/Feature/NotificationDispatcherTest.php
+index 70b23c7..a7cd7ac 100644
+--- a/apps/api/tests/Feature/NotificationDispatcherTest.php
++++ b/apps/api/tests/Feature/NotificationDispatcherTest.php
+@@ -9,16 +9,18 @@
+ use App\Models\OrderItem;
+ use App\Models\Product;
+ use App\Services\Delivery\NotificationDispatcher;
++use App\Services\WhatsApp\MessageBuilder;
++use App\Services\WhatsApp\WhatsAppClient;
+ use Illuminate\Foundation\Testing\RefreshDatabase;
+ use Illuminate\Support\Facades\Http;
+ use Illuminate\Support\Facades\Log;
++use Illuminate\Support\Facades\Mail;
+ use Tests\TestCase;
+ 
+ /**
+- * Test untuk NotificationDispatcher — dev-mode log + n8n webhook HTTP POST
+- * + payload shape untuk order.paid dan account.ready events.
++ * Test untuk NotificationDispatcher — dev-mode log + direct Email/WA dispatch.
+  *
+- * Http facade di-fake untuk isolate HTTP. Log::spy untuk verifikasi dev-mode output.
++ * Mail dan Http facades di-fake untuk isolate. Log::spy untuk verifikasi dev-mode output.
+  */
+ class NotificationDispatcherTest extends TestCase
+ {
+@@ -104,7 +106,28 @@ private function makeProvisioningReady(): AccountProvisioning
+         ]);
+     }
+ 
+-    // ───── dev mode (no webhook) ─────
++    private function makeDispatcherWithWa(): NotificationDispatcher
++    {
++        Http::fake(['*' => Http::response(['ok' => true], 200)]);
++
++        $waClient = new WhatsAppClient(
++            webhookUrl: 'https://wa.example.com/webhook',
++            webhookSecret: 'test-secret',
++        );
++        $msgBuilder = new MessageBuilder(
++            siteUrl: 'https://example.com',
++            storeName: 'TestStore',
++        );
++
++        return new NotificationDispatcher(
++            n8nWebhookUrl: null,
++            waClient: $waClient,
++            waMessageBuilder: $msgBuilder,
++            siteUrl: 'https://example.com',
++        );
++    }
++
++    // ————— dev mode (no webhook, no WA) —————
+ 
+     public function test_dev_mode_marks_sent_when_webhook_url_null(): void
+     {
+@@ -134,101 +157,50 @@ public function test_dev_mode_does_not_overwrite_existing_timestamps(): void
+         $this->assertEquals($firstSent->toIso8601String(), $fresh->email_sent_at->toIso8601String());
+     }
+ 
+-    // ───── n8n webhook ─────
++    // ————— WhatsApp webhook —————
+ 
+-    public function test_webhook_posts_order_paid_with_correct_payload(): void
++    public function test_wa_dispatch_sends_order_paid_message(): void
+     {
+-        Http::fake(['*' => Http::response(['ok' => true], 200)]);
+-
+-        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
++        $dispatcher = $this->makeDispatcherWithWa();
+         [$order, $delivery] = $this->makeOrderWithDelivery();
+ 
+         $dispatcher->dispatchOrderPaid($order, [$delivery]);
+ 
+-        Http::assertSent(function ($request) use ($order, $delivery) {
++        Http::assertSent(function ($request) use ($order) {
+             $body = json_decode($request->body(), true);
+ 
+-            return ($body['order']['kode_order'] ?? null) === $order->kode_order
+-                && ($body['order']['email_pembeli'] ?? null) === 'buyer@example.com'
+-                && ($body['deliveries'][0]['product']['nama'] ?? null) === $delivery->orderItem->nama_produk
+-                && ($body['deliveries'][0]['license_key'] ?? null) === $delivery->licenseKey->key
+-                && ($body['channels'] ?? null) === ['email', 'wa'];
++            return ($body['event'] ?? null) === 'send_message'
++                && str_contains($body['data']['content'] ?? '', $order->kode_order)
++                && str_starts_with($body['data']['phone_number'] ?? '', '62');
+         });
++
++        $this->assertNotNull($delivery->fresh()->wa_sent_at);
+     }
+ 
+-    public function test_webhook_posts_account_ready_with_credentials(): void
++    public function test_wa_dispatch_sends_account_ready_message(): void
+     {
+-        Http::fake(['*' => Http::response(['ok' => true], 200)]);
+-
+-        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
++        $dispatcher = $this->makeDispatcherWithWa();
+         $prov = $this->makeProvisioningReady();
+         $prov->loadMissing('orderItem.order', 'orderItem.product');
+ 
+         $dispatcher->dispatchAccountReady($prov);
+ 
+-        Http::assertSent(function ($request) use ($prov) {
++        Http::assertSent(function ($request) {
+             $body = json_decode($request->body(), true);
+ 
+-            return ($body['event'] ?? null) === 'account.ready'
+-                && ($body['item']['product_nama'] ?? null) === 'Netflix'
+-                && ($body['item']['credentials']['username'] ?? null) === 'u@x.com'
+-                && ($body['item']['credentials']['password'] ?? null) === 'pw123'
+-                && ($body['item']['catatan'] ?? null) === 'Aktivasi OK'
+-                && ($body['channels'] ?? null) === ['email', 'wa'];
++            return ($body['event'] ?? null) === 'send_message'
++                && str_contains($body['data']['content'] ?? '', 'Netflix');
+         });
+ 
+-        $this->assertNotNull($prov->fresh()->email_sent_at);
+         $this->assertNotNull($prov->fresh()->wa_sent_at);
+     }
+ 
+-    public function test_webhook_failure_logs_error_does_not_mark_sent(): void
+-    {
+-        Http::fake(['*' => Http::response('Internal Server Error', 500)]);
+-
+-        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
+-        [$order, $delivery] = $this->makeOrderWithDelivery();
+-
+-        // dispatchOrderPaid swallows HTTP error — tidak throw
+-        $dispatcher->dispatchOrderPaid($order, [$delivery]);
+-
+-        $this->assertNull($delivery->fresh()->email_sent_at, 'email_sent_at harus null saat webhook fail');
+-        $this->assertNull($delivery->fresh()->wa_sent_at);
+-    }
+-
+-    public function test_webhook_marks_sent_only_after_2xx_response(): void
+-    {
+-        Http::fake(['*' => Http::response(['ok' => true], 202)]);  // 202 = Accepted
+-
+-        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
+-        [$order, $delivery] = $this->makeOrderWithDelivery();
+-
+-        $dispatcher->dispatchOrderPaid($order, [$delivery]);
+-
+-        $this->assertNotNull($delivery->fresh()->email_sent_at);
+-    }
+-
+-    public function test_timeout_uses_constructor_param(): void
+-    {
+-        Http::fake(['*' => Http::response(['ok' => true], 200)]);
+-
+-        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 3);
+-        [$order, $delivery] = $this->makeOrderWithDelivery();
+-
+-        $dispatcher->dispatchOrderPaid($order, [$delivery]);
+-
+-        Http::assertSent(function ($request) {
+-            // Verify timeout set on pending request — checked via Laravel internals
+-            return $request->method() === 'POST';
+-        });
+-    }
+-
+-    // ───── account.ready edge case ─────
++    // ————— account.ready edge case —————
+ 
+     public function test_account_ready_skips_when_order_or_item_missing(): void
+     {
+         Http::fake(['*' => Http::response(['ok' => true], 200)]);
+ 
+-        // Provisioning tanpa relasi loaded — orderItem null guard
+         $prov = new AccountProvisioning([
+             'order_item_id' => 999999,
+             'status' => 'siap',
+@@ -236,8 +208,8 @@ public function test_account_ready_skips_when_order_or_item_missing(): void
+         ]);
+         $prov->id = 1;
+ 
+-        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook');
+-        $dispatcher->dispatchAccountReady($prov);  // tidak throw
++        $dispatcher = new NotificationDispatcher(null);
++        $dispatcher->dispatchAccountReady($prov);
+ 
+         Http::assertNothingSent();
+     }
+@@ -252,6 +224,38 @@ public function test_account_ready_dev_mode_marks_provisioning_sent(): void
+         $this->assertNotNull($prov->fresh()->email_sent_at);
+         $this->assertNotNull($prov->fresh()->wa_sent_at);
+     }
++
++    // ————— WhatsApp message contains correct data —————
++
++    public function test_wa_order_paid_message_includes_download_link(): void
++    {
++        $dispatcher = $this->makeDispatcherWithWa();
++        [$order, $delivery] = $this->makeOrderWithDelivery();
++
++        $dispatcher->dispatchOrderPaid($order, [$delivery]);
++
++        Http::assertSent(function ($request) use ($delivery) {
++            $body = json_decode($request->body(), true);
++            $content = $body['data']['content'] ?? '';
++
++            return str_contains($content, $delivery->download_token)
++                && str_contains($content, 'Rp');
++        });
++    }
++
++    public function test_wa_phone_normalised_to_62(): void
++    {
++        $dispatcher = $this->makeDispatcherWithWa();
++        [$order, $delivery] = $this->makeOrderWithDelivery();
++
++        $dispatcher->dispatchOrderPaid($order, [$delivery]);
++
++        Http::assertSent(function ($request) {
++            $body = json_decode($request->body(), true);
++
++            return str_starts_with($body['data']['phone_number'] ?? '', '628');
++        });
++    }
+ }
+ 
+ /**
+@@ -260,4 +264,4 @@ public function test_account_ready_dev_mode_marks_provisioning_sent(): void
+ function DB(): \Illuminate\Database\Connection
+ {
+     return \Illuminate\Support\Facades\DB::connection();
+-}
+\ No newline at end of file
++}
+diff --git a/apps/web/app/[locale]/(public)/cek-pesanan/[kodeOrder]/StatusPoller.tsx b/apps/web/app/[locale]/(public)/cek-pesanan/[kodeOrder]/StatusPoller.tsx
+index 3908fb1..17b58d8 100644
+--- a/apps/web/app/[locale]/(public)/cek-pesanan/[kodeOrder]/StatusPoller.tsx
++++ b/apps/web/app/[locale]/(public)/cek-pesanan/[kodeOrder]/StatusPoller.tsx
+@@ -3,6 +3,7 @@
+ import { useEffect, useState } from 'react';
+ 
+ import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
++import { getClientApiBase } from '@/lib/client-api';
+ 
+ interface Props {
+   kodeOrder: string;
+@@ -21,7 +22,7 @@ export function StatusPoller({ kodeOrder, initialStatus }: Props) {
+ 
+     const interval = setInterval(async () => {
+       try {
+-        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
++        const apiBase = getClientApiBase();
+         const res = await fetch(`${apiBase}/api/orders/${kodeOrder}/status`, {
+           cache: 'no-store',
+         });
+diff --git a/apps/web/app/[locale]/(public)/develop/[slug]/AddToCartControls.tsx b/apps/web/app/[locale]/(public)/develop/[slug]/AddToCartControls.tsx
+index 0d63b2e..49430b9 100644
+--- a/apps/web/app/[locale]/(public)/develop/[slug]/AddToCartControls.tsx
++++ b/apps/web/app/[locale]/(public)/develop/[slug]/AddToCartControls.tsx
+@@ -12,11 +12,13 @@ interface Props {
+   productId: number;
+   /** Produk pre-orderable: ganti label CTA + message. */
+   isPreOrder?: boolean;
++  /** Produk gratis: ganti label CTA + skip payment wording di checkout. */
++  isFree?: boolean;
+   /** Deposit percent (1-100) untuk label CTA. */
+   depositPercent?: number | null;
+ }
+ 
+-export function AddToCartControls({ productId, isPreOrder = false, depositPercent }: Props) {
++export function AddToCartControls({ productId, isPreOrder = false, isFree = false, depositPercent }: Props) {
+   const t = useTranslations('developDetail');
+   const [pending, startTransition] = useTransition();
+ 
+@@ -26,7 +28,12 @@ export function AddToCartControls({ productId, isPreOrder = false, depositPercen
+       if (!res.ok && res.error) {
+         toast.error(res.error);
+       } else {
+-        toast.success(isPreOrder ? t('preorderAdded') : t('added'));
++        const successMsg = isFree
++          ? t('freeAdded')
++          : isPreOrder
++            ? t('preorderAdded')
++            : t('added');
++        toast.success(successMsg);
+       }
+     });
+   }
+@@ -36,21 +43,27 @@ export function AddToCartControls({ productId, isPreOrder = false, depositPercen
+       try {
+         await addToCartAndGoAction(productId, 1);
+       } catch (err) {
+-        const msg = err instanceof Error ? err.message : t('addError');
+-        toast.error(msg);
++        if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
++        toast.error(err instanceof Error ? err.message : t('addError'));
+       }
+     });
+   }
+ 
+-  // Label CTA: pakai "Pre-Order Sekarang (DP {percent}%)" untuk pre-order.
+-  // depositPercent null/undefined → fallback ke '50' sebagai default (lihat Product default).
++  // Label CTA: free > pre-order > normal precedence. Free produk tidak punya
++  // pre-order (ProductController reject kombinasi), jadi branch cuma 2 cabang.
+   const dpLabel = depositPercent ?? 50;
+   const primaryLabel = pending
+     ? t('adding')
++    : isFree
++      ? t('freeCta')
++      : isPreOrder
++        ? t('addToCartPreOrder', { percent: dpLabel })
++        : t('addToCart');
++  const buyNowLabel = isFree
++    ? t('freeBuyNow')
+     : isPreOrder
+-      ? t('addToCartPreOrder', { percent: dpLabel })
+-      : t('addToCart');
+-  const buyNowLabel = isPreOrder ? t('buyNowPreOrder') : t('buyNow');
++      ? t('buyNowPreOrder')
++      : t('buyNow');
+ 
+   return (
+     <div className="flex flex-col gap-3">
+diff --git a/apps/web/app/[locale]/(public)/develop/[slug]/page.tsx b/apps/web/app/[locale]/(public)/develop/[slug]/page.tsx
+index 4c0edda..6d5fc78 100644
+--- a/apps/web/app/[locale]/(public)/develop/[slug]/page.tsx
++++ b/apps/web/app/[locale]/(public)/develop/[slug]/page.tsx
+@@ -68,7 +68,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
+     ? product.deskripsi.slice(0, 160)
+     : t('fallbackDescription', { name: product.nama });
+ 
+-  const ogImage = product.preview_images?.[0];
++  const previewImages = Array.isArray(product.preview_images)
++    ? product.preview_images.filter((img): img is string => typeof img === 'string' && img.trim() !== '')
++    : [];
++  const ogImage = previewImages[0];
+ 
+   return {
+     title: `${product.nama} — enpiistudio`,
+@@ -105,6 +108,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
+     .split(/\r?\n/)
+     .filter((p) => p.trim() !== '');
+ 
++  const previewImages = Array.isArray(product.preview_images)
++    ? product.preview_images.filter((img): img is string => typeof img === 'string' && img.trim() !== '')
++    : [];
+   const pullQuoteIdx = paragraphs.length >= 2 ? 1 : -1;
+ 
+   // Specs
+@@ -152,10 +158,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
+           {/* Image — large, thick border, hard shadow, slightly rotated */}
+           <div className="relative">
+             <div className="bg-surface border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
+-              {product.preview_images?.[0] ? (
++              {previewImages[0] ? (
+                 // eslint-disable-next-line @next/next/no-img-element
+                 <img
+-                  src={product.preview_images[0]}
++                  src={previewImages[0]}
+                   alt={product.nama}
+                   className="w-full aspect-[4/3] object-cover"
+                 />
+@@ -209,9 +215,11 @@ export default async function WorkDetailPage({ params }: PageProps) {
+             <div className="flex flex-col gap-2">
+               <div className="flex items-baseline gap-3">
+                 <Badge tone="accent" size="lg">
+-                  {product.is_pre_order && product.deposit_amount
+-                    ? t('dpLabel', { percent: product.deposit_percent ?? 50 })
+-                    : formatRupiah(product.harga)}
++                  {product.is_free
++                    ? t('free')
++                    : product.is_pre_order && product.deposit_amount
++                      ? t('dpLabel', { percent: product.deposit_percent ?? 50 })
++                      : formatRupiah(product.harga)}
+                 </Badge>
+                 {product.needs_license_key && (
+                   <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
+@@ -233,6 +241,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
+               <AddToCartControls
+                 productId={product.id}
+                 isPreOrder={product.is_pre_order}
++                isFree={product.is_free}
+                 depositPercent={product.deposit_percent}
+               />
+             </div>
+@@ -297,10 +306,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
+                     <dd className="font-bold text-ink">{t('items', { count: product.fitur.length })}</dd>
+                   </div>
+                 )}
+-                {product.preview_images && product.preview_images.length > 0 && (
++                {previewImages.length > 0 && (
+                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
+                     <dt className="font-label text-label-sm uppercase text-ink/60">{t('preview')}</dt>
+-                    <dd className="font-bold text-ink">{t('images', { count: product.preview_images.length })}</dd>
++                    <dd className="font-bold text-ink">{t('images', { count: previewImages.length })}</dd>
+                   </div>
+                 )}
+                 {product.has_downloadable_file && product.download_expiry_days && (
+@@ -390,7 +399,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
+       )}
+ 
+       {/* ───── 5. GALLERY (irregular grid) ───── */}
+-      {product.preview_images && product.preview_images.length > 1 && (
++      {previewImages.length > 1 && (
+         <section className="border-b-4 border-ink">
+           <SectionContainer py="lg">
+             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+@@ -408,7 +417,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
+             </div>
+ 
+             <WorkGallery
+-              images={product.preview_images}
++              images={previewImages}
+               alt={product.nama}
+               title={product.nama}
+             />
+diff --git a/apps/web/app/[locale]/(public)/keranjang/CartItem.tsx b/apps/web/app/[locale]/(public)/keranjang/CartItem.tsx
+index 1f53d97..a2c912c 100644
+--- a/apps/web/app/[locale]/(public)/keranjang/CartItem.tsx
++++ b/apps/web/app/[locale]/(public)/keranjang/CartItem.tsx
+@@ -70,7 +70,7 @@ export async function CartItem({ item }: { item: CartItemData }) {
+               </NLink>
+             </div>
+             <Badge tone="accent" size="md">
+-              {formatRupiah(p.harga)}
++              {p.is_free ? t('free') : formatRupiah(p.harga)}
+             </Badge>
+           </div>
+ 
+diff --git a/apps/web/app/[locale]/(public)/keranjang/SummaryBlock.tsx b/apps/web/app/[locale]/(public)/keranjang/SummaryBlock.tsx
+index 0e6a48d..8ab1c74 100644
+--- a/apps/web/app/[locale]/(public)/keranjang/SummaryBlock.tsx
++++ b/apps/web/app/[locale]/(public)/keranjang/SummaryBlock.tsx
+@@ -38,8 +38,11 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
+       ? items[0].product.release_date
+       : null;
+ 
+-  // Untuk pre-order, "total" yang ditampilkan ke buyer = DP (amount yang harus dibayar).
+-  const displayTotal = allPreorder ? depositTotal : total;
++  // Free cart: total = 0 (auto-set backend). Untuk pre-order, "total" yang ditampilkan
++  // ke buyer = DP (amount yang harus dibayar). Free > pre-order precedence karena
++  // kombinasi is_free+is_pre_order ditolak di admin (tidak mungkin sampai sini).
++  const allFree = items.length > 0 && items.every((i) => i.product?.is_free);
++  const displayTotal = allPreorder ? depositTotal : allFree ? 0 : total;
+ 
+   return (
+     <Card variant="filled-primary" as="aside" thick hoverable={false}>
+@@ -52,7 +55,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
+             {allPreorder ? t('preorderLabel') : t('subtotal')}
+           </span>
+           <span className="font-display font-black text-lg text-surface">
+-            {formatRupiah(subtotal)}
++            {allFree ? t('free') : formatRupiah(subtotal)}
+           </span>
+         </div>
+         {discount > 0 && (
+@@ -83,11 +86,11 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
+         )}
+         <div className="pt-2">
+           <p className="font-label text-label-sm uppercase tracking-[0.2em] text-surface/70 mb-2">
+-            {allPreorder ? t('preorderLabel') : t('total')}
++            {allPreorder ? t('preorderLabel') : allFree ? t('free') : t('total')}
+           </p>
+           <Badge tone="accent" size="lg" shadow={false} className="px-6 py-4">
+             <span className="font-display font-black text-3xl md:text-4xl uppercase tracking-tight">
+-              {formatRupiah(displayTotal)}
++              {allFree ? t('free') : formatRupiah(displayTotal)}
+             </span>
+           </Badge>
+           <p className="mt-3 font-label text-[10px] uppercase tracking-wider text-surface/60">
+@@ -108,7 +111,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
+           shadowColor="accent"
+           className="w-full mt-2"
+         >
+-          {allPreorder ? t('checkoutPreOrder') : t('checkout')}
++          {allFree ? t('checkoutFree') : allPreorder ? t('checkoutPreOrder') : t('checkout')}
+         </Button>
+ 
+         <p className="text-center font-label text-[10px] uppercase tracking-wider text-surface/60">
+diff --git a/apps/web/app/[locale]/(public)/pembayaran/[kodeOrder]/PaymentPoller.tsx b/apps/web/app/[locale]/(public)/pembayaran/[kodeOrder]/PaymentPoller.tsx
+index 54c876e..21c9d7b 100644
+--- a/apps/web/app/[locale]/(public)/pembayaran/[kodeOrder]/PaymentPoller.tsx
++++ b/apps/web/app/[locale]/(public)/pembayaran/[kodeOrder]/PaymentPoller.tsx
+@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
+ 
+ import { Button, Card, NLink } from '@/components/ui/neobrutal';
+ import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
++import { getClientApiBase } from '@/lib/client-api';
+ 
+ interface Props {
+   kodeOrder: string;
+@@ -78,13 +79,14 @@ export function PaymentPoller({
+ 
+   // Polling — pause saat tab hidden (hemat baterai + bandwidth mobile).
+   useEffect(() => {
+-    if (status === 'paid' || status === 'preorder_deposit_paid') {
++    if (status === 'paid' || status === 'preorder_deposit_paid' || status === 'free') {
+       if (pollRef.current) {
+         clearInterval(pollRef.current);
+         pollRef.current = null;
+       }
+-      // Auto-redirect ke halaman sukses. Sama untuk `paid` (order paid biasa)
+-      // dan `preorder_deposit_paid` (DP dibayar, fulfillment di-defer sampai release).
++      // Auto-redirect ke halaman sukses. Sama untuk `paid` (order paid biasa),
++      // `preorder_deposit_paid` (DP dibayar, fulfillment di-defer sampai release),
++      // dan `free` (cart is_free, skip payment gateway — sudah paid saat checkout).
+       const t = setTimeout(() => router.push(`/pesanan-sukses/${kodeOrder}`), 1200);
+       return () => clearTimeout(t);
+     }
+@@ -98,7 +100,7 @@ export function PaymentPoller({
+ 
+     async function poll() {
+       try {
+-        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
++        const apiBase = getClientApiBase();
+         const res = await fetch(`${apiBase}/api/orders/${kodeOrder}/status`, {
+           cache: 'no-store',
+         });
+@@ -108,7 +110,7 @@ export function PaymentPoller({
+         if (data.status !== status) {
+           setStatus(data.status);
+         }
+-        if (data.status === 'paid' || data.status === 'preorder_deposit_paid') {
++        if (data.status === 'paid' || data.status === 'preorder_deposit_paid' || data.status === 'free') {
+           router.push(`/pesanan-sukses/${kodeOrder}`);
+         } else if (data.status === 'expired' || data.status === 'failed') {
+           setStatus(data.status);
+@@ -144,14 +146,14 @@ export function PaymentPoller({
+     if (isChecking) return;
+     setIsChecking(true);
+     try {
+-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
++      const apiBase = getClientApiBase();
+       const res = await fetch(`${apiBase}/api/orders/${kodeOrder}/status`, {
+         cache: 'no-store',
+       });
+       if (!res.ok) return;
+       const json = (await res.json()) as { data: OrderStatusSummary };
+       setStatus(json.data.status);
+-      if (json.data.status === 'paid' || json.data.status === 'preorder_deposit_paid') {
++      if (json.data.status === 'paid' || json.data.status === 'preorder_deposit_paid' || json.data.status === 'free') {
+         router.push(`/pesanan-sukses/${kodeOrder}`);
+       }
+     } catch {
+diff --git a/apps/web/app/[locale]/admin/categories/CategoryForm.tsx b/apps/web/app/[locale]/admin/categories/CategoryForm.tsx
+index fedc2af..dd95a2a 100644
+--- a/apps/web/app/[locale]/admin/categories/CategoryForm.tsx
++++ b/apps/web/app/[locale]/admin/categories/CategoryForm.tsx
+@@ -5,7 +5,7 @@
+ 
+ 'use client';
+ 
+-import { useActionState } from 'react';
++import { useActionState, useEffect, useState } from 'react';
+ import { useRouter } from 'next/navigation';
+ import { useTranslations } from 'next-intl';
+ 
+@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/Input';
+ import { Textarea } from '@/components/ui/Textarea';
+ import { Card } from '@/components/ui/neobrutal';
+ import { slugify } from '@/lib/format';
++import { toast } from '@/components/ui/toast-store';
+ 
+ import { createCategory, updateCategory, ActionResult } from './actions';
+ 
+@@ -35,21 +36,29 @@ export function CategoryForm({ initial }: Props) {
+   const tBtns = useTranslations('common.buttons');
+   const isEdit = !!initial;
+ 
+-  const [state, formAction, pending] = useActionState(
+-    async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
+-      if (isEdit) {
+-        return await updateCategory(initial!.id, _prev, fd);
++  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
++  // setelah form action selesai (sukses maupun gagal). Semua field pakai
++  // useState + value supaya isian admin tidak hilang saat validasi gagal.
++  const [nama, setNama] = useState(initial?.nama ?? '');
++  const [slug, setSlug] = useState(initial?.slug ?? '');
++  const [deskripsi, setDeskripsi] = useState(initial?.deskripsi ?? '');
++
++  const actionFn = isEdit ? updateCategory.bind(null, initial!.id) : createCategory;
++  const [state, formAction, pending] = useActionState(actionFn, {} as ActionResult);
++
++  useEffect(() => {
++    if (state.ok && state.message) {
++      toast.success(state.message, 3000);
++      if (state.redirectTo) {
++        router.push(state.redirectTo);
+       }
+-      return await createCategory(_prev, fd);
+-    },
+-    {} as ActionResult,
+-  );
++    }
++  }, [state, router]);
+ 
+   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
+     if (isEdit) return; // jangan override saat edit
+-    const slugInput = document.getElementById('slug') as HTMLInputElement | null;
+-    if (slugInput && !slugInput.value) {
+-      slugInput.value = slugify(e.target.value);
++    if (!slug) {
++      setSlug(slugify(e.target.value));
+     }
+   }
+ 
+@@ -62,7 +71,8 @@ export function CategoryForm({ initial }: Props) {
+           id="nama"
+           name="nama"
+           required
+-          defaultValue={initial?.nama}
++          value={nama}
++          onChange={(e) => setNama(e.target.value)}
+           onBlur={autoSlug}
+         />
+       </FormField>
+@@ -76,7 +86,8 @@ export function CategoryForm({ initial }: Props) {
+         <Input
+           id="slug"
+           name="slug"
+-          defaultValue={initial?.slug ?? ''}
++          value={slug}
++          onChange={(e) => setSlug(e.target.value)}
+           pattern="[a-z0-9-]+"
+           className="font-mono"
+         />
+@@ -92,7 +103,8 @@ export function CategoryForm({ initial }: Props) {
+           id="deskripsi"
+           name="deskripsi"
+           rows={4}
+-          defaultValue={initial?.deskripsi ?? ''}
++          value={deskripsi}
++          onChange={(e) => setDeskripsi(e.target.value)}
+         />
+       </FormField>
+ 
+diff --git a/apps/web/app/[locale]/admin/categories/actions.ts b/apps/web/app/[locale]/admin/categories/actions.ts
+index 3bafc9a..86489f4 100644
+--- a/apps/web/app/[locale]/admin/categories/actions.ts
++++ b/apps/web/app/[locale]/admin/categories/actions.ts
+@@ -6,13 +6,15 @@
+  */
+ 
+ import { revalidatePath } from 'next/cache';
+-import { redirect } from 'next/navigation';
+ 
+ import { ApiRequestError, apiDelete, apiPost, apiPut } from '@/lib/api';
+ 
+ export interface ActionResult {
+   error?: string;
+   fieldErrors?: Record<string, string[]>;
++  ok?: boolean;
++  message?: string;
++  redirectTo?: string;
+ }
+ 
+ // ───── Create ─────
+@@ -38,7 +40,7 @@ export async function createCategory(_prev: ActionResult, formData: FormData): P
+   }
+ 
+   revalidatePath('/admin/categories');
+-  redirect('/admin/categories');
++  return { ok: true, message: 'Kategori berhasil dibuat.', redirectTo: '/admin/categories' };
+ }
+ 
+ // ───── Update ─────
+@@ -68,7 +70,7 @@ export async function updateCategory(
+   }
+ 
+   revalidatePath('/admin/categories');
+-  redirect('/admin/categories');
++  return { ok: true, message: 'Kategori berhasil diperbarui.', redirectTo: '/admin/categories' };
+ }
+ 
+ // ───── Delete ─────
+diff --git a/apps/web/app/[locale]/admin/license-keys/LicenseKeyForm.tsx b/apps/web/app/[locale]/admin/license-keys/LicenseKeyForm.tsx
+index f3c3043..2fec01e 100644
+--- a/apps/web/app/[locale]/admin/license-keys/LicenseKeyForm.tsx
++++ b/apps/web/app/[locale]/admin/license-keys/LicenseKeyForm.tsx
+@@ -1,6 +1,6 @@
+ 'use client';
+ 
+-import { useActionState } from 'react';
++import { useActionState, useState } from 'react';
+ import { useTranslations } from 'next-intl';
+ 
+ import { Button } from '@/components/ui/neobrutal';
+@@ -48,11 +48,23 @@ export function LicenseKeyTrigger({ products: _products }: Props) {
+ export function LicenseKeyFormCard({ products }: Props) {
+   const t = useTranslations('admin.licenseKeys.form');
+   const { open, setOpen } = useLicenseKey();
++
++  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
++  // setelah form action selesai. Pakai useState supaya isian tidak hilang
++  // saat validasi gagal.
++  const [count, setCount] = useState('10');
++  const [prefix, setPrefix] = useState('');
++  const [productId, setProductId] = useState('');
++
+   const [state, formAction, pending] = useActionState<ActionResult, FormData>(
+     async (prev, fd) => {
+       const res = await insertLicenseKey(prev, fd);
+       if (res.ok) {
+         setOpen(false);
++        // Reset fields untuk sesi insert berikutnya
++        setCount('10');
++        setPrefix('');
++        setProductId('');
+         if (res.message) toast.success(res.message);
+       }
+       return res;
+@@ -86,7 +98,8 @@ export function LicenseKeyFormCard({ products }: Props) {
+           label={t('fieldProduct')}
+           required
+           placeholder={t('productPlaceholder')}
+-          defaultValue=""
++          defaultValue={productId}
++          onChange={(v) => setProductId(v)}
+           showAllOption={{ value: '', label: t('productPlaceholder') }}
+           options={products.map((p) => ({ value: String(p.id), label: p.nama }))}
+           error={state.fieldErrors?.product_id?.[0]}
+@@ -100,7 +113,8 @@ export function LicenseKeyFormCard({ products }: Props) {
+               type="number"
+               min={1}
+               max={500}
+-              defaultValue={10}
++              value={count}
++              onChange={(e) => setCount(e.target.value)}
+               required
+             />
+           </FormField>
+@@ -117,6 +131,8 @@ export function LicenseKeyFormCard({ products }: Props) {
+               type="text"
+               pattern="[A-Z0-9]{2,10}"
+               maxLength={10}
++              value={prefix}
++              onChange={(e) => setPrefix(e.target.value)}
+               placeholder="ADMIN"
+               className="uppercase font-mono"
+             />
+diff --git a/apps/web/app/[locale]/admin/posts/PostForm.tsx b/apps/web/app/[locale]/admin/posts/PostForm.tsx
+index b37a6be..c00ed9b 100644
+--- a/apps/web/app/[locale]/admin/posts/PostForm.tsx
++++ b/apps/web/app/[locale]/admin/posts/PostForm.tsx
+@@ -5,7 +5,7 @@
+ 
+ 'use client';
+ 
+-import { useActionState, useState } from 'react';
++import { useActionState, useEffect, useState } from 'react';
+ import { useRouter } from 'next/navigation';
+ import { useTranslations } from 'next-intl';
+ 
+@@ -18,7 +18,9 @@ import { Textarea } from '@/components/ui/Textarea';
+ import { Card } from '@/components/ui/neobrutal';
+ import { TiptapEditor } from '@/components/admin/TiptapEditor';
+ import { Checkbox } from '@/components/ui/Checkbox';
++import { DatePicker } from '@/components/ui/DatePicker';
+ import { slugify } from '@/lib/format';
++import { toast } from '@/components/ui/toast-store';
+ import type { Post, PostStatus } from '@/lib/types';
+ 
+ import { createPost, updatePost, ActionResult } from './actions';
+@@ -50,34 +52,42 @@ export function PostForm({ initial }: Props) {
+   const tBtns = useTranslations('common.buttons');
+   const isEdit = !!initial;
+ 
+-  const [state, formAction, pending] = useActionState(
+-    async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
+-      if (isEdit) {
+-        return await updatePost(initial!.id, _prev, fd);
+-      }
+-      return await createPost(_prev, fd);
+-    },
+-    {} as ActionResult,
+-  );
+-
++  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
++  // setelah form action selesai (sukses maupun gagal). Semua field pakai
++  // useState + value supaya isian admin tidak hilang saat validasi gagal.
++  const [title, setTitle] = useState(initial?.title ?? '');
++  const [slug, setSlug] = useState(initial?.slug ?? '');
++  const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '');
+   const [status, setStatus] = useState<PostStatus>(initial?.status ?? 'draft');
+ 
++  // Format published_at untuk input datetime-local (YYYY-MM-DDTHH:mm)
++  const publishedAtInitial = initial?.published_at
++    ? new Date(initial.published_at).toISOString().slice(0, 10)
++    : '';
++  const [publishedAt, setPublishedAt] = useState(publishedAtInitial);
++
++  const actionFn = isEdit ? updatePost.bind(null, initial!.id) : createPost;
++  const [state, formAction, pending] = useActionState(actionFn, {} as ActionResult);
++
++  useEffect(() => {
++    if (state.ok && state.message) {
++      toast.success(state.message, 3000);
++      if (state.redirectTo) {
++        router.push(state.redirectTo);
++      }
++    }
++  }, [state, router]);
++
+   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
+     if (isEdit) return;
+-    const el = document.getElementById('slug') as HTMLInputElement | null;
+-    if (el && !el.value) el.value = slugify(e.target.value);
++    if (!slug) setSlug(slugify(e.target.value));
+   }
+ 
+   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
+ 
+-  // Format published_at untuk input datetime-local (YYYY-MM-DDTHH:mm)
+-  const publishedAtLocal = initial?.published_at
+-    ? new Date(initial.published_at).toISOString().slice(0, 16)
+-    : '';
+-
+   return (
+     <form action={formAction} className="space-y-8">
+-      {/* ───── Title + Slug ───── */}
++      {/* ————— Title + Slug ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
+         <div className="grid md:grid-cols-2 gap-5">
+@@ -87,7 +97,8 @@ export function PostForm({ initial }: Props) {
+               name="title"
+               required
+               maxLength={200}
+-              defaultValue={initial?.title}
++              value={title}
++              onChange={(e) => setTitle(e.target.value)}
+               onBlur={autoSlug}
+             />
+           </FormField>
+@@ -101,7 +112,8 @@ export function PostForm({ initial }: Props) {
+             <Input
+               id="slug"
+               name="slug"
+-              defaultValue={initial?.slug ?? ''}
++              value={slug}
++              onChange={(e) => setSlug(e.target.value)}
+               pattern="[a-z0-9-]+"
+               className="font-mono"
+             />
+@@ -109,7 +121,7 @@ export function PostForm({ initial }: Props) {
+         </div>
+       </section>
+ 
+-      {/* ───── Konten ───── */}
++      {/* ————— Konten ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
+         <FormField
+@@ -123,7 +135,8 @@ export function PostForm({ initial }: Props) {
+             name="excerpt"
+             rows={3}
+             maxLength={500}
+-            defaultValue={initial?.excerpt ?? ''}
++            value={excerpt}
++            onChange={(e) => setExcerpt(e.target.value)}
+           />
+         </FormField>
+ 
+@@ -142,7 +155,7 @@ export function PostForm({ initial }: Props) {
+         </FormField>
+       </section>
+ 
+-      {/* ───── Media ───── */}
++      {/* ————— Media ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionMedia')} title={t('sectionMediaTitle')} />
+         <FormField
+@@ -167,7 +180,7 @@ export function PostForm({ initial }: Props) {
+         </FormField>
+       </section>
+ 
+-      {/* ───── Publish ───── */}
++      {/* ————— Publish ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionPublish')} title={t('sectionPublishTitle')} />
+         <div className="grid md:grid-cols-2 gap-5">
+@@ -196,11 +209,10 @@ export function PostForm({ initial }: Props) {
+             }
+             error={fieldErr('published_at')}
+           >
+-            <Input
+-              id="published_at"
++            <DatePicker
+               name="published_at"
+-              type="datetime-local"
+-              defaultValue={publishedAtLocal}
++              defaultValue={publishedAt}
++              onChange={setPublishedAt}
+               disabled={status === 'archived'}
+             />
+           </FormField>
+diff --git a/apps/web/app/[locale]/admin/posts/actions.ts b/apps/web/app/[locale]/admin/posts/actions.ts
+index 2dfc161..6f2c773 100644
+--- a/apps/web/app/[locale]/admin/posts/actions.ts
++++ b/apps/web/app/[locale]/admin/posts/actions.ts
+@@ -7,13 +7,15 @@
+  */
+ 
+ import { revalidatePath } from 'next/cache';
+-import { redirect } from 'next/navigation';
+ 
+ import { ApiRequestError, apiDelete, apiPostForm, apiPutForm } from '@/lib/api';
+ 
+ export interface ActionResult {
+   error?: string;
+   fieldErrors?: Record<string, string[]>;
++  ok?: boolean;
++  message?: string;
++  redirectTo?: string;
+ }
+ 
+ function pickFieldError(err: ApiRequestError): Record<string, string[]> {
+@@ -40,7 +42,7 @@ export async function createPost(
+ 
+     revalidatePath('/admin/posts');
+     revalidatePath('/admin');
+-    redirect(`/admin/posts/${newId}`);
++    return { ok: true, message: 'Catatan berhasil dibuat.', redirectTo: `/admin/posts/${newId}` };
+   } catch (err) {
+     if (err instanceof ApiRequestError) {
+       return {
+@@ -48,7 +50,6 @@ export async function createPost(
+         fieldErrors: pickFieldError(err),
+       };
+     }
+-    if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
+     return { error: 'Gagal membuat catatan.' };
+   }
+   return {};
+@@ -69,14 +70,13 @@ export async function updatePost(
+         fieldErrors: pickFieldError(err),
+       };
+     }
+-    if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
+     return { error: 'Gagal memperbarui catatan.' };
+   }
+ 
+   revalidatePath('/admin/posts');
+   revalidatePath(`/admin/posts/${id}`);
+   revalidatePath('/admin');
+-  redirect(`/admin/posts/${id}`);
++  return { ok: true, message: 'Catatan berhasil diperbarui.', redirectTo: `/admin/posts/${id}` };
+ }
+ 
+ // ───── Delete ─────
+diff --git a/apps/web/app/[locale]/admin/products/ProductForm.tsx b/apps/web/app/[locale]/admin/products/ProductForm.tsx
+index ec4cb8f..42a2aeb 100644
+--- a/apps/web/app/[locale]/admin/products/ProductForm.tsx
++++ b/apps/web/app/[locale]/admin/products/ProductForm.tsx
+@@ -4,19 +4,22 @@
+ 
+ 'use client';
+ 
+-import { useActionState, useState } from 'react';
++import { useActionState, useEffect, useState } from 'react';
+ import { useRouter } from 'next/navigation';
+ import { useTranslations } from 'next-intl';
+ 
+ import { Button } from '@/components/ui/neobrutal';
+ import { FileUpload } from '@/components/admin/FileUpload';
++import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+ import { FormField } from '@/components/admin/FormField';
+ import { Checkbox } from '@/components/ui/Checkbox';
++import { CurrencyInput } from '@/components/ui/CurrencyInput';
+ import { Input } from '@/components/ui/Input';
+ import { SelectSearch } from '@/components/ui/SelectSearch';
+ import { Textarea } from '@/components/ui/Textarea';
+ import { Card } from '@/components/ui/neobrutal';
+ import { slugify } from '@/lib/format';
++import { toast } from '@/components/ui/toast-store';
+ import type { Category, LinkedPost, Product } from '@/lib/types';
+ 
+ import { createProduct, updateProduct, ActionResult } from './actions';
+@@ -46,33 +49,77 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
+   );
+ }
+ 
++/** Tipe produk yang butuh file upload (download/bundle). */
++const TIPE_NEEDS_FILE = new Set(['download', 'bundle']);
++
+ export function ProductForm({ categories, initial, availablePosts = [] }: Props) {
+   const router = useRouter();
+   const t = useTranslations('admin.products.form');
++  const tProd = useTranslations('admin.products');
+   const tBtns = useTranslations('common.buttons');
+   const isEdit = !!initial;
+ 
+-  const [state, formAction, pending] = useActionState(
+-    async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
+-      if (isEdit) {
+-        return await updateProduct(initial!.id, _prev, fd);
+-      }
+-      return await createProduct(_prev, fd);
+-    },
+-    {} as ActionResult,
++  // Catatan: React 19 + Next 15 me-reset uncontrolled <input> setelah form
++  // action selesai (sukses maupun gagal). Untuk itu SEMUA field di sini
++  // pakai controlled inputs — values di state, bukan defaultValue di DOM.
++  // Saat submit gagal, React tinggal re-render dengan state values yang
++  // sama → form tetap berisi isian admin.
++  const [nama, setNama] = useState(initial?.nama ?? '');
++  const [slug, setSlug] = useState(initial?.slug ?? '');
++  const [categoryId, setCategoryId] = useState<string>(
++    initial?.category_id ? String(initial.category_id) : '',
++  );
++  const [isFree, setIsFree] = useState(initial?.is_free ?? false);
++  const [harga, setHarga] = useState(() => {
++    const raw = initial?.harga ?? '';
++    if (!raw) return '';
++    const num = parseInt(String(raw), 10);
++    return Number.isNaN(num) ? '' : String(num);
++  });
++  const [tipe, setTipe] = useState(initial?.tipe ?? 'download');
++  const [status, setStatus] = useState(initial?.status ?? 'draft');
++  const [downloadExpiry, setDownloadExpiry] = useState<string>(
++    initial?.download_expiry_days != null ? String(initial.download_expiry_days) : '7',
++  );
++  const [deskripsi, setDeskripsi] = useState(initial?.deskripsi ?? '');
++  const [isPreOrder, setIsPreOrder] = useState(initial?.is_pre_order ?? false);
++  const [releaseDate, setReleaseDate] = useState(initial?.release_date ?? '');
++  const [depositPercent, setDepositPercent] = useState<string>(
++    initial?.deposit_percent != null ? String(initial.deposit_percent) : '50',
+   );
+ 
+-  const [fitur, setFitur] = useState<string[]>(initial?.fitur ?? []);
++  const actionFn = isEdit ? updateProduct.bind(null, initial!.id) : createProduct;
++  const [state, formAction, pending] = useActionState(actionFn, {} as ActionResult);
++
++  useEffect(() => {
++    if (state.ok && state.message) {
++      toast.success(state.message, 3000);
++      if (state.redirectTo) {
++        router.push(state.redirectTo);
++      }
++    }
++  }, [state, router]);
++
++  const [fitur, setFitur] = useState<string[]>(() => {
++    if (Array.isArray(initial?.fitur)) return initial.fitur;
++    if (typeof initial?.fitur === 'string') {
++      try {
++        const parsed = JSON.parse(initial.fitur);
++        if (Array.isArray(parsed)) return parsed;
++      } catch {}
++    }
++    return [];
++  });
+   const [newFitur, setNewFitur] = useState('');
+   // Linked posts — array of post_id yang dipilih admin. Urutan = index array.
++  const [libraryImages, setLibraryImages] = useState<string[]>([]);
+   const [linkedIds, setLinkedIds] = useState<number[]>(
+     (initial?.linked_posts ?? []).map((p) => p.id),
+   );
+ 
+   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
+     if (isEdit) return;
+-    const el = document.getElementById('slug') as HTMLInputElement | null;
+-    if (el && !el.value) el.value = slugify(e.target.value);
++    setSlug(slugify(e.target.value));
+   }
+ 
+   function addFitur() {
+@@ -107,6 +154,23 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+     setLinkedIds((prev) => prev.filter((x) => x !== id));
+   }
+ 
++  // Free ↔ Pre-order mutual exclusion: backend reject kalau keduanya
++  // aktif. UI handle di sini supaya admin tidak bisa centang keduanya.
++  function handleFreeChange(checked: boolean) {
++    setIsFree(checked);
++    if (checked) {
++      setIsPreOrder(false);
++      setHarga('0');
++    }
++  }
++
++  function handlePreOrderChange(checked: boolean) {
++    setIsPreOrder(checked);
++    if (checked) {
++      setIsFree(false);
++    }
++  }
++
+   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
+ 
+   // Serialize fitur as JSON for the hidden input
+@@ -116,9 +180,12 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+   // sesuai array (admin atur via tombol ↑↓). Empty array → sync detach semua.
+   const linkedById = new Map(availablePosts.map((p) => [p.id, p]));
+ 
++  // Derived: apakah tipe produk butuh file upload?
++  const needsFile = TIPE_NEEDS_FILE.has(tipe);
++
+   return (
+     <form action={formAction} className="space-y-8">
+-      {/* ───── Identitas ───── */}
++      {/* ————— Identitas ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
+         <div className="grid md:grid-cols-2 gap-5">
+@@ -128,7 +195,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+               name="nama"
+               required
+               maxLength={200}
+-              defaultValue={initial?.nama}
++              value={nama}
++              onChange={(e) => setNama(e.target.value)}
+               onBlur={autoSlug}
+             />
+           </FormField>
+@@ -142,7 +210,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+             <Input
+               id="slug"
+               name="slug"
+-              defaultValue={initial?.slug ?? ''}
++              value={slug}
++              onChange={(e) => setSlug(e.target.value)}
+               pattern="[a-z0-9-]+"
+               className="font-mono"
+             />
+@@ -156,7 +225,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+                 label: c.nama,
+                 hint: c.slug ?? undefined,
+               }))}
+-              defaultValue={initial?.category_id ? String(initial.category_id) : ''}
++              value={categoryId}
++              onChange={setCategoryId}
+               placeholder={t('categoryPlaceholder')}
+               clearable
+               showAllOption={{ value: '', label: t('categoryPlaceholder') }}
+@@ -165,19 +235,36 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+         </div>
+       </section>
+ 
+-      {/* ───── Harga & Tipe ───── */}
++      {/* ————— Harga & Tipe ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionPricing')} title={t('sectionPricingTitle')} />
++        <FormField
++          htmlFor="is_free"
++          label={t('fieldFree')}
++          hint={t('fieldFreeHint')}
++          error={fieldErr('is_free')}
++        >
++          <Checkbox
++            name="is_free"
++            value="1"
++            checked={isFree}
++            onChange={(e) => handleFreeChange(e.currentTarget.checked)}
++            label={t('fieldFree')}
++          />
++        </FormField>
+         <div className="grid md:grid-cols-2 gap-5">
+           <FormField label={t('fieldPrice')} htmlFor="harga" required error={fieldErr('harga')}>
+-            <Input
++            {/* Hidden input fallback: disabled TIDAK submit via FormData, jadi
++                backend reject dengan "harga required" walau admin toggle is_free. */}
++            {isFree && <input type="hidden" name="harga" value="0" />}
++            <CurrencyInput
+               id="harga"
+-              name="harga"
+-              type="number"
+-              min="0"
+-              step="1000"
+-              required
+-              defaultValue={initial?.harga ?? ''}
++              name={isFree ? undefined : 'harga'}
++              required={!isFree}
++              disabled={isFree}
++              value={isFree ? '0' : harga}
++              onChange={setHarga}
++              readOnly={isFree}
+             />
+           </FormField>
+ 
+@@ -185,7 +272,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+             <SelectSearch
+               name="tipe"
+               required
+-              defaultValue={initial?.tipe ?? 'download'}
++              value={tipe}
++              onChange={(v) => setTipe(v as typeof tipe)}
+               placeholder={t('typePlaceholder')}
+               options={[
+                 { value: 'download', label: t('typeDownload') },
+@@ -200,7 +288,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+             <SelectSearch
+               name="status"
+               required
+-              defaultValue={initial?.status ?? 'draft'}
++              value={status}
++              onChange={(v) => setStatus(v as typeof status)}
+               placeholder={t('statusPlaceholder')}
+               options={[
+                 { value: 'draft', label: t('statusDraft') },
+@@ -210,74 +299,88 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+             />
+           </FormField>
+ 
+-          <FormField
+-            label={t('fieldDownloadExpiry')}
+-            htmlFor="download_expiry_days"
+-            hint={t('fieldDownloadExpiryHint')}
+-            error={fieldErr('download_expiry_days')}
+-          >
+-            <Input
+-              id="download_expiry_days"
+-              name="download_expiry_days"
+-              type="number"
+-              min="1"
+-              max="365"
+-              defaultValue={initial?.download_expiry_days ?? 7}
+-            />
+-          </FormField>
++          {/* Download expiry hanya relevan untuk tipe download/bundle */}
++          {needsFile && (
++            <FormField
++              label={t('fieldDownloadExpiry')}
++              htmlFor="download_expiry_days"
++              hint={t('fieldDownloadExpiryHint')}
++              error={fieldErr('download_expiry_days')}
++            >
++              <Input
++                id="download_expiry_days"
++                name="download_expiry_days"
++                type="number"
++                min="1"
++                max="365"
++                value={downloadExpiry}
++                onChange={(e) => setDownloadExpiry(e.target.value)}
++              />
++            </FormField>
++          )}
+         </div>
+       </section>
+ 
+-      {/* ───── Pre-Order ───── */}
+-      <section className="space-y-5">
+-        <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
+-        <FormField
+-          htmlFor="is_pre_order"
+-          label={t('fieldPreOrder')}
+-          hint={t('fieldPreOrderHint')}
+-          error={fieldErr('is_pre_order')}
+-        >
+-          <Checkbox
+-            name="is_pre_order"
+-            value="1"
+-            defaultChecked={initial?.is_pre_order ?? false}
+-            label={t('fieldPreOrderLabel')}
+-          />
+-        </FormField>
+-
+-        <div className="grid md:grid-cols-2 gap-5">
++      {/* ————— Pre-Order ————— */}
++      {/* Mutual exclusion: pre-order tidak bisa dikombinasi dengan gratis */}
++      {!isFree && (
++        <section className="space-y-5">
++          <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
+           <FormField
+-            htmlFor="release_date"
+-            label={t('fieldReleaseDate')}
+-            hint={t('fieldReleaseDateHint')}
+-            error={fieldErr('release_date')}
++            htmlFor="is_pre_order"
++            label={t('fieldPreOrder')}
++            hint={t('fieldPreOrderHint')}
++            error={fieldErr('is_pre_order')}
+           >
+-            <DatePicker
+-              name="release_date"
+-              defaultValue={initial?.release_date ?? ''}
+-              placeholder={t('fieldReleaseDatePlaceholder')}
++            <Checkbox
++              name="is_pre_order"
++              value="1"
++              checked={isPreOrder}
++              onChange={(e) => handlePreOrderChange(e.currentTarget.checked)}
++              label={t('fieldPreOrderLabel')}
+             />
+           </FormField>
+ 
+-          <FormField
+-            htmlFor="preorder_deposit_percent"
+-            label={t('fieldDepositPercent')}
+-            hint={t('fieldDepositPercentHint')}
+-            error={fieldErr('preorder_deposit_percent')}
+-          >
+-            <Input
+-              name="preorder_deposit_percent"
+-              type="number"
+-              min={1}
+-              max={100}
+-              defaultValue={initial?.deposit_percent ?? 50}
+-              className="font-mono"
+-            />
+-          </FormField>
+-        </div>
+-      </section>
++          {/* Release date & deposit hanya muncul kalau pre-order aktif */}
++          {isPreOrder && (
++            <div className="grid md:grid-cols-2 gap-5">
++              <FormField
++                htmlFor="release_date"
++                label={t('fieldReleaseDate')}
++                hint={t('fieldReleaseDateHint')}
++                required
++                error={fieldErr('release_date')}
++              >
++                <DatePicker
++                  name="release_date"
++                  defaultValue={releaseDate}
++                  placeholder={t('fieldReleaseDatePlaceholder')}
++                />
++              </FormField>
++
++              <FormField
++                htmlFor="preorder_deposit_percent"
++                label={t('fieldDepositPercent')}
++                hint={t('fieldDepositPercentHint')}
++                required
++                error={fieldErr('preorder_deposit_percent')}
++              >
++                <Input
++                  name="preorder_deposit_percent"
++                  type="number"
++                  min={1}
++                  max={100}
++                  value={depositPercent}
++                  onChange={(e) => setDepositPercent(e.target.value)}
++                  className="font-mono"
++                />
++              </FormField>
++            </div>
++          )}
++        </section>
++      )}
+ 
+-      {/* ───── Deskripsi ───── */}
++      {/* ————— Deskripsi ————— */}
+       <section className="space-y-5">
+         <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
+         <FormField label={t('fieldDescription')} htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
+@@ -286,7 +389,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+             name="deskripsi"
+             rows={5}
+             required
+-            defaultValue={initial?.deskripsi ?? ''}
++            value={deskripsi}
++            onChange={(e) => setDeskripsi(e.target.value)}
+           />
+         </FormField>
+ 
+@@ -343,7 +447,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+         </FormField>
+       </section>
+ 
+-      {/* ───── Linked Posts (panduan / warning / catatan) ───── */}
++      {/* ————— Linked Posts (panduan / warning / catatan) ————— */}
+       <section className="space-y-4">
+         <SectionHeader eyebrow={t('sectionLinkedPosts')} title={t('sectionLinkedPostsTitle')} />
+         <p className="text-xs text-ink/60 font-body">{t('sectionLinkedPostsHint')}</p>
+@@ -446,25 +550,78 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
+         )}
+       </section>
+ 
+-      {/* ───── File produk ───── */}
++      {/* ————— Gambar Preview (hanya saat create) ————— */}
++      {!isEdit && (
+       <section className="space-y-5">
+-        <SectionHeader eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
++        <SectionHeader eyebrow={tProd('previewImagesEyebrow').replace('✎ ', '')} title={tProd('previewImagesTitle')} />
+         <FormField
+-          label={t('fieldFile')}
+-          htmlFor="file"
+-          hint={
+-            isEdit && initial?.file_url
+-              ? t('fieldFileHintCurrent', { url: initial.file_url })
+-              : t('fieldFileHintEmpty')
+-          }
+-          error={fieldErr('file')}
++          label={tProd('previewImagesTitle')}
++          htmlFor="preview_images"
++          hint={tProd('previewImagesSubtitle')}
++          error={fieldErr('preview_images')}
+         >
+-          <FileUpload name="file" accept=".zip,.rar,.7z,.pdf,.apk,.exe,.tar.gz" maxSizeMB={500} />
+-          {isEdit && initial?.file_url && (
+-            <Checkbox name="remove_file" value="1" label={t('removeFile')} className="mt-2" />
+-          )}
++          <input type="hidden" name="preview_images_urls" value={JSON.stringify(libraryImages)} />
++          
++          <div className="space-y-3">
++            {libraryImages.length > 0 && (
++              <div className="flex flex-wrap gap-2">
++                {libraryImages.map((url, i) => (
++                  <div key={url} className="relative border-2 border-ink bg-surface p-1">
++                    {/* eslint-disable-next-line @next/next/no-img-element */}
++                    <img src={url} alt="Library preview" className="h-16 w-16 object-cover border border-ink" />
++                    <button
++                      type="button"
++                      onClick={() => setLibraryImages(libraryImages.filter((_, idx) => idx !== i))}
++                      className="absolute -top-2 -right-2 h-5 w-5 bg-accent border border-ink text-ink font-bold text-xs flex items-center justify-center hover:bg-primary hover:text-surface cursor-pointer"
++                    >
++                      ×
++                    </button>
++                  </div>
++                ))}
++              </div>
++            )}
++
++            <div className="flex flex-wrap gap-3 items-center">
++              <div className="flex-1 min-w-[240px]">
++                <FileUpload name="preview_images" accept="image/*" multiple maxSizeMB={10} />
++              </div>
++              <div className="shrink-0">
++                <MediaPickerModal
++                  onPick={(url) => {
++                    if (!libraryImages.includes(url) && libraryImages.length < 5) {
++                      setLibraryImages((prev) => [...prev, url]);
++                    }
++                  }}
++                />
++              </div>
++            </div>
++          </div>
+         </FormField>
+       </section>
++      )}
++
++      {/* ————— File produk (hanya untuk tipe download/bundle) ————— */}
++      {needsFile && (
++        <section className="space-y-5">
++          <SectionHeader eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
++          <FormField
++            label={t('fieldFile')}
++            htmlFor="file"
++            hint={
++              isEdit && initial?.file_url
++                ? t('fieldFileHintCurrent', { url: initial.file_url })
++                : t('fieldFileHintEmpty')
++            }
++            required={!isEdit || !initial?.file_url}
++            error={fieldErr('file')}
++          >
++            <FileUpload name="file" accept=".zip,.rar,.7z,.pdf,.apk,.exe,.tar.gz" maxSizeMB={500} />
++            {isEdit && initial?.file_url && (
++              <Checkbox name="remove_file" value="1" label={t('removeFile')} className="mt-2" />
++            )}
++          </FormField>
++        </section>
++      )}
+ 
+       {state.error && (
+         <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
+diff --git a/apps/web/app/[locale]/admin/products/actions.ts b/apps/web/app/[locale]/admin/products/actions.ts
+index c13398b..114fd95 100644
+--- a/apps/web/app/[locale]/admin/products/actions.ts
++++ b/apps/web/app/[locale]/admin/products/actions.ts
+@@ -5,13 +5,15 @@
+  */
+ 
+ import { revalidatePath } from 'next/cache';
+-import { redirect } from 'next/navigation';
+ 
+ import { ApiRequestError, apiDelete, apiPost, apiPostForm, apiPutForm } from '@/lib/api';
+ 
+ export interface ActionResult {
+   error?: string;
+   fieldErrors?: Record<string, string[]>;
++  ok?: boolean;
++  message?: string;
++  redirectTo?: string;
+ }
+ 
+ // ───── Helpers ─────
+@@ -37,7 +39,7 @@ export async function createProduct(_prev: ActionResult, formData: FormData): Pr
+ 
+     revalidatePath('/admin/products');
+     revalidatePath('/admin');
+-    redirect(`/admin/products/${newId}`);
++    return { ok: true, message: 'Produk berhasil dibuat.', redirectTo: `/admin/products/${newId}` };
+   } catch (err) {
+     if (err instanceof ApiRequestError) {
+       return {
+@@ -67,14 +69,13 @@ export async function updateProduct(
+         fieldErrors: pickFieldError(err),
+       };
+     }
+-    if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
+     return { error: 'Gagal memperbarui produk.' };
+   }
+ 
+   revalidatePath('/admin/products');
+   revalidatePath(`/admin/products/${id}`);
+   revalidatePath('/admin');
+-  redirect(`/admin/products/${id}`);
++  return { ok: true, message: 'Produk berhasil diperbarui.', redirectTo: `/admin/products/${id}` };
+ }
+ 
+ // ───── Delete ─────
+diff --git a/apps/web/app/[locale]/admin/settings/IdentityForm.tsx b/apps/web/app/[locale]/admin/settings/IdentityForm.tsx
+index 3c55b82..aab2f3b 100644
+--- a/apps/web/app/[locale]/admin/settings/IdentityForm.tsx
++++ b/apps/web/app/[locale]/admin/settings/IdentityForm.tsx
+@@ -60,6 +60,12 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
+   // bisa sync via single source of truth (controlled).
+   const [logoUrl, setLogoUrl] = useState<string | null>(initial.logo_url);
+ 
++  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
++  // setelah form action selesai. Pakai useState supaya isian tidak hilang
++  // saat validasi gagal.
++  const [studioName, setStudioName] = useState(initial.studio_name ?? 'enpiistudio');
++  const [tagline, setTagline] = useState(initial.tagline ?? '');
++
+   return (
+     <Card variant="surface" className="p-6 space-y-5">
+       <div className="border-b-2 border-ink pb-3">
+@@ -74,12 +80,13 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
+       <form action={action} className="space-y-4">
+         <FormError variant="box">{state.error}</FormError>
+ 
+-        <FormField label={t('fieldStudioName')} htmlFor="studio-name" required>
++        <FormField label={t('fieldStudioName')} htmlFor="studio-name">
+           <Input
+             id="studio-name"
+             name="studio_name"
+             type="text"
+-            defaultValue={initial.studio_name ?? 'enpiistudio'}
++            value={studioName}
++            onChange={(e) => setStudioName(e.target.value)}
+             placeholder="enpiistudio"
+           />
+         </FormField>
+@@ -93,7 +100,8 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
+             id="tagline"
+             name="tagline"
+             type="text"
+-            defaultValue={initial.tagline ?? ''}
++            value={tagline}
++            onChange={(e) => setTagline(e.target.value)}
+             placeholder={t('fieldTaglinePlaceholder')}
+             maxLength={80}
+           />
+@@ -205,7 +213,6 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
+                   size="sm"
+                   flat
+                   onClick={() => removeLink(idx)}
+-                  className="shrink-0"
+                   disabled={links.length === 1}
+                   aria-label={t('linkRemoveAria')}
+                 >
+@@ -243,6 +250,9 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
+     INITIAL,
+   );
+ 
++  // Controlled state supaya isian tidak hilang saat submit gagal.
++  const [footerText, setFooterText] = useState(initial.text ?? '');
++
+   return (
+     <Card variant="surface" className="p-6 space-y-5">
+       <div className="border-b-2 border-ink pb-3">
+@@ -265,7 +275,8 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
+           <Textarea
+             id="footer-text"
+             name="footer_text"
+-            defaultValue={initial.text ?? ''}
++            value={footerText}
++            onChange={(e) => setFooterText(e.target.value)}
+             rows={3}
+           />
+         </FormField>
+diff --git a/apps/web/app/[locale]/admin/settings/MaintenanceForm.tsx b/apps/web/app/[locale]/admin/settings/MaintenanceForm.tsx
+index 41df71e..b2d910d 100644
+--- a/apps/web/app/[locale]/admin/settings/MaintenanceForm.tsx
++++ b/apps/web/app/[locale]/admin/settings/MaintenanceForm.tsx
+@@ -10,7 +10,7 @@
+  * (customer tidak bisa checkout). Disable tidak perlu confirm.
+  */
+ 
+-import { useActionState } from 'react';
++import { useActionState, useState } from 'react';
+ import { useTranslations } from 'next-intl';
+ 
+ import { Button } from '@/components/ui/neobrutal';
+@@ -43,6 +43,10 @@ export function MaintenanceForm({ status }: Props) {
+ 
+   const enabled = status.enabled;
+ 
++  // Controlled state supaya isian maintenance message tidak hilang
++  // saat form action selesai (React 19 reset behavior).
++  const [message, setMessage] = useState(status.message ?? '');
++
+   /**
+    * Form submit handler:
+    * - Kalau mau ENABLE → confirm dulu (impact ke customer)
+@@ -104,7 +108,8 @@ export function MaintenanceForm({ status }: Props) {
+           <Textarea
+             id="maintenance-message"
+             name="message"
+-            defaultValue={status.message ?? ''}
++            value={message}
++            onChange={(e) => setMessage(e.target.value)}
+             rows={3}
+             maxLength={500}
+           />
+diff --git a/apps/web/app/[locale]/admin/settings/PaymentForm.tsx b/apps/web/app/[locale]/admin/settings/PaymentForm.tsx
+index 451b00a..c7cb5a5 100644
+--- a/apps/web/app/[locale]/admin/settings/PaymentForm.tsx
++++ b/apps/web/app/[locale]/admin/settings/PaymentForm.tsx
+@@ -11,7 +11,7 @@
+  * replace. Tidak ada "show/hide" toggle (security concern).
+  */
+ 
+-import { useActionState } from 'react';
++import { useActionState, useState } from 'react';
+ import { useTranslations } from 'next-intl';
+ 
+ import { Button } from '@/components/ui/neobrutal';
+@@ -46,6 +46,13 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
+     INITIAL,
+   );
+ 
++  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
++  // setelah form action selesai. Pakai useState supaya isian tidak hilang
++  // saat validasi gagal.
++  const [merchant, setMerchant] = useState(initial.tripay_merchant ?? '');
++  const [apiKey, setApiKey] = useState('');
++  const [privateKey, setPrivateKey] = useState('');
++
+   const modeOptions = [
+     { value: 'sandbox', label: t('modeSandbox') },
+     { value: 'production', label: t('modeProduction') },
+@@ -101,7 +108,6 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
+           <FormField
+             label={t('fieldMerchant')}
+             htmlFor="tripay-merchant"
+-            required
+             hint={t('fieldMerchantHint')}
+             error={state.fieldErrors?.tripay_merchant?.[0]}
+           >
+@@ -109,7 +115,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
+               id="tripay-merchant"
+               name="tripay_merchant"
+               type="text"
+-              defaultValue={initial.tripay_merchant ?? ''}
++              value={merchant}
++              onChange={(e) => setMerchant(e.target.value)}
+               placeholder="T12345"
+             />
+           </FormField>
+@@ -128,7 +135,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
+               id="tripay-api-key"
+               name="tripay_api_key"
+               type="password"
+-              defaultValue=""
++              value={apiKey}
++              onChange={(e) => setApiKey(e.target.value)}
+               placeholder={initial.tripay_api_key_masked ?? '••••••••'}
+               autoComplete="off"
+             />
+@@ -148,7 +156,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
+               id="tripay-private-key"
+               name="tripay_private_key"
+               type="password"
+-              defaultValue=""
++              value={privateKey}
++              onChange={(e) => setPrivateKey(e.target.value)}
+               placeholder={initial.tripay_private_key_masked ?? '••••••••'}
+               autoComplete="off"
+             />
+diff --git a/apps/web/components/admin/MediaPicker.tsx b/apps/web/components/admin/MediaPicker.tsx
+index d31200f..f2c82e1 100644
+--- a/apps/web/components/admin/MediaPicker.tsx
++++ b/apps/web/components/admin/MediaPicker.tsx
+@@ -1,72 +1,39 @@
+ 'use client';
+ 
+ /**
+- * MediaPicker — buka /admin/media?pick=1 di popup window untuk pilih image
+- * dari library. Return URL via postMessage ke opener.
+- *
+- * Use case: di form produk, user klik "Pilih dari library" → buka picker →
+- * click image → window close + form field terisi dengan URL.
+- *
+- * Catatan: window.open() pattern sederhana. Alternatif: modal dalam-app
+- * (lebih mulus, tapi lebih banyak code). Untuk MVP cukup popup.
+- *
+- * Callback: kalau ada callback di-window opener, panggil. Atau default
+- * fallback ke postMessage listener yang disimpan di window.__mediaPickHandler.
++ * MediaPicker — wrapper component yang merender MediaPickerModal in-app dialog.
+  */
+ 
+-import { useCallback } from 'react';
+-import { useTranslations } from 'next-intl';
+-
+-import { Button } from '@/components/ui/neobrutal';
++import { MediaPickerModal } from './MediaPickerModal';
+ 
+ interface Props {
+-  /** Label tombol. Default dari i18n `admin.shared.pickerButton`. */
++  /** Label tombol. Default: "Pakai dari Library". */
+   label?: string;
+   /** Variant button. Default: 'surface'. */
+   variant?: 'surface' | 'primary' | 'accent';
+   /** Size button. Default: 'sm'. */
+   size?: 'sm' | 'md';
+-  /**
+-   * Dipanggil saat user memilih image dari library.
+-   * `url` adalah URL image yang dipilih.
+-   */
++  /** Dipanggil saat user memilih image dari library. */
+   onPick: (url: string) => void;
++  disabled?: boolean;
+ }
+ 
+ export function MediaPicker({
+-  label: labelProp,
++  label,
+   variant = 'surface',
+-  size = 'sm',
+   onPick,
++  disabled = false,
+ }: Props) {
+-  const t = useTranslations('admin.shared');
+-  const label = labelProp ?? t('pickerButton');
+-  const handleClick = useCallback(() => {
+-    // Register handler di window supaya window picker bisa panggil.
+-    // Pakai symbol key biar tidak conflict dengan listener lain.
+-    (window as unknown as { __mediaPickHandler?: (url: string) => void }).__mediaPickHandler = onPick;
+-
+-    // Buka picker di popup window.
+-    const url = '/admin/media?pick=1';
+-    const features = 'width=900,height=700,menubar=no,toolbar=no,location=no';
+-    window.open(url, 'media-picker', features);
+-  }, [onPick]);
+-
+   return (
+-    <Button variant={variant} size={size} type="button" onClick={handleClick}>
+-      ◰ {label}
+-    </Button>
++    <MediaPickerModal
++      triggerLabel={label}
++      variant={variant}
++      onPick={onPick}
++      disabled={disabled}
++    />
+   );
+ }
+ 
+-/**
+- * Listener yang dipasang di /admin/media?pick=1 — menerima postMessage
+- * dari parent (kalau MediaPicker dibuka dari form dalam window yang sama).
+- * Untuk popup-window pattern, MediaGallery handle sendiri via window.opener.
+- *
+- * Function ini di-export terpisah untuk integrasi dengan form yang mau
+- * pakai library dalam same-window (bukan popup).
+- */
+ export function attachMediaPickListener(handler: (url: string) => void): () => void {
+   function listener(event: MessageEvent) {
+     if (event.origin !== window.location.origin) return;
+diff --git a/apps/web/components/admin/PreviewImagesManager.tsx b/apps/web/components/admin/PreviewImagesManager.tsx
+index 2fc9891..4a2ed4a 100644
+--- a/apps/web/components/admin/PreviewImagesManager.tsx
++++ b/apps/web/components/admin/PreviewImagesManager.tsx
+@@ -5,20 +5,19 @@
+  *
+  * Dua cara tambah image:
+  *   1. Upload file baru (form upload standard)
+- *   2. "Pakai dari Library" — buka /admin/media?pick=1 popup, pilih existing
+- *      image dari library, return via postMessage.
+- *
+- * Backend attach-by-reference belum ada — tombol "Pakai dari Library"
+- * sementara kasih toast "Coming soon" sampai backend support POST with URL.
++ *   2. "Pakai dari Library" — buka MediaPickerModal in-app dialog, pilih gambar
++ *      dari library (product/post) dan tautkan URL langsung.
+  */
+ 
+-import { useEffect, useState, useTransition } from 'react';
++import { useState, useTransition } from 'react';
+ import { useRouter } from 'next/navigation';
+ import { useTranslations } from 'next-intl';
+ 
+ import { Button, BUTTON_LABEL_CLS } from '@/components/ui/neobrutal';
+ import { confirmDialog } from '@/components/ui/dialog-store';
+ import { toast } from '@/components/ui/toast-store';
++import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
++import { getClientApiBase } from '@/lib/client-api';
+ 
+ interface Props {
+   productId: number;
+@@ -33,24 +32,6 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+   const [pending, startTransition] = useTransition();
+   const [error, setError] = useState<string | null>(null);
+ 
+-  // Listen postMessage dari MediaPicker popup window.
+-  useEffect(() => {
+-    function listener(event: MessageEvent) {
+-      if (event.origin !== window.location.origin) return;
+-      const data = event.data as { type?: string; url?: string } | null;
+-      if (data?.type === 'media-pick' && typeof data.url === 'string') {
+-        // Backend belum support attach-by-URL — kasih feedback visual dulu.
+-        toast.info(t('imagePicked', { url: data.url.slice(0, 60) }));
+-      }
+-    }
+-    window.addEventListener('message', listener);
+-    return () => window.removeEventListener('message', listener);
+-  }, [t]);
+-
+-  function openLibrary() {
+-    window.open('/admin/media?pick=1', 'media-picker', 'width=900,height=700');
+-  }
+-
+   async function addImage(e: React.ChangeEvent<HTMLInputElement>) {
+     const file = e.target.files?.[0];
+     e.target.value = '';
+@@ -62,7 +43,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+ 
+     startTransition(async () => {
+       try {
+-        const res = await fetch(`${apiUrl}/api/admin/products/${productId}/preview-images`, {
++        const res = await fetch(`${getClientApiBase()}/api/admin/products/${productId}/preview-images`, {
+           method: 'POST',
+           body: fd,
+           credentials: 'include',
+@@ -80,6 +61,30 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+     });
+   }
+ 
++  async function addImageByUrl(url: string) {
++    setError(null);
++    startTransition(async () => {
++      try {
++        const res = await fetch(`${getClientApiBase()}/api/admin/products/${productId}/preview-images`, {
++          method: 'POST',
++          headers: { 'Content-Type': 'application/json' },
++          body: JSON.stringify({ url }),
++          credentials: 'include',
++        });
++        if (!res.ok) {
++          const j = await res.json().catch(() => ({}));
++          throw new Error(j.message || `HTTP ${res.status}`);
++        }
++        const data = await res.json();
++        setImages(data.data.preview_images);
++        router.refresh();
++        toast.success(t('imagePicked', { url: url.slice(0, 40) }));
++      } catch (err) {
++        setError(err instanceof Error ? err.message : t('uploadError'));
++      }
++    });
++  }
++
+   async function removeImage(index: number) {
+     const ok = await confirmDialog({
+       title: t('pickerConfirmTitle'),
+@@ -92,7 +97,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+ 
+     startTransition(async () => {
+       try {
+-        const res = await fetch(`${apiUrl}/api/admin/products/${productId}/preview-images`, {
++        const res = await fetch(`${getClientApiBase()}/api/admin/products/${productId}/preview-images`, {
+           method: 'DELETE',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ index }),
+@@ -140,7 +145,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+       </div>
+ 
+       {images.length < 5 && (
+-        <div className="flex flex-wrap gap-2">
++        <div className="flex flex-wrap gap-2 items-center">
+           <label className={BUTTON_LABEL_CLS + ' inline-flex items-center gap-2 bg-surface px-3 py-2 text-sm'}>
+             {t('addImage')}
+             <input
+@@ -151,14 +156,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+               className="hidden"
+             />
+           </label>
+-          <button
+-            type="button"
+-            onClick={openLibrary}
+-            disabled={pending}
+-            className={BUTTON_LABEL_CLS + ' inline-flex items-center gap-2 bg-accent px-3 py-2 text-sm'}
+-          >
+-            {t('pickerUseLibrary')}
+-          </button>
++          <MediaPickerModal onPick={addImageByUrl} disabled={pending} />
+         </div>
+       )}
+ 
+@@ -170,4 +168,4 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
+       )}
+     </div>
+   );
+-}
++}
+\ No newline at end of file
+diff --git a/apps/web/components/public/CartBadge.tsx b/apps/web/components/public/CartBadge.tsx
+index 5362f6a..33727c4 100644
+--- a/apps/web/components/public/CartBadge.tsx
++++ b/apps/web/components/public/CartBadge.tsx
+@@ -1,12 +1,10 @@
+ import { getTranslations } from 'next-intl/server';
+ 
+ import { cartApi, PublicFetchError } from '@/lib/cart-api';
+-
+-import { Badge } from '@/components/ui/Badge';
+ import { Button } from '@/components/ui/neobrutal';
+ 
+ /**
+- * Cart badge di TopNav — tampilkan jumlah item di cart.
++ * Cart badge di TopNav ? tampilkan jumlah item di cart.
+  * Server Component, fetch cart count. Auto-handle cookie-less state.
+  */
+ export async function CartBadge() {
+@@ -28,20 +26,37 @@ export async function CartBadge() {
+       href="/keranjang"
+       aria-label={t('viewCart')}
+     >
+-      <span className="relative inline-flex items-center gap-1.5">
+-        <span aria-hidden="true">🛒</span>
++      <span className="inline-flex items-center gap-2">
++        <CartIcon />
+         <span className="hidden sm:inline">{t('viewCart')}</span>
+         {count > 0 && (
+-          <Badge
+-            tone="accent"
+-            size="sm"
+-            shadow={false}
+-            className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 min-w-[1.75rem] !h-7 px-1.5 !text-xs font-bold normal-case tracking-normal"
+-          >
++          <span className="inline-flex items-center justify-center bg-accent text-ink font-black text-xs px-2 py-0.5 border border-ink shadow-[1px_1px_0_0_var(--color-ink)] min-w-[1.25rem] rounded-none">
+             {count > 99 ? '99+' : count}
+-          </Badge>
++          </span>
+         )}
+       </span>
+     </Button>
+   );
+ }
++
++function CartIcon() {
++  return (
++    <svg
++      xmlns="http://www.w3.org/2000/svg"
++      width="16"
++      height="16"
++      viewBox="0 0 24 24"
++      fill="none"
++      stroke="currentColor"
++      strokeWidth="2.5"
++      strokeLinecap="square"
++      strokeLinejoin="miter"
++      aria-hidden="true"
++      className="shrink-0"
++    >
++      <circle cx="9" cy="20" r="1" />
++      <circle cx="20" cy="20" r="1" />
++      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
++    </svg>
++  );
++}
+diff --git a/apps/web/components/public/Footer.tsx b/apps/web/components/public/Footer.tsx
+index 9598dff..3dc9166 100644
+--- a/apps/web/components/public/Footer.tsx
++++ b/apps/web/components/public/Footer.tsx
+@@ -14,6 +14,7 @@
+ import { getTranslations } from 'next-intl/server';
+ 
+ import { Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
++import { Input } from '@/components/ui/Input';
+ import { publicApi } from '@/lib/public-api';
+ 
+ export async function Footer() {
+@@ -84,12 +85,12 @@ export async function Footer() {
+                 method="post"
+                 className="flex border-4 border-ink"
+               >
+-                <input
++                <Input
+                   type="email"
+                   name="email"
+                   placeholder={t('emailPlaceholder')}
+                   required
+-                  className="bg-surface px-4 py-4 w-full min-w-0 font-label text-label-sm focus:ring-0 focus:outline-none border-none rounded-none"
++                  className="rounded-none border-0 px-4 py-4 font-label text-label-sm"
+                 />
+                 <button
+                   type="submit"
+diff --git a/apps/web/components/public/PriceTag.tsx b/apps/web/components/public/PriceTag.tsx
+index b7d6283..b137ce9 100644
+--- a/apps/web/components/public/PriceTag.tsx
++++ b/apps/web/components/public/PriceTag.tsx
+@@ -1,3 +1,7 @@
++'use client';
++
++import { useTranslations } from 'next-intl';
++
+ import { formatRupiah } from '@/lib/format';
+ 
+ interface Props {
+@@ -13,11 +17,15 @@ const SIZE = {
+ 
+ /**
+  * Harga dengan style NeoBrutalism — font besar bold warna primary.
++ * Kalau value = 0, render label "Gratis" dari translation key 'product.price.free'.
+  */
+ export function PriceTag({ value, size = 'md' }: Props) {
++  const t = useTranslations('product.price');
++  const isFree = Number.parseFloat(value) === 0;
++
+   return (
+     <p className={`font-bold text-primary ${SIZE[size]} leading-none`}>
+-      {formatRupiah(value)}
++      {isFree ? t('free') : formatRupiah(value)}
+     </p>
+   );
+ }
+\ No newline at end of file
+diff --git a/apps/web/components/public/ProductCard.tsx b/apps/web/components/public/ProductCard.tsx
+index 484f4ba..afdbe3b 100644
+--- a/apps/web/components/public/ProductCard.tsx
++++ b/apps/web/components/public/ProductCard.tsx
+@@ -65,7 +65,7 @@ export async function ProductCard({ product }: Props) {
+         </h3>
+         <p className="mt-1 text-xs text-ink/60">{kategoriNama}</p>
+         <p className="mt-3 font-bold text-primary text-lg sm:text-xl">
+-          {formatRupiah(product.harga)}
++          {product.is_free ? t('priceFree') : formatRupiah(product.harga)}
+         </p>
+       </div>
+     </Card>
+diff --git a/apps/web/components/public/TrendingSection.tsx b/apps/web/components/public/TrendingSection.tsx
+index f2d1ce1..da57733 100644
+--- a/apps/web/components/public/TrendingSection.tsx
++++ b/apps/web/components/public/TrendingSection.tsx
+@@ -181,6 +181,7 @@ const PLACEHOLDER_TRENDING: Product[] = [
+     status: 'aktif',
+     is_featured: true,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: false,
+     has_downloadable_file: true,
+     created_at: null,
+@@ -203,6 +204,7 @@ const PLACEHOLDER_TRENDING: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: true,
+     has_downloadable_file: false,
+     created_at: null,
+@@ -225,6 +227,7 @@ const PLACEHOLDER_TRENDING: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: false,
+     has_downloadable_file: true,
+     created_at: null,
+@@ -250,6 +253,7 @@ const PLACEHOLDER_LATEST: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: false,
+     has_downloadable_file: true,
+     created_at: null,
+@@ -272,6 +276,7 @@ const PLACEHOLDER_LATEST: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: true,
+     has_downloadable_file: false,
+     created_at: null,
+@@ -294,6 +299,7 @@ const PLACEHOLDER_LATEST: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: false,
+     has_downloadable_file: true,
+     created_at: null,
+@@ -316,6 +322,7 @@ const PLACEHOLDER_LATEST: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: false,
+     has_downloadable_file: true,
+     created_at: null,
+@@ -338,6 +345,7 @@ const PLACEHOLDER_LATEST: Product[] = [
+     status: 'aktif',
+     is_featured: false,
+     is_pre_order: false,
++    is_free: false,
+     needs_license_key: true,
+     has_downloadable_file: false,
+     created_at: null,
+diff --git a/apps/web/components/ui/DatePicker.tsx b/apps/web/components/ui/DatePicker.tsx
+index 770dbdb..1100554 100644
+--- a/apps/web/components/ui/DatePicker.tsx
++++ b/apps/web/components/ui/DatePicker.tsx
+@@ -61,6 +61,7 @@ export function DatePicker({
+   align = 'left',
+ }: Props) {
+   const [open, setOpen] = useState(false);
++  const placementRef = useRef<'bottom' | 'top'>('bottom');
+   const [selected, setSelected] = useState<Date | undefined>(() =>
+     parseIsoDate(defaultValue),
+   );
+@@ -71,6 +72,17 @@ export function DatePicker({
+     setSelected(parseIsoDate(defaultValue));
+   }, [defaultValue]);
+ 
++  function toggleOpen() {
++    if (!open && triggerRef.current) {
++      const rect = triggerRef.current.getBoundingClientRect();
++      const spaceBelow = window.innerHeight - rect.bottom;
++      const spaceAbove = rect.top;
++      const ESTIMATED_HEIGHT = 340;
++      placementRef.current = (spaceBelow < ESTIMATED_HEIGHT && spaceAbove > spaceBelow) ? 'top' : 'bottom';
++    }
++    setOpen((v) => !v);
++  }
++
+   useEffect(() => {
+     if (!open) return;
+     function onDocClick(e: MouseEvent) {
+@@ -132,7 +144,7 @@ export function DatePicker({
+           id={`dp-trigger-${name}`}
+           type="button"
+           disabled={disabled}
+-          onClick={() => setOpen((v) => !v)}
++          onClick={toggleOpen}
+           aria-haspopup="dialog"
+           aria-expanded={open}
+           className={
+@@ -152,9 +164,11 @@ export function DatePicker({
+           <div
+             role="dialog"
+             aria-label="Pilih tanggal"
+-            className="absolute z-50 mt-2 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)]"
++            className={
++              'absolute z-50 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] ' +
++              (placementRef.current === 'top' ? 'bottom-full mb-2' : 'top-full mt-2')
++            }
+             style={{
+-              top: '100%',
+               left: align === 'left' ? 0 : 'auto',
+               right: align === 'right' ? 0 : 'auto',
+               width: 'max-content',
+diff --git a/apps/web/components/ui/SelectSearch.tsx b/apps/web/components/ui/SelectSearch.tsx
+index 085975f..feb72be 100644
+--- a/apps/web/components/ui/SelectSearch.tsx
++++ b/apps/web/components/ui/SelectSearch.tsx
+@@ -44,6 +44,7 @@ export function SelectSearch({
+ }: Props) {
+   const id = useId();
+   const [open, setOpen] = useState(false);
++  const placementRef = useRef<'bottom' | 'top'>('bottom');
+   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
+   const value = controlledValue ?? internalValue;
+ 
+@@ -61,6 +62,17 @@ export function SelectSearch({
+       )
+     : allOptions;
+ 
++  function toggleOpen() {
++    if (!open && triggerRef.current) {
++      const rect = triggerRef.current.getBoundingClientRect();
++      const spaceBelow = window.innerHeight - rect.bottom;
++      const spaceAbove = rect.top;
++      const ESTIMATED_HEIGHT = 280;
++      placementRef.current = (spaceBelow < ESTIMATED_HEIGHT && spaceAbove > spaceBelow) ? 'top' : 'bottom';
++    }
++    setOpen((v) => !v);
++  }
++
+   useEffect(() => {
+     if (!open) return;
+     function onDown(e: MouseEvent) {
+@@ -119,7 +131,7 @@ export function SelectSearch({
+         id={id}
+         type="button"
+         disabled={disabled}
+-        onClick={() => setOpen((v) => !v)}
++        onClick={toggleOpen}
+         aria-haspopup="listbox"
+         aria-expanded={open}
+         className={
+@@ -157,7 +169,10 @@ export function SelectSearch({
+         <div
+           ref={panelRef}
+           role="listbox"
+-          className="absolute z-30 left-0 right-0 mt-1 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)]"
++          className={
++            'absolute z-30 left-0 right-0 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] ' +
++            (placementRef.current === 'top' ? 'bottom-full mb-1' : 'top-full mt-1')
++          }
+         >
+           <div className="p-2 border-b-2 border-ink">
+             <input
+diff --git a/apps/web/lib/format.ts b/apps/web/lib/format.ts
+index 22ac330..433b429 100644
+--- a/apps/web/lib/format.ts
++++ b/apps/web/lib/format.ts
+@@ -62,6 +62,7 @@ export const TIPE_LABEL: Record<string, string> = {
+   download: 'Download',
+   license: 'License',
+   bundle: 'Bundle',
++  account_manual: 'Aktivasi Manual',
+ };
+ 
+ /** Extract relative path dari URL/file_url storage. */
+diff --git a/apps/web/lib/media-shared.ts b/apps/web/lib/media-shared.ts
+index 3fda2d9..0868bf7 100644
+--- a/apps/web/lib/media-shared.ts
++++ b/apps/web/lib/media-shared.ts
+@@ -36,7 +36,7 @@ export function deriveMediaMeta(url: string): {
+ 
+   let mime = 'application/octet-stream';
+   let type: MediaItem['type'] = 'other';
+-  if (IMAGE_EXT.test(filename)) {
++  if (IMAGE_EXT.test(filename) || url.includes('/previews/') || url.includes('/thumbnails/') || url.includes('/images/') || url.includes('/products/')) {
+     mime = `image/${filename.split('.').pop()?.toLowerCase() ?? 'jpeg'}`;
+     type = 'image';
+   } else if (VIDEO_EXT.test(filename)) {
+diff --git a/apps/web/lib/types.ts b/apps/web/lib/types.ts
+index 1443b31..98237a7 100644
+--- a/apps/web/lib/types.ts
++++ b/apps/web/lib/types.ts
+@@ -32,6 +32,9 @@ export interface Product {
+   fitur: string[];
+   status: StatusProduct;
+   is_featured: boolean;
++  // Produk gratis: badge "Gratis" menggantikan price display. harga selalu '0'
++  // di DB (auto-set backend). Checkout skip payment gateway, status order='free'.
++  is_free: boolean;
+   // Pre-order fields. Null/undefined untuk produk non-pre-order.
+   // release_date/deposit_percent/deposit_amount/remaining_amount nullable
+   // ketika is_pre_order=false (lihat ProductResource).
+@@ -180,7 +183,7 @@ export interface Cart {
+ 
+ // ───── Order ─────
+ 
+-export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded' | 'preorder_deposit_paid';
++export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'refunded' | 'preorder_deposit_paid' | 'free';
+ export type TipeOrder = 'download' | 'license' | 'bundle' | 'account_manual';
+ 
+ export interface OrderDeliveryInfo {
+@@ -289,6 +292,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+   expired: 'Expired',
+   refunded: 'Refunded',
+   preorder_deposit_paid: 'DP Diterima',
++  free: 'Gratis',
+ };
+ 
+ /** Status label Indonesia untuk LicenseKey. */
+diff --git a/apps/web/messages/en.json b/apps/web/messages/en.json
+index 71434f7..b0df444 100644
+--- a/apps/web/messages/en.json
++++ b/apps/web/messages/en.json
+@@ -222,7 +222,10 @@
+     "galleryClose": "Close",
+     "adding": "Adding…",
+     "added": "Product added to cart.",
++    "freeAdded": "Free product added to cart.",
+     "addError": "Failed to add the product to your cart.",
++    "freeCta": "Get for Free",
++    "freeBuyNow": "Get Now →",
+     "buyNow": "Buy Now →",
+     "viewCart": "View Cart",
+     "preorderBadge": "Pre-Order",
+@@ -307,6 +310,7 @@
+     },
+     "empty": "No works in this category.",
+     "from": "From",
++    "priceFree": "Free",
+     "categoryLabel": "Category",
+     "searchLabel": "Search results",
+     "itemsSuffix": "works",
+@@ -354,8 +358,10 @@
+     "subtotal": "Subtotal",
+     "discount": "Discount",
+     "total": "Total",
++    "free": "Free",
+     "checkout": "Proceed to Checkout",
+     "checkoutPreOrder": "Continue with Pre-Order",
++    "checkoutFree": "Get for Free",
+     "preorderLabel": "Pre-order deposit",
+     "preorderRemaining": "Remaining (paid at release)",
+     "preorderReleaseDate": "Release date",
+@@ -826,6 +832,8 @@
+         "fieldSlugHint": "URL-friendly identifier. Lowercase, numbers, dashes.",
+         "fieldCategory": "Category",
+         "categoryPlaceholder": "— No Category —",
++        "fieldFree": "Free Product",
++        "fieldFreeHint": "Enable for freebie / sample / promo material. Price auto-set to Rp 0 and checkout skips payment gateway.",
+         "fieldPrice": "Price (IDR)",
+         "fieldType": "Type",
+         "typePlaceholder": "Pick a type…",
+diff --git a/apps/web/messages/id.json b/apps/web/messages/id.json
+index 297b366..0723ee9 100644
+--- a/apps/web/messages/id.json
++++ b/apps/web/messages/id.json
+@@ -222,7 +222,10 @@
+     "galleryClose": "Tutup",
+     "adding": "Menambahkan…",
+     "added": "Produk ditambahkan ke keranjang.",
++    "freeAdded": "Produk gratis ditambahkan ke keranjang.",
+     "addError": "Gagal menambahkan produk ke keranjang.",
++    "freeCta": "Dapatkan Gratis",
++    "freeBuyNow": "Dapatkan Sekarang →",
+     "buyNow": "Beli Sekarang →",
+     "viewCart": "Lihat Keranjang",
+     "preorderBadge": "Pre-Order",
+@@ -307,6 +310,7 @@
+     },
+     "empty": "Belum ada karya di kategori ini.",
+     "from": "Mulai",
++    "priceFree": "Gratis",
+     "categoryLabel": "Kategori",
+     "searchLabel": "Hasil pencarian",
+     "itemsSuffix": "karya",
+@@ -354,8 +358,10 @@
+     "subtotal": "Subtotal",
+     "discount": "Diskon",
+     "total": "Total",
++    "free": "Gratis",
+     "checkout": "Lanjut ke Checkout",
+     "checkoutPreOrder": "Lanjut Pre-Order",
++    "checkoutFree": "Dapatkan Gratis",
+     "preorderLabel": "DP untuk pre-order",
+     "preorderRemaining": "Sisa dibayar saat rilis",
+     "preorderReleaseDate": "Tanggal rilis",
+@@ -826,6 +832,8 @@
+         "fieldSlugHint": "URL-friendly identifier. Huruf kecil, angka, strip.",
+         "fieldCategory": "Kategori",
+         "categoryPlaceholder": "— Tanpa Kategori —",
++        "fieldFree": "Produk Gratis",
++        "fieldFreeHint": "Aktifkan untuk freebie / sample / materi promosi. Harga otomatis disetel ke Rp 0 dan checkout melewati payment gateway.",
+         "fieldPrice": "Harga (Rp)",
+         "fieldType": "Tipe",
+         "typePlaceholder": "Pilih tipe…",
+diff --git a/apps/web/middleware.ts b/apps/web/middleware.ts
+index 19c957f..0af169a 100644
+--- a/apps/web/middleware.ts
++++ b/apps/web/middleware.ts
+@@ -36,5 +36,5 @@ export function middleware(request: NextRequest) {
+ 
+ export const config = {
+   // Skip Next internals, static assets, dan SEMUA API routes (locale-unaware).
+-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
++  matcher: ['/((?!api|tripay|_next|_vercel|.*\\..*).*)'],
+ };
+diff --git a/apps/web/next.config.ts b/apps/web/next.config.ts
+index 1ac73f5..f808f0c 100644
+--- a/apps/web/next.config.ts
++++ b/apps/web/next.config.ts
+@@ -4,6 +4,27 @@ import createNextIntlPlugin from 'next-intl/plugin';
+ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
+ 
+ const nextConfig: NextConfig = {
++  async rewrites() {
++    const apiInternal =
++      process.env.API_INTERNAL_URL ||
++      (process.env.NEXT_PUBLIC_API_URL?.startsWith('http://api')
++        ? process.env.NEXT_PUBLIC_API_URL
++        : 'http://api:8000');
++
++    return [
++      {
++        source: '/api/:path*',
++        destination: `${apiInternal}/api/:path*`,
++      },
++    ];
++  },
++  // Server Actions: naikkan body size limit untuk upload file produk (max 1GB).
++  
++  experimental: {
++    serverActions: {
++      bodySizeLimit: '1gb',
++    },
++  },
+   // `npm run dev` di dalam container dengan bind mount host (Windows host
+   // + Linux container). fs.inotify watcher bawaan sering tidak mendeteksi
+   // perubahan di bind mount cross-OS — pakai polling fallback.
+diff --git a/infra/docker-compose.yml b/infra/docker-compose.yml
+index 5b7fdb2..13ce116 100644
+--- a/infra/docker-compose.yml
++++ b/infra/docker-compose.yml
+@@ -15,7 +15,7 @@ services:
+       MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+     ports:
+       # Host port hardcoded ke 3307 agar tidak bentrok dengan MySQL lokal Windows di 3306.
+-      - "3307:3306"
++      - "3308:3306"
+     volumes:
+       - db_data:/var/lib/mysql
+       - ./docker/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+diff --git a/infra/docker/api/Dockerfile b/infra/docker/api/Dockerfile
+index 4138885..3a53cdb 100644
+--- a/infra/docker/api/Dockerfile
++++ b/infra/docker/api/Dockerfile
+@@ -37,6 +37,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
+ # Install PHP extensions
+ RUN docker-php-ext-install pdo pdo_mysql mbstring gd zip bcmath
+ 
++# Custom PHP settings — upload limit 1GB untuk file produk
++COPY infra/docker/api/php-uploads.ini /usr/local/etc/php/conf.d/99-uploads.ini
++
+ # Install Composer
+ COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+ 
+diff --git a/infra/nginx/store.enpiistudio.com.conf b/infra/nginx/store.enpiistudio.com.conf
+index 19e59a6..025cd8b 100644
+--- a/infra/nginx/store.enpiistudio.com.conf
++++ b/infra/nginx/store.enpiistudio.com.conf
+@@ -18,6 +18,9 @@
+ #   5. Tab Advanced → paste konfigurasi di bawah (bagian location /api/ dan /download/)
+ #
+ 
++# Upload file produk bisa sampai 1GB — set global supaya semua location inherit.
++client_max_body_size 1g;
++
+ # ───── API routes — bypass Next.js, langsung ke Laravel ─────
+ location /api/ {
+     proxy_pass http://api:8000;

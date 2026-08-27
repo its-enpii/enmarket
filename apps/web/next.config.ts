@@ -4,6 +4,27 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    const apiInternal =
+      process.env.API_INTERNAL_URL ||
+      (process.env.NEXT_PUBLIC_API_URL?.startsWith('http://api')
+        ? process.env.NEXT_PUBLIC_API_URL
+        : 'http://api:8000');
+
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${apiInternal}/api/:path*`,
+      },
+    ];
+  },
+  // Server Actions: naikkan body size limit untuk upload file produk (max 1GB).
+  
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '1gb',
+    },
+  },
   // `npm run dev` di dalam container dengan bind mount host (Windows host
   // + Linux container). fs.inotify watcher bawaan sering tidak mendeteksi
   // perubahan di bind mount cross-OS — pakai polling fallback.

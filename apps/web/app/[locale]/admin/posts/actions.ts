@@ -7,13 +7,15 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 import { ApiRequestError, apiDelete, apiPostForm, apiPutForm } from '@/lib/api';
 
 export interface ActionResult {
   error?: string;
   fieldErrors?: Record<string, string[]>;
+  ok?: boolean;
+  message?: string;
+  redirectTo?: string;
 }
 
 function pickFieldError(err: ApiRequestError): Record<string, string[]> {
@@ -40,7 +42,7 @@ export async function createPost(
 
     revalidatePath('/admin/posts');
     revalidatePath('/admin');
-    redirect(`/admin/posts/${newId}`);
+    return { ok: true, message: 'Catatan berhasil dibuat.', redirectTo: `/admin/posts/${newId}` };
   } catch (err) {
     if (err instanceof ApiRequestError) {
       return {
@@ -48,7 +50,6 @@ export async function createPost(
         fieldErrors: pickFieldError(err),
       };
     }
-    if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
     return { error: 'Gagal membuat catatan.' };
   }
   return {};
@@ -69,14 +70,13 @@ export async function updatePost(
         fieldErrors: pickFieldError(err),
       };
     }
-    if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
     return { error: 'Gagal memperbarui catatan.' };
   }
 
   revalidatePath('/admin/posts');
   revalidatePath(`/admin/posts/${id}`);
   revalidatePath('/admin');
-  redirect(`/admin/posts/${id}`);
+  return { ok: true, message: 'Catatan berhasil diperbarui.', redirectTo: `/admin/posts/${id}` };
 }
 
 // ───── Delete ─────

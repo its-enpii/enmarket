@@ -13,8 +13,9 @@ Toko digital personal milik **enpiistudio** untuk menjual produk-produk digital:
 | Database | MySQL 8 |
 | File storage | EnStorage (Google Drive orchestrator enpiistudio) |
 | Payment gateway | Tripay (QRIS Direct API) |
-| Notifikasi WA | Evolution API |
-| Workflow otomasi | n8n |
+| Notifikasi WA | WhatsApp webhook agent enpiistudio |
+| Notifikasi email | Laravel Mail (SMTP) |
+| Workflow otomasi | n8n (opsional, tidak lagi jalur utama notifikasi) |
 | Containerization | Docker Compose |
 
 ## Struktur Repo
@@ -67,13 +68,15 @@ Detail lengkap lihat folder [`.docs/`](./.docs):
 
 | Fase | Fokus | Status |
 |---|---|---|
-| 0 | Setup & fondasi | 🚧 In progress |
-| 1 | Dashboard produk | ⏳ Pending |
-| 2 | Halaman publik | ⏳ Pending |
-| 3 | Pembelian & Tripay QRIS | ⏳ Pending |
-| 4 | Pengiriman otomatis | ⏳ Pending |
-| 5 | Dashboard pesanan & lisensi | ⏳ Pending |
-| 6 | Polish & launch | ⏳ Pending |
+| 0 | Setup & fondasi | ✅ Selesai |
+| 1 | Dashboard produk | ✅ Selesai |
+| 2 | Halaman publik | ✅ Selesai |
+| 3 | Pembelian & Tripay QRIS | ✅ Selesai |
+| 4 | Pengiriman otomatis (email + WA) | ✅ Selesai |
+| 5 | Dashboard pesanan & lisensi | ✅ Selesai |
+| 6 | Polish & launch | 🚧 In progress |
+
+> Fitur tambahan di luar roadmap awal yang sudah jadi: keranjang belanja, pre-order dengan DP + release manual admin, produk gratis (`is_free`) dengan checkout tanpa pembayaran, akun manual (`account_manual`) dengan aktivasi admin.
 
 ## Lisensi
 

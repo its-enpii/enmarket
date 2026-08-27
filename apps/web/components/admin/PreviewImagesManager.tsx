@@ -5,20 +5,19 @@
  *
  * Dua cara tambah image:
  *   1. Upload file baru (form upload standard)
- *   2. "Pakai dari Library" — buka /admin/media?pick=1 popup, pilih existing
- *      image dari library, return via postMessage.
- *
- * Backend attach-by-reference belum ada — tombol "Pakai dari Library"
- * sementara kasih toast "Coming soon" sampai backend support POST with URL.
+ *   2. "Pakai dari Library" — buka MediaPickerModal in-app dialog, pilih gambar
+ *      dari library (product/post) dan tautkan URL langsung.
  */
 
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button, BUTTON_LABEL_CLS } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import { toast } from '@/components/ui/toast-store';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+import { getClientApiBase } from '@/lib/client-api';
 
 interface Props {
   productId: number;
@@ -33,24 +32,6 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  // Listen postMessage dari MediaPicker popup window.
-  useEffect(() => {
-    function listener(event: MessageEvent) {
-      if (event.origin !== window.location.origin) return;
-      const data = event.data as { type?: string; url?: string } | null;
-      if (data?.type === 'media-pick' && typeof data.url === 'string') {
-        // Backend belum support attach-by-URL — kasih feedback visual dulu.
-        toast.info(t('imagePicked', { url: data.url.slice(0, 60) }));
-      }
-    }
-    window.addEventListener('message', listener);
-    return () => window.removeEventListener('message', listener);
-  }, [t]);
-
-  function openLibrary() {
-    window.open('/admin/media?pick=1', 'media-picker', 'width=900,height=700');
-  }
-
   async function addImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = '';
@@ -62,7 +43,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
 
     startTransition(async () => {
       try {
-        const res = await fetch(`${apiUrl}/api/admin/products/${productId}/preview-images`, {
+        const res = await fetch(`${getClientApiBase()}/api/admin/products/${productId}/preview-images`, {
           method: 'POST',
           body: fd,
           credentials: 'include',
@@ -74,6 +55,30 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
         const data = await res.json();
         setImages(data.data.preview_images);
         router.refresh();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t('uploadError'));
+      }
+    });
+  }
+
+  async function addImageByUrl(url: string) {
+    setError(null);
+    startTransition(async () => {
+      try {
+        const res = await fetch(`${getClientApiBase()}/api/admin/products/${productId}/preview-images`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+          credentials: 'include',
+        });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.message || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        setImages(data.data.preview_images);
+        router.refresh();
+        toast.success(t('imagePicked', { url: url.slice(0, 40) }));
       } catch (err) {
         setError(err instanceof Error ? err.message : t('uploadError'));
       }
@@ -92,7 +97,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
 
     startTransition(async () => {
       try {
-        const res = await fetch(`${apiUrl}/api/admin/products/${productId}/preview-images`, {
+        const res = await fetch(`${getClientApiBase()}/api/admin/products/${productId}/preview-images`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ index }),
@@ -140,7 +145,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
       </div>
 
       {images.length < 5 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 items-center">
           <label className={BUTTON_LABEL_CLS + ' inline-flex items-center gap-2 bg-surface px-3 py-2 text-sm'}>
             {t('addImage')}
             <input
@@ -151,14 +156,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
               className="hidden"
             />
           </label>
-          <button
-            type="button"
-            onClick={openLibrary}
-            disabled={pending}
-            className={BUTTON_LABEL_CLS + ' inline-flex items-center gap-2 bg-accent px-3 py-2 text-sm'}
-          >
-            {t('pickerUseLibrary')}
-          </button>
+          <MediaPickerModal onPick={addImageByUrl} disabled={pending} />
         </div>
       )}
 

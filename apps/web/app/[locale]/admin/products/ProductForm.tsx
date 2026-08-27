@@ -4,19 +4,22 @@
 
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { FileUpload } from '@/components/admin/FileUpload';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { FormField } from '@/components/admin/FormField';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { CurrencyInput } from '@/components/ui/CurrencyInput';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
+import { toast } from '@/components/ui/toast-store';
 import type { Category, LinkedPost, Product } from '@/lib/types';
 
 import { createProduct, updateProduct, ActionResult } from './actions';
@@ -46,33 +49,77 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
+/** Tipe produk yang butuh file upload (download/bundle). */
+const TIPE_NEEDS_FILE = new Set(['download', 'bundle']);
+
 export function ProductForm({ categories, initial, availablePosts = [] }: Props) {
   const router = useRouter();
   const t = useTranslations('admin.products.form');
+  const tProd = useTranslations('admin.products');
   const tBtns = useTranslations('common.buttons');
   const isEdit = !!initial;
 
-  const [state, formAction, pending] = useActionState(
-    async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
-      if (isEdit) {
-        return await updateProduct(initial!.id, _prev, fd);
-      }
-      return await createProduct(_prev, fd);
-    },
-    {} as ActionResult,
+  // Catatan: React 19 + Next 15 me-reset uncontrolled <input> setelah form
+  // action selesai (sukses maupun gagal). Untuk itu SEMUA field di sini
+  // pakai controlled inputs — values di state, bukan defaultValue di DOM.
+  // Saat submit gagal, React tinggal re-render dengan state values yang
+  // sama → form tetap berisi isian admin.
+  const [nama, setNama] = useState(initial?.nama ?? '');
+  const [slug, setSlug] = useState(initial?.slug ?? '');
+  const [categoryId, setCategoryId] = useState<string>(
+    initial?.category_id ? String(initial.category_id) : '',
+  );
+  const [isFree, setIsFree] = useState(initial?.is_free ?? false);
+  const [harga, setHarga] = useState(() => {
+    const raw = initial?.harga ?? '';
+    if (!raw) return '';
+    const num = parseInt(String(raw), 10);
+    return Number.isNaN(num) ? '' : String(num);
+  });
+  const [tipe, setTipe] = useState(initial?.tipe ?? 'download');
+  const [status, setStatus] = useState(initial?.status ?? 'draft');
+  const [downloadExpiry, setDownloadExpiry] = useState<string>(
+    initial?.download_expiry_days != null ? String(initial.download_expiry_days) : '7',
+  );
+  const [deskripsi, setDeskripsi] = useState(initial?.deskripsi ?? '');
+  const [isPreOrder, setIsPreOrder] = useState(initial?.is_pre_order ?? false);
+  const [releaseDate, setReleaseDate] = useState(initial?.release_date ?? '');
+  const [depositPercent, setDepositPercent] = useState<string>(
+    initial?.deposit_percent != null ? String(initial.deposit_percent) : '50',
   );
 
-  const [fitur, setFitur] = useState<string[]>(initial?.fitur ?? []);
+  const actionFn = isEdit ? updateProduct.bind(null, initial!.id) : createProduct;
+  const [state, formAction, pending] = useActionState(actionFn, {} as ActionResult);
+
+  useEffect(() => {
+    if (state.ok && state.message) {
+      toast.success(state.message, 3000);
+      if (state.redirectTo) {
+        router.push(state.redirectTo);
+      }
+    }
+  }, [state, router]);
+
+  const [fitur, setFitur] = useState<string[]>(() => {
+    if (Array.isArray(initial?.fitur)) return initial.fitur;
+    if (typeof initial?.fitur === 'string') {
+      try {
+        const parsed = JSON.parse(initial.fitur);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {}
+    }
+    return [];
+  });
   const [newFitur, setNewFitur] = useState('');
   // Linked posts — array of post_id yang dipilih admin. Urutan = index array.
+  const [libraryImages, setLibraryImages] = useState<string[]>([]);
   const [linkedIds, setLinkedIds] = useState<number[]>(
     (initial?.linked_posts ?? []).map((p) => p.id),
   );
 
   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
     if (isEdit) return;
-    const el = document.getElementById('slug') as HTMLInputElement | null;
-    if (el && !el.value) el.value = slugify(e.target.value);
+    setSlug(slugify(e.target.value));
   }
 
   function addFitur() {
@@ -107,6 +154,23 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
     setLinkedIds((prev) => prev.filter((x) => x !== id));
   }
 
+  // Free ↔ Pre-order mutual exclusion: backend reject kalau keduanya
+  // aktif. UI handle di sini supaya admin tidak bisa centang keduanya.
+  function handleFreeChange(checked: boolean) {
+    setIsFree(checked);
+    if (checked) {
+      setIsPreOrder(false);
+      setHarga('0');
+    }
+  }
+
+  function handlePreOrderChange(checked: boolean) {
+    setIsPreOrder(checked);
+    if (checked) {
+      setIsFree(false);
+    }
+  }
+
   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
 
   // Serialize fitur as JSON for the hidden input
@@ -116,9 +180,12 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
   // sesuai array (admin atur via tombol ↑↓). Empty array → sync detach semua.
   const linkedById = new Map(availablePosts.map((p) => [p.id, p]));
 
+  // Derived: apakah tipe produk butuh file upload?
+  const needsFile = TIPE_NEEDS_FILE.has(tipe);
+
   return (
     <form action={formAction} className="space-y-8">
-      {/* ───── Identitas ───── */}
+      {/* ————— Identitas ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
@@ -128,7 +195,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
               name="nama"
               required
               maxLength={200}
-              defaultValue={initial?.nama}
+              value={nama}
+              onChange={(e) => setNama(e.target.value)}
               onBlur={autoSlug}
             />
           </FormField>
@@ -142,7 +210,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
             <Input
               id="slug"
               name="slug"
-              defaultValue={initial?.slug ?? ''}
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
               pattern="[a-z0-9-]+"
               className="font-mono"
             />
@@ -156,7 +225,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                 label: c.nama,
                 hint: c.slug ?? undefined,
               }))}
-              defaultValue={initial?.category_id ? String(initial.category_id) : ''}
+              value={categoryId}
+              onChange={setCategoryId}
               placeholder={t('categoryPlaceholder')}
               clearable
               showAllOption={{ value: '', label: t('categoryPlaceholder') }}
@@ -165,19 +235,36 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
         </div>
       </section>
 
-      {/* ───── Harga & Tipe ───── */}
+      {/* ————— Harga & Tipe ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionPricing')} title={t('sectionPricingTitle')} />
+        <FormField
+          htmlFor="is_free"
+          label={t('fieldFree')}
+          hint={t('fieldFreeHint')}
+          error={fieldErr('is_free')}
+        >
+          <Checkbox
+            name="is_free"
+            value="1"
+            checked={isFree}
+            onChange={(e) => handleFreeChange(e.currentTarget.checked)}
+            label={t('fieldFree')}
+          />
+        </FormField>
         <div className="grid md:grid-cols-2 gap-5">
           <FormField label={t('fieldPrice')} htmlFor="harga" required error={fieldErr('harga')}>
-            <Input
+            {/* Hidden input fallback: disabled TIDAK submit via FormData, jadi
+                backend reject dengan "harga required" walau admin toggle is_free. */}
+            {isFree && <input type="hidden" name="harga" value="0" />}
+            <CurrencyInput
               id="harga"
-              name="harga"
-              type="number"
-              min="0"
-              step="1000"
-              required
-              defaultValue={initial?.harga ?? ''}
+              name={isFree ? undefined : 'harga'}
+              required={!isFree}
+              disabled={isFree}
+              value={isFree ? '0' : harga}
+              onChange={setHarga}
+              readOnly={isFree}
             />
           </FormField>
 
@@ -185,7 +272,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
             <SelectSearch
               name="tipe"
               required
-              defaultValue={initial?.tipe ?? 'download'}
+              value={tipe}
+              onChange={(v) => setTipe(v as typeof tipe)}
               placeholder={t('typePlaceholder')}
               options={[
                 { value: 'download', label: t('typeDownload') },
@@ -200,7 +288,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
             <SelectSearch
               name="status"
               required
-              defaultValue={initial?.status ?? 'draft'}
+              value={status}
+              onChange={(v) => setStatus(v as typeof status)}
               placeholder={t('statusPlaceholder')}
               options={[
                 { value: 'draft', label: t('statusDraft') },
@@ -210,74 +299,88 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
             />
           </FormField>
 
-          <FormField
-            label={t('fieldDownloadExpiry')}
-            htmlFor="download_expiry_days"
-            hint={t('fieldDownloadExpiryHint')}
-            error={fieldErr('download_expiry_days')}
-          >
-            <Input
-              id="download_expiry_days"
-              name="download_expiry_days"
-              type="number"
-              min="1"
-              max="365"
-              defaultValue={initial?.download_expiry_days ?? 7}
-            />
-          </FormField>
+          {/* Download expiry hanya relevan untuk tipe download/bundle */}
+          {needsFile && (
+            <FormField
+              label={t('fieldDownloadExpiry')}
+              htmlFor="download_expiry_days"
+              hint={t('fieldDownloadExpiryHint')}
+              error={fieldErr('download_expiry_days')}
+            >
+              <Input
+                id="download_expiry_days"
+                name="download_expiry_days"
+                type="number"
+                min="1"
+                max="365"
+                value={downloadExpiry}
+                onChange={(e) => setDownloadExpiry(e.target.value)}
+              />
+            </FormField>
+          )}
         </div>
       </section>
 
-      {/* ───── Pre-Order ───── */}
-      <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
-        <FormField
-          htmlFor="is_pre_order"
-          label={t('fieldPreOrder')}
-          hint={t('fieldPreOrderHint')}
-          error={fieldErr('is_pre_order')}
-        >
-          <Checkbox
-            name="is_pre_order"
-            value="1"
-            defaultChecked={initial?.is_pre_order ?? false}
-            label={t('fieldPreOrderLabel')}
-          />
-        </FormField>
-
-        <div className="grid md:grid-cols-2 gap-5">
+      {/* ————— Pre-Order ————— */}
+      {/* Mutual exclusion: pre-order tidak bisa dikombinasi dengan gratis */}
+      {!isFree && (
+        <section className="space-y-5">
+          <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
           <FormField
-            htmlFor="release_date"
-            label={t('fieldReleaseDate')}
-            hint={t('fieldReleaseDateHint')}
-            error={fieldErr('release_date')}
+            htmlFor="is_pre_order"
+            label={t('fieldPreOrder')}
+            hint={t('fieldPreOrderHint')}
+            error={fieldErr('is_pre_order')}
           >
-            <DatePicker
-              name="release_date"
-              defaultValue={initial?.release_date ?? ''}
-              placeholder={t('fieldReleaseDatePlaceholder')}
+            <Checkbox
+              name="is_pre_order"
+              value="1"
+              checked={isPreOrder}
+              onChange={(e) => handlePreOrderChange(e.currentTarget.checked)}
+              label={t('fieldPreOrderLabel')}
             />
           </FormField>
 
-          <FormField
-            htmlFor="preorder_deposit_percent"
-            label={t('fieldDepositPercent')}
-            hint={t('fieldDepositPercentHint')}
-            error={fieldErr('preorder_deposit_percent')}
-          >
-            <Input
-              name="preorder_deposit_percent"
-              type="number"
-              min={1}
-              max={100}
-              defaultValue={initial?.deposit_percent ?? 50}
-              className="font-mono"
-            />
-          </FormField>
-        </div>
-      </section>
+          {/* Release date & deposit hanya muncul kalau pre-order aktif */}
+          {isPreOrder && (
+            <div className="grid md:grid-cols-2 gap-5">
+              <FormField
+                htmlFor="release_date"
+                label={t('fieldReleaseDate')}
+                hint={t('fieldReleaseDateHint')}
+                required
+                error={fieldErr('release_date')}
+              >
+                <DatePicker
+                  name="release_date"
+                  defaultValue={releaseDate}
+                  placeholder={t('fieldReleaseDatePlaceholder')}
+                />
+              </FormField>
 
-      {/* ───── Deskripsi ───── */}
+              <FormField
+                htmlFor="preorder_deposit_percent"
+                label={t('fieldDepositPercent')}
+                hint={t('fieldDepositPercentHint')}
+                required
+                error={fieldErr('preorder_deposit_percent')}
+              >
+                <Input
+                  name="preorder_deposit_percent"
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={depositPercent}
+                  onChange={(e) => setDepositPercent(e.target.value)}
+                  className="font-mono"
+                />
+              </FormField>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ————— Deskripsi ————— */}
       <section className="space-y-5">
         <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
         <FormField label={t('fieldDescription')} htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
@@ -286,7 +389,8 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
             name="deskripsi"
             rows={5}
             required
-            defaultValue={initial?.deskripsi ?? ''}
+            value={deskripsi}
+            onChange={(e) => setDeskripsi(e.target.value)}
           />
         </FormField>
 
@@ -343,7 +447,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
         </FormField>
       </section>
 
-      {/* ───── Linked Posts (panduan / warning / catatan) ───── */}
+      {/* ————— Linked Posts (panduan / warning / catatan) ————— */}
       <section className="space-y-4">
         <SectionHeader eyebrow={t('sectionLinkedPosts')} title={t('sectionLinkedPostsTitle')} />
         <p className="text-xs text-ink/60 font-body">{t('sectionLinkedPostsHint')}</p>
@@ -446,25 +550,78 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
         )}
       </section>
 
-      {/* ───── File produk ───── */}
+      {/* ————— Gambar Preview (hanya saat create) ————— */}
+      {!isEdit && (
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
+        <SectionHeader eyebrow={tProd('previewImagesEyebrow').replace('✎ ', '')} title={tProd('previewImagesTitle')} />
         <FormField
-          label={t('fieldFile')}
-          htmlFor="file"
-          hint={
-            isEdit && initial?.file_url
-              ? t('fieldFileHintCurrent', { url: initial.file_url })
-              : t('fieldFileHintEmpty')
-          }
-          error={fieldErr('file')}
+          label={tProd('previewImagesTitle')}
+          htmlFor="preview_images"
+          hint={tProd('previewImagesSubtitle')}
+          error={fieldErr('preview_images')}
         >
-          <FileUpload name="file" accept=".zip,.rar,.7z,.pdf,.apk,.exe,.tar.gz" maxSizeMB={500} />
-          {isEdit && initial?.file_url && (
-            <Checkbox name="remove_file" value="1" label={t('removeFile')} className="mt-2" />
-          )}
+          <input type="hidden" name="preview_images_urls" value={JSON.stringify(libraryImages)} />
+          
+          <div className="space-y-3">
+            {libraryImages.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {libraryImages.map((url, i) => (
+                  <div key={url} className="relative border-2 border-ink bg-surface p-1">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="Library preview" className="h-16 w-16 object-cover border border-ink" />
+                    <button
+                      type="button"
+                      onClick={() => setLibraryImages(libraryImages.filter((_, idx) => idx !== i))}
+                      className="absolute -top-2 -right-2 h-5 w-5 bg-accent border border-ink text-ink font-bold text-xs flex items-center justify-center hover:bg-primary hover:text-surface cursor-pointer"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="flex-1 min-w-[240px]">
+                <FileUpload name="preview_images" accept="image/*" multiple maxSizeMB={10} />
+              </div>
+              <div className="shrink-0">
+                <MediaPickerModal
+                  onPick={(url) => {
+                    if (!libraryImages.includes(url) && libraryImages.length < 5) {
+                      setLibraryImages((prev) => [...prev, url]);
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </FormField>
       </section>
+      )}
+
+      {/* ————— File produk (hanya untuk tipe download/bundle) ————— */}
+      {needsFile && (
+        <section className="space-y-5">
+          <SectionHeader eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
+          <FormField
+            label={t('fieldFile')}
+            htmlFor="file"
+            hint={
+              isEdit && initial?.file_url
+                ? t('fieldFileHintCurrent', { url: initial.file_url })
+                : t('fieldFileHintEmpty')
+            }
+            required={!isEdit || !initial?.file_url}
+            error={fieldErr('file')}
+          >
+            <FileUpload name="file" accept=".zip,.rar,.7z,.pdf,.apk,.exe,.tar.gz" maxSizeMB={500} />
+            {isEdit && initial?.file_url && (
+              <Checkbox name="remove_file" value="1" label={t('removeFile')} className="mt-2" />
+            )}
+          </FormField>
+        </section>
+      )}
 
       {state.error && (
         <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">

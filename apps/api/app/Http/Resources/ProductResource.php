@@ -25,10 +25,15 @@ class ProductResource extends JsonResource
             'tipe' => $this->tipe,
             'file_url' => $this->file_url,
             'download_expiry_days' => $this->download_expiry_days,
-            'preview_images' => $this->preview_images ?? [],
+            'preview_images' => is_array($this->preview_images) ? array_values(array_filter($this->preview_images, fn ($item) => is_string($item) && trim($item) !== '')) : [],
             'fitur' => $this->fitur ?? [],
             'status' => $this->status,
             'is_featured' => (bool) $this->is_featured,
+            // Produk gratis: label "Gratis" di-render frontend (via translation key
+            // product.price.free) ketika flag ini true. harga selalu 0 di DB
+            // (auto-set di ProductController). Backend TIDAK localize di sini —
+            // source of truth label adalah translation file frontend.
+            'is_free' => (bool) $this->is_free,
             // Pre-order fields. Untuk non-preorder products, release_date/deposit_percent
             // null, deposit_amount/remaining_amount null (whenLoaded-style suppression
             // untuk hemat bandwidth — frontend branch via is_pre_order).

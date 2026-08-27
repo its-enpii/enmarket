@@ -28,6 +28,7 @@ class Product extends Model
         'fitur',
         'status',
         'is_featured',
+        'is_free',
         'is_pre_order',
         'release_date',
         'preorder_deposit_percent',
@@ -39,6 +40,7 @@ class Product extends Model
         'fitur' => 'array',
         'download_expiry_days' => 'integer',
         'is_featured' => 'boolean',
+        'is_free' => 'boolean',
         'is_pre_order' => 'boolean',
         'release_date' => 'date',
         'preorder_deposit_percent' => 'integer',
@@ -125,6 +127,26 @@ class Product extends Model
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
+    }
+
+    /**
+     * Scope: hanya produk yang ditandai gratis (is_free=true).
+     *
+     * Backend ProductController auto-set harga=0 saat is_free=true — jadi
+     * filter ini cara yang reliable untuk query "semua produk gratis".
+     */
+    public function scopeFree($query)
+    {
+        return $query->where('is_free', true);
+    }
+
+    /**
+     * Apakah produk ini gratis? Alias guard untuk (bool) $this->is_free —
+     * readable di view + service.
+     */
+    public function isFree(): bool
+    {
+        return (bool) $this->is_free;
     }
 
     /**

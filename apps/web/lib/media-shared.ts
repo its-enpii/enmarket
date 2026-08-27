@@ -36,7 +36,7 @@ export function deriveMediaMeta(url: string): {
 
   let mime = 'application/octet-stream';
   let type: MediaItem['type'] = 'other';
-  if (IMAGE_EXT.test(filename)) {
+  if (IMAGE_EXT.test(filename) || url.includes('/previews/') || url.includes('/thumbnails/') || url.includes('/images/') || url.includes('/products/')) {
     mime = `image/${filename.split('.').pop()?.toLowerCase() ?? 'jpeg'}`;
     type = 'image';
   } else if (VIDEO_EXT.test(filename)) {

@@ -11,7 +11,7 @@
  * replace. Tidak ada "show/hide" toggle (security concern).
  */
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
@@ -45,6 +45,13 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
     },
     INITIAL,
   );
+
+  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
+  // setelah form action selesai. Pakai useState supaya isian tidak hilang
+  // saat validasi gagal.
+  const [merchant, setMerchant] = useState(initial.tripay_merchant ?? '');
+  const [apiKey, setApiKey] = useState('');
+  const [privateKey, setPrivateKey] = useState('');
 
   const modeOptions = [
     { value: 'sandbox', label: t('modeSandbox') },
@@ -101,7 +108,6 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
           <FormField
             label={t('fieldMerchant')}
             htmlFor="tripay-merchant"
-            required
             hint={t('fieldMerchantHint')}
             error={state.fieldErrors?.tripay_merchant?.[0]}
           >
@@ -109,7 +115,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
               id="tripay-merchant"
               name="tripay_merchant"
               type="text"
-              defaultValue={initial.tripay_merchant ?? ''}
+              value={merchant}
+              onChange={(e) => setMerchant(e.target.value)}
               placeholder="T12345"
             />
           </FormField>
@@ -128,7 +135,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
               id="tripay-api-key"
               name="tripay_api_key"
               type="password"
-              defaultValue=""
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
               placeholder={initial.tripay_api_key_masked ?? '••••••••'}
               autoComplete="off"
             />
@@ -148,7 +156,8 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
               id="tripay-private-key"
               name="tripay_private_key"
               type="password"
-              defaultValue=""
+              value={privateKey}
+              onChange={(e) => setPrivateKey(e.target.value)}
               placeholder={initial.tripay_private_key_masked ?? '••••••••'}
               autoComplete="off"
             />

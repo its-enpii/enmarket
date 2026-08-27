@@ -44,6 +44,7 @@ export function SelectSearch({
 }: Props) {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const placementRef = useRef<'bottom' | 'top'>('bottom');
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
   const value = controlledValue ?? internalValue;
 
@@ -60,6 +61,17 @@ export function SelectSearch({
         o.hint?.toLowerCase().includes(query.toLowerCase()),
       )
     : allOptions;
+
+  function toggleOpen() {
+    if (!open && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const ESTIMATED_HEIGHT = 280;
+      placementRef.current = (spaceBelow < ESTIMATED_HEIGHT && spaceAbove > spaceBelow) ? 'top' : 'bottom';
+    }
+    setOpen((v) => !v);
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -119,7 +131,7 @@ export function SelectSearch({
         id={id}
         type="button"
         disabled={disabled}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggleOpen}
         aria-haspopup="listbox"
         aria-expanded={open}
         className={
@@ -157,7 +169,10 @@ export function SelectSearch({
         <div
           ref={panelRef}
           role="listbox"
-          className="absolute z-30 left-0 right-0 mt-1 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)]"
+          className={
+            'absolute z-30 left-0 right-0 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] ' +
+            (placementRef.current === 'top' ? 'bottom-full mb-1' : 'top-full mt-1')
+          }
         >
           <div className="p-2 border-b-2 border-ink">
             <input

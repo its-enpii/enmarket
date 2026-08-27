@@ -6,13 +6,15 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 import { ApiRequestError, apiDelete, apiPost, apiPut } from '@/lib/api';
 
 export interface ActionResult {
   error?: string;
   fieldErrors?: Record<string, string[]>;
+  ok?: boolean;
+  message?: string;
+  redirectTo?: string;
 }
 
 // ───── Create ─────
@@ -38,7 +40,7 @@ export async function createCategory(_prev: ActionResult, formData: FormData): P
   }
 
   revalidatePath('/admin/categories');
-  redirect('/admin/categories');
+  return { ok: true, message: 'Kategori berhasil dibuat.', redirectTo: '/admin/categories' };
 }
 
 // ───── Update ─────
@@ -68,7 +70,7 @@ export async function updateCategory(
   }
 
   revalidatePath('/admin/categories');
-  redirect('/admin/categories');
+  return { ok: true, message: 'Kategori berhasil diperbarui.', redirectTo: '/admin/categories' };
 }
 
 // ───── Delete ─────

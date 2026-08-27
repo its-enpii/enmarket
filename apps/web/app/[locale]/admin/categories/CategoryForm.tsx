@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Card } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
+import { toast } from '@/components/ui/toast-store';
 
 import { createCategory, updateCategory, ActionResult } from './actions';
 
@@ -35,21 +36,29 @@ export function CategoryForm({ initial }: Props) {
   const tBtns = useTranslations('common.buttons');
   const isEdit = !!initial;
 
-  const [state, formAction, pending] = useActionState(
-    async (_prev: ActionResult, fd: FormData): Promise<ActionResult> => {
-      if (isEdit) {
-        return await updateCategory(initial!.id, _prev, fd);
+  // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
+  // setelah form action selesai (sukses maupun gagal). Semua field pakai
+  // useState + value supaya isian admin tidak hilang saat validasi gagal.
+  const [nama, setNama] = useState(initial?.nama ?? '');
+  const [slug, setSlug] = useState(initial?.slug ?? '');
+  const [deskripsi, setDeskripsi] = useState(initial?.deskripsi ?? '');
+
+  const actionFn = isEdit ? updateCategory.bind(null, initial!.id) : createCategory;
+  const [state, formAction, pending] = useActionState(actionFn, {} as ActionResult);
+
+  useEffect(() => {
+    if (state.ok && state.message) {
+      toast.success(state.message, 3000);
+      if (state.redirectTo) {
+        router.push(state.redirectTo);
       }
-      return await createCategory(_prev, fd);
-    },
-    {} as ActionResult,
-  );
+    }
+  }, [state, router]);
 
   function autoSlug(e: React.FocusEvent<HTMLInputElement>) {
     if (isEdit) return; // jangan override saat edit
-    const slugInput = document.getElementById('slug') as HTMLInputElement | null;
-    if (slugInput && !slugInput.value) {
-      slugInput.value = slugify(e.target.value);
+    if (!slug) {
+      setSlug(slugify(e.target.value));
     }
   }
 
@@ -62,7 +71,8 @@ export function CategoryForm({ initial }: Props) {
           id="nama"
           name="nama"
           required
-          defaultValue={initial?.nama}
+          value={nama}
+          onChange={(e) => setNama(e.target.value)}
           onBlur={autoSlug}
         />
       </FormField>
@@ -76,7 +86,8 @@ export function CategoryForm({ initial }: Props) {
         <Input
           id="slug"
           name="slug"
-          defaultValue={initial?.slug ?? ''}
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
           pattern="[a-z0-9-]+"
           className="font-mono"
         />
@@ -92,7 +103,8 @@ export function CategoryForm({ initial }: Props) {
           id="deskripsi"
           name="deskripsi"
           rows={4}
-          defaultValue={initial?.deskripsi ?? ''}
+          value={deskripsi}
+          onChange={(e) => setDeskripsi(e.target.value)}
         />
       </FormField>
 

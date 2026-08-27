@@ -51,5 +51,5 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   // Skip Next internals, static assets, dan SEMUA API routes (locale-unaware).
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
+  matcher: ['/((?!api|tripay|_next|_vercel|.*\\..*).*)'],
 };

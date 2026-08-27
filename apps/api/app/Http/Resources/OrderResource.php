@@ -22,6 +22,9 @@ class OrderResource extends JsonResource
             'total_harga' => (string) $this->total_harga,
             'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
             'status' => $this->status,
+            // True kalau order skip payment gateway (cart is_free). Provenance
+            // berbeda dari 'paid' (tidak ada Tripay reference) tapi delivery flow identik.
+            'is_free' => $this->isFree(),
             // Pre-order fields. Null untuk non-preorder orders.
             'is_preorder' => $this->isPreorder(),
             'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
@@ -51,6 +54,7 @@ class OrderResource extends JsonResource
                 'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
                 'is_preorder' => $this->isPreorder(),
                 'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
+                'is_free' => $this->isFree(),
                 'item_count' => $this->whenLoaded('items', fn () => $this->items->count()),
             ];
         }

@@ -14,6 +14,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
+import { Input } from '@/components/ui/Input';
 import { publicApi } from '@/lib/public-api';
 
 export async function Footer() {
@@ -84,12 +85,12 @@ export async function Footer() {
                 method="post"
                 className="flex border-4 border-ink"
               >
-                <input
+                <Input
                   type="email"
                   name="email"
                   placeholder={t('emailPlaceholder')}
                   required
-                  className="bg-surface px-4 py-4 w-full min-w-0 font-label text-label-sm focus:ring-0 focus:outline-none border-none rounded-none"
+                  className="rounded-none border-0 px-4 py-4 font-label text-label-sm"
                 />
                 <button
                   type="submit"

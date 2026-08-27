@@ -334,11 +334,12 @@ class CheckoutFlowTest extends TestCase
             ]),
         );
 
-        // sanitizePhone: hapus semua non-digit → '6281234567890'
+        // sanitizePhone: hapus non-digit lalu normalisasi prefix 628 → 08
+        // (format yang diminta Tripay: 0812..., tanpa + dan tanpa spasi)
         $this->assertEquals(
-            '6281234567890',
+            '081234567890',
             CheckoutTripayStub::$lastCustomerPhone,
-            'Phone harus disanitasi jadi digits-only',
+            'Phone harus dinormalisasi ke format 08xxx',
         );
     }
 

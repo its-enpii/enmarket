@@ -37,6 +37,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql mbstring gd zip bcmath
 
+# Custom PHP settings — upload limit 1GB untuk file produk
+COPY infra/docker/api/php-uploads.ini /usr/local/etc/php/conf.d/99-uploads.ini
+
 # Install Composer
 COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 

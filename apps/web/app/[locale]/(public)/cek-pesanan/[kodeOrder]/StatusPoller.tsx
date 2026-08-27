@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
+import { getClientApiBase } from '@/lib/client-api';
 
 interface Props {
   kodeOrder: string;
@@ -21,7 +22,7 @@ export function StatusPoller({ kodeOrder, initialStatus }: Props) {
 
     const interval = setInterval(async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const apiBase = getClientApiBase();
         const res = await fetch(`${apiBase}/api/orders/${kodeOrder}/status`, {
           cache: 'no-store',
         });

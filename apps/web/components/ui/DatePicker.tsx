@@ -61,6 +61,7 @@ export function DatePicker({
   align = 'left',
 }: Props) {
   const [open, setOpen] = useState(false);
+  const placementRef = useRef<'bottom' | 'top'>('bottom');
   const [selected, setSelected] = useState<Date | undefined>(() =>
     parseIsoDate(defaultValue),
   );
@@ -70,6 +71,17 @@ export function DatePicker({
   useEffect(() => {
     setSelected(parseIsoDate(defaultValue));
   }, [defaultValue]);
+
+  function toggleOpen() {
+    if (!open && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const ESTIMATED_HEIGHT = 340;
+      placementRef.current = (spaceBelow < ESTIMATED_HEIGHT && spaceAbove > spaceBelow) ? 'top' : 'bottom';
+    }
+    setOpen((v) => !v);
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -132,7 +144,7 @@ export function DatePicker({
           id={`dp-trigger-${name}`}
           type="button"
           disabled={disabled}
-          onClick={() => setOpen((v) => !v)}
+          onClick={toggleOpen}
           aria-haspopup="dialog"
           aria-expanded={open}
           className={
@@ -152,9 +164,11 @@ export function DatePicker({
           <div
             role="dialog"
             aria-label="Pilih tanggal"
-            className="absolute z-50 mt-2 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)]"
+            className={
+              'absolute z-50 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] ' +
+              (placementRef.current === 'top' ? 'bottom-full mb-2' : 'top-full mt-2')
+            }
             style={{
-              top: '100%',
               left: align === 'left' ? 0 : 'auto',
               right: align === 'right' ? 0 : 'auto',
               width: 'max-content',

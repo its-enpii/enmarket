@@ -38,8 +38,11 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
       ? items[0].product.release_date
       : null;
 
-  // Untuk pre-order, "total" yang ditampilkan ke buyer = DP (amount yang harus dibayar).
-  const displayTotal = allPreorder ? depositTotal : total;
+  // Free cart: total = 0 (auto-set backend). Untuk pre-order, "total" yang ditampilkan
+  // ke buyer = DP (amount yang harus dibayar). Free > pre-order precedence karena
+  // kombinasi is_free+is_pre_order ditolak di admin (tidak mungkin sampai sini).
+  const allFree = items.length > 0 && items.every((i) => i.product?.is_free);
+  const displayTotal = allPreorder ? depositTotal : allFree ? 0 : total;
 
   return (
     <Card variant="filled-primary" as="aside" thick hoverable={false}>
@@ -52,7 +55,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
             {allPreorder ? t('preorderLabel') : t('subtotal')}
           </span>
           <span className="font-display font-black text-lg text-surface">
-            {formatRupiah(subtotal)}
+            {allFree ? t('free') : formatRupiah(subtotal)}
           </span>
         </div>
         {discount > 0 && (
@@ -83,11 +86,11 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
         )}
         <div className="pt-2">
           <p className="font-label text-label-sm uppercase tracking-[0.2em] text-surface/70 mb-2">
-            {allPreorder ? t('preorderLabel') : t('total')}
+            {allPreorder ? t('preorderLabel') : allFree ? t('free') : t('total')}
           </p>
           <Badge tone="accent" size="lg" shadow={false} className="px-6 py-4">
             <span className="font-display font-black text-3xl md:text-4xl uppercase tracking-tight">
-              {formatRupiah(displayTotal)}
+              {allFree ? t('free') : formatRupiah(displayTotal)}
             </span>
           </Badge>
           <p className="mt-3 font-label text-[10px] uppercase tracking-wider text-surface/60">
@@ -108,7 +111,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
           shadowColor="accent"
           className="w-full mt-2"
         >
-          {allPreorder ? t('checkoutPreOrder') : t('checkout')}
+          {allFree ? t('checkoutFree') : allPreorder ? t('checkoutPreOrder') : t('checkout')}
         </Button>
 
         <p className="text-center font-label text-[10px] uppercase tracking-wider text-surface/60">

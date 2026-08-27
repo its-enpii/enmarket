@@ -10,7 +10,7 @@
  * (customer tidak bisa checkout). Disable tidak perlu confirm.
  */
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
@@ -42,6 +42,10 @@ export function MaintenanceForm({ status }: Props) {
   );
 
   const enabled = status.enabled;
+
+  // Controlled state supaya isian maintenance message tidak hilang
+  // saat form action selesai (React 19 reset behavior).
+  const [message, setMessage] = useState(status.message ?? '');
 
   /**
    * Form submit handler:
@@ -104,7 +108,8 @@ export function MaintenanceForm({ status }: Props) {
           <Textarea
             id="maintenance-message"
             name="message"
-            defaultValue={status.message ?? ''}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             rows={3}
             maxLength={500}
           />
