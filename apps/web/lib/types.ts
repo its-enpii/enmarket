@@ -231,6 +231,7 @@ export interface AccountProvisioningInfo {
 }
 
 export interface Order {
+  id?: number;
   kode_order: string;
   nama_pembeli: string;
   email_pembeli: string;
@@ -479,4 +480,66 @@ export interface CustomerUser {
   email_verified_at: string | null;
   last_login_at: string | null;
   created_at: string | null;
+}
+
+// ───── Game Top-up ─────
+
+export interface Game {
+  id: number;
+  slug: string;
+  nama: string;
+  brand: string | null;
+  icon_url: string | null;
+  banner_url: string | null;
+  requires_server_id: boolean;
+  description: string | null;
+  sort_order: number;
+  active: boolean;
+  digiflazz_category: string | null;
+  items?: GameItem[];
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface GameItem {
+  id: number;
+  game_id: number;
+  nama: string;
+  harga: string;
+  harga_formatted: string;
+  digiflazz_sku: string;
+  digiflazz_category: string | null;
+  sort_order: number;
+  active: boolean;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface TopupPreview {
+  game: string;
+  item: string;
+  harga: string;
+  harga_formatted: string;
+  total: number;
+  contact_type: string;
+  contact_value: string;
+  payment_gateways: string[];
+}
+
+export type TopupStatus = 'pending' | 'processing' | 'success' | 'failed';
+
+export interface TopupOrder extends Order {
+  id: number;
+  is_topup_order: boolean;
+  game_id: number | null;
+  game_item_id: number | null;
+  game_user_id: string | null;
+  game_server_id: string | null;
+  contact_type: string | null;
+  contact_value: string | null;
+  topup_status: TopupStatus | null;
+  digiflazz_trx_id: string | null;
+  payment_gateway: string | null;
+  game?: { id: number; nama: string; slug: string; icon_url: string | null } | null;
+  game_item?: { id: number; nama: string; harga: string } | null;
 }

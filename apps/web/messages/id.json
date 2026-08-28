@@ -68,7 +68,8 @@
     "wishlist": "Wishlist",
     "wishlistCount": "Item di wishlist",
     "login": "Masuk",
-    "account": "Akun"
+    "account": "Akun",
+    "topup": "Top Up"
   },
   "footer": {
     "brandTitle": "enpiistudio",
@@ -670,7 +671,8 @@
       "brandTitle": "enpiistudio",
       "brandSubtitle": "Admin",
       "openMenu": "Buka menu",
-      "closeMenu": "Tutup menu"
+      "closeMenu": "Tutup menu",
+      "games": "Game Top-up"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -1430,6 +1432,38 @@
         "noneYet": "Belum ada permintaan kustom masuk",
         "noneYetHint": "Permintaan yang dikirim dari halaman Layanan akan muncul di sini."
       }
+    },
+    "games": {
+      "listTitle": "Kelola Game",
+      "listEyebrow": "Manajemen",
+      "listSubtitle": "Kelola game dan nominal top-up.",
+      "newTitle": "Tambah Game Baru",
+      "newSubtitle": "Buat game baru untuk top-up.",
+      "editTitle": "Edit Game",
+      "editSubtitle": "Ubah detail game dan kelola item.",
+      "field": {
+        "nama": "Nama Game",
+        "slug": "Slug",
+        "brand": "Brand",
+        "iconUrl": "URL Icon",
+        "bannerUrl": "URL Banner",
+        "requiresServerId": "Memerlukan Server ID",
+        "description": "Deskripsi",
+        "sortOrder": "Urutan",
+        "active": "Aktif",
+        "digiflazzCategory": "Kategori Digiflazz"
+      },
+      "items": {
+        "title": "Daftar Item",
+        "add": "Tambah Item",
+        "nama": "Nama Item",
+        "harga": "Harga",
+        "sku": "SKU Digiflazz",
+        "empty": "Belum ada item."
+      },
+      "empty": "Belum ada game.",
+      "addNew": "Tambah Game",
+      "confirmDelete": "Yakin ingin menghapus game ini?"
     }
   },
   "trending": {
@@ -1575,7 +1609,8 @@
       "orders": "Pesanan Saya",
       "wishlist": "Wishlist",
       "profile": "Pengaturan Profil",
-      "logout": "Keluar"
+      "logout": "Keluar",
+      "topups": "Riwayat Top-up"
     },
     "dashboard": {
       "title": "Dasbor Akun",
@@ -1605,6 +1640,50 @@
     "logout": {
       "confirm": "Apakah Anda yakin ingin keluar dari akun?",
       "loggedOut": "Anda telah berhasil keluar."
+    },
+    "topups": {
+      "title": "Riwayat Top-up",
+      "empty": "Belum ada riwayat top-up.",
+      "viewDetail": "Lihat Detail",
+      "status": {
+        "pending": "Menunggu",
+        "processing": "Diproses",
+        "success": "Berhasil",
+        "failed": "Gagal"
+      }
+    }
+  },
+  "topup": {
+    "title": "Top Up Game",
+    "subtitle": "Isi saldo game favoritmu dengan mudah dan cepat.",
+    "pickGame": "Pilih Game",
+    "pickItem": "Pilih Nominal",
+    "userId": "User ID",
+    "userIdHint": "Masukkan User ID game kamu",
+    "serverId": "Server ID",
+    "serverIdHint": "Masukkan Server ID (jika diperlukan)",
+    "contactLabel": "Kontak untuk Notifikasi",
+    "contactPhone": "Nomor WhatsApp",
+    "contactEmail": "Alamat Email",
+    "payNow": "Bayar Sekarang",
+    "processing": "Memproses...",
+    "successTitle": "Top-up Sedang Diproses",
+    "successMessage": "Top-up sedang diproses. Notifikasi akan dikirim ke {contact}.",
+    "failedTitle": "Pembayaran Gagal",
+    "failedMessage": "Pembayaran gagal. Silakan coba lagi.",
+    "previewTitle": "Ringkasan Top-up",
+    "total": "Total Pembayaran",
+    "confirm": "Konfirmasi & Bayar",
+    "paymentMethod": "Metode Pembayaran",
+    "noGames": "Belum ada game tersedia.",
+    "noItems": "Belum ada nominal tersedia.",
+    "backToGames": "← Kembali ke Daftar Game",
+    "errors": {
+      "userIdRequired": "User ID wajib diisi.",
+      "serverIdRequired": "Server ID wajib diisi untuk game ini.",
+      "contactRequired": "Nomor telepon atau email wajib diisi.",
+      "gameNotFound": "Game tidak ditemukan.",
+      "itemRequired": "Pilih nominal terlebih dahulu."
     }
   }
 }

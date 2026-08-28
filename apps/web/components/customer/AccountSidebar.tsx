@@ -25,6 +25,7 @@ export function AccountSidebar() {
     { key: 'orders', href: '/akun/pesanan', icon: '📦' },
     { key: 'wishlist', href: '/akun/wishlist', icon: '❤️' },
     { key: 'profile', href: '/akun/profil', icon: '⚙️' },
+    { key: 'topups', href: '/akun/topup', icon: '🎮' },
   ] as const;
 
   return (

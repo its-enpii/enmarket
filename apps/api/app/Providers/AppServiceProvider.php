@@ -10,6 +10,7 @@ use App\Models\SiteSetting;
 use App\Observers\ActivityLogger;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
+use App\Services\Digiflazz\DigiflazzClient;
 use App\Services\Delivery\OrderDeliveryService;
 use App\Services\NextRevalidator;
 use App\Services\SiteSettings;
@@ -80,6 +81,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(NotificationDispatcher::class, function () {
             return new NotificationDispatcher(
                 n8nWebhookUrl: config('services.n8n.webhook_kirim_produk') ?: null,
+            );
+        });
+
+        // Bind DigiflazzClient (game top-up API)
+        $this->app->singleton(DigiflazzClient::class, function () {
+            return new DigiflazzClient(
+                apiKey: (string) config('services.digiflazz.api_key', ''),
+                username: (string) config('services.digiflazz.username', ''),
+                baseUrl: (string) config('services.digiflazz.base_url', 'https://api.digiflazz.com'),
             );
         });
 

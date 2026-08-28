@@ -1,0 +1,100 @@
+import { getTranslations } from 'next-intl/server';
+
+import { Button, NLink } from '@/components/ui/neobrutal';
+import { Card } from '@/components/ui/neobrutal';
+import { ApiRequestError, apiGet } from '@/lib/api';
+import type { Game, PaginatedResponse } from '@/lib/types';
+
+import { deleteGame } from './actions';
+import { DeleteButton } from '@/components/admin/DeleteButton';
+
+interface Props {
+  searchParams: Promise<{ q?: string; page?: string }>;
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'admin.games' });
+  return { title: `${t('listTitle')} — Admin` };
+}
+
+async function loadGames(params: Awaited<Props['searchParams']>) {
+  try {
+    return await apiGet<PaginatedResponse<Game>>('/api/admin/games', {
+      q: params.q,
+      page: params.page ?? 1,
+      per_page: 20,
+    });
+  } catch (err) {
+    if (err instanceof ApiRequestError) {
+      return { data: [] as Game[], meta: { current_page: 1, last_page: 1, per_page: 20, total: 0 } };
+    }
+    throw err;
+  }
+}
+
+export default async function GamesListPage({ searchParams }: Props) {
+  const [sp, t] = await Promise.all([searchParams, getTranslations('admin.games')]);
+  const result = await loadGames(sp);
+  const games = result.data ?? [];
+
+  return (
+    <div className="p-6 sm:p-8 space-y-6">
+      <header className="border-b-4 border-ink pb-6 flex items-end justify-between">
+        <div>
+          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
+            {t('listEyebrow')}
+          </p>
+          <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
+            {t('listTitle')}<span className="text-primary">.</span>
+          </h1>
+          <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
+            {t('listSubtitle')}
+          </p>
+        </div>
+        <Button variant="primary" size="sm" href="/admin/games/new">
+          {t('addNew')}
+        </Button>
+      </header>
+
+      {games.length === 0 ? (
+        <Card variant="surface" hoverable={false} className="p-8 text-center">
+          <p className="text-ink/60">{t('empty')}</p>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {games.map((game) => (
+            <Card key={game.id} variant="surface" hoverable={false} className="p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+                  {game.icon_url ? (
+                    <img src={game.icon_url} alt="" className="w-10 h-10 rounded border-2 border-ink object-cover shrink-0" />
+                  ) : (
+                    <div className="w-10 h-10 rounded border-2 border-ink bg-accent/20 flex items-center justify-center shrink-0">🎮</div>
+                  )}
+                  <div className="min-w-0">
+                    <NLink href={`/admin/games/${game.id}`} variant="primary" className="font-bold text-sm truncate block">
+                      {game.nama}
+                    </NLink>
+                    <p className="text-xs text-ink/50">{game.slug} · {(game.items ?? []).length} items</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className={`text-xs font-bold px-2 py-0.5 border-2 ${game.active ? 'border-green-600 bg-green-100 text-green-800' : 'border-red-600 bg-red-100 text-red-800'}`}>
+                    {game.active ? 'Active' : 'Inactive'}
+                  </span>
+                  <DeleteButton
+                    action={deleteGame}
+                    itemId={game.id}
+                    confirmMessage={t('confirmDelete')}
+                  />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
