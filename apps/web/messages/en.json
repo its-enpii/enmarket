@@ -1451,7 +1451,12 @@
         "description": "Description",
         "sortOrder": "Sort Order",
         "active": "Active",
-        "digiflazzCategory": "Digiflazz Category"
+        "digiflazzCategory": "Digiflazz Category",
+        "slugPlaceholder": "auto-generated from name",
+        "activeStatus": "Active",
+        "inactiveStatus": "Inactive",
+        "save": "Save",
+        "create": "Create Game"
       },
       "items": {
         "title": "Item List",
@@ -1600,7 +1605,8 @@
         "rateLimited": "Too many OTP requests. Please wait a moment."
       },
       "success": "Successfully logged in.",
-      "welcomeBack": "Welcome back!"
+      "welcomeBack": "Welcome back!",
+      "changePhone": "Change"
     }
   },
   "account": {
@@ -1615,7 +1621,15 @@
     "dashboard": {
       "title": "Account Dashboard",
       "subtitle": "Manage your orders, wishlist, and profile in one place.",
-      "welcomeGreeting": "Hello, {name}!"
+      "welcomeGreeting": "Hello, {name}!",
+      "verified": "WA Verified",
+      "totalOrders": "Total Orders",
+      "verificationStatus": "Verification Status",
+      "viewAll": "View All →",
+      "openWishlist": "Open Wishlist →",
+      "exploreCatalog": "Explore Catalog",
+      "loading": "Loading account data...",
+      "loadingOrders": "Loading orders..."
     },
     "orders": {
       "title": "Order History",
@@ -1628,14 +1642,28 @@
         "failed": "Failed",
         "expired": "Expired",
         "refunded": "Refunded"
-      }
+      },
+      "subtitle": "List of all your digital orders and licenses at enpiistudio.",
+      "loading": "Loading order history...",
+      "emptyDescription": "You have not made any orders with this account.",
+      "startShopping": "Start Shopping",
+      "prevPage": "← Previous",
+      "nextPage": "Next →",
+      "pageOf": "Page {page} of {total}",
+      "total": "Total",
+      "itemsCount": "{count} items"
     },
     "profile": {
       "title": "Profile Settings",
       "nameLabel": "Full Name",
       "phoneLabel": "WhatsApp Number",
       "saveProfile": "Save Changes",
-      "profileUpdated": "Profile updated successfully."
+      "profileUpdated": "Profile updated successfully.",
+      "subtitle": "Manage your name, WhatsApp number, and email information.",
+      "emailLabel": "Email (Optional)",
+      "emailPlaceholder": "email@example.com",
+      "phoneHint": "This number is used for WhatsApp OTP login.",
+      "errorUpdate": "Failed to update profile."
     },
     "logout": {
       "confirm": "Are you sure you want to log out?",
@@ -1651,6 +1679,19 @@
         "success": "Success",
         "failed": "Failed"
       }
+    },
+    "sidebar": {
+      "title": "Customer Account",
+      "defaultName": "Customer"
+    },
+    "wishlist": {
+      "subtitle": "List of products you saved to purchase later.",
+      "loading": "Loading wishlist...",
+      "emptyTitle": "Your wishlist is empty.",
+      "emptyDescription": "Explore our products and click the heart icon to save your favorite products.",
+      "explore": "Explore Catalog",
+      "viewProduct": "View Product",
+      "remove": "Remove"
     }
   },
   "topup": {
@@ -1684,8 +1725,13 @@
       "contactRequired": "Phone number or email is required.",
       "gameNotFound": "Game not found.",
       "itemRequired": "Please pick a nominal first.",
-      "paymentGatewayRequired": "Please select a payment method first."
+      "paymentGatewayRequired": "Please select a payment method first.",
+      "checkoutFailed": "Checkout failed. Please try again."
     },
-    "viaGateway": "via {gateway}"
+    "viaGateway": "via {gateway}",
+    "gateways": {
+      "duitku": "Duitku",
+      "tripay": "Tripay (QRIS)"
+    }
   }
 }

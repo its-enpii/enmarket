@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import type { Game, PaginatedResponse } from '@/lib/types';
@@ -81,9 +82,9 @@ export default async function GamesListPage({ searchParams }: Props) {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className={`text-xs font-bold px-2 py-0.5 border-2 ${game.active ? 'border-green-600 bg-green-100 text-green-800' : 'border-red-600 bg-red-100 text-red-800'}`}>
-                    {game.active ? 'Active' : 'Inactive'}
-                  </span>
+                  <Badge tone={game.active ? 'accent' : 'surface'} size="sm">
+                    {game.active ? t('field.activeStatus') : t('field.inactiveStatus')}
+                  </Badge>
                   <DeleteButton
                     action={deleteGame}
                     itemId={game.id}

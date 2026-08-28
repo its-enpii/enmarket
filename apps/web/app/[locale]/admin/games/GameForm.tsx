@@ -4,6 +4,7 @@ import React, { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { FormError } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Checkbox } from '@/components/ui/Checkbox';
@@ -28,9 +29,7 @@ export function GameForm({ game }: Props) {
   return (
     <form action={formAction} className="space-y-5">
       {state.error && (
-        <div className="border-4 border-red-500 bg-red-50 p-3 text-red-700 text-sm font-bold">
-          {state.error}
-        </div>
+        <FormError variant="box">{state.error}</FormError>
       )}
 
       <div>
@@ -40,7 +39,7 @@ export function GameForm({ game }: Props) {
 
       <div>
         <label className="font-label text-xs uppercase font-bold block mb-1">{t('slug')}</label>
-        <Input name="slug" defaultValue={game?.slug ?? ''} placeholder="auto-generate dari nama" />
+        <Input name="slug" defaultValue={game?.slug ?? ''} placeholder={t('slugPlaceholder')} />
       </div>
 
       <div>
@@ -83,7 +82,7 @@ export function GameForm({ game }: Props) {
 
       <div className="pt-4 border-t-2 border-ink">
         <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? '...' : isEdit ? 'Simpan' : 'Buat Game'}
+          {pending ? '...' : isEdit ? t('save') : t('create')}
         </Button>
       </div>
     </form>

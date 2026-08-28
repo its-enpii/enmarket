@@ -8,6 +8,7 @@ import type { WishlistItem } from '@/lib/types';
 
 export default function AkunWishlistPage() {
   const t = useTranslations('account.nav');
+  const tWishlist = useTranslations('account.wishlist');
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,22 +44,22 @@ export default function AkunWishlistPage() {
           {t('wishlist')}
         </h1>
         <p className="text-sm text-ink/70 mt-1">
-          Daftar produk yang Anda simpan untuk dibeli nanti.
+          {tWishlist('subtitle')}
         </p>
       </div>
 
       {loading ? (
         <Card variant="surface" hoverable={false} className="p-8 text-center">
-          <p className="text-sm font-bold text-ink">Memuat wishlist...</p>
+          <p className="text-sm font-bold text-ink">{tWishlist('loading')}</p>
         </Card>
       ) : items.length === 0 ? (
         <Card variant="surface" hoverable={false} className="p-12 text-center">
-          <p className="text-base font-bold text-ink mb-2">Wishlist Anda kosong.</p>
+          <p className="text-base font-bold text-ink mb-2">{tWishlist('emptyTitle')}</p>
           <p className="text-xs text-ink/70 mb-6">
-            Jelajahi produk kami dan klik ikon hati untuk menyimpan produk favorit Anda.
+            {tWishlist('emptyDescription')}
           </p>
           <Button variant="primary" size="md" href="/katalog">
-            Jelajahi Katalog
+            {tWishlist('explore')}
           </Button>
         </Card>
       ) : (
@@ -85,15 +86,17 @@ export default function AkunWishlistPage() {
                   size="sm"
                   href={`/katalog/${item.product?.slug}`}
                 >
-                  Lihat Produk
+                  {tWishlist('viewProduct')}
                 </Button>
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   type="button"
                   onClick={() => handleRemove(item.product_id)}
-                  className="text-xs font-bold text-red-600 hover:text-red-800 transition-colors uppercase"
+                  className="!text-red-600 hover:!text-red-800 uppercase !min-h-0 !p-1.5 text-xs"
                 >
-                  Hapus
-                </button>
+                  {tWishlist('remove')}
+                </Button>
               </div>
             </Card>
           ))}

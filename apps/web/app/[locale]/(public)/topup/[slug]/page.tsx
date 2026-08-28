@@ -1,9 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Link } from '@/i18n/navigation';
+
 
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { Card } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 import type { Game } from '@/lib/types';
 
 import { TopupForm } from './TopupForm';
@@ -47,9 +47,9 @@ export default async function TopupGamePage({ params }: { params: Promise<{ slug
   return (
     <div className="bg-transparent py-8 md:py-16">
       <SectionContainer>
-        <Link href="/topup" className="font-label text-sm font-bold text-primary hover:underline mb-4 inline-block">
+        <NLink href="/topup" variant="primary" underline="hover" className="font-label text-sm font-bold mb-4 inline-block">
           {t('backToGames')}
-        </Link>
+        </NLink>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Game info */}

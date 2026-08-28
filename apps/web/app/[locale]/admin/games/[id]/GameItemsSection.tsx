@@ -93,13 +93,15 @@ export function GameItemsSection({ game }: Props) {
                 <p className="font-bold text-sm">{item.nama}</p>
                 <p className="text-xs text-ink/60">{item.digiflazz_sku} · {formatRupiah(item.harga)}</p>
               </div>
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={() => handleDelete(item.id)}
-                className="text-red-600 font-bold text-xs hover:underline"
+                className="!text-red-600 !min-h-0 !p-1.5 text-xs"
               >
                 ✕
-              </button>
+              </Button>
             </div>
           ))}
         </div>

@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
+
 
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { PageHeader } from '@/components/public/PageHeader';
@@ -47,25 +47,23 @@ export default async function TopupPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-8">
             {games.map((game) => (
-              <Link key={game.id} href={`/topup/${game.slug}`}>
-                <Card variant="surface" className="p-4 text-center hover:shadow-[6px_6px_0_0_var(--color-ink)] transition-all group">
-                  {game.icon_url ? (
-                    <img
-                      src={game.icon_url}
-                      alt={game.nama}
-                      className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink object-cover"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink bg-accent/20 flex items-center justify-center text-2xl">
-                      🎮
-                    </div>
-                  )}
-                  <p className="font-label text-sm font-bold text-ink truncate">{game.nama}</p>
-                  {game.brand && (
-                    <p className="text-xs text-ink/50 mt-1">{game.brand}</p>
-                  )}
-                </Card>
-              </Link>
+              <Card key={game.id} href={`/topup/${game.slug}`} variant="surface" className="p-4 text-center group">
+                {game.icon_url ? (
+                  <img
+                    src={game.icon_url}
+                    alt={game.nama}
+                    className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink bg-accent/20 flex items-center justify-center text-2xl">
+                    🎮
+                  </div>
+                )}
+                <p className="font-label text-sm font-bold text-ink truncate">{game.nama}</p>
+                {game.brand && (
+                  <p className="text-xs text-ink/50 mt-1">{game.brand}</p>
+                )}
+              </Card>
             ))}
           </div>
         )}

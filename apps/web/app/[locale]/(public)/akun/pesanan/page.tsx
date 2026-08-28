@@ -46,22 +46,22 @@ export default function AkunPesananPage() {
           {t('title')}
         </h1>
         <p className="text-sm text-ink/70 mt-1">
-          Daftar riwayat semua pesanan digital dan lisensi Anda di enpiistudio.
+          {t('subtitle')}
         </p>
       </div>
 
       {loading ? (
         <Card variant="surface" hoverable={false} className="p-8 text-center">
-          <p className="text-sm font-bold text-ink">Memuat riwayat pesanan...</p>
+          <p className="text-sm font-bold text-ink">{t('loading')}</p>
         </Card>
       ) : orders.length === 0 ? (
         <Card variant="surface" hoverable={false} className="p-12 text-center">
           <p className="text-base font-bold text-ink mb-2">{t('empty')}</p>
           <p className="text-xs text-ink/70 mb-6">
-            Anda belum pernah membuat pesanan dengan akun ini.
+            {t('emptyDescription')}
           </p>
           <Button variant="primary" size="md" href="/katalog">
-            Mulai Belanja
+            {t('startShopping')}
           </Button>
         </Card>
       ) : (
@@ -78,10 +78,10 @@ export default function AkunPesananPage() {
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
-                ← Sebelumnya
+                {t('prevPage')}
               </Button>
               <span className="text-xs font-mono font-bold text-ink">
-                Halaman {page} dari {lastPage}
+                {t('pageOf', { page, total: lastPage })}
               </span>
               <Button
                 variant="surface"
@@ -89,7 +89,7 @@ export default function AkunPesananPage() {
                 disabled={page >= lastPage}
                 onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
               >
-                Selanjutnya →
+                {t('nextPage')}
               </Button>
             </div>
           )}

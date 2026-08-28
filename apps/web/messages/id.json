@@ -1451,7 +1451,12 @@
         "description": "Deskripsi",
         "sortOrder": "Urutan",
         "active": "Aktif",
-        "digiflazzCategory": "Kategori Digiflazz"
+        "digiflazzCategory": "Kategori Digiflazz",
+        "slugPlaceholder": "auto-generate dari nama",
+        "activeStatus": "Aktif",
+        "inactiveStatus": "Tidak Aktif",
+        "save": "Simpan",
+        "create": "Buat Game"
       },
       "items": {
         "title": "Daftar Item",
@@ -1600,7 +1605,8 @@
         "rateLimited": "Terlalu banyak permintaan OTP. Silakan tunggu beberapa saat."
       },
       "success": "Berhasil masuk ke akun.",
-      "welcomeBack": "Selamat datang kembali!"
+      "welcomeBack": "Selamat datang kembali!",
+      "changePhone": "Ubah"
     }
   },
   "account": {
@@ -1615,7 +1621,15 @@
     "dashboard": {
       "title": "Dasbor Akun",
       "subtitle": "Kelola pesanan, wishlist, dan profil Anda di satu tempat.",
-      "welcomeGreeting": "Halo, {name}!"
+      "welcomeGreeting": "Halo, {name}!",
+      "verified": "Terverifikasi WA",
+      "totalOrders": "Total Pesanan",
+      "verificationStatus": "Status Verifikasi",
+      "viewAll": "Lihat Semua →",
+      "openWishlist": "Buka Wishlist →",
+      "exploreCatalog": "Jelajahi Katalog",
+      "loading": "Memuat data akun...",
+      "loadingOrders": "Memuat pesanan..."
     },
     "orders": {
       "title": "Riwayat Pesanan",
@@ -1628,14 +1642,28 @@
         "failed": "Gagal",
         "expired": "Kedaluwarsa",
         "refunded": "Dikembalikan"
-      }
+      },
+      "subtitle": "Daftar riwayat semua pesanan digital dan lisensi Anda di enpiistudio.",
+      "loading": "Memuat riwayat pesanan...",
+      "emptyDescription": "Anda belum pernah membuat pesanan dengan akun ini.",
+      "startShopping": "Mulai Belanja",
+      "prevPage": "← Sebelumnya",
+      "nextPage": "Selanjutnya →",
+      "pageOf": "Halaman {page} dari {total}",
+      "total": "Total",
+      "itemsCount": "{count} item"
     },
     "profile": {
       "title": "Pengaturan Profil",
       "nameLabel": "Nama Lengkap",
       "phoneLabel": "Nomor WhatsApp",
       "saveProfile": "Simpan Perubahan",
-      "profileUpdated": "Profil berhasil diperbarui."
+      "profileUpdated": "Profil berhasil diperbarui.",
+      "subtitle": "Kelola informasi nama, nomor WhatsApp, dan email Anda.",
+      "emailLabel": "Email (Opsional)",
+      "emailPlaceholder": "email@contoh.com",
+      "phoneHint": "Nomor ini digunakan untuk login WhatsApp OTP.",
+      "errorUpdate": "Gagal memperbarui profil."
     },
     "logout": {
       "confirm": "Apakah Anda yakin ingin keluar dari akun?",
@@ -1651,6 +1679,19 @@
         "success": "Berhasil",
         "failed": "Gagal"
       }
+    },
+    "sidebar": {
+      "title": "Akun Pelanggan",
+      "defaultName": "Pelanggan"
+    },
+    "wishlist": {
+      "subtitle": "Daftar produk yang Anda simpan untuk dibeli nanti.",
+      "loading": "Memuat wishlist...",
+      "emptyTitle": "Wishlist Anda kosong.",
+      "emptyDescription": "Jelajahi produk kami dan klik ikon hati untuk menyimpan produk favorit Anda.",
+      "explore": "Jelajahi Katalog",
+      "viewProduct": "Lihat Produk",
+      "remove": "Hapus"
     }
   },
   "topup": {
@@ -1684,8 +1725,13 @@
       "contactRequired": "Nomor telepon atau email wajib diisi.",
       "gameNotFound": "Game tidak ditemukan.",
       "itemRequired": "Pilih nominal terlebih dahulu.",
-      "paymentGatewayRequired": "Pilih metode pembayaran terlebih dahulu."
+      "paymentGatewayRequired": "Pilih metode pembayaran terlebih dahulu.",
+      "checkoutFailed": "Checkout gagal. Silakan coba lagi."
     },
-    "viaGateway": "via {gateway}"
+    "viaGateway": "via {gateway}",
+    "gateways": {
+      "duitku": "Duitku",
+      "tripay": "Tripay (QRIS)"
+    }
   }
 }
