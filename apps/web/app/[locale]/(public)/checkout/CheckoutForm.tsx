@@ -6,7 +6,9 @@ import { useTranslations } from 'next-intl';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
+import { PaymentMethodSelector } from '@/components/checkout/PaymentMethodSelector';
 import { formatRupiah } from '@/lib/format';
+import type { PaymentGateway } from '@/lib/types';
 
 import { applyCouponAction, checkoutAction } from './actions';
 
@@ -18,10 +20,19 @@ interface State {
 interface Props {
   defaultEmail?: string;
   cartTotal?: number;
+  enabledGateways?: Array<{ key: PaymentGateway }>;
 }
 
-export function CheckoutForm({ defaultEmail, cartTotal = 0 }: Props) {
+export function CheckoutForm({
+  defaultEmail,
+  cartTotal = 0,
+  enabledGateways = [{ key: 'tripay' }, { key: 'duitku' }],
+}: Props) {
   const t = useTranslations('checkout');
+  const [selectedGateway, setSelectedGateway] = useState<PaymentGateway>(
+    enabledGateways[0]?.key ?? 'tripay',
+  );
+  const [paymentMethod, setPaymentMethod] = useState('VC');
   const [couponCodeInput, setCouponCodeInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
@@ -69,6 +80,8 @@ export function CheckoutForm({ defaultEmail, cartTotal = 0 }: Props) {
         email: (formData.get('email') as string) ?? '',
         wa: (formData.get('wa') as string) ?? '',
         coupon_code: appliedCoupon?.code || (formData.get('coupon_code') as string) || undefined,
+        payment_gateway: (formData.get('payment_gateway') as PaymentGateway) || selectedGateway,
+        payment_method: (formData.get('payment_method') as string) || (selectedGateway === 'duitku' ? paymentMethod : undefined),
       }).catch((err) => {
         if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
         return { error: t('errorGeneric') };
@@ -191,6 +204,14 @@ export function CheckoutForm({ defaultEmail, cartTotal = 0 }: Props) {
           </Card>
         )}
       </div>
+
+      <PaymentMethodSelector
+        enabledGateways={enabledGateways}
+        selectedGateway={selectedGateway}
+        onSelectGateway={setSelectedGateway}
+        paymentMethod={paymentMethod}
+        onChangePaymentMethod={setPaymentMethod}
+      />
 
       {state?.error && !state.fieldErrors && (
         <FormError variant="box">{state.error}</FormError>

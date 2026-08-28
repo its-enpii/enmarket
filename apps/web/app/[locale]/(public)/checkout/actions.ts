@@ -11,13 +11,15 @@ import { revalidatePath } from 'next/cache';
 import { getTranslations } from 'next-intl/server';
 
 import { ApiRequestError, apiPost } from '@/lib/api';
-import type { ApplyCouponResult, Cart, SingleResponse } from '@/lib/types';
+import type { ApplyCouponResult, Cart, PaymentGateway, SingleResponse } from '@/lib/types';
 
 interface CheckoutInput {
   nama: string;
   email: string;
   wa: string;
   coupon_code?: string;
+  payment_gateway?: PaymentGateway;
+  payment_method?: string;
 }
 
 interface CheckoutResult {

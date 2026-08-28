@@ -22,15 +22,16 @@ import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { toast } from '@/components/ui/toast-store';
-import type { SiteChannels, SitePayment } from '@/lib/types';
+import type { PaymentGatewaysMap, SiteChannels, SitePayment } from '@/lib/types';
 
-import { updateChannels, updatePayment, type ActionResult } from './actions';
+import { updateChannels, updatePayment, updatePaymentGateways, type ActionResult } from './actions';
 
 const INITIAL: ActionResult = {};
 
 interface Props {
   payment: SitePayment;
   channels: SiteChannels;
+  paymentGateways?: PaymentGatewaysMap;
 }
 
 // ───── Payment credentials section ─────
@@ -272,11 +273,153 @@ function ToggleRow({
 
 // ───── Composite ─────
 
-export function PaymentForm({ payment, channels }: Props) {
+export function PaymentForm({ payment, channels, paymentGateways }: Props) {
   return (
     <div className="space-y-6">
+      <GatewaysSection initial={paymentGateways} />
       <PaymentSection initial={payment} />
+      <DuitkuSection initial={payment} />
       <ChannelsSection initial={channels} />
     </div>
+  );
+}
+
+function GatewaysSection({ initial }: { initial?: PaymentGatewaysMap }) {
+  const t = useTranslations('admin.settings.payment');
+  const [state, action, pending] = useActionState<ActionResult, FormData>(
+    async (prev, fd) => {
+      const res = await updatePaymentGateways(prev, fd);
+      if (res.ok && res.message) toast.success(res.message);
+      return res;
+    },
+    INITIAL,
+  );
+
+  const tripayEnabled = initial?.tripay?.enabled ?? true;
+  const duitkuEnabled = initial?.duitku?.enabled ?? false;
+
+  return (
+    <Card variant="surface" className="p-6 space-y-5">
+      <div className="border-b-2 border-ink pb-3">
+        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+          ✎ {t('sectionGateways')}
+        </p>
+        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
+          {t('sectionGatewaysTitle')}
+        </h2>
+      </div>
+
+      <form action={action} className="space-y-3">
+        <FormError variant="box">{state.error}</FormError>
+
+        <ToggleRow
+          name="gateway_tripay"
+          label={t('gatewayTripay')}
+          description={t('gatewayTripayDesc')}
+          defaultEnabled={tripayEnabled}
+        />
+        <ToggleRow
+          name="gateway_duitku"
+          label={t('gatewayDuitku')}
+          description={t('gatewayDuitkuDesc')}
+          defaultEnabled={duitkuEnabled}
+        />
+
+        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+          <Button type="submit" variant="primary" size="md" disabled={pending}>
+            {pending ? t('submitPending') : t('submitGateways')}
+          </Button>
+        </div>
+      </form>
+    </Card>
+  );
+}
+
+function DuitkuSection({ initial }: { initial: SitePayment }) {
+  const t = useTranslations('admin.settings.payment');
+  const [state, action, pending] = useActionState<ActionResult, FormData>(
+    async (prev, fd) => {
+      const res = await updatePayment(prev, fd);
+      if (res.ok && res.message) toast.success(res.message);
+      return res;
+    },
+    INITIAL,
+  );
+
+  const modeOptions = [
+    { value: 'sandbox', label: t('modeSandbox') },
+    { value: 'production', label: t('modeProduction') },
+  ];
+
+  return (
+    <Card variant="surface" className="p-6 space-y-5">
+      <div className="border-b-2 border-ink pb-3">
+        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+          ✎ {t('sectionDuitku')}
+        </p>
+        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
+          {t('sectionDuitkuTitle')}
+        </h2>
+      </div>
+
+      <form action={action} className="space-y-4">
+        <FormError variant="box">{state.error}</FormError>
+
+        <FormField
+          label={t('fieldDuitkuMerchant')}
+          htmlFor="duitku-merchant"
+          hint={t('fieldDuitkuMerchantHint')}
+          error={state.fieldErrors?.duitku_merchant_code?.[0]}
+        >
+          <Input
+            id="duitku-merchant"
+            name="duitku_merchant_code"
+            type="text"
+            defaultValue={initial.duitku_merchant_code ?? ''}
+            placeholder="D12345"
+          />
+        </FormField>
+
+        <FormField
+          label={t('fieldDuitkuApiKey')}
+          htmlFor="duitku-api-key"
+          hint={
+            initial.duitku_api_key_masked
+              ? t('fieldDuitkuApiKeyHintCurrent', { masked: initial.duitku_api_key_masked })
+              : t('fieldDuitkuApiKeyHintNew')
+          }
+          error={state.fieldErrors?.duitku_api_key?.[0]}
+        >
+          <Input
+            id="duitku-api-key"
+            name="duitku_api_key"
+            type="password"
+            defaultValue=""
+            placeholder={initial.duitku_api_key_masked ?? '••••••••'}
+            autoComplete="off"
+          />
+        </FormField>
+
+        <FormField
+          label={t('fieldDuitkuMode')}
+          htmlFor="duitku-mode"
+          hint={t('fieldDuitkuModeHint')}
+        >
+          <SelectSearch
+            name="duitku_mode"
+            defaultValue={initial.duitku_mode ?? 'sandbox'}
+            options={modeOptions}
+            placeholder={t('modePlaceholder')}
+            clearable={false}
+          />
+        </FormField>
+
+        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+          <Button type="submit" variant="primary" size="md" disabled={pending}>
+            {pending ? t('submitPending') : t('submitDuitku')}
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }

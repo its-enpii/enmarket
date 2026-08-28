@@ -47,6 +47,7 @@ export default async function PaymentSettingsPage() {
         <PaymentForm
           payment={initialData.payment}
           channels={initialData.channels}
+          paymentGateways={initialData.payment_gateways}
         />
       ) : (
         <Card variant="surface" className="p-6 text-ink/60">

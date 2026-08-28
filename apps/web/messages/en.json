@@ -413,14 +413,15 @@
     "buyerInfo": "Buyer Information",
     "orderSummary": "Order Summary",
     "total": "Total",
-    "paymentMethod": "Payment method: QRIS via Tripay",
+    "paymentMethod": "Payment Method",
     "errorLoad": "Failed to load your cart",
     "phonePlaceholder": "08123456789",
     "couponLabel": "Coupon / Discount Code",
     "couponApply": "Apply",
     "couponApplied": "Coupon successfully applied.",
     "couponInvalid": "Coupon code is invalid or not applicable.",
-    "discount": "Coupon Discount"
+    "discount": "Coupon Discount",
+    "paymentMethodPlaceholder": "Choose a payment method…"
   },
   "payment": {
     "title": "Payment",
@@ -445,7 +446,14 @@
     "copy": "Copy",
     "copied": "✓ Copied",
     "viewOrder": "View order details →",
-    "autoRefresh": "The status refreshes automatically every 4 seconds."
+    "autoRefresh": "The status refreshes automatically every 4 seconds.",
+    "method": "Payment Method",
+    "methodHint": "Choose an available payment method.",
+    "gateway": "Payment Gateway",
+    "gateways": {
+      "tripay": "Tripay",
+      "duitku": "Duitku"
+    }
   },
   "orderSuccess": {
     "title": "Order Created",
@@ -1278,7 +1286,24 @@
         "channelEwallet": "E-Wallet",
         "channelEwalletDesc": "OVO, DANA, GoPay, ShopeePay.",
         "channelConvenienceStore": "Convenience Store",
-        "channelConvenienceStoreDesc": "Indomaret, Alfamart."
+        "channelConvenienceStoreDesc": "Indomaret, Alfamart.",
+        "sectionDuitku": "Duitku",
+        "sectionDuitkuTitle": "Duitku Credentials",
+        "fieldDuitkuMerchant": "Merchant Code",
+        "fieldDuitkuMerchantHint": "Merchant code from your Duitku dashboard.",
+        "fieldDuitkuApiKey": "API Key",
+        "fieldDuitkuApiKeyHintCurrent": "Current: {masked}. Leave empty to keep, or type a new value.",
+        "fieldDuitkuApiKeyHintNew": "Stored encrypted. Never displayed after saving.",
+        "fieldDuitkuMode": "Mode",
+        "fieldDuitkuModeHint": "Pick sandbox for testing, production for live.",
+        "submitDuitku": "Save Duitku Config",
+        "sectionGateways": "Gateways",
+        "sectionGatewaysTitle": "Payment Gateways",
+        "submitGateways": "Save Gateways",
+        "gatewayTripay": "Tripay",
+        "gatewayTripayDesc": "QRIS, Virtual Account, E-Wallet via Tripay.",
+        "gatewayDuitku": "Duitku",
+        "gatewayDuitkuDesc": "QRIS, Virtual Account, E-Wallet, Retail via Duitku."
       },
       "maintenance": {
         "listTitle": "Maintenance",

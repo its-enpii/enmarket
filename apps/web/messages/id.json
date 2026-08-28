@@ -413,14 +413,15 @@
     "buyerInfo": "Data Pembeli",
     "orderSummary": "Ringkasan Pesanan",
     "total": "Total",
-    "paymentMethod": "Metode pembayaran: QRIS melalui Tripay",
+    "paymentMethod": "Metode Pembayaran",
     "errorLoad": "Gagal memuat keranjang",
     "phonePlaceholder": "08123456789",
     "couponLabel": "Kode Kupon / Diskon",
     "couponApply": "Terapkan",
     "couponApplied": "Kupon berhasil diterapkan.",
     "couponInvalid": "Kode kupon tidak valid atau tidak dapat digunakan.",
-    "discount": "Diskon Kupon"
+    "discount": "Diskon Kupon",
+    "paymentMethodPlaceholder": "Pilih metode pembayaran…"
   },
   "payment": {
     "title": "Pembayaran",
@@ -445,7 +446,14 @@
     "copy": "Salin",
     "copied": "✓ Tersalin",
     "viewOrder": "Lihat detail pesanan →",
-    "autoRefresh": "Status diperbarui otomatis setiap 4 detik."
+    "autoRefresh": "Status diperbarui otomatis setiap 4 detik.",
+    "method": "Metode Pembayaran",
+    "methodHint": "Pilih metode pembayaran yang tersedia.",
+    "gateway": "Payment Gateway",
+    "gateways": {
+      "tripay": "Tripay",
+      "duitku": "Duitku"
+    }
   },
   "orderSuccess": {
     "title": "Pesanan Berhasil Dibuat",
@@ -1278,7 +1286,24 @@
         "channelEwallet": "E-Wallet",
         "channelEwalletDesc": "OVO, DANA, GoPay, ShopeePay.",
         "channelConvenienceStore": "Convenience Store",
-        "channelConvenienceStoreDesc": "Indomaret, Alfamart."
+        "channelConvenienceStoreDesc": "Indomaret, Alfamart.",
+        "sectionDuitku": "Duitku",
+        "sectionDuitkuTitle": "Credentials Duitku",
+        "fieldDuitkuMerchant": "Merchant Code",
+        "fieldDuitkuMerchantHint": "Kode merchant dari dashboard Duitku.",
+        "fieldDuitkuApiKey": "API Key",
+        "fieldDuitkuApiKeyHintCurrent": "Saat ini: {masked}. Kosongkan untuk keep, atau ketik nilai baru.",
+        "fieldDuitkuApiKeyHintNew": "Disimpan terenkripsi. Tidak akan ditampilkan setelah disimpan.",
+        "fieldDuitkuMode": "Mode",
+        "fieldDuitkuModeHint": "Pilih sandbox untuk testing, production untuk live.",
+        "submitDuitku": "Simpan Duitku Config",
+        "sectionGateways": "Gateways",
+        "sectionGatewaysTitle": "Payment Gateways",
+        "submitGateways": "Simpan Gateways",
+        "gatewayTripay": "Tripay",
+        "gatewayTripayDesc": "QRIS, Virtual Account, E-Wallet via Tripay.",
+        "gatewayDuitku": "Duitku",
+        "gatewayDuitkuDesc": "QRIS, Virtual Account, E-Wallet, Retail via Duitku."
       },
       "maintenance": {
         "listTitle": "Maintenance",

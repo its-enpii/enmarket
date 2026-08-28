@@ -17,6 +17,8 @@ use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
+use App\Services\Duitku\DuitkuClient;
+use App\Services\Payment\OrderPaidHandler;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -61,6 +63,18 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind CartService (stateless, bisa singleton)
         $this->app->singleton(CartService::class, fn () => new CartService);
+
+        // Bind Duitku client (singleton — immutable config)
+        $this->app->singleton(DuitkuClient::class, function () {
+            return new DuitkuClient(
+                merchantCode: (string) config('services.duitku.merchant_code', ''),
+                apiKey: (string) config('services.duitku.api_key', ''),
+                baseUrl: (string) config('services.duitku.base_url', ''),
+            );
+        });
+
+        // Bind OrderPaidHandler (shared across all payment gateways)
+        $this->app->singleton(OrderPaidHandler::class);
 
         // Bind NotificationDispatcher — null webhook kalau belum dikonfigurasi = dev log mode
         $this->app->singleton(NotificationDispatcher::class, function () {
