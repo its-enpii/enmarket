@@ -10,6 +10,7 @@ use App\Models\SiteSetting;
 use App\Observers\ActivityLogger;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
+use App\Services\Digiflazz\DigiflazzClient;
 use App\Services\Delivery\OrderDeliveryService;
 use App\Services\NextRevalidator;
 use App\Services\SiteSettings;
@@ -17,6 +18,8 @@ use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
+use App\Services\Duitku\DuitkuClient;
+use App\Services\Payment\OrderPaidHandler;
 use App\Services\WhatsApp\MessageBuilder;
 use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -64,6 +67,18 @@ class AppServiceProvider extends ServiceProvider
         // Bind CartService (stateless, bisa singleton)
         $this->app->singleton(CartService::class, fn () => new CartService);
 
+        // Bind Duitku client (singleton — immutable config)
+        $this->app->singleton(DuitkuClient::class, function () {
+            return new DuitkuClient(
+                merchantCode: (string) config('services.duitku.merchant_code', ''),
+                apiKey: (string) config('services.duitku.api_key', ''),
+                baseUrl: (string) config('services.duitku.base_url', ''),
+            );
+        });
+
+        // Bind OrderPaidHandler (shared across all payment gateways)
+        $this->app->singleton(OrderPaidHandler::class);
+
         // Bind WhatsAppClient — null webhook = dev log mode
         $this->app->singleton(WhatsAppClient::class, function () {
             $url = config('services.whatsapp.webhook_url') ?: null;
@@ -91,6 +106,16 @@ class AppServiceProvider extends ServiceProvider
                 waClient: $waUrl ? $app->make(WhatsAppClient::class) : null,
                 waMessageBuilder: $waUrl ? $app->make(MessageBuilder::class) : null,
                 siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
+            );
+        });
+
+        // Bind DigiflazzClient (game top-up API)
+        $this->app->singleton(DigiflazzClient::class, function () {
+            return new DigiflazzClient(
+                apiKey: (string) config('services.digiflazz.api_key', ''),
+                username: (string) config('services.digiflazz.username', ''),
+                baseUrl: (string) config('services.digiflazz.base_url', 'https://api.digiflazz.com/v1'),
+                webhookSecret: (string) config('services.digiflazz.webhook_secret', ''),
             );
         });
 

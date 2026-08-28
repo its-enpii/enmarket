@@ -373,7 +373,7 @@ class CheckoutFlowTest extends TestCase
         );
 
         $response->assertStatus(502);
-        $response->assertJsonFragment(['code' => 'tripay_error']);
+        $response->assertJsonFragment(['code' => 'payment_error']);
         // Cart TIDAK di-clear saat Tripay gagal (order tidak terbuat)
         $this->assertNotNull(Cart::where('session_id', self::SESSION)->first());
     }

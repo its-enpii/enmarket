@@ -79,7 +79,8 @@
     "wishlist": "Wishlist",
     "wishlistCount": "Wishlist items",
     "login": "Login",
-    "account": "Account"
+    "account": "Account",
+    "topup": "Top Up"
   },
   "footer": {
     "brandTitle": "enpiistudio",
@@ -437,7 +438,8 @@
     "couponApply": "Apply",
     "couponApplied": "Coupon successfully applied.",
     "couponInvalid": "Coupon code is invalid or not applicable.",
-    "discount": "Coupon Discount"
+    "discount": "Coupon Discount",
+    "paymentMethodPlaceholder": "Choose a payment method…"
   },
   "payment": {
     "title": "Payment",
@@ -462,7 +464,14 @@
     "copy": "Copy",
     "copied": "✓ Copied",
     "viewOrder": "View order details →",
-    "autoRefresh": "The status refreshes automatically every 4 seconds."
+    "autoRefresh": "The status refreshes automatically every 4 seconds.",
+    "method": "Payment Method",
+    "methodHint": "Choose an available payment method.",
+    "gateway": "Payment Gateway",
+    "gateways": {
+      "tripay": "Tripay",
+      "duitku": "Duitku"
+    }
   },
   "orderSuccess": {
     "title": "Order Created",
@@ -682,7 +691,8 @@
       "brandSubtitle": "Admin",
       "openMenu": "Open menu",
       "closeMenu": "Close menu",
-      "reviews": "Customer Reviews"
+      "reviews": "Customer Reviews",
+      "games": "Game Top-up"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -1306,7 +1316,24 @@
         "channelEwallet": "E-Wallet",
         "channelEwalletDesc": "OVO, DANA, GoPay, ShopeePay.",
         "channelConvenienceStore": "Convenience Store",
-        "channelConvenienceStoreDesc": "Indomaret, Alfamart."
+        "channelConvenienceStoreDesc": "Indomaret, Alfamart.",
+        "sectionDuitku": "Duitku",
+        "sectionDuitkuTitle": "Duitku Credentials",
+        "fieldDuitkuMerchant": "Merchant Code",
+        "fieldDuitkuMerchantHint": "Merchant code from your Duitku dashboard.",
+        "fieldDuitkuApiKey": "API Key",
+        "fieldDuitkuApiKeyHintCurrent": "Current: {masked}. Leave empty to keep, or type a new value.",
+        "fieldDuitkuApiKeyHintNew": "Stored encrypted. Never displayed after saving.",
+        "fieldDuitkuMode": "Mode",
+        "fieldDuitkuModeHint": "Pick sandbox for testing, production for live.",
+        "submitDuitku": "Save Duitku Config",
+        "sectionGateways": "Gateways",
+        "sectionGatewaysTitle": "Payment Gateways",
+        "submitGateways": "Save Gateways",
+        "gatewayTripay": "Tripay",
+        "gatewayTripayDesc": "QRIS, Virtual Account, E-Wallet via Tripay.",
+        "gatewayDuitku": "Duitku",
+        "gatewayDuitkuDesc": "QRIS, Virtual Account, E-Wallet, Retail via Duitku."
       },
       "maintenance": {
         "listTitle": "Maintenance",
@@ -1476,6 +1503,43 @@
         "noneYet": "No reviews received yet",
         "noneYetHint": "Reviews from verified buyers will appear here."
       }
+    },
+    "games": {
+      "listTitle": "Manage Games",
+      "listEyebrow": "Management",
+      "listSubtitle": "Manage games and top-up nominals.",
+      "newTitle": "Add New Game",
+      "newSubtitle": "Create a new game for top-up.",
+      "editTitle": "Edit Game",
+      "editSubtitle": "Edit game details and manage items.",
+      "field": {
+        "nama": "Game Name",
+        "slug": "Slug",
+        "brand": "Brand",
+        "iconUrl": "Icon URL",
+        "bannerUrl": "Banner URL",
+        "requiresServerId": "Requires Server ID",
+        "description": "Description",
+        "sortOrder": "Sort Order",
+        "active": "Active",
+        "digiflazzCategory": "Digiflazz Category",
+        "slugPlaceholder": "auto-generated from name",
+        "activeStatus": "Active",
+        "inactiveStatus": "Inactive",
+        "save": "Save",
+        "create": "Create Game"
+      },
+      "items": {
+        "title": "Item List",
+        "add": "Add Item",
+        "nama": "Item Name",
+        "harga": "Price",
+        "sku": "Digiflazz SKU",
+        "empty": "No items yet."
+      },
+      "empty": "No games yet.",
+      "addNew": "Add Game",
+      "confirmDelete": "Are you sure you want to delete this game?"
     }
   },
   "trending": {
@@ -1627,7 +1691,8 @@
         "rateLimited": "Too many OTP requests. Please wait a moment."
       },
       "success": "Successfully logged in.",
-      "welcomeBack": "Welcome back!"
+      "welcomeBack": "Welcome back!",
+      "changePhone": "Change"
     }
   },
   "account": {
@@ -1637,7 +1702,8 @@
       "wishlist": "Wishlist",
       "profile": "Profile Settings",
       "logout": "Logout",
-      "customerAccount": "Customer Account"
+      "customerAccount": "Customer Account",
+      "topups": "Top-up History"
     },
     "dashboard": {
       "title": "Account Dashboard",
@@ -1650,7 +1716,10 @@
       "verificationStatus": "Verification Status",
       "verifiedWA": "WA Verified",
       "exploreCatalog": "Explore Catalog",
-      "viewAll": "View All"
+      "viewAll": "View All",
+      "verified": "WA Verified",
+      "loading": "Loading account data...",
+      "loadingOrders": "Loading orders..."
     },
     "orders": {
       "title": "Order History",
@@ -1670,7 +1739,14 @@
       "pageInfo": "Page {page} of {lastPage}",
       "prev": "? Previous",
       "next": "Next ?",
-      "totalLabel": "Total"
+      "totalLabel": "Total",
+      "loading": "Loading order history...",
+      "emptyDescription": "You have not made any orders with this account.",
+      "prevPage": "← Previous",
+      "nextPage": "Next →",
+      "pageOf": "Page {page} of {total}",
+      "total": "Total",
+      "itemsCount": "{count} items"
     },
     "profile": {
       "title": "Profile Settings",
@@ -1680,7 +1756,10 @@
       "profileUpdated": "Profile updated successfully.",
       "emailLabel": "Email (Optional)",
       "phoneHint": "This phone number is used for WhatsApp OTP login.",
-      "errorGeneric": "Failed to update profile."
+      "errorGeneric": "Failed to update profile.",
+      "subtitle": "Manage your name, WhatsApp number, and email information.",
+      "emailPlaceholder": "email@example.com",
+      "errorUpdate": "Failed to update profile."
     },
     "logout": {
       "confirm": "Are you sure you want to log out?",
@@ -1698,6 +1777,30 @@
       "emptyHint": "Explore our products and click the heart icon to save your favorites.",
       "exploreCatalog": "Explore Catalog",
       "defaultCategory": "Digital"
+    },
+    "topups": {
+      "title": "Top-up History",
+      "empty": "No top-up history yet.",
+      "viewDetail": "View Detail",
+      "status": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "success": "Success",
+        "failed": "Failed"
+      }
+    },
+    "sidebar": {
+      "title": "Customer Account",
+      "defaultName": "Customer"
+    },
+    "wishlist": {
+      "subtitle": "List of products you saved to purchase later.",
+      "loading": "Loading wishlist...",
+      "emptyTitle": "Your wishlist is empty.",
+      "emptyDescription": "Explore our products and click the heart icon to save your favorite products.",
+      "explore": "Explore Catalog",
+      "viewProduct": "View Product",
+      "remove": "Remove"
     }
   },
   "promoBanner": {
@@ -1735,5 +1838,45 @@
     "submitCta": "Submit Review",
     "submitSuccess": "Your review has been submitted and published!",
     "submitError": "Failed to submit review. Please check your inputs."
+  },
+  "topup": {
+    "title": "Game Top Up",
+    "subtitle": "Top up your favorite game credits easily and quickly.",
+    "pickGame": "Pick a Game",
+    "pickItem": "Pick Nominal",
+    "userId": "User ID",
+    "userIdHint": "Enter your in-game User ID",
+    "serverId": "Server ID",
+    "serverIdHint": "Enter Server ID (if required)",
+    "contactLabel": "Contact for Notification",
+    "contactPhone": "WhatsApp Number",
+    "contactEmail": "Email Address",
+    "payNow": "Pay Now",
+    "processing": "Processing...",
+    "successTitle": "Top-up In Progress",
+    "successMessage": "Top-up is being processed. Notification will be sent to {contact}.",
+    "failedTitle": "Payment Failed",
+    "failedMessage": "Payment failed. Please try again.",
+    "previewTitle": "Top-up Summary",
+    "total": "Total Payment",
+    "confirm": "Confirm & Pay",
+    "paymentMethod": "Payment Method",
+    "noGames": "No games available yet.",
+    "noItems": "No nominals available yet.",
+    "backToGames": "← Back to Game List",
+    "errors": {
+      "userIdRequired": "User ID is required.",
+      "serverIdRequired": "Server ID is required for this game.",
+      "contactRequired": "Phone number or email is required.",
+      "gameNotFound": "Game not found.",
+      "itemRequired": "Please pick a nominal first.",
+      "paymentGatewayRequired": "Please select a payment method first.",
+      "checkoutFailed": "Checkout failed. Please try again."
+    },
+    "viaGateway": "via {gateway}",
+    "gateways": {
+      "duitku": "Duitku",
+      "tripay": "Tripay (QRIS)"
+    }
   }
 }

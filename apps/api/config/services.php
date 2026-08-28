@@ -77,6 +77,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Duitku payment gateway
+    |--------------------------------------------------------------------------
+    */
+
+    'duitku' => [
+        'mode' => env('DUITKU_MODE', 'sandbox'),
+        'merchant_code' => env('DUITKU_MERCHANT_CODE'),
+        'api_key' => env('DUITKU_API_KEY'),
+        'default_method' => env('DUITKU_DEFAULT_METHOD', 'SP'),
+        'expiry_period' => (int) env('DUITKU_EXPIRY_PERIOD', 1440),
+        'callback_url' => env('DUITKU_CALLBACK_URL'),
+        'return_url' => env('DUITKU_RETURN_URL'),
+        'base_url' => env('DUITKU_MODE') === 'production'
+            ? 'https://api-prod.duitku.com/api/merchant'
+            : 'https://api-sandbox.duitku.com/api/merchant',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | n8n orchestrator (Fase 4)
     |--------------------------------------------------------------------------
     |
@@ -117,6 +136,20 @@ return [
         'url' => env('EVOLUTION_API_URL'),
         'api_key' => env('EVOLUTION_API_KEY'),
         'instance' => env('EVOLUTION_INSTANCE', 'enpiistudio'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Digiflazz (Game Top-up)
+    |--------------------------------------------------------------------------
+    */
+
+    'digiflazz' => [
+        'username' => env('DIGIFLAZZ_USERNAME', ''),
+        'api_key' => env('DIGIFLAZZ_API_KEY', ''),
+        'base_url' => env('DIGIFLAZZ_BASE_URL', 'https://api.digiflazz.com/v1'),
+        'webhook_secret' => env('DIGIFLAZZ_WEBHOOK_SECRET', ''),
+        'mode' => env('DIGIFLAZZ_MODE', 'dev'),
     ],
 
 ];

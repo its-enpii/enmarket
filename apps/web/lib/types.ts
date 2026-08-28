@@ -4,6 +4,15 @@
  */
 
 export type StatusProduct = 'aktif' | 'draft' | 'tidak_dijual';
+
+export type PaymentGateway = 'tripay' | 'duitku';
+
+export interface PaymentGatewayConfig {
+  enabled: boolean;
+}
+
+export type PaymentGatewaysMap = Record<PaymentGateway, PaymentGatewayConfig>;
+
 export type TipeProduct = 'download' | 'license' | 'bundle' | 'account_manual';
 
 export interface Category {
@@ -114,6 +123,7 @@ export interface PublicSiteConfig {
   logo_url: string | null;
   social: SiteSocial;
   footer: SiteFooter;
+  payment_gateways: PaymentGatewaysMap;
 }
 
 export interface SiteFooter {
@@ -125,6 +135,9 @@ export interface SitePayment {
   tripay_api_key_masked: string | null;
   tripay_private_key_masked: string | null;
   tripay_mode: 'sandbox' | 'production';
+  duitku_merchant_code: string | null;
+  duitku_api_key_masked: string | null;
+  duitku_mode: 'sandbox' | 'production';
 }
 
 export interface SiteChannels {
@@ -145,6 +158,7 @@ export interface SiteSettings {
   payment: SitePayment;
   channels: SiteChannels;
   maintenance: SiteMaintenanceConfig;
+  payment_gateways: PaymentGatewaysMap;
 }
 
 export interface MaintenanceStatus {
@@ -221,6 +235,7 @@ export interface AccountProvisioningInfo {
 }
 
 export interface Order {
+  id?: number;
   kode_order: string;
   nama_pembeli: string;
   email_pembeli: string;
@@ -472,7 +487,8 @@ export interface CustomerUser {
   created_at: string | null;
 }
 
-// ????? Reviews ?????
+
+// ───── Reviews ─────
 
 export interface ProductRatingSummary {
   average: number;
@@ -511,4 +527,66 @@ export interface ReviewStats {
   published: number;
   hidden: number;
   average_rating: number;
+}
+
+// ───── Game Top-up ─────
+
+export interface Game {
+  id: number;
+  slug: string;
+  nama: string;
+  brand: string | null;
+  icon_url: string | null;
+  banner_url: string | null;
+  requires_server_id: boolean;
+  description: string | null;
+  sort_order: number;
+  active: boolean;
+  digiflazz_category: string | null;
+  items?: GameItem[];
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface GameItem {
+  id: number;
+  game_id: number;
+  nama: string;
+  harga: string;
+  harga_formatted: string;
+  digiflazz_sku: string;
+  digiflazz_category: string | null;
+  sort_order: number;
+  active: boolean;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface TopupPreview {
+  game: string;
+  item: string;
+  harga: string;
+  harga_formatted: string;
+  total: number;
+  contact_type: string;
+  contact_value: string;
+  payment_gateways: string[];
+}
+
+export type TopupStatus = 'pending' | 'processing' | 'success' | 'failed';
+
+export interface TopupOrder extends Order {
+  id: number;
+  is_topup_order: boolean;
+  game_id: number | null;
+  game_item_id: number | null;
+  game_user_id: string | null;
+  game_server_id: string | null;
+  contact_type: string | null;
+  contact_value: string | null;
+  topup_status: TopupStatus | null;
+  digiflazz_trx_id: string | null;
+  payment_gateway: string | null;
+  game?: { id: number; nama: string; slug: string; icon_url: string | null } | null;
+  game_item?: { id: number; nama: string; harga: string } | null;
 }

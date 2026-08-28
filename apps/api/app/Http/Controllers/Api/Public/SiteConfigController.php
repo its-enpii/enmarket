@@ -46,6 +46,14 @@ class SiteConfigController extends Controller
                 'footer' => [
                     'text' => $raw('footer_text'),
                 ],
+                'payment_gateways' => (function () use ($raw) {
+                    $val = $raw('payment_gateways');
+                    $decoded = $val ? json_decode($val, true) : null;
+                    if (! is_array($decoded)) {
+                        return ['tripay' => ['enabled' => true], 'duitku' => ['enabled' => false]];
+                    }
+                    return array_map(fn ($g) => ['enabled' => $g['enabled'] ?? false], $decoded);
+                })(),
             ],
         ]);
     }

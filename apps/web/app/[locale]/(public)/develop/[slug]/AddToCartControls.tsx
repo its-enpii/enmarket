@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useTransition } from 'react';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, NLink } from '@/components/ui/neobrutal';
 import { toast } from '@/components/ui/toast-store';
 
 import { addToCartAction, addToCartAndGoAction } from './actions';
@@ -87,12 +87,14 @@ export function AddToCartControls({ productId, isPreOrder = false, isFree = fals
         {buyNowLabel}
       </button>
 
-      <a
+      <NLink
         href="/keranjang"
-        className="block text-center text-xs text-ink/50 hover:text-primary font-bold underline decoration-1 underline-offset-4"
+        variant="default"
+        underline="hover"
+        className="block text-center text-xs text-ink/50 font-bold"
       >
         {t('viewCart')}
-      </a>
+      </NLink>
     </div>
   );
 }

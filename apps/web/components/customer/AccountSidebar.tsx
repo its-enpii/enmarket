@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useAuth } from './AuthProvider';
-import { Card } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 
 export function AccountSidebar() {
   const t = useTranslations('account.nav');
@@ -26,6 +26,7 @@ export function AccountSidebar() {
     { key: 'orders', href: '/akun/pesanan', icon: '📦' },
     { key: 'wishlist', href: '/akun/wishlist', icon: '❤️' },
     { key: 'profile', href: '/akun/profil', icon: '⚙️' },
+    { key: 'topups', href: '/akun/topup', icon: '🎮' },
   ] as const;
 
   return (
@@ -61,14 +62,16 @@ export function AccountSidebar() {
             );
           })}
 
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="sm"
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-600 border-2 border-transparent hover:bg-red-50 hover:border-red-600 transition-all text-left mt-4"
+            className="w-full !justify-start gap-3 mt-4 !text-red-600 hover:!bg-red-50"
           >
             <span>🚪</span>
             <span>{t('logout')}</span>
-          </button>
+          </Button>
         </nav>
       </Card>
     </aside>

@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
+import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
 import { useAuth } from './AuthProvider';
 
 export function ProfileForm() {
@@ -39,29 +41,26 @@ export function ProfileForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {success && (
-        <div className="p-4 bg-green-100 border-3 border-green-700 text-green-900 font-bold text-sm shadow-[3px_3px_0_0_var(--color-ink)]">
-          {t('profileUpdated')}
-        </div>
+        <Card variant="filled-accent" hoverable={false} className="p-3 text-sm font-bold">
+          ✓ {t('profileUpdated')}
+        </Card>
       )}
 
       {error && (
-        <div className="p-4 bg-red-100 border-3 border-red-700 text-red-900 font-bold text-sm shadow-[3px_3px_0_0_var(--color-ink)]">
-          {error}
-        </div>
+        <FormError variant="box">{error}</FormError>
       )}
 
       <div>
         <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
           {t('nameLabel')}
         </label>
-        <input
+        <Input
           id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={t('nameLabel')}
           disabled={loading}
-          className="w-full px-4 py-3 border-3 border-ink bg-surface text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
         />
       </div>
 
@@ -69,14 +68,14 @@ export function ProfileForm() {
         <label htmlFor="phone" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
           {t('phoneLabel')}
         </label>
-        <input
+        <Input
           id="phone"
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="08123456789"
           disabled={loading}
-          className="w-full px-4 py-3 border-3 border-ink bg-surface text-ink font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
+          className="font-mono"
         />
         <p className="mt-1 text-xs text-ink/70">
           {t('phoneHint')}
@@ -87,14 +86,13 @@ export function ProfileForm() {
         <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
           {t('emailLabel')}
         </label>
-        <input
+        <Input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="email@contoh.com"
+          placeholder={t('emailPlaceholder')}
           disabled={loading}
-          className="w-full px-4 py-3 border-3 border-ink bg-surface text-ink font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
         />
       </div>
 

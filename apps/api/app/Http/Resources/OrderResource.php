@@ -40,6 +40,27 @@ class OrderResource extends JsonResource
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
+            'is_topup_order' => $this->isTopupOrder(),
+            'game_id' => $this->game_id,
+            'game_item_id' => $this->game_item_id,
+            'game_user_id' => $this->game_user_id,
+            'game_server_id' => $this->game_server_id,
+            'contact_type' => $this->contact_type,
+            'contact_value' => $this->contact_value,
+            'topup_status' => $this->topup_status,
+            'digiflazz_trx_id' => $this->digiflazz_trx_id,
+            'payment_gateway' => $this->payment_gateway,
+            'game' => $this->whenLoaded('game', fn () => [
+                'id' => $this->game->id,
+                'nama' => $this->game->nama,
+                'slug' => $this->game->slug,
+                'icon_url' => $this->game->icon_url,
+            ]),
+            'game_item' => $this->whenLoaded('gameItem', fn () => [
+                'id' => $this->gameItem->id,
+                'nama' => $this->gameItem->nama,
+                'harga' => (string) $this->gameItem->harga,
+            ]),
         ];
 
         // Untuk polling ringan — strip heavy fields dari view publik.

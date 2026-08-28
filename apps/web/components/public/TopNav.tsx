@@ -59,6 +59,7 @@ export function TopNav({ children }: Props) {
     { key: 'develop', href: '/develop' },
     { key: 'display', href: '/display' },
     { key: 'layanan', href: '/layanan' },
+    { key: 'topup', href: '/topup' },
   ] as const;
 
   return (

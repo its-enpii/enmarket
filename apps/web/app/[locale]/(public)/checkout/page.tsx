@@ -4,6 +4,7 @@ import { EmptyState } from '@/components/public/EmptyState';
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
+import { getEnabledGateways } from '@/lib/payment-api';
 
 import { CheckoutForm } from './CheckoutForm';
 
@@ -59,6 +60,8 @@ export default async function CheckoutPage() {
     );
   }
 
+  const enabledGateways = await getEnabledGateways();
+
   return (
     <div className="mx-auto max-w-4xl px-6 py-8 sm:py-12">
       {/* Page header — neobrutalism eyebrow + display headline */}
@@ -76,7 +79,7 @@ export default async function CheckoutPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-8">
         <Card variant="surface" thick hoverable={false} className="p-6">
-          <CheckoutForm cartTotal={cart.total} />
+          <CheckoutForm cartTotal={cart.total} enabledGateways={enabledGateways} />
         </Card>
 
         <Card variant="filled-primary" as="aside" thick hoverable={false} className="p-5 h-fit">

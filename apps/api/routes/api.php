@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\CheckoutController;
 use App\Http\Controllers\Api\Public\CustomRequestController;
+use App\Http\Controllers\Api\Public\DigiflazzWebhookController;
 use App\Http\Controllers\Api\Public\DownloadController;
 use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\PostController as PublicPostController;
@@ -35,7 +36,12 @@ use App\Http\Controllers\Api\Public\ReviewController as PublicReviewController;
 use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
+use App\Http\Controllers\Api\Public\DuitkuCallbackController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Admin\GameController as AdminGameController;
+use App\Http\Controllers\Api\Admin\GameItemController as AdminGameItemController;
+use App\Http\Controllers\Api\Customer\TopupHistoryController;
+use App\Http\Controllers\Api\Public\TopupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +80,12 @@ Route::prefix('public')->group(function () {
     // Public site config (identity + social + footer). Payment secrets
     // TIDAK di-expose di sini — hanya SiteSettings::all() yg masuk public.
     Route::get('site-config', [SiteConfigController::class, 'show']);
+
+    // Top-up game (Digiflazz)
+    Route::get('topup/games', [TopupController::class, 'games']);
+    Route::get('topup/games/{slug}', [TopupController::class, 'show']);
+    Route::post('topup/preview', [TopupController::class, 'preview'])->middleware('throttle:cart');
+    Route::post('topup/checkout', [TopupController::class, 'checkout'])->middleware('throttle:checkout');
 });
 
 // ───── Customer Auth & Account ─────
@@ -93,6 +105,8 @@ Route::prefix('customer')->group(function () {
         Route::get('wishlist', [CustomerWishlistController::class, 'index']);
         Route::post('wishlist/toggle', [CustomerWishlistController::class, 'toggle']);
         Route::delete('wishlist/{productId}', [CustomerWishlistController::class, 'destroy']);
+
+        Route::get('topups', [TopupHistoryController::class, 'index']);
     });
 });
 
@@ -132,6 +146,13 @@ Route::get('/orders/{kodeOrder}', [OrderController::class, 'show']);
 // Tripay callback (public, signature-verified — no throttle; signature
 // verification itself prevents abuse. Kalau production butuh, tambah IP allowlist.)
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle']);
+
+// Duitku callback (public, signature-verified)
+Route::post('/duitku/callback', [DuitkuCallbackController::class, 'handle']);
+
+// Digiflazz webhook (public, HMAC-SHA256 signature-verified via DIGIFLAZZ_WEBHOOK_SECRET).
+// Digiflazz mengirim status update async (queue → success/gagal) setelah initial topup.
+Route::post('/digiflazz/webhook', [DigiflazzWebhookController::class, 'handle']);
 
 // Public download endpoint (token-based, no auth, throttled per token)
 Route::get('/download/{token}', [DownloadController::class, 'show'])
@@ -230,5 +251,10 @@ Route::prefix('admin')->group(function () {
 
         // Recent activity log
         Route::get('activity', [ActivityController::class, 'index']);
+
+        // Game top-up admin CRUD
+        Route::apiResource('games', AdminGameController::class);
+        Route::apiResource('games.items', AdminGameItemController::class)->shallow();
     });
 });
+Route::post('/duitku/callback', [DuitkuCallbackController::class, 'handle']);

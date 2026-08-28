@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
+import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
 import { authApi } from '@/lib/auth-api';
 
 interface Props {
@@ -65,28 +67,24 @@ export function OtpRequestForm({ initialPhone = '', onSuccess, locale }: Props) 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 bg-red-100 border-2 border-red-600 text-red-800 text-sm font-medium">
-          {error}
-        </div>
+        <FormError variant="box">{error}</FormError>
       )}
 
       <div>
         <label htmlFor="customer-phone" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
           {t('phoneLabel')}
         </label>
-        <input
+        <Input
           id="customer-phone"
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder={t('phonePlaceholder')}
           disabled={loading || cooldown > 0}
-          className="w-full px-4 py-3 border-3 border-ink bg-surface text-ink font-mono text-base font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
+          className="font-mono text-base font-semibold"
           autoFocus
         />
-        <p className="mt-1 text-xs text-ink/70">
-          {t('phoneHint')}
-        </p>
+        <FormHint>{t('phoneHint')}</FormHint>
       </div>
 
       <Button
