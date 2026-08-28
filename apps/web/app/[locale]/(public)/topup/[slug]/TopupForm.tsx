@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 
@@ -24,10 +24,64 @@ export function TopupForm({ game }: Props) {
   const [serverId, setServerId] = useState('');
   const [contactType, setContactType] = useState<'phone' | 'email'>('phone');
   const [contactValue, setContactValue] = useState('');
+  const [availableGateways, setAvailableGateways] = useState<string[]>([]);
+  const [paymentGateway, setPaymentGateway] = useState<string>('');
+  const [previewTotal, setPreviewTotal] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const items = game.items ?? [];
+
+  /**
+   * Re-fetch preview setiap kali input berubah — biar payment_gateways list selalu fresh
+   * sesuai setting admin saat user buka halaman.
+   */
+  useEffect(() => {
+    let cancelled = false;
+    if (!selectedItem || !userId.trim()) {
+      setAvailableGateways([]);
+      setPaymentGateway('');
+      setPreviewTotal(null);
+      return () => {
+        cancelled = true;
+      };
+    }
+    if (game.requires_server_id && !serverId.trim()) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const run = async () => {
+      try {
+        const res = await topupApi.previewTopup({
+          game_id: game.id,
+          game_item_id: selectedItem.id,
+          user_id: userId,
+          server_id: game.requires_server_id ? serverId : undefined,
+          contact_type: contactType,
+          contact_value: contactValue || 'preview',
+        });
+        if (cancelled) return;
+        const data = res.data;
+        setPreviewTotal(data.total);
+        const gateways = Array.isArray(data.payment_gateways) ? data.payment_gateways : [];
+        setAvailableGateways(gateways);
+        if (gateways.length === 1) {
+          setPaymentGateway(gateways[0]);
+        } else if (gateways.length > 0 && !gateways.includes(paymentGateway)) {
+          setPaymentGateway(gateways[0]);
+        }
+      } catch {
+        // silent — gak perlu block UI kalau preview gagal
+      }
+    };
+    run();
+    return () => {
+      cancelled = true;
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItem, userId, serverId, contactType, contactValue, game.id, game.requires_server_id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +103,10 @@ export function TopupForm({ game }: Props) {
       setError(t('errors.itemRequired'));
       return;
     }
+    if (!paymentGateway) {
+      setError(t('errors.paymentGatewayRequired'));
+      return;
+    }
 
     setLoading(true);
     try {
@@ -59,11 +117,24 @@ export function TopupForm({ game }: Props) {
         server_id: game.requires_server_id ? serverId : undefined,
         contact_type: contactType,
         contact_value: contactValue,
-        payment_gateway: 'tripay',
+        payment_gateway: paymentGateway,
       });
 
-      if (res.data?.redirect_url) {
-        router.push(res.data.redirect_url);
+      const data = res.data as {
+        redirect_url?: string;
+        payment_url?: string;
+        gateway?: string;
+        qr_url?: string;
+      };
+
+      // Duitku: dapat payment_url → langsung redirect ke sana.
+      // Tripay: redirect ke halaman internal `/pembayaran/{kode_order}`.
+      if (data.payment_url && data.gateway === 'duitku') {
+        window.location.href = data.payment_url;
+        return;
+      }
+      if (data.redirect_url) {
+        router.push(data.redirect_url);
       } else {
         router.push('/topup/success');
       }
@@ -158,14 +229,46 @@ export function TopupForm({ game }: Props) {
         />
       </div>
 
+      {/* Payment method picker — muncul setelah preview fetch enabled gateways */}
+      {availableGateways.length > 0 && (
+        <div>
+          <label className="font-label text-label-sm uppercase font-bold block mb-2">
+            {t('paymentMethod')}
+          </label>
+          <div className="flex flex-wrap gap-3">
+            {availableGateways.map((gw) => (
+              <button
+                key={gw}
+                type="button"
+                onClick={() => setPaymentGateway(gw)}
+                className={`px-4 py-2 border-4 font-bold transition-all ${
+                  paymentGateway === gw
+                    ? 'border-primary bg-primary/10 shadow-[4px_4px_0_0_var(--color-primary)]'
+                    : 'border-ink bg-surface hover:shadow-[4px_4px_0_0_var(--color-ink)]'
+                }`}
+              >
+                {gw === 'duitku' ? 'Duitku' : 'Tripay (QRIS)'}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Summary */}
       {selectedItem && (
         <Card variant="filled-accent" hoverable={false} className="p-4">
           <h4 className="font-bold text-sm mb-2">{t('previewTitle')}</h4>
           <div className="flex justify-between text-sm">
             <span>{game.nama} — {selectedItem.nama}</span>
-            <span className="font-bold">{formatRupiah(selectedItem.harga)}</span>
+            <span className="font-bold">
+              {formatRupiah(previewTotal ?? selectedItem.harga)}
+            </span>
           </div>
+          {paymentGateway && (
+            <p className="text-xs text-ink/60 mt-2">
+              {t('viaGateway', { gateway: paymentGateway })}
+            </p>
+          )}
         </Card>
       )}
 
@@ -179,7 +282,7 @@ export function TopupForm({ game }: Props) {
         type="submit"
         variant="primary"
         size="lg"
-        disabled={loading || !selectedItem}
+        disabled={loading || !selectedItem || availableGateways.length === 0}
         className="w-full"
       >
         {loading ? t('processing') : t('payNow')}

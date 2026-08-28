@@ -1683,7 +1683,9 @@
       "serverIdRequired": "Server ID is required for this game.",
       "contactRequired": "Phone number or email is required.",
       "gameNotFound": "Game not found.",
-      "itemRequired": "Please pick a nominal first."
-    }
+      "itemRequired": "Please pick a nominal first.",
+      "paymentGatewayRequired": "Please select a payment method first."
+    },
+    "viaGateway": "via {gateway}"
   }
 }

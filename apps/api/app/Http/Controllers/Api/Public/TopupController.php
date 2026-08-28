@@ -9,18 +9,23 @@ use App\Http\Resources\GameResource;
 use App\Models\Game;
 use App\Models\GameItem;
 use App\Models\Order;
-use App\Services\Tripay\CreateTransactionDto;
+use App\Models\SiteSetting;
+use App\Services\Duitku\CreateTransactionDto as DuitkuTransactionDto;
+use App\Services\Duitku\DuitkuClient;
+use App\Services\Duitku\DuitkuException;
+use App\Services\Tripay\CreateTransactionDto as TripayTransactionDto;
 use App\Services\Tripay\TripayClient;
 use App\Services\Tripay\TripayException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class TopupController extends Controller
 {
     public function __construct(
         private readonly TripayClient $tripay,
+        private readonly DuitkuClient $duitku,
     ) {}
 
     public function games(): JsonResponse
@@ -84,7 +89,7 @@ class TopupController extends Controller
                 'total' => (int) $item->harga,
                 'contact_type' => $request->contact_type,
                 'contact_value' => $request->contact_value,
-                'payment_gateways' => ['tripay'],
+                'payment_gateways' => $this->enabledPaymentGateways(),
             ],
         ]);
     }
@@ -112,6 +117,26 @@ class TopupController extends Controller
             return response()->json(['message' => 'Item tidak aktif atau tidak valid.'], 422);
         }
 
+        $gateway = (string) $request->payment_gateway;
+        $enabled = $this->enabledPaymentGateways();
+
+        if (! in_array($gateway, $enabled, true)) {
+            return response()->json([
+                'message' => "Payment gateway '{$gateway}' tidak aktif di pengaturan admin.",
+                'enabled' => $enabled,
+            ], 422);
+        }
+
+        // payment_method/channel resolution:
+        // - Kalau admin set default di config (DUITKU_DEFAULT_METHOD=SP, Tripay pakai 'QRIS2'),
+        //   dan customer tidak pilih, pakai default.
+        $paymentMethod = $request->input('payment_method');
+        if (empty($paymentMethod)) {
+            $paymentMethod = $gateway === 'duitku'
+                ? (string) config('services.duitku.default_method', 'SP')
+                : 'QRIS2';
+        }
+
         $total = (int) $item->harga;
         $kodeOrder = $this->generateKodeOrder();
 
@@ -121,7 +146,7 @@ class TopupController extends Controller
 
         try {
             $order = DB::transaction(function () use (
-                $request, $game, $item, $total, $kodeOrder, $contactName
+                $request, $game, $item, $total, $kodeOrder, $contactName, $gateway, $paymentMethod
             ) {
                 return Order::create([
                     'kode_order' => $kodeOrder,
@@ -138,60 +163,194 @@ class TopupController extends Controller
                     'contact_type' => $request->contact_type,
                     'contact_value' => $request->contact_value,
                     'topup_status' => 'pending',
-                    'payment_gateway' => $request->payment_gateway,
+                    'payment_gateway' => $gateway,
+                    'payment_channel' => $paymentMethod,
                 ]);
             });
 
-            $tripayItems = [[
-                'sku' => $item->digiflazz_sku,
-                'name' => $game->nama . ' - ' . $item->nama,
-                'price' => $total,
-                'quantity' => 1,
-            ]];
+            // Dispatch ke payment gateway sesuai setting admin
+            if ($gateway === 'duitku') {
+                $res = $this->createDuitkuTransaction($order, $game, $item, $total, $contactName, $request, $paymentMethod);
+                return response()->json([
+                    'data' => [
+                        'kode_order' => $kodeOrder,
+                        'gateway' => 'duitku',
+                        'payment_url' => $res['paymentUrl'],
+                        'payment_method' => $paymentMethod,
+                        'expired_at' => $res['expiredAt'] ?? null,
+                        'redirect_url' => "/topup/{$game->slug}?status=pending&kode={$kodeOrder}",
+                    ],
+                    'message' => 'Top-up order created. Silakan lakukan pembayaran.',
+                ], 201);
+            }
 
-            $dto = new CreateTransactionDto(
-                method: 'QRIS2',
-                merchantRef: $kodeOrder,
-                amount: $total,
-                customerName: $contactName,
-                customerEmail: $request->contact_type === 'email' ? $request->contact_value : 'topup@enpiistudio.com',
-                customerPhone: $request->contact_type === 'phone' ? $this->sanitizePhone($request->contact_value) : '08000000000',
-                orderItems: $tripayItems,
-                expiredTime: time() + 3600,
-                callbackUrl: config('services.tripay.callback_url') ?: null,
-            );
-
-            $tripayRes = $this->tripay->createTransaction($dto);
-
-            $order->update([
-                'tripay_reference' => $tripayRes['reference'],
-                'qr_string' => $tripayRes['qr_string'] ?? null,
-                'qr_url' => $tripayRes['qr_url'] ?? null,
-                'qr_expired_at' => now()->addSeconds(3600),
-            ]);
-
+            // Default: Tripay
+            $res = $this->createTripayTransaction($order, $game, $item, $total, $contactName, $request);
             return response()->json([
                 'data' => [
                     'kode_order' => $kodeOrder,
+                    'gateway' => 'tripay',
+                    'payment_method' => $paymentMethod,
+                    'qr_url' => $res['qr_url'] ?? null,
+                    'qr_string' => $res['qr_string'] ?? null,
+                    'reference' => $res['reference'] ?? null,
+                    'expired_at' => isset($res['expired_at']) ? (string) $res['expired_at'] : null,
                     'redirect_url' => "/pembayaran/{$kodeOrder}",
                 ],
                 'message' => 'Top-up order created. Silakan lakukan pembayaran.',
             ], 201);
         } catch (TripayException $e) {
-            Log::error('Topup checkout Tripay error', ['err' => $e->getMessage()]);
-
-            return response()->json([
-                'message' => 'Gagal membuat transaksi pembayaran: ' . $e->getMessage(),
-                'code' => 'tripay_error',
-            ], 502);
+            Log::error('Topup checkout Tripay error', ['err' => $e->getMessage(), 'order' => $kodeOrder]);
+            return $this->gatewayErrorResponse('tripay', $e, $kodeOrder);
+        } catch (DuitkuException $e) {
+            Log::error('Topup checkout Duitku error', ['err' => $e->getMessage(), 'order' => $kodeOrder]);
+            return $this->gatewayErrorResponse('duitku', $e, $kodeOrder);
         } catch (\Throwable $e) {
             Log::error('Topup checkout error', ['err' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
             return response()->json([
                 'message' => 'Checkout gagal: ' . $e->getMessage(),
                 'code' => 'checkout_error',
             ], 500);
         }
+    }
+
+    /**
+     * Create Tripay transaction untuk top-up order.
+     *
+     * @return array{reference:string, qr_string:?string, qr_url:?string, expired_at:?int}
+     */
+    private function createTripayTransaction(
+        Order $order,
+        Game $game,
+        GameItem $item,
+        int $total,
+        string $contactName,
+        TopupCheckoutRequest $request,
+    ): array {
+        $dto = new TripayTransactionDto(
+            method: 'QRIS2',
+            merchantRef: $order->kode_order,
+            amount: $total,
+            customerName: $contactName,
+            customerEmail: $request->contact_type === 'email' ? $request->contact_value : 'topup@enpiistudio.com',
+            customerPhone: $request->contact_type === 'phone' ? $this->sanitizePhone($request->contact_value) : '08000000000',
+            orderItems: [[
+                'sku' => $item->digiflazz_sku,
+                'name' => $game->nama . ' - ' . $item->nama,
+                'price' => $total,
+                'quantity' => 1,
+            ]],
+            expiredTime: time() + 3600,
+            callbackUrl: config('services.tripay.callback_url') ?: null,
+        );
+
+        $res = $this->tripay->createTransaction($dto);
+
+        $order->update([
+            'tripay_reference' => $res['reference'],
+            'qr_string' => $res['qr_string'] ?? null,
+            'qr_url' => $res['qr_url'] ?? null,
+            'qr_expired_at' => now()->addSeconds(3600),
+        ]);
+
+        return [
+            'reference' => $res['reference'],
+            'qr_string' => $res['qr_string'] ?? null,
+            'qr_url' => $res['qr_url'] ?? null,
+            'expired_at' => time() + 3600,
+        ];
+    }
+
+    /**
+     * Create Duitku transaction untuk top-up order.
+     *
+     * @return array{paymentUrl:string, qrString:?string, expiredAt:?string}
+     */
+    private function createDuitkuTransaction(
+        Order $order,
+        Game $game,
+        GameItem $item,
+        int $total,
+        string $contactName,
+        TopupCheckoutRequest $request,
+        string $paymentMethod,
+    ): array {
+        $expiryPeriod = (int) config('services.duitku.expiry_period', 1440);
+
+        $dto = new DuitkuTransactionDto(
+            paymentMethod: $paymentMethod,
+            merchantOrderId: $order->kode_order,
+            amount: $total,
+            productDetails: $game->nama . ' - ' . $item->nama,
+            customerEmail: $request->contact_type === 'email' ? $request->contact_value : 'topup@enpiistudio.com',
+            customerName: $contactName,
+            callbackUrl: config('services.duitku.callback_url') ?: null,
+            returnUrl: config('services.duitku.return_url') ?: null,
+            expiryPeriod: $expiryPeriod,
+        );
+
+        $res = $this->duitku->createTransaction($dto);
+
+        $order->update([
+            'qr_url' => $res['paymentUrl'] ?? null,
+            'qr_string' => $res['qrString'] ?? null,
+            'qr_expired_at' => isset($res['expiredAt']) ? $res['expiredAt'] : null,
+        ]);
+
+        return [
+            'paymentUrl' => $res['paymentUrl'],
+            'qrString' => $res['qrString'] ?? null,
+            'expiredAt' => $res['expiredAt'] ?? null,
+        ];
+    }
+
+    /**
+     * Ambil daftar payment gateway yang diaktifkan admin via SiteSetting.
+     *
+     * @return array<int, string>  e.g. ['tripay', 'duitku']
+     */
+    private function enabledPaymentGateways(): array
+    {
+        $raw = Cache::rememberForever('site_settings:all', function () {
+            return SiteSetting::all()
+                ->mapWithKeys(fn (SiteSetting $s) => [$s->key => $s->value])
+                ->all();
+        });
+
+        $value = $raw['payment_gateways'] ?? null;
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            $value = is_array($decoded) ? $decoded : null;
+        }
+
+        $enabled = [];
+        if (is_array($value)) {
+            foreach (['tripay', 'duitku'] as $gw) {
+                if (! empty($value[$gw]['enabled'])) {
+                    $enabled[] = $gw;
+                }
+            }
+        }
+
+        // Fallback kalau setting belum di-save: tripay default ON (back-compat)
+        if (empty($enabled)) {
+            $enabled = ['tripay'];
+        }
+
+        return $enabled;
+    }
+
+    private function gatewayErrorResponse(string $gateway, \Throwable $e, string $kodeOrder): JsonResponse
+    {
+        Log::error("Topup checkout {$gateway} error", [
+            'order' => $kodeOrder,
+            'err' => $e->getMessage(),
+        ]);
+
+        return response()->json([
+            'message' => "Gagal membuat transaksi pembayaran ({$gateway}): " . $e->getMessage(),
+            'code' => "{$gateway}_error",
+        ], 502);
     }
 
     private function generateKodeOrder(): string

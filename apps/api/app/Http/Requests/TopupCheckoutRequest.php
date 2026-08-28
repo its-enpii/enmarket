@@ -21,6 +21,7 @@ class TopupCheckoutRequest extends FormRequest
             'contact_type' => ['required', 'string', 'in:phone,email'],
             'contact_value' => ['required', 'string', 'max:120'],
             'payment_gateway' => ['required', 'string', 'in:tripay,duitku'],
+            'payment_method' => ['nullable', 'string', 'max:50'],
         ];
     }
 }

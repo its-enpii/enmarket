@@ -1683,7 +1683,9 @@
       "serverIdRequired": "Server ID wajib diisi untuk game ini.",
       "contactRequired": "Nomor telepon atau email wajib diisi.",
       "gameNotFound": "Game tidak ditemukan.",
-      "itemRequired": "Pilih nominal terlebih dahulu."
-    }
+      "itemRequired": "Pilih nominal terlebih dahulu.",
+      "paymentGatewayRequired": "Pilih metode pembayaran terlebih dahulu."
+    },
+    "viaGateway": "via {gateway}"
   }
 }
