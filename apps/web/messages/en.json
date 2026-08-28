@@ -68,7 +68,8 @@
     "wishlist": "Wishlist",
     "wishlistCount": "Wishlist items",
     "login": "Login",
-    "account": "Account"
+    "account": "Account",
+    "topup": "Top Up"
   },
   "footer": {
     "brandTitle": "enpiistudio",
@@ -662,7 +663,8 @@
       "brandTitle": "enpiistudio",
       "brandSubtitle": "Admin",
       "openMenu": "Open menu",
-      "closeMenu": "Close menu"
+      "closeMenu": "Close menu",
+      "games": "Game Top-up"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -1405,6 +1407,38 @@
         "noneYet": "No custom requests yet",
         "noneYetHint": "Submissions from the Services page will appear here."
       }
+    },
+    "games": {
+      "listTitle": "Manage Games",
+      "listEyebrow": "Management",
+      "listSubtitle": "Manage games and top-up nominals.",
+      "newTitle": "Add New Game",
+      "newSubtitle": "Create a new game for top-up.",
+      "editTitle": "Edit Game",
+      "editSubtitle": "Edit game details and manage items.",
+      "field": {
+        "nama": "Game Name",
+        "slug": "Slug",
+        "brand": "Brand",
+        "iconUrl": "Icon URL",
+        "bannerUrl": "Banner URL",
+        "requiresServerId": "Requires Server ID",
+        "description": "Description",
+        "sortOrder": "Sort Order",
+        "active": "Active",
+        "digiflazzCategory": "Digiflazz Category"
+      },
+      "items": {
+        "title": "Item List",
+        "add": "Add Item",
+        "nama": "Item Name",
+        "harga": "Price",
+        "sku": "Digiflazz SKU",
+        "empty": "No items yet."
+      },
+      "empty": "No games yet.",
+      "addNew": "Add Game",
+      "confirmDelete": "Are you sure you want to delete this game?"
     }
   },
   "trending": {
@@ -1550,7 +1584,8 @@
       "orders": "My Orders",
       "wishlist": "Wishlist",
       "profile": "Profile Settings",
-      "logout": "Logout"
+      "logout": "Logout",
+      "topups": "Top-up History"
     },
     "dashboard": {
       "title": "Account Dashboard",
@@ -1580,6 +1615,50 @@
     "logout": {
       "confirm": "Are you sure you want to log out?",
       "loggedOut": "You have been logged out."
+    },
+    "topups": {
+      "title": "Top-up History",
+      "empty": "No top-up history yet.",
+      "viewDetail": "View Detail",
+      "status": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "success": "Success",
+        "failed": "Failed"
+      }
+    }
+  },
+  "topup": {
+    "title": "Game Top Up",
+    "subtitle": "Top up your favorite game credits easily and quickly.",
+    "pickGame": "Pick a Game",
+    "pickItem": "Pick Nominal",
+    "userId": "User ID",
+    "userIdHint": "Enter your in-game User ID",
+    "serverId": "Server ID",
+    "serverIdHint": "Enter Server ID (if required)",
+    "contactLabel": "Contact for Notification",
+    "contactPhone": "WhatsApp Number",
+    "contactEmail": "Email Address",
+    "payNow": "Pay Now",
+    "processing": "Processing...",
+    "successTitle": "Top-up In Progress",
+    "successMessage": "Top-up is being processed. Notification will be sent to {contact}.",
+    "failedTitle": "Payment Failed",
+    "failedMessage": "Payment failed. Please try again.",
+    "previewTitle": "Top-up Summary",
+    "total": "Total Payment",
+    "confirm": "Confirm & Pay",
+    "paymentMethod": "Payment Method",
+    "noGames": "No games available yet.",
+    "noItems": "No nominals available yet.",
+    "backToGames": "← Back to Game List",
+    "errors": {
+      "userIdRequired": "User ID is required.",
+      "serverIdRequired": "Server ID is required for this game.",
+      "contactRequired": "Phone number or email is required.",
+      "gameNotFound": "Game not found.",
+      "itemRequired": "Please pick a nominal first."
     }
   }
 }

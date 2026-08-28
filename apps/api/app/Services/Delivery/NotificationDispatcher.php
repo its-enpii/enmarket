@@ -259,4 +259,38 @@ class NotificationDispatcher
             ])->save();
         }
     }
+
+    /**
+     * Notify buyer tentang hasil top-up game (sukses/gagal).
+     * Dispatch ke n8n webhook (atau log di dev mode).
+     */
+    public function notifyTopupResult(Order $order): void
+    {
+        $order->loadMissing('game', 'gameItem');
+
+        $gameName = $order->game?->nama ?? 'Unknown Game';
+        $itemName = $order->gameItem?->nama ?? 'Unknown Item';
+        $status = $order->topup_status === 'success' ? 'berhasil' : 'gagal';
+        $sn = $order->digiflazz_response['sn'] ?? '-';
+
+        $payload = [
+            'event' => 'topup.result',
+            'order' => [
+                'kode_order' => $order->kode_order,
+                'contact_type' => $order->contact_type,
+                'contact_value' => $order->contact_value,
+                'total_harga' => (int) $order->total_harga,
+            ],
+            'topup' => [
+                'game' => $gameName,
+                'item' => $itemName,
+                'status' => $status,
+                'sn' => $sn,
+                'game_user_id' => $order->game_user_id,
+            ],
+            'channels' => $order->contact_type === 'phone' ? ['wa'] : ['email'],
+        ];
+
+        $this->postToN8n($payload);
+    }
 }

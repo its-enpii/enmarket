@@ -34,6 +34,10 @@ use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Admin\GameController as AdminGameController;
+use App\Http\Controllers\Api\Admin\GameItemController as AdminGameItemController;
+use App\Http\Controllers\Api\Customer\TopupHistoryController;
+use App\Http\Controllers\Api\Public\TopupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +75,12 @@ Route::prefix('public')->group(function () {
     // Public site config (identity + social + footer). Payment secrets
     // TIDAK di-expose di sini — hanya SiteSettings::all() yg masuk public.
     Route::get('site-config', [SiteConfigController::class, 'show']);
+
+    // Top-up game (Digiflazz)
+    Route::get('topup/games', [TopupController::class, 'games']);
+    Route::get('topup/games/{slug}', [TopupController::class, 'show']);
+    Route::post('topup/preview', [TopupController::class, 'preview'])->middleware('throttle:cart');
+    Route::post('topup/checkout', [TopupController::class, 'checkout'])->middleware('throttle:checkout');
 });
 
 // ───── Customer Auth & Account ─────
@@ -90,6 +100,8 @@ Route::prefix('customer')->group(function () {
         Route::get('wishlist', [CustomerWishlistController::class, 'index']);
         Route::post('wishlist/toggle', [CustomerWishlistController::class, 'toggle']);
         Route::delete('wishlist/{productId}', [CustomerWishlistController::class, 'destroy']);
+
+        Route::get('topups', [TopupHistoryController::class, 'index']);
     });
 });
 
@@ -219,5 +231,9 @@ Route::prefix('admin')->group(function () {
 
         // Recent activity log
         Route::get('activity', [ActivityController::class, 'index']);
+
+        // Game top-up admin CRUD
+        Route::apiResource('games', AdminGameController::class);
+        Route::apiResource('games.items', AdminGameItemController::class)->shallow();
     });
 });

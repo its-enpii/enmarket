@@ -97,4 +97,18 @@ return [
         'instance' => env('EVOLUTION_INSTANCE', 'enpiistudio'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Digiflazz (Game Top-up)
+    |--------------------------------------------------------------------------
+    */
+
+    'digiflazz' => [
+        'api_key' => env('DIGIFLAZZ_API_KEY', ''),
+        'username' => env('DIGIFLAZZ_USERNAME', ''),
+        'base_url' => env('DIGIFLAZZ_MODE', 'sandbox') === 'production'
+            ? 'https://api.digiflazz.com'
+            : 'https://api.digiflazz.com',
+    ],
+
 ];
