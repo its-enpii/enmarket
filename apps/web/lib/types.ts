@@ -4,6 +4,15 @@
  */
 
 export type StatusProduct = 'aktif' | 'draft' | 'tidak_dijual';
+
+export type PaymentGateway = 'tripay' | 'duitku';
+
+export interface PaymentGatewayConfig {
+  enabled: boolean;
+}
+
+export type PaymentGatewaysMap = Record<PaymentGateway, PaymentGatewayConfig>;
+
 export type TipeProduct = 'download' | 'license' | 'bundle' | 'account_manual';
 
 export interface Category {
@@ -110,6 +119,7 @@ export interface PublicSiteConfig {
   logo_url: string | null;
   social: SiteSocial;
   footer: SiteFooter;
+  payment_gateways: PaymentGatewaysMap;
 }
 
 export interface SiteFooter {
@@ -121,6 +131,9 @@ export interface SitePayment {
   tripay_api_key_masked: string | null;
   tripay_private_key_masked: string | null;
   tripay_mode: 'sandbox' | 'production';
+  duitku_merchant_code: string | null;
+  duitku_api_key_masked: string | null;
+  duitku_mode: 'sandbox' | 'production';
 }
 
 export interface SiteChannels {
@@ -141,6 +154,7 @@ export interface SiteSettings {
   payment: SitePayment;
   channels: SiteChannels;
   maintenance: SiteMaintenanceConfig;
+  payment_gateways: PaymentGatewaysMap;
 }
 
 export interface MaintenanceStatus {

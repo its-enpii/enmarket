@@ -77,6 +77,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Duitku payment gateway
+    |--------------------------------------------------------------------------
+    */
+
+    'duitku' => [
+        'mode' => env('DUITKU_MODE', 'sandbox'),
+        'merchant_code' => env('DUITKU_MERCHANT_CODE'),
+        'api_key' => env('DUITKU_API_KEY'),
+        'callback_url' => env('DUITKU_CALLBACK_URL'),
+        'return_url' => env('DUITKU_RETURN_URL'),
+        'base_url' => env('DUITKU_MODE') === 'production'
+            ? 'https://api-prod.duitku.com/api/merchant'
+            : 'https://api-sandbox.duitku.com/api/merchant',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | n8n orchestrator (Fase 4)
     |--------------------------------------------------------------------------
     */

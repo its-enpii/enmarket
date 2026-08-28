@@ -33,6 +33,7 @@ use App\Http\Controllers\Api\Public\ProductController as PublicProductController
 use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
+use App\Http\Controllers\Api\Public\DuitkuCallbackController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -221,3 +222,4 @@ Route::prefix('admin')->group(function () {
         Route::get('activity', [ActivityController::class, 'index']);
     });
 });
+Route::post('/duitku/callback', [DuitkuCallbackController::class, 'handle']);

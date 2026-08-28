@@ -179,6 +179,9 @@ export async function updatePayment(
     tripay_api_key: String(formData.get('tripay_api_key') ?? '').trim(),
     tripay_private_key: String(formData.get('tripay_private_key') ?? '').trim(),
     tripay_mode: String(formData.get('tripay_mode') ?? 'sandbox'),
+    duitku_merchant_code: String(formData.get('duitku_merchant_code') ?? '').trim(),
+    duitku_api_key: String(formData.get('duitku_api_key') ?? '').trim(),
+    duitku_mode: String(formData.get('duitku_mode') ?? 'sandbox'),
   };
 
   try {
@@ -221,6 +224,29 @@ export async function updateChannels(
     return { ok: true, message: res.message, data: res.data };
   } catch (err) {
     return { error: errorMessage(err, 'Gagal menyimpan payment channels.') };
+  }
+}
+
+// ───── Payment Gateways (Tripay / Duitku enable toggles) ─────
+
+export async function updatePaymentGateways(
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const values = {
+    tripay: { enabled: formData.get('gateway_tripay') === 'on' },
+    duitku: { enabled: formData.get('gateway_duitku') === 'on' },
+  };
+
+  try {
+    const res = await apiPatch<{ data: SiteSettings; message: string }>(
+      '/api/admin/settings',
+      { group: 'payment_gateways', values },
+    );
+    revalidatePath('/admin/settings/payment');
+    return { ok: true, message: res.message, data: res.data };
+  } catch (err) {
+    return { error: errorMessage(err, 'Gagal menyimpan payment gateways.') };
   }
 }
 

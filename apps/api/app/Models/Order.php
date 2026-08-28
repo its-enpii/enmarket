@@ -32,6 +32,8 @@ class Order extends Model
         'qr_url',
         'qr_expired_at',
         'paid_at',
+        'payment_gateway',
+        'payment_channel',
     ];
 
     protected $casts = [
