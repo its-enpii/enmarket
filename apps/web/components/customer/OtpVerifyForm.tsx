@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
+import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { Input } from '@/components/ui/Input';
 import { useAuth } from './AuthProvider';
 import { authApi } from '@/lib/auth-api';
 
@@ -90,9 +92,7 @@ export function OtpVerifyForm({
   return (
     <div className="space-y-4">
       {error && (
-        <div className="p-3 bg-red-100 border-2 border-red-600 text-red-800 text-sm font-medium">
-          {error}
-        </div>
+        <FormError variant="box">{error}</FormError>
       )}
 
       <div className="p-3 bg-accent/20 border-2 border-ink text-sm">
@@ -102,9 +102,9 @@ export function OtpVerifyForm({
           <button
             type="button"
             onClick={onChangePhone}
-            className="text-xs font-bold text-primary underline hover:text-ink transition-colors"
+            className="text-xs font-bold text-primary underline hover:text-ink transition-colors cursor-pointer"
           >
-            Ubah
+            {t('changePhone')}
           </button>
         </div>
       </div>
@@ -120,7 +120,7 @@ export function OtpVerifyForm({
           <label htmlFor="otp-code" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
             {t('otpLabel')}
           </label>
-          <input
+          <Input
             id="otp-code"
             type="text"
             inputMode="numeric"
@@ -130,13 +130,11 @@ export function OtpVerifyForm({
             onChange={handleCodeChange}
             placeholder="000000"
             disabled={loading}
-            className="w-full text-center tracking-[0.5em] px-4 py-3 border-3 border-ink bg-surface text-ink font-mono text-2xl font-black focus:outline-none focus:ring-2 focus:ring-primary shadow-[3px_3px_0_0_var(--color-ink)]"
+            className="text-center tracking-[0.5em] font-mono text-2xl font-black"
             autoFocus
             autoComplete="one-time-code"
           />
-          <p className="mt-1 text-xs text-ink/70 text-center">
-            {t('otpHint')}
-          </p>
+          <FormHint>{t('otpHint')}</FormHint>
         </div>
 
         <Button

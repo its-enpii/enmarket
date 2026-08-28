@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { FormError } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 import { Radio } from '@/components/ui/Radio';
 import type { Game, GameItem } from '@/lib/types';
@@ -139,7 +140,7 @@ export function TopupForm({ game }: Props) {
         router.push('/topup/success');
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Checkout gagal';
+      const msg = err instanceof Error ? err.message : t('errors.checkoutFailed');
       setError(msg);
     } finally {
       setLoading(false);
@@ -156,19 +157,17 @@ export function TopupForm({ game }: Props) {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {items.map((item) => (
-              <button
+              <Card
                 key={item.id}
+                as="button"
                 type="button"
+                variant={selectedItem?.id === item.id ? 'filled-accent' : 'surface'}
                 onClick={() => setSelectedItem(item)}
-                className={`p-3 border-4 text-left transition-all ${
-                  selectedItem?.id === item.id
-                    ? 'border-primary bg-primary/10 shadow-[4px_4px_0_0_var(--color-primary)]'
-                    : 'border-ink bg-surface hover:shadow-[4px_4px_0_0_var(--color-ink)]'
-                }`}
+                className="p-3 text-left cursor-pointer w-full"
               >
                 <p className="font-bold text-sm text-ink">{item.nama}</p>
                 <p className="text-xs text-ink/70 mt-1">{formatRupiah(item.harga)}</p>
-              </button>
+              </Card>
             ))}
           </div>
         )}
@@ -237,18 +236,15 @@ export function TopupForm({ game }: Props) {
           </label>
           <div className="flex flex-wrap gap-3">
             {availableGateways.map((gw) => (
-              <button
+              <Button
                 key={gw}
                 type="button"
+                variant={paymentGateway === gw ? 'primary' : 'surface'}
+                size="sm"
                 onClick={() => setPaymentGateway(gw)}
-                className={`px-4 py-2 border-4 font-bold transition-all ${
-                  paymentGateway === gw
-                    ? 'border-primary bg-primary/10 shadow-[4px_4px_0_0_var(--color-primary)]'
-                    : 'border-ink bg-surface hover:shadow-[4px_4px_0_0_var(--color-ink)]'
-                }`}
               >
-                {gw === 'duitku' ? 'Duitku' : 'Tripay (QRIS)'}
-              </button>
+                {t(`gateways.${gw}` as any)}
+              </Button>
             ))}
           </div>
         </div>
@@ -273,9 +269,7 @@ export function TopupForm({ game }: Props) {
       )}
 
       {error && (
-        <div className="border-4 border-red-500 bg-red-50 p-3 text-red-700 text-sm font-bold">
-          {error}
-        </div>
+        <FormError variant="box">{error}</FormError>
       )}
 
       <Button

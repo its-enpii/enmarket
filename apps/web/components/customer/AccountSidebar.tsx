@@ -4,10 +4,11 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useAuth } from './AuthProvider';
-import { Card } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 
 export function AccountSidebar() {
   const t = useTranslations('account.nav');
+  const tSidebar = useTranslations('account.sidebar');
   const tLogout = useTranslations('account.logout');
   const pathname = usePathname();
   const router = useRouter();
@@ -32,9 +33,9 @@ export function AccountSidebar() {
     <aside className="w-full md:w-64 shrink-0">
       <Card variant="surface" hoverable={false} className="p-5">
         <div className="pb-4 mb-4 border-b-2 border-ink">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">Akun Pelanggan</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{tSidebar('title')}</p>
           <p className="text-lg font-black text-ink truncate mt-1">
-            {user?.name || 'Pelanggan'}
+            {user?.name || tSidebar('defaultName')}
           </p>
           <p className="text-xs font-mono text-ink/70 truncate">{user?.phone}</p>
         </div>
@@ -61,14 +62,16 @@ export function AccountSidebar() {
             );
           })}
 
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="sm"
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-600 border-2 border-transparent hover:bg-red-50 hover:border-red-600 transition-all text-left mt-4"
+            className="w-full !justify-start gap-3 mt-4 !text-red-600 hover:!bg-red-50"
           >
             <span>🚪</span>
             <span>{t('logout')}</span>
-          </button>
+          </Button>
         </nav>
       </Card>
     </aside>

@@ -3,8 +3,18 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button } from '@/components/ui/neobrutal';
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import { formatDate } from '@/lib/format';
 import type { Order } from '@/lib/types';
+
+const STATUS_TONE: Record<string, BadgeTone> = {
+  paid: 'accent',
+  pending: 'surface',
+  preorder_deposit_paid: 'primary',
+  failed: 'ink',
+  expired: 'ink',
+  refunded: 'ink',
+};
 
 interface Props {
   order: Order;
@@ -13,23 +23,7 @@ interface Props {
 export function OrderHistoryItem({ order }: Props) {
   const t = useTranslations('account.orders');
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return 'bg-green-100 text-green-800 border-green-700';
-      case 'pending':
-        return 'bg-amber-100 text-amber-800 border-amber-700';
-      case 'preorder_deposit_paid':
-        return 'bg-blue-100 text-blue-800 border-blue-700';
-      case 'failed':
-      case 'expired':
-        return 'bg-red-100 text-red-800 border-red-700';
-      case 'refunded':
-        return 'bg-purple-100 text-purple-800 border-purple-700';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-700';
-    }
-  };
+
 
   const statusKey = `status.${order.status}` as any;
   const statusLabel = t(statusKey);
@@ -44,13 +38,9 @@ export function OrderHistoryItem({ order }: Props) {
             <span className="font-mono font-black text-ink text-base">
               {order.kode_order}
             </span>
-            <span
-              className={`px-2 py-0.5 text-xs font-bold uppercase border-2 ${getStatusBadge(
-                order.status
-              )}`}
-            >
+            <Badge tone={STATUS_TONE[order.status] ?? 'surface'} size="sm">
               {statusLabel}
-            </span>
+            </Badge>
           </div>
           <p className="text-xs text-ink/60 mt-0.5">
             {order.created_at ? formatDate(order.created_at) : '-'}
@@ -58,7 +48,7 @@ export function OrderHistoryItem({ order }: Props) {
         </div>
 
         <div className="text-left sm:text-right">
-          <p className="text-xs text-ink/70 uppercase font-semibold">Total</p>
+          <p className="text-xs text-ink/70 uppercase font-semibold">{t('total')}</p>
           <p className="font-black text-ink text-lg font-mono">
             {order.total_harga_formatted}
           </p>
@@ -80,7 +70,7 @@ export function OrderHistoryItem({ order }: Props) {
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-ink/60">{itemCount} items</p>
+          <p className="text-xs text-ink/60">{t('itemsCount', { count: itemCount })}</p>
         )}
       </div>
 

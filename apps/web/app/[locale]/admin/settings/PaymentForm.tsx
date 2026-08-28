@@ -14,6 +14,7 @@
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { Checkbox } from '@/components/ui/Checkbox';
@@ -71,16 +72,12 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
             </p>
           </div>
           <div className="text-right shrink-0">
-            <span
-              className={
-                'inline-flex items-center gap-1 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-2 border-ink ' +
-                (initial.tripay_mode === 'production'
-                  ? 'bg-primary text-surface'
-                  : 'bg-accent text-ink')
-              }
+            <Badge
+              tone={initial.tripay_mode === 'production' ? 'primary' : 'accent'}
+              size="sm"
             >
               {initial.tripay_mode === 'production' ? t('modeBadgeLive') : t('modeBadgeTest')}
-            </span>
+            </Badge>
           </div>
         </div>
       </Card>

@@ -3,7 +3,8 @@
 import { useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
+import { FormError } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 
@@ -146,10 +147,12 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
             </Field>
 
             {error && (
-              <p className="text-xs text-red-700 bg-red-50 border border-red-300 p-2">{error}</p>
+              <FormError variant="box">{error}</FormError>
             )}
             {success && (
-              <p className="text-xs text-green-800 bg-green-50 border border-green-300 p-2">{success}</p>
+              <Card variant="filled-accent" hoverable={false} className="p-2 text-xs font-bold text-ink">
+                ✓ {success}
+              </Card>
             )}
 
             <div className="flex gap-2 justify-end pt-2">

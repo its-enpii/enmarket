@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
+import { Input } from '@/components/ui/Input';
 import type { PaymentGateway } from '@/lib/types';
 
 interface Props {
@@ -70,14 +71,14 @@ export function PaymentMethodSelector({
           <label htmlFor="payment_method" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
             {tCheckout('paymentMethod')}
           </label>
-          <input
+          <Input
             id="payment_method"
             name="payment_method"
             type="text"
             value={paymentMethod}
             onChange={(e) => onChangePaymentMethod(e.target.value)}
             placeholder="VC, QR, OVO, etc."
-            className="w-full border-2 border-ink bg-surface px-3 py-2 text-sm font-bold uppercase tracking-wide placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="font-bold uppercase tracking-wide"
           />
         </div>
       )}

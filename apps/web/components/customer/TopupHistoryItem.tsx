@@ -3,15 +3,16 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/neobrutal';
 import { formatRupiah, formatDate } from '@/lib/format';
 import type { TopupOrder, TopupStatus } from '@/lib/types';
 
-const STATUS_COLORS: Record<TopupStatus, string> = {
-  pending: 'bg-yellow-100 text-yellow-800 border-yellow-600',
-  processing: 'bg-blue-100 text-blue-800 border-blue-600',
-  success: 'bg-green-100 text-green-800 border-green-600',
-  failed: 'bg-red-100 text-red-800 border-red-600',
+const STATUS_TONE: Record<TopupStatus, BadgeTone> = {
+  pending: 'surface',
+  processing: 'primary',
+  success: 'accent',
+  failed: 'ink',
 };
 
 interface Props {
@@ -21,7 +22,7 @@ interface Props {
 export function TopupHistoryItem({ order }: Props) {
   const t = useTranslations('account.topups');
   const status = order.topup_status ?? 'pending';
-  const statusColor = STATUS_COLORS[status] ?? STATUS_COLORS.pending;
+  const tone = STATUS_TONE[status] ?? STATUS_TONE.pending;
 
   return (
     <Card variant="surface" hoverable={false} className="p-4">
@@ -39,9 +40,11 @@ export function TopupHistoryItem({ order }: Props) {
         </div>
         <div className="text-right shrink-0">
           <p className="font-bold text-sm">{formatRupiah(order.total_harga)}</p>
-          <span className={`inline-block text-xs font-bold px-2 py-0.5 border-2 mt-1 ${statusColor}`}>
-            {t(`status.${status}`)}
-          </span>
+          <div className="mt-1">
+            <Badge tone={tone} size="sm">
+              {t(`status.${status}`)}
+            </Badge>
+          </div>
         </div>
       </div>
     </Card>
