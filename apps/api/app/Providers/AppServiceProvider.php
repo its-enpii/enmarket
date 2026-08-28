@@ -89,7 +89,8 @@ class AppServiceProvider extends ServiceProvider
             return new DigiflazzClient(
                 apiKey: (string) config('services.digiflazz.api_key', ''),
                 username: (string) config('services.digiflazz.username', ''),
-                baseUrl: (string) config('services.digiflazz.base_url', 'https://api.digiflazz.com'),
+                baseUrl: (string) config('services.digiflazz.base_url', 'https://api.digiflazz.com/v1'),
+                webhookSecret: (string) config('services.digiflazz.webhook_secret', ''),
             );
         });
 

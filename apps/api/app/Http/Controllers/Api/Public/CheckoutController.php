@@ -273,7 +273,16 @@ class CheckoutController extends Controller
             ], 422);
         }
 
-        $paymentMethod = $request->input('payment_method', 'QRIS2');
+        $paymentMethod = $request->input('payment_method');
+
+        // Duitku default payment method comes from config (DUITKU_DEFAULT_METHOD) —
+        // kalau nggak dipilih di request, pakai yang admin setting.
+        if ($gateway === 'duitku' && empty($paymentMethod)) {
+            $paymentMethod = (string) config('services.duitku.default_method', 'SP');
+        }
+
+        // QRIS2 default untuk Tripay sandbox flow (kept for backward compat)
+        $paymentMethod ??= 'QRIS2';
 
         try {
             $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $appliedCoupon, $userId, $gateway, $paymentMethod) {
@@ -318,7 +327,7 @@ class CheckoutController extends Controller
                     customerName: $request->nama,
                     callbackUrl: config('services.duitku.callback_url') ?: null,
                     returnUrl: config('services.duitku.return_url') ?: null,
-                    expiryPeriod: 60,
+                    expiryPeriod: (int) config('services.duitku.expiry_period', 1440),
                 );
 
                 $duitkuRes = $this->duitku->createTransaction($duitkuDto);

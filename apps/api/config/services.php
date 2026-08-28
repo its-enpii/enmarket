@@ -85,6 +85,8 @@ return [
         'mode' => env('DUITKU_MODE', 'sandbox'),
         'merchant_code' => env('DUITKU_MERCHANT_CODE'),
         'api_key' => env('DUITKU_API_KEY'),
+        'default_method' => env('DUITKU_DEFAULT_METHOD', 'SP'),
+        'expiry_period' => (int) env('DUITKU_EXPIRY_PERIOD', 1440),
         'callback_url' => env('DUITKU_CALLBACK_URL'),
         'return_url' => env('DUITKU_RETURN_URL'),
         'base_url' => env('DUITKU_MODE') === 'production'
@@ -121,11 +123,11 @@ return [
     */
 
     'digiflazz' => [
-        'api_key' => env('DIGIFLAZZ_API_KEY', ''),
         'username' => env('DIGIFLAZZ_USERNAME', ''),
-        'base_url' => env('DIGIFLAZZ_MODE', 'sandbox') === 'production'
-            ? 'https://api.digiflazz.com'
-            : 'https://api.digiflazz.com',
+        'api_key' => env('DIGIFLAZZ_API_KEY', ''),
+        'base_url' => env('DIGIFLAZZ_BASE_URL', 'https://api.digiflazz.com/v1'),
+        'webhook_secret' => env('DIGIFLAZZ_WEBHOOK_SECRET', ''),
+        'mode' => env('DIGIFLAZZ_MODE', 'dev'),
     ],
 
 ];

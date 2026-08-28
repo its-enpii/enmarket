@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\Public\CartController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\CheckoutController;
 use App\Http\Controllers\Api\Public\CustomRequestController;
+use App\Http\Controllers\Api\Public\DigiflazzWebhookController;
 use App\Http\Controllers\Api\Public\DownloadController;
 use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\PostController as PublicPostController;
@@ -138,6 +139,13 @@ Route::get('/orders/{kodeOrder}', [OrderController::class, 'show']);
 // Tripay callback (public, signature-verified — no throttle; signature
 // verification itself prevents abuse. Kalau production butuh, tambah IP allowlist.)
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle']);
+
+// Duitku callback (public, signature-verified)
+Route::post('/duitku/callback', [DuitkuCallbackController::class, 'handle']);
+
+// Digiflazz webhook (public, HMAC-SHA256 signature-verified via DIGIFLAZZ_WEBHOOK_SECRET).
+// Digiflazz mengirim status update async (queue → success/gagal) setelah initial topup.
+Route::post('/digiflazz/webhook', [DigiflazzWebhookController::class, 'handle']);
 
 // Public download endpoint (token-based, no auth, throttled per token)
 Route::get('/download/{token}', [DownloadController::class, 'show'])

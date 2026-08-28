@@ -12,6 +12,7 @@ class DigiflazzClient
         private readonly string $apiKey,
         private readonly string $username,
         private readonly string $baseUrl,
+        private readonly string $webhookSecret = '',
         private readonly int $timeout = 15,
     ) {}
 
@@ -107,5 +108,29 @@ class DigiflazzClient
         } catch (ConnectionException $e) {
             throw new DigiflazzException('Digiflazz balance check failed: ' . $e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * Verify HMAC-SHA256 signature pada webhook callback dari Digiflazz.
+     *
+     * Format header (per docs): `x-digiflazz-signature` containing
+     * hex HMAC-SHA256(rawBody, webhookSecret).
+     *
+     * @return bool  true jika signature cocok, false jika tidak (atau secret belum di-set)
+     */
+    public function verifyWebhookSignature(string $rawBody, ?string $incomingSignature): bool
+    {
+        if (empty($this->webhookSecret) || empty($incomingSignature)) {
+            return false;
+        }
+
+        $expected = hash_hmac('sha256', $rawBody, $this->webhookSecret);
+
+        return hash_equals($expected, strtolower($incomingSignature));
+    }
+
+    public function webhookSecret(): string
+    {
+        return $this->webhookSecret;
     }
 }
