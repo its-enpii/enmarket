@@ -44,6 +44,9 @@ export default async function CustomRequestDetailPage({ params }: Props) {
           {t('detailTitle')} #{request.id}
           <span className="text-primary">.</span>
         </h1>
+        <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
+          {request.deskripsi.length > 140 ? `${request.deskripsi.slice(0, 140)}…` : request.deskripsi}
+        </p>
       </header>
 
       {/* Quick actions — konsisten dengan detail pages lain (back to list) */}
