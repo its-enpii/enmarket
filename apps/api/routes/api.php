@@ -246,4 +246,3 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('games.items', AdminGameItemController::class)->shallow();
     });
 });
-Route::post('/duitku/callback', [DuitkuCallbackController::class, 'handle']);
