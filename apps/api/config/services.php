@@ -100,6 +100,25 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    'duitku' => [
+        'mode' => env('DUITKU_MODE', 'sandbox'),
+        'merchant_code' => env('DUITKU_MERCHANT_CODE'),
+        'api_key' => env('DUITKU_API_KEY'),
+        'default_method' => env('DUITKU_DEFAULT_METHOD', 'SP'),
+        'expiry_period' => (int) env('DUITKU_EXPIRY_PERIOD', 1440),
+        'callback_url' => env('DUITKU_CALLBACK_URL'),
+        'return_url' => env('DUITKU_RETURN_URL'),
+        'base_url' => env('DUITKU_MODE') === 'production'
+            ? 'https://api-prod.duitku.com/api/merchant'
+            : 'https://api-sandbox.duitku.com/api/merchant',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | n8n orchestrator (Fase 4)
+    |--------------------------------------------------------------------------
+    */
+
     'n8n' => [
         'webhook_kirim_produk' => env('N8N_WEBHOOK_KIRIM_PRODUK'),
     ],

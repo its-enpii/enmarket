@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { NLink } from '@/components/ui/neobrutal';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
@@ -45,12 +45,14 @@ export default async function PembayaranPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-8 sm:py-12">
-      <Link
+      <NLink
         href="/keranjang"
-        className="inline-block mb-4 text-sm font-bold text-ink/60 hover:text-primary"
+        variant="default"
+        underline="hover"
+        className="inline-block mb-4 text-sm font-bold text-ink/60"
       >
         {tCommon('back')}
-      </Link>
+      </NLink>
 
       <h1 className="text-2xl sm:text-3xl font-bold text-ink mb-2">
         {t('title')}

@@ -15,7 +15,7 @@ export default function AkunProfilPage() {
           {t('title')}
         </h1>
         <p className="text-sm text-ink/70 mt-1">
-          Kelola informasi nama, nomor WhatsApp, dan email Anda.
+          {t('subtitle')}
         </p>
       </div>
 

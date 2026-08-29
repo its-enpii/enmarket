@@ -80,9 +80,26 @@ class Order extends Model
         return $this->belongsTo(GameItem::class);
     }
 
+    /**
+     * Apakah order ini sudah dibayar?
+     *
+     * Mencakup `paid` (Tripay callback) dan `free` (cart berisi produk is_free,
+     * skip payment gateway) — keduanya end-state yang siap untuk delivery.
+     */
     public function isPaid(): bool
     {
         return $this->status === 'paid';
+    }
+
+    /**
+     * Apakah order ini free (checkout skip payment gateway)?
+     *
+     * Provenance berbeda dari `paid` (tidak ada Tripay reference), tapi delivery
+     * flow-nya identik — license/file tersedia, notification terkirim.
+     */
+    public function isFree(): bool
+    {
+        return $this->status === 'free';
     }
 
     public function isQrisValid(): bool
@@ -107,6 +124,14 @@ class Order extends Model
         return $this->isPreorder()
             && $this->status === 'paid'
             && $this->preorder_release_processed_at !== null;
+    }
+
+    /**
+     * Ulasan yang dibuat untuk produk dalam pesanan ini.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function isTopupOrder(): bool

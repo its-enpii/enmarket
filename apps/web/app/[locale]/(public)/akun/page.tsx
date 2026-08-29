@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import { useAuth } from '@/components/customer/AuthProvider';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';

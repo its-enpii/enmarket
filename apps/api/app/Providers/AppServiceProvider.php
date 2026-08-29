@@ -20,6 +20,8 @@ use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
 use App\Services\Duitku\DuitkuClient;
 use App\Services\Payment\OrderPaidHandler;
+use App\Services\WhatsApp\MessageBuilder;
+use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -74,6 +76,16 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
+        // Bind WhatsAppClient — null webhook = dev log mode
+        $this->app->singleton(WhatsAppClient::class, function () {
+            $url = config('services.whatsapp.webhook_url') ?: null;
+
+            return new WhatsAppClient(
+                webhookUrl: $url,
+                webhookSecret: (string) config('services.whatsapp.webhook_secret', 'enmarket.webhook'),
+            );
+        });
+
         // Bind OrderPaidHandler (shared across all payment gateways)
         $this->app->singleton(OrderPaidHandler::class);
 
@@ -81,6 +93,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(NotificationDispatcher::class, function () {
             return new NotificationDispatcher(
                 n8nWebhookUrl: config('services.n8n.webhook_kirim_produk') ?: null,
+            );
+        });
+
+        // Bind DigiflazzClient (game top-up API)
+        $this->app->singleton(DigiflazzClient::class, function () {
+            return new DigiflazzClient(
+                apiKey: (string) config('services.digiflazz.api_key', ''),
+                username: (string) config('services.digiflazz.username', ''),
+                baseUrl: (string) config('services.digiflazz.base_url', 'https://api.digiflazz.com/v1'),
+                webhookSecret: (string) config('services.digiflazz.webhook_secret', ''),
             );
         });
 
