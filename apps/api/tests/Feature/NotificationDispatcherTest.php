@@ -131,8 +131,8 @@ class NotificationDispatcherTest extends TestCase
 
     public function test_dev_mode_marks_sent_when_webhook_url_null(): void
     {
-        // Dev mode: mail driver=log → email "sent"; WA client null → wa_sent_at
-        // tetap null (per-channel truthful, tidak ada auto-mark kedua channel).
+        // Dev mode (tanpa WA client): mail driver=array dianggap terkirim;
+        // WA client null → wa_sent_at tetap null (per-channel truthful).
         $dispatcher = new NotificationDispatcher(null);
         [$order, $delivery] = $this->makeOrderWithDelivery();
 
@@ -218,7 +218,8 @@ class NotificationDispatcherTest extends TestCase
 
     public function test_account_ready_dev_mode_marks_provisioning_sent(): void
     {
-        // Dev mode: mail driver=log → email "sent"; WA client null → wa_sent_at null.
+        // Dev mode (tanpa WA client): email via mailer array terkirim OK;
+        // wa_sent_at tetap null (per-channel truthful).
         $dispatcher = new NotificationDispatcher(null);
         $prov = $this->makeProvisioningReady();
 

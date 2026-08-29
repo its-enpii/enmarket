@@ -164,7 +164,7 @@ class NotificationDispatcher
                 eventType: $eventType,
                 deliveries: $deliveries,
                 provisioning: $provisioning,
-                siteUrl: $this->siteUrl ?? config('services.next.public_url', ''),
+                siteUrl: (string) ($this->siteUrl ?? config('services.next.public_url', '')),
             ));
 
             Log::info('NotificationDispatcher: email sent', [
