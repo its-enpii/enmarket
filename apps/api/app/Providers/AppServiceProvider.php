@@ -10,6 +10,7 @@ use App\Models\SiteSetting;
 use App\Observers\ActivityLogger;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
+use App\Services\Digiflazz\DigiflazzClient;
 use App\Services\Delivery\OrderDeliveryService;
 use App\Services\NextRevalidator;
 use App\Services\SiteSettings;
@@ -17,8 +18,8 @@ use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
-use App\Services\WhatsApp\MessageBuilder;
-use App\Services\WhatsApp\WhatsAppClient;
+use App\Services\Duitku\DuitkuClient;
+use App\Services\Payment\OrderPaidHandler;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -64,33 +65,32 @@ class AppServiceProvider extends ServiceProvider
         // Bind CartService (stateless, bisa singleton)
         $this->app->singleton(CartService::class, fn () => new CartService);
 
-        // Bind WhatsAppClient — null webhook = dev log mode
-        $this->app->singleton(WhatsAppClient::class, function () {
-            $url = config('services.whatsapp.webhook_url') ?: null;
-
-            return new WhatsAppClient(
-                webhookUrl: $url,
-                webhookSecret: (string) config('services.whatsapp.webhook_secret', 'enmarket.webhook'),
+        // Bind Duitku client (singleton — immutable config)
+        $this->app->singleton(DuitkuClient::class, function () {
+            return new DuitkuClient(
+                merchantCode: (string) config('services.duitku.merchant_code', ''),
+                apiKey: (string) config('services.duitku.api_key', ''),
+                baseUrl: (string) config('services.duitku.base_url', ''),
             );
         });
 
-        // Bind WhatsApp MessageBuilder
-        $this->app->singleton(MessageBuilder::class, function () {
-            return new MessageBuilder(
-                siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
-                storeName: (string) config('app.name', 'Enmarket'),
-            );
-        });
+        // Bind OrderPaidHandler (shared across all payment gateways)
+        $this->app->singleton(OrderPaidHandler::class);
 
-        // Bind NotificationDispatcher — now with WhatsApp + Email channels
-        $this->app->singleton(NotificationDispatcher::class, function ($app) {
-            $waUrl = config('services.whatsapp.webhook_url') ?: null;
-
+        // Bind NotificationDispatcher — null webhook kalau belum dikonfigurasi = dev log mode
+        $this->app->singleton(NotificationDispatcher::class, function () {
             return new NotificationDispatcher(
                 n8nWebhookUrl: config('services.n8n.webhook_kirim_produk') ?: null,
-                waClient: $waUrl ? $app->make(WhatsAppClient::class) : null,
-                waMessageBuilder: $waUrl ? $app->make(MessageBuilder::class) : null,
-                siteUrl: (string) config('services.next.public_url', config('app.url', 'http://localhost')),
+            );
+        });
+
+        // Bind DigiflazzClient (game top-up API)
+        $this->app->singleton(DigiflazzClient::class, function () {
+            return new DigiflazzClient(
+                apiKey: (string) config('services.digiflazz.api_key', ''),
+                username: (string) config('services.digiflazz.username', ''),
+                baseUrl: (string) config('services.digiflazz.base_url', 'https://api.digiflazz.com/v1'),
+                webhookSecret: (string) config('services.digiflazz.webhook_secret', ''),
             );
         });
 

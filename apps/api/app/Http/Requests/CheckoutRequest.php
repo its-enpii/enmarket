@@ -19,6 +19,8 @@ class CheckoutRequest extends FormRequest
             'wa' => ['required', 'string', 'min:8', 'max:20', 'regex:/^[0-9+\-\s]+$/'],
             'session_id' => ['nullable', 'string', 'max:64'],
             'coupon_code' => ['nullable', 'string', 'max:50'],
+            'payment_gateway' => ['nullable', 'string', 'in:tripay,duitku'],
+            'payment_method' => ['nullable', 'string', 'max:50'],
         ];
     }
 

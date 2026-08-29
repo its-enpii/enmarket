@@ -77,34 +77,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | n8n orchestrator (Fase 4)
+    | Duitku payment gateway
     |--------------------------------------------------------------------------
-    |
-    | Laravel POST ke webhook ini setelah order paid; n8n workflow yang
-    | mengirim email + WhatsApp ke pembeli. Jalur ini sudah tidak dipakai —
-    | notifikasi kini direct Email+WA dari NotificationDispatcher. Config
-    | dibiarkan untuk backward compatibility.
-    |
     */
 
-    'n8n' => [
-        'webhook_kirim_produk' => env('N8N_WEBHOOK_KIRIM_PRODUK'),
+    'duitku' => [
+        'mode' => env('DUITKU_MODE', 'sandbox'),
+        'merchant_code' => env('DUITKU_MERCHANT_CODE'),
+        'api_key' => env('DUITKU_API_KEY'),
+        'default_method' => env('DUITKU_DEFAULT_METHOD', 'SP'),
+        'expiry_period' => (int) env('DUITKU_EXPIRY_PERIOD', 1440),
+        'callback_url' => env('DUITKU_CALLBACK_URL'),
+        'return_url' => env('DUITKU_RETURN_URL'),
+        'base_url' => env('DUITKU_MODE') === 'production'
+            ? 'https://api-prod.duitku.com/api/merchant'
+            : 'https://api-sandbox.duitku.com/api/merchant',
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | WhatsApp webhook agent (enpiistudio)
+    | n8n orchestrator (Fase 4)
     |--------------------------------------------------------------------------
-    |
-    | Kirim notifikasi WA langsung via webhook agent enpiistudio.
-    | Signature: HMAC-SHA256 atas JSON body dengan secret key.
-    | Kalau WA_WEBHOOK_URL kosong, WhatsApp channel di-skip (log only).
-    |
     */
 
-    'whatsapp' => [
-        'webhook_url' => env('WA_WEBHOOK_URL'),
-        'webhook_secret' => env('WA_WEBHOOK_SECRET', 'enmarket.webhook'),
+    'n8n' => [
+        'webhook_kirim_produk' => env('N8N_WEBHOOK_KIRIM_PRODUK'),
     ],
 
     /*
@@ -117,6 +114,20 @@ return [
         'url' => env('EVOLUTION_API_URL'),
         'api_key' => env('EVOLUTION_API_KEY'),
         'instance' => env('EVOLUTION_INSTANCE', 'enpiistudio'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Digiflazz (Game Top-up)
+    |--------------------------------------------------------------------------
+    */
+
+    'digiflazz' => [
+        'username' => env('DIGIFLAZZ_USERNAME', ''),
+        'api_key' => env('DIGIFLAZZ_API_KEY', ''),
+        'base_url' => env('DIGIFLAZZ_BASE_URL', 'https://api.digiflazz.com/v1'),
+        'webhook_secret' => env('DIGIFLAZZ_WEBHOOK_SECRET', ''),
+        'mode' => env('DIGIFLAZZ_MODE', 'dev'),
     ],
 
 ];

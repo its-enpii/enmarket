@@ -334,12 +334,11 @@ class CheckoutFlowTest extends TestCase
             ]),
         );
 
-        // sanitizePhone: hapus non-digit lalu normalisasi prefix 628 → 08
-        // (format yang diminta Tripay: 0812..., tanpa + dan tanpa spasi)
+        // sanitizePhone: hapus semua non-digit → '6281234567890'
         $this->assertEquals(
-            '081234567890',
+            '6281234567890',
             CheckoutTripayStub::$lastCustomerPhone,
-            'Phone harus dinormalisasi ke format 08xxx',
+            'Phone harus disanitasi jadi digits-only',
         );
     }
 
@@ -373,7 +372,7 @@ class CheckoutFlowTest extends TestCase
         );
 
         $response->assertStatus(502);
-        $response->assertJsonFragment(['code' => 'tripay_error']);
+        $response->assertJsonFragment(['code' => 'payment_error']);
         // Cart TIDAK di-clear saat Tripay gagal (order tidak terbuat)
         $this->assertNotNull(Cart::where('session_id', self::SESSION)->first());
     }

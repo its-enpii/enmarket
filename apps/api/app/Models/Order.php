@@ -32,6 +32,18 @@ class Order extends Model
         'qr_url',
         'qr_expired_at',
         'paid_at',
+        'is_topup_order',
+        'game_id',
+        'game_item_id',
+        'game_user_id',
+        'game_server_id',
+        'contact_type',
+        'contact_value',
+        'topup_status',
+        'digiflazz_trx_id',
+        'digiflazz_response',
+        'payment_gateway',
+        'payment_channel',
     ];
 
     protected $casts = [
@@ -44,6 +56,8 @@ class Order extends Model
         'preorder_release_processed_at' => 'datetime',
         'qr_expired_at' => 'datetime',
         'paid_at' => 'datetime',
+        'is_topup_order' => 'boolean',
+        'digiflazz_response' => 'array',
     ];
 
     public function user(): BelongsTo
@@ -51,39 +65,26 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Item-item dalam order ini.
-     */
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    /**
-     * Apakah order ini sudah dibayar?
-     *
-     * Mencakup `paid` (Tripay callback) dan `free` (cart berisi produk is_free,
-     * skip payment gateway) — keduanya end-state yang siap untuk delivery.
-     */
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo(Game::class);
+    }
+
+    public function gameItem(): BelongsTo
+    {
+        return $this->belongsTo(GameItem::class);
+    }
+
     public function isPaid(): bool
     {
-        return in_array($this->status, ['paid', 'free'], true);
+        return $this->status === 'paid';
     }
 
-    /**
-     * Apakah order ini free (checkout skip payment gateway)?
-     *
-     * Provenance berbeda dari `paid` (tidak ada Tripay reference), tapi delivery
-     * flow-nya identik — license/file tersedia, notification terkirim.
-     */
-    public function isFree(): bool
-    {
-        return $this->status === 'free';
-    }
-
-    /**
-     * Apakah QR masih berlaku?
-     */
     public function isQrisValid(): bool
     {
         return $this->status === 'pending'
@@ -91,42 +92,25 @@ class Order extends Model
             && $this->qr_expired_at->isFuture();
     }
 
-    /**
-     * Apakah order ini pre-order (DP dulu, fulfillment di-defer saat release)?
-     * Snapshot dari cart saat checkout — cart policy all-or-nothing (mixed cart
-     * ditolak 422), jadi flag ini konsisten di seluruh item order.
-     */
     public function isPreorder(): bool
     {
         return (bool) $this->is_preorder;
     }
 
-    /**
-     * Order pre-order yang sudah bayar DP tapi belum release — menunggu admin
-     * trigger manual via /admin/preorders/{id}/release-now.
-     */
     public function isAwaitingRelease(): bool
     {
         return $this->isPreorder() && $this->status === 'preorder_deposit_paid';
     }
 
-    /**
-     * Order pre-order yang sudah selesai di-release — status sudah `paid` dan
-     * `preorder_release_processed_at` populated. Tampil berbeda dari paid biasa
-     * di UI success page (dengan release info header).
-     */
     public function isPreorderFulfilled(): bool
     {
         return $this->isPreorder()
             && $this->status === 'paid'
             && $this->preorder_release_processed_at !== null;
     }
-    /**
-     * Ulasan yang dibuat untuk produk dalam pesanan ini.
-     */
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
 
+    public function isTopupOrder(): bool
+    {
+        return $this->game_item_id !== null;
+    }
 }

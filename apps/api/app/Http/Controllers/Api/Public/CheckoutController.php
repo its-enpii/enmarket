@@ -8,10 +8,13 @@ use App\Http\Resources\CartResource;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\SiteSetting;
 use App\Models\User;
 use App\Services\Auth\WhatsappOtpService;
 use App\Services\Cart\CartService;
-use App\Services\Delivery\OrderDeliveryService;
+use App\Services\Duitku\CreateTransactionDto as DuitkuTransactionDto;
+use App\Services\Duitku\DuitkuClient;
+use App\Services\Duitku\DuitkuException;
 use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use App\Services\Tripay\TripayException;
@@ -26,11 +29,11 @@ class CheckoutController extends Controller
     public function __construct(
         private readonly CartService $cartService,
         private readonly TripayClient $tripay,
-        private readonly OrderDeliveryService $deliveryService,
+        private readonly DuitkuClient $duitku,
     ) {}
 
     /**
-     * GET /api/checkout â€” preview cart (untuk sanity-check sebelum form).
+     * GET /api/checkout — preview cart (untuk sanity-check sebelum form).
      */
     public function preview(Request $request): JsonResponse
     {
@@ -45,7 +48,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * POST /api/checkout/apply-coupon â€” validasi kupon dan kalkulasi diskon.
+     * POST /api/checkout/apply-coupon — validasi kupon dan kalkulasi diskon.
      */
     public function applyCoupon(Request $request): JsonResponse
     {
@@ -128,7 +131,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * POST /api/checkout â€” proses checkout, hit Tripay, return kode_order.
+     * POST /api/checkout — proses checkout, hit Tripay, return kode_order.
      */
     public function store(CheckoutRequest $request): JsonResponse
     {
@@ -168,24 +171,11 @@ class CheckoutController extends Controller
             ], 422);
         }
 
-        // Free vs paid cart policy: all-or-nothing (seperti pre-order).
-        // Cart campuran free + berbayar â†’ 422. Pembeli harus pisah cart jadi 2 order.
-        // Checkout free skip payment gateway, jadi tidak bisa diproses sebagian.
-        $hasFree = $items->contains(fn ($i) => $i->product?->isFree());
-        $hasPaid = $items->contains(fn ($i) => $i->product && ! $i->product->isFree());
-
-        if ($hasFree && $hasPaid) {
-            return response()->json([
-                'message' => 'Tidak boleh campur produk gratis dengan produk berbayar dalam satu pesanan.',
-                'code' => 'cart_free_mixed',
-            ], 422);
-        }
-
         $fullTotal = (int) $items->sum(fn ($i) => $i->product->harga * $i->qty);
 
-        // Pre-order handling: cart policy all-or-nothing. Mixed cart â†’ 422.
+        // Pre-order handling: cart policy all-or-nothing. Mixed cart → 422.
         // Kalau semua item pre-orderable, amount yang di-charge ke Tripay = DP%
-        // (bukan harga penuh). Saat release admin trigger manual â€” see PreorderReleaseService.
+        // (bukan harga penuh). Saat release admin trigger manual — see PreorderReleaseService.
         $hasPreorder = $items->contains(fn ($i) => $i->product?->isPreOrderable());
         $hasNonPreorder = $items->contains(fn ($i) => $i->product && ! $i->product->isPreOrderable());
 
@@ -235,13 +225,6 @@ class CheckoutController extends Controller
                 'preorder_deposit_amount' => $depositTotal,
                 'preorder_remaining_amount' => $remainingTotal,
             ];
-        } elseif ($hasFree) {
-            // Free cart: fullTotal == 0 (backend auto-set harga=0 saat is_free).
-            // Skip Tripay â€” order langsung dibuat dengan status `free` + paid_at.
-            // Delivery di-trigger synchronously di dalam transaction supaya buyer
-            // langsung dapat download token saat landing di /pesanan-sukses.
-            $total = 0;
-            $preorderMeta = ['is_preorder' => false];
         } else {
             if ($fullTotal < 100) {
                 return response()->json([
@@ -282,9 +265,27 @@ class CheckoutController extends Controller
 
         $kodeOrder = $this->generateKodeOrder();
 
+        $gateway = $this->resolveGateway($request->input('payment_gateway'));
+        if (! $gateway) {
+            return response()->json([
+                'message' => 'Tidak ada payment gateway yang aktif.',
+                'code' => 'no_gateway_enabled',
+            ], 422);
+        }
+
+        $paymentMethod = $request->input('payment_method');
+
+        // Duitku default payment method comes from config (DUITKU_DEFAULT_METHOD) —
+        // kalau nggak dipilih di request, pakai yang admin setting.
+        if ($gateway === 'duitku' && empty($paymentMethod)) {
+            $paymentMethod = (string) config('services.duitku.default_method', 'SP');
+        }
+
+        // QRIS2 default untuk Tripay sandbox flow (kept for backward compat)
+        $paymentMethod ??= 'QRIS2';
+
         try {
-            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $appliedCoupon, $userId, $hasFree) {
-                $initialStatus = $hasFree ? 'free' : 'pending';
+            $order = DB::transaction(function () use ($items, $request, $total, $kodeOrder, $preorderMeta, $appliedCoupon, $userId, $gateway, $paymentMethod) {
                 $orderData = [
                     'user_id' => $userId,
                     'kode_order' => $kodeOrder,
@@ -292,7 +293,9 @@ class CheckoutController extends Controller
                     'email_pembeli' => $request->email,
                     'wa_pembeli' => $request->wa,
                     'total_harga' => $total,
-                    'status' => $initialStatus,
+                    'status' => 'pending',
+                    'payment_gateway' => $gateway,
+                    'payment_channel' => $paymentMethod,
                 ] + $preorderMeta;
 
                 $order = Order::create($orderData);
@@ -311,87 +314,76 @@ class CheckoutController extends Controller
                     $appliedCoupon->increment('used_count');
                 }
 
-                // Free order: set paid_at synchronously + trigger delivery (idempotent
-                // via OrderDeliveryService) sehingga buyer langsung punya download
-                // token saat sampai di /pesanan-sukses. Tidak ada Tripay callback â€”
-                // provenance berbeda dari order paid biasa.
-                if ($hasFree) {
-                    $now = now();
-                    $order->forceFill([
-                        'paid_at' => $now,
-                    ])->save();
-
-                    $this->deliveryService->generateForOrder($order->fresh(), 'paid');
-                }
-
                 return $order;
             });
 
-            // Untuk Tripay items payload: pakai line full price sebagai informational.
-            // Tripay signature validasi amount total â€” yang kita set ke DP untuk pre-order.
-            $tripayItems = $items->map(fn ($i) => [
-                'sku' => (string) $i->product_id,
-                'name' => $i->product->nama,
-                'price' => (int) $i->product->harga,
-                'quantity' => $i->qty,
-            ])->toArray();
+            if ($gateway === 'duitku') {
+                $duitkuDto = new DuitkuTransactionDto(
+                    paymentMethod: $paymentMethod,
+                    merchantOrderId: $kodeOrder,
+                    amount: $total,
+                    productDetails: 'Order '.$kodeOrder,
+                    customerEmail: $request->email,
+                    customerName: $request->nama,
+                    callbackUrl: config('services.duitku.callback_url') ?: null,
+                    returnUrl: config('services.duitku.return_url') ?: null,
+                    expiryPeriod: (int) config('services.duitku.expiry_period', 1440),
+                );
 
-            // Free order skip Tripay entirely â€” buyer langsung di-redirect ke payment
-            // page yang akan auto-redirect lagi ke /pesanan-sukses (status sudah 'free'
-            // yang diperlakukan sama dengan 'paid' oleh PaymentPoller).
-            if ($hasFree) {
-                $this->cartService->clear($sessionId);
+                $duitkuRes = $this->duitku->createTransaction($duitkuDto);
 
-                return response()->json([
-                    'data' => [
-                        'kode_order' => $kodeOrder,
-                        'redirect_url' => "/pembayaran/{$kodeOrder}",
-                    ],
-                    'message' => 'Order gratis dibuat. Produk siap diunduh.',
-                ], 201);
+                $order->update([
+                    'tripay_reference' => $duitkuRes['reference'],
+                    'qr_string' => $duitkuRes['qrString'] ?? null,
+                    'qr_url' => $duitkuRes['paymentUrl'] ?? null,
+                    'qr_expired_at' => $duitkuRes['expiredAt'] ? now()->parse($duitkuRes['expiredAt']) : now()->addMinutes(60),
+                ]);
+            } else {
+                $tripayItems = $items->map(fn ($i) => [
+                    'sku' => (string) $i->product_id,
+                    'name' => $i->product->nama,
+                    'price' => (int) $i->product->harga,
+                    'quantity' => $i->qty,
+                ])->toArray();
+
+                $dto = new CreateTransactionDto(
+                    method: $paymentMethod,
+                    merchantRef: $kodeOrder,
+                    amount: $total,
+                    customerName: $request->nama,
+                    customerEmail: $request->email,
+                    customerPhone: $this->sanitizePhone($request->wa),
+                    orderItems: $tripayItems,
+                    expiredTime: time() + 3600,
+                    callbackUrl: config('services.tripay.callback_url') ?: null,
+                );
+
+                $tripayRes = $this->tripay->createTransaction($dto);
+
+                $order->update([
+                    'tripay_reference' => $tripayRes['reference'],
+                    'qr_string' => $tripayRes['qr_string'] ?? null,
+                    'qr_url' => $tripayRes['qr_url'] ?? null,
+                    'qr_expired_at' => now()->addSeconds(3600),
+                ]);
             }
 
-            $dto = new CreateTransactionDto(
-                method: 'QRIS2',
-                merchantRef: $kodeOrder,
-                amount: $total,
-                customerName: $request->nama,
-                customerEmail: $request->email,
-                customerPhone: $this->sanitizePhone($request->wa),
-                orderItems: $tripayItems,
-                expiredTime: time() + 3600, // Unix timestamp = now + 1 hour
-                callbackUrl: config('services.tripay.callback_url') ?: null,
-            );
-
-            $tripayRes = $this->tripay->createTransaction($dto);
-
-            // Perbarui total_harga pesanan agar mencakup fee transaksi Tripay (total tagihan riil)
-            $payableTotal = (int) ($tripayRes['amount_customer'] ?? ($tripayRes['amount'] + ($tripayRes['total_fee'] ?? $tripayRes['fee_customer'] ?? 0)));
-
-            $order->update([
-                'total_harga' => $payableTotal > 0 ? $payableTotal : $total,
-                'tripay_reference' => $tripayRes['reference'],
-                'qr_string' => $tripayRes['qr_string'] ?? null,
-                'qr_url' => $tripayRes['qr_url'] ?? null,
-                'qr_expired_at' => now()->addSeconds(3600),
-            ]);
-
-            // Clear cart setelah order berhasil
             $this->cartService->clear($sessionId, $userId);
 
             return response()->json([
                 'data' => [
                     'kode_order' => $kodeOrder,
+                    'gateway' => $gateway,
                     'redirect_url' => "/pembayaran/{$kodeOrder}",
                 ],
                 'message' => 'Order dibuat. Silakan lakukan pembayaran.',
             ], 201);
-        } catch (TripayException $e) {
-            Log::error('Checkout Tripay error', ['err' => $e->getMessage()]);
+        } catch (TripayException|DuitkuException $e) {
+            Log::error('Checkout payment error', ['gateway' => $gateway, 'err' => $e->getMessage()]);
 
             return response()->json([
                 'message' => 'Gagal membuat transaksi pembayaran: '.$e->getMessage(),
-                'code' => 'tripay_error',
+                'code' => 'payment_error',
             ], 502);
         } catch (\Throwable $e) {
             Log::error('Checkout error', ['err' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
@@ -422,14 +414,37 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Sanitasi phone â€” Tripay butuh format seperti 08123456789 (no +, no spaces).
+     * Sanitasi phone — Tripay butuh format seperti 08123456789 (no +, no spaces).
      */
     private function sanitizePhone(string $phone): string
     {
-        $cleaned = preg_replace('/[^0-9]/', '', $phone) ?? '';
-        if (str_starts_with($cleaned, '628')) {
-            return '0'.substr($cleaned, 2);
+        return preg_replace('/[^0-9]/', '', $phone) ?? $phone;
+    }
+
+    /**
+     * Resolve which payment gateway to use.
+     * Read from site_settings `payment_gateways` JSON. Accept explicit request
+     * or default to first enabled. Return null if none enabled.
+     */
+    private function resolveGateway(?string $requested): ?string
+    {
+        $raw = SiteSetting::where('key', 'payment_gateways')->value('value');
+        $gateways = $raw ? json_decode($raw, true) : null;
+
+        if (! is_array($gateways)) {
+            $gateways = ['tripay' => ['enabled' => true]];
         }
-        return $cleaned;
+
+        $enabled = array_keys(array_filter($gateways, fn ($g) => is_array($g) && ($g['enabled'] ?? false)));
+
+        if (empty($enabled)) {
+            return null;
+        }
+
+        if ($requested && in_array($requested, $enabled, true)) {
+            return $requested;
+        }
+
+        return $enabled[0];
     }
 }

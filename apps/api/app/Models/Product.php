@@ -28,7 +28,6 @@ class Product extends Model
         'fitur',
         'status',
         'is_featured',
-        'is_free',
         'is_pre_order',
         'release_date',
         'preorder_deposit_percent',
@@ -40,7 +39,6 @@ class Product extends Model
         'fitur' => 'array',
         'download_expiry_days' => 'integer',
         'is_featured' => 'boolean',
-        'is_free' => 'boolean',
         'is_pre_order' => 'boolean',
         'release_date' => 'date',
         'preorder_deposit_percent' => 'integer',
@@ -127,26 +125,6 @@ class Product extends Model
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
-    }
-
-    /**
-     * Scope: hanya produk yang ditandai gratis (is_free=true).
-     *
-     * Backend ProductController auto-set harga=0 saat is_free=true — jadi
-     * filter ini cara yang reliable untuk query "semua produk gratis".
-     */
-    public function scopeFree($query)
-    {
-        return $query->where('is_free', true);
-    }
-
-    /**
-     * Apakah produk ini gratis? Alias guard untuk (bool) $this->is_free —
-     * readable di view + service.
-     */
-    public function isFree(): bool
-    {
-        return (bool) $this->is_free;
     }
 
     /**
@@ -241,58 +219,4 @@ class Product extends Model
 
         return $harga - $this->depositAmount();
     }
-    /**
-     * Semua review untuk produk ini.
-     */
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    /**
-     * Review yang dipublikasikan.
-     */
-    public function publishedReviews(): HasMany
-    {
-        return $this->hasMany(Review::class)->where('is_published', true);
-    }
-
-    /**
-     * Hitung aggregate rating (rata-rata, total count, distribusi bintang 1-5).
-     */
-    public function ratingSummary(): array
-    {
-        $published = $this->publishedReviews;
-        $total = $published->count();
-
-        if ($total === 0) {
-            return [
-                'average' => 0.0,
-                'count' => 0,
-                'distribution' => [
-                    '5' => 0,
-                    '4' => 0,
-                    '3' => 0,
-                    '2' => 0,
-                    '1' => 0,
-                ],
-            ];
-        }
-
-        $avg = round($published->avg('rating'), 1);
-        $counts = $published->groupBy('rating')->map->count();
-
-        return [
-            'average' => (float) $avg,
-            'count' => $total,
-            'distribution' => [
-                '5' => (int) ($counts->get(5) ?? 0),
-                '4' => (int) ($counts->get(4) ?? 0),
-                '3' => (int) ($counts->get(3) ?? 0),
-                '2' => (int) ($counts->get(2) ?? 0),
-                '1' => (int) ($counts->get(1) ?? 0),
-            ],
-        ];
-    }
-
 }

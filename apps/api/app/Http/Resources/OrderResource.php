@@ -22,9 +22,6 @@ class OrderResource extends JsonResource
             'total_harga' => (string) $this->total_harga,
             'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
             'status' => $this->status,
-            // True kalau order skip payment gateway (cart is_free). Provenance
-            // berbeda dari 'paid' (tidak ada Tripay reference) tapi delivery flow identik.
-            'is_free' => $this->isFree(),
             // Pre-order fields. Null untuk non-preorder orders.
             'is_preorder' => $this->isPreorder(),
             'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
@@ -40,6 +37,27 @@ class OrderResource extends JsonResource
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
+            'is_topup_order' => $this->isTopupOrder(),
+            'game_id' => $this->game_id,
+            'game_item_id' => $this->game_item_id,
+            'game_user_id' => $this->game_user_id,
+            'game_server_id' => $this->game_server_id,
+            'contact_type' => $this->contact_type,
+            'contact_value' => $this->contact_value,
+            'topup_status' => $this->topup_status,
+            'digiflazz_trx_id' => $this->digiflazz_trx_id,
+            'payment_gateway' => $this->payment_gateway,
+            'game' => $this->whenLoaded('game', fn () => [
+                'id' => $this->game->id,
+                'nama' => $this->game->nama,
+                'slug' => $this->game->slug,
+                'icon_url' => $this->game->icon_url,
+            ]),
+            'game_item' => $this->whenLoaded('gameItem', fn () => [
+                'id' => $this->gameItem->id,
+                'nama' => $this->gameItem->nama,
+                'harga' => (string) $this->gameItem->harga,
+            ]),
         ];
 
         // Untuk polling ringan — strip heavy fields dari view publik.
@@ -54,7 +72,6 @@ class OrderResource extends JsonResource
                 'total_harga_formatted' => 'Rp '.number_format((float) $this->total_harga, 0, ',', '.'),
                 'is_preorder' => $this->isPreorder(),
                 'preorder_release_date' => $this->isPreorder() ? $this->preorder_release_date?->toDateString() : null,
-                'is_free' => $this->isFree(),
                 'item_count' => $this->whenLoaded('items', fn () => $this->items->count()),
             ];
         }

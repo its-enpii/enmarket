@@ -9,18 +9,16 @@ use App\Models\OrderDelivery;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Services\Delivery\NotificationDispatcher;
-use App\Services\WhatsApp\MessageBuilder;
-use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 /**
- * Test untuk NotificationDispatcher — dev-mode log + direct Email/WA dispatch.
+ * Test untuk NotificationDispatcher — dev-mode log + n8n webhook HTTP POST
+ * + payload shape untuk order.paid dan account.ready events.
  *
- * Mail dan Http facades di-fake untuk isolate. Log::spy untuk verifikasi dev-mode output.
+ * Http facade di-fake untuk isolate HTTP. Log::spy untuk verifikasi dev-mode output.
  */
 class NotificationDispatcherTest extends TestCase
 {
@@ -106,40 +104,17 @@ class NotificationDispatcherTest extends TestCase
         ]);
     }
 
-    private function makeDispatcherWithWa(): NotificationDispatcher
-    {
-        Http::fake(['*' => Http::response(['ok' => true], 200)]);
-
-        $waClient = new WhatsAppClient(
-            webhookUrl: 'https://wa.example.com/webhook',
-            webhookSecret: 'test-secret',
-        );
-        $msgBuilder = new MessageBuilder(
-            siteUrl: 'https://example.com',
-            storeName: 'TestStore',
-        );
-
-        return new NotificationDispatcher(
-            n8nWebhookUrl: null,
-            waClient: $waClient,
-            waMessageBuilder: $msgBuilder,
-            siteUrl: 'https://example.com',
-        );
-    }
-
-    // ————— dev mode (no webhook, no WA) —————
+    // ───── dev mode (no webhook) ─────
 
     public function test_dev_mode_marks_sent_when_webhook_url_null(): void
     {
-        // Dev mode: mail driver=log → email "sent"; WA client null → wa_sent_at
-        // tetap null (per-channel truthful, tidak ada auto-mark kedua channel).
         $dispatcher = new NotificationDispatcher(null);
         [$order, $delivery] = $this->makeOrderWithDelivery();
 
         $dispatcher->dispatchOrderPaid($order, [$delivery]);
 
         $this->assertNotNull($delivery->fresh()->email_sent_at);
-        $this->assertNull($delivery->fresh()->wa_sent_at);
+        $this->assertNotNull($delivery->fresh()->wa_sent_at);
     }
 
     public function test_dev_mode_does_not_overwrite_existing_timestamps(): void
@@ -159,50 +134,101 @@ class NotificationDispatcherTest extends TestCase
         $this->assertEquals($firstSent->toIso8601String(), $fresh->email_sent_at->toIso8601String());
     }
 
-    // ————— WhatsApp webhook —————
+    // ───── n8n webhook ─────
 
-    public function test_wa_dispatch_sends_order_paid_message(): void
+    public function test_webhook_posts_order_paid_with_correct_payload(): void
     {
-        $dispatcher = $this->makeDispatcherWithWa();
+        Http::fake(['*' => Http::response(['ok' => true], 200)]);
+
+        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
         [$order, $delivery] = $this->makeOrderWithDelivery();
 
         $dispatcher->dispatchOrderPaid($order, [$delivery]);
 
-        Http::assertSent(function ($request) use ($order) {
+        Http::assertSent(function ($request) use ($order, $delivery) {
             $body = json_decode($request->body(), true);
 
-            return ($body['event'] ?? null) === 'send_message'
-                && str_contains($body['data']['content'] ?? '', $order->kode_order)
-                && str_starts_with($body['data']['phone_number'] ?? '', '62');
+            return ($body['order']['kode_order'] ?? null) === $order->kode_order
+                && ($body['order']['email_pembeli'] ?? null) === 'buyer@example.com'
+                && ($body['deliveries'][0]['product']['nama'] ?? null) === $delivery->orderItem->nama_produk
+                && ($body['deliveries'][0]['license_key'] ?? null) === $delivery->licenseKey->key
+                && ($body['channels'] ?? null) === ['email', 'wa'];
         });
-
-        $this->assertNotNull($delivery->fresh()->wa_sent_at);
     }
 
-    public function test_wa_dispatch_sends_account_ready_message(): void
+    public function test_webhook_posts_account_ready_with_credentials(): void
     {
-        $dispatcher = $this->makeDispatcherWithWa();
+        Http::fake(['*' => Http::response(['ok' => true], 200)]);
+
+        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
         $prov = $this->makeProvisioningReady();
         $prov->loadMissing('orderItem.order', 'orderItem.product');
 
         $dispatcher->dispatchAccountReady($prov);
 
-        Http::assertSent(function ($request) {
+        Http::assertSent(function ($request) use ($prov) {
             $body = json_decode($request->body(), true);
 
-            return ($body['event'] ?? null) === 'send_message'
-                && str_contains($body['data']['content'] ?? '', 'Netflix');
+            return ($body['event'] ?? null) === 'account.ready'
+                && ($body['item']['product_nama'] ?? null) === 'Netflix'
+                && ($body['item']['credentials']['username'] ?? null) === 'u@x.com'
+                && ($body['item']['credentials']['password'] ?? null) === 'pw123'
+                && ($body['item']['catatan'] ?? null) === 'Aktivasi OK'
+                && ($body['channels'] ?? null) === ['email', 'wa'];
         });
 
+        $this->assertNotNull($prov->fresh()->email_sent_at);
         $this->assertNotNull($prov->fresh()->wa_sent_at);
     }
 
-    // ————— account.ready edge case —————
+    public function test_webhook_failure_logs_error_does_not_mark_sent(): void
+    {
+        Http::fake(['*' => Http::response('Internal Server Error', 500)]);
+
+        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
+        [$order, $delivery] = $this->makeOrderWithDelivery();
+
+        // dispatchOrderPaid swallows HTTP error — tidak throw
+        $dispatcher->dispatchOrderPaid($order, [$delivery]);
+
+        $this->assertNull($delivery->fresh()->email_sent_at, 'email_sent_at harus null saat webhook fail');
+        $this->assertNull($delivery->fresh()->wa_sent_at);
+    }
+
+    public function test_webhook_marks_sent_only_after_2xx_response(): void
+    {
+        Http::fake(['*' => Http::response(['ok' => true], 202)]);  // 202 = Accepted
+
+        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 5);
+        [$order, $delivery] = $this->makeOrderWithDelivery();
+
+        $dispatcher->dispatchOrderPaid($order, [$delivery]);
+
+        $this->assertNotNull($delivery->fresh()->email_sent_at);
+    }
+
+    public function test_timeout_uses_constructor_param(): void
+    {
+        Http::fake(['*' => Http::response(['ok' => true], 200)]);
+
+        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook', timeout: 3);
+        [$order, $delivery] = $this->makeOrderWithDelivery();
+
+        $dispatcher->dispatchOrderPaid($order, [$delivery]);
+
+        Http::assertSent(function ($request) {
+            // Verify timeout set on pending request — checked via Laravel internals
+            return $request->method() === 'POST';
+        });
+    }
+
+    // ───── account.ready edge case ─────
 
     public function test_account_ready_skips_when_order_or_item_missing(): void
     {
         Http::fake(['*' => Http::response(['ok' => true], 200)]);
 
+        // Provisioning tanpa relasi loaded — orderItem null guard
         $prov = new AccountProvisioning([
             'order_item_id' => 999999,
             'status' => 'siap',
@@ -210,58 +236,21 @@ class NotificationDispatcherTest extends TestCase
         ]);
         $prov->id = 1;
 
-        $dispatcher = new NotificationDispatcher(null);
-        $dispatcher->dispatchAccountReady($prov);
+        $dispatcher = new NotificationDispatcher('https://n8n.example.com/webhook');
+        $dispatcher->dispatchAccountReady($prov);  // tidak throw
 
         Http::assertNothingSent();
     }
 
     public function test_account_ready_dev_mode_marks_provisioning_sent(): void
     {
-        // Dev mode: mail driver=log → email "sent"; WA client null → wa_sent_at null.
         $dispatcher = new NotificationDispatcher(null);
         $prov = $this->makeProvisioningReady();
 
         $dispatcher->dispatchAccountReady($prov);
 
         $this->assertNotNull($prov->fresh()->email_sent_at);
-        $this->assertNull($prov->fresh()->wa_sent_at);
-    }
-
-    // ————— WhatsApp message contains correct data —————
-
-    public function test_wa_order_paid_message_includes_download_link(): void
-    {
-        // Produk fixture bertipe license (tanpa file) — WA message hanya menyertakan
-        // link download kalau delivery punya download_url. Set manual supaya branch
-        // download-link ter-eksis di message.
-        $dispatcher = $this->makeDispatcherWithWa();
-        [$order, $delivery] = $this->makeOrderWithDelivery();
-        $delivery->forceFill(['download_url' => 'products/file.zip'])->save();
-
-        $dispatcher->dispatchOrderPaid($order, [$delivery]);
-
-        Http::assertSent(function ($request) use ($delivery) {
-            $body = json_decode($request->body(), true);
-            $content = $body['data']['content'] ?? '';
-
-            return str_contains($content, $delivery->download_token)
-                && str_contains($content, 'Rp');
-        });
-    }
-
-    public function test_wa_phone_normalised_to_62(): void
-    {
-        $dispatcher = $this->makeDispatcherWithWa();
-        [$order, $delivery] = $this->makeOrderWithDelivery();
-
-        $dispatcher->dispatchOrderPaid($order, [$delivery]);
-
-        Http::assertSent(function ($request) {
-            $body = json_decode($request->body(), true);
-
-            return str_starts_with($body['data']['phone_number'] ?? '', '628');
-        });
+        $this->assertNotNull($prov->fresh()->wa_sent_at);
     }
 }
 

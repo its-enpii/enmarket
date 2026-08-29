@@ -43,7 +43,7 @@ class SettingsController extends Controller
     public function update(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'group' => ['required', 'string', 'in:identity,social,footer,payment,channels'],
+            'group' => ['required', 'string', 'in:identity,social,footer,payment,channels,payment_gateways'],
             'values' => ['required', 'array'],
         ]);
 
@@ -72,6 +72,33 @@ class SettingsController extends Controller
             return response()->json([
                 'data' => $this->buildGroupedSettings(),
                 'message' => 'Social links berhasil disimpan.',
+            ]);
+        }
+
+        if ($data['group'] === 'payment_gateways') {
+            $gateways = $data['values'];
+            SiteSetting::updateOrCreate(
+                ['key' => 'payment_gateways'],
+                ['value' => json_encode($gateways), 'type' => 'json'],
+            );
+
+            // Persist Duitku credentials if provided
+            $duitkuKeys = ['duitku_merchant_code' => 'string', 'duitku_api_key' => 'secret', 'duitku_mode' => 'string'];
+            foreach ($duitkuKeys as $key => $type) {
+                if ($type === 'secret' && empty($data['values'][$key])) {
+                    continue;
+                }
+                if (isset($data['values'][$key])) {
+                    SiteSetting::updateOrCreate(
+                        ['key' => $key],
+                        ['value' => (string) $data['values'][$key], 'type' => $type],
+                    );
+                }
+            }
+
+            return response()->json([
+                'data' => $this->buildGroupedSettings(),
+                'message' => 'Payment gateways berhasil disimpan.',
             ]);
         }
 
@@ -151,7 +178,7 @@ class SettingsController extends Controller
             $socialLinks = [];
         }
 
-        return [
+        $result = [
             'identity' => [
                 'studio_name' => $raw('studio_name'),
                 'tagline' => $raw('tagline'),
@@ -166,6 +193,9 @@ class SettingsController extends Controller
                 'tripay_api_key_masked' => $masked($raw('tripay_api_key')),
                 'tripay_private_key_masked' => $masked($raw('tripay_private_key')),
                 'tripay_mode' => $raw('tripay_mode') ?? 'sandbox',
+                'duitku_merchant_code' => $raw('duitku_merchant_code'),
+                'duitku_api_key_masked' => $masked($raw('duitku_api_key')),
+                'duitku_mode' => $raw('duitku_mode') ?? 'sandbox',
             ],
             'channels' => [
                 'qris' => $this->parseBool($raw('channel_qris')),
@@ -177,6 +207,14 @@ class SettingsController extends Controller
                 'message' => $raw('maintenance_message'),
             ],
         ];
+
+        $pgRaw = $raw('payment_gateways');
+        $pgDecoded = $pgRaw ? json_decode($pgRaw, true) : null;
+        $result['payment_gateways'] = is_array($pgDecoded)
+            ? $pgDecoded
+            : ['tripay' => ['enabled' => true], 'duitku' => ['enabled' => false]];
+
+        return $result;
     }
 
     /**

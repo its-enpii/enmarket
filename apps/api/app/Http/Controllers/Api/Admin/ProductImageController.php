@@ -12,9 +12,9 @@ use Illuminate\Support\Str;
 
 /**
  * Sub-resource untuk preview images produk.
- * Append gambar baru (file upload atau attach by URL dari library) atau hapus berdasarkan index.
+ * Append gambar baru atau hapus berdasarkan index.
  *
- * POST   /api/admin/products/{product}/preview-images   (multipart: file, atau JSON: { url })
+ * POST   /api/admin/products/{product}/preview-images   (multipart: file)
  * DELETE /api/admin/products/{product}/preview-images   (body: { index })
  */
 class ProductImageController extends Controller
@@ -24,13 +24,12 @@ class ProductImageController extends Controller
     public function __construct(private readonly EnStorageClient $storage) {}
 
     /**
-     * Upload atau attach satu preview image dan append ke array.
+     * Upload satu preview image dan append ke array.
      */
     public function store(Request $request, Product $product): JsonResponse
     {
         $request->validate([
-            'file' => ['nullable', 'image', 'max:10240'], // 10MB
-            'url' => ['nullable', 'string', 'max:1000'],
+            'file' => ['required', 'image', 'max:10240'], // 10MB
         ]);
 
         $current = $product->preview_images ?? [];
@@ -42,26 +41,13 @@ class ProductImageController extends Controller
             ], 422);
         }
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $ext = $file->getClientOriginalExtension() ?: 'jpg';
-            $filename = Str::random(20).'.'.$ext;
-            $path = $this->storage->upload($file, "products/previews/{$product->id}/{$filename}");
-        } elseif ($request->filled('url')) {
-            $path = $request->input('url');
-        } else {
-            return response()->json([
-                'message' => 'File atau URL gambar wajib diisi.',
-                'code' => 'missing_image',
-            ], 422);
-        }
+        $file = $request->file('file');
+        $ext = $file->getClientOriginalExtension() ?: 'jpg';
+        $filename = Str::random(20).'.'.$ext;
+        $path = $this->storage->upload($file, "products/previews/{$product->id}/{$filename}");
 
-        // Hindari duplikat URL di array
-        if (! in_array($path, $current, true)) {
-            $current[] = $path;
-        }
-
-        $product->preview_images = array_values($current);
+        $current[] = $path;
+        $product->preview_images = $current;
         $product->save();
 
         return response()->json([
@@ -88,11 +74,7 @@ class ProductImageController extends Controller
             ], 404);
         }
 
-        // Hanya hapus dari storage jika path merupakan file lokal storage (bukan external URL)
-        $targetUrl = $current[$data['index']];
-        if (str_contains($targetUrl, '/storage/') || str_contains($targetUrl, 'products/previews/')) {
-            $this->storage->delete($targetUrl);
-        }
+        $this->storage->delete($current[$data['index']]);
 
         unset($current[$data['index']]);
         $product->preview_images = array_values($current); // reindex
