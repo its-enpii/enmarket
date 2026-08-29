@@ -1,7 +1,6 @@
 ﻿import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { apiGet } from '@/lib/api';
@@ -36,16 +35,23 @@ export default async function CustomRequestDetailPage({ params }: Props) {
   }
 
   return (
-    <div className="space-y-6">
-      <AdminPageHeader
-        eyebrow={t('detailEyebrow')}
-        title={`${t('detailTitle')} #${request.id}`}
-        action={
-          <Button variant="surface" size="sm" href="/admin/custom-requests">
-            ← {t('listTitle')}
-          </Button>
-        }
-      />
+    <div className="p-6 sm:p-8 space-y-6">
+      <header className="border-b-4 border-ink pb-6">
+        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
+          {t('detailEyebrow')}
+        </p>
+        <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tight text-ink">
+          {t('detailTitle')} #{request.id}
+          <span className="text-primary">.</span>
+        </h1>
+      </header>
+
+      {/* Quick actions — konsisten dengan detail pages lain (back to list) */}
+      <div className="flex justify-end">
+        <Button href="/admin/custom-requests" variant="ghost" size="sm">
+          ← {t('listTitle')}
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 cols: Details */}
@@ -122,7 +128,7 @@ export default async function CustomRequestDetailPage({ params }: Props) {
             <h3 className="font-bold text-lg text-ink border-b-2 border-ink/10 pb-3 mb-4">
               {t('updateStatus')}
             </h3>
-            <CustomRequestEditForm request={request} />
+            <CustomRequestEditForm customRequest={request} />
           </Card>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { useTranslations } from 'next-intl';
 
-import { formatShortDate } from '@/lib/format';
+import { formatDate as formatShortDate } from '@/lib/format';
 
 interface Props {
   name?: string;

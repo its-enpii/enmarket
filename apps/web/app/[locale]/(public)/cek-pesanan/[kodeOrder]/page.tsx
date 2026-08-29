@@ -64,6 +64,16 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
     throw err;
   }
 
+  // Produk yang sudah diberi ulasan oleh pembeli (untuk badge di list item).
+  // Gagal fetch review tidak boleh memblokir halaman — default kosong.
+  let reviewedProductIds: number[] = [];
+  try {
+    const reviewRes = await reviewApi.getOrderReviews(kodeOrder);
+    reviewedProductIds = reviewRes.reviewed_product_ids ?? [];
+  } catch {
+    reviewedProductIds = [];
+  }
+
   const statusVariant = STATUS_VARIANTS[order.status] ?? 'surface';
   const statusKey = STATUS_KEYS[order.status as keyof typeof STATUS_KEYS];
 

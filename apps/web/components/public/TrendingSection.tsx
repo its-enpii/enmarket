@@ -359,6 +359,7 @@ const PLACEHOLDER_LATEST: Product[] = [
 
 /** Hero card — besar, 1 kolom penuh di mobile, sisi kiri di md+. */
 function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlaceholder?: boolean }) {
+  const t = useTranslations('trending');
   const thumb = product.preview_images?.[0];
   return (
     <Link
@@ -416,6 +417,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
 
 /** Side card — kompak, horizontal di mobile, vertikal di md+. */
 function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlaceholder?: boolean }) {
+  const t = useTranslations('trending');
   const thumb = product.preview_images?.[0];
   return (
     <Link

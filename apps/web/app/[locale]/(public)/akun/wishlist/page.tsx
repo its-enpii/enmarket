@@ -97,7 +97,7 @@ export default function AkunWishlistPage() {
                   className="!text-red-600 hover:!text-red-800 uppercase !min-h-0 !p-1.5 text-xs"
                 >
                   {t('remove')}
-                </button>
+                </Button>
               </div>
             </Card>
           ))}

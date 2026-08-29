@@ -53,10 +53,8 @@ export function MediaPickerModal({
     if (!open || fetched) return;
     startTransition(async () => {
       const res = await fetchMediaLibrary();
-      if (res.ok) {
-        setItems(res.items);
-        setFetched(true);
-      }
+      setItems(res);
+      setFetched(true);
     });
   }, [open, fetched]);
 
@@ -124,6 +122,7 @@ export function MediaPickerModal({
             className="w-full text-xs"
           />
           <SelectSearch
+            name="source"
             options={[
               { value: 'all', label: t('filterSourceAll') },
               { value: 'products', label: t('filterSourceProducts') },
@@ -140,6 +139,7 @@ export function MediaPickerModal({
             aria-label={t('filterSourceAria')}
           />
           <SelectSearch
+            name="type"
             options={[
               { value: 'all', label: t('filterTypeAll') },
               { value: 'image', label: t('filterTypeImage') },
@@ -178,7 +178,7 @@ export function MediaPickerModal({
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {filtered.map((it) => (
                 <button
-                  key={`${it.source}-${it.id}-${it.url}`}
+                  key={`${it.source}-${it.sourceId}-${it.url}`}
                   type="button"
                   onClick={() => handleSelect(it.url)}
                   className="group relative border-2 border-ink bg-surface p-2 text-left hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-x-0 active:translate-y-0 transition-all flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-primary"
@@ -188,7 +188,7 @@ export function MediaPickerModal({
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={it.url}
-                        alt={it.label}
+                        alt={it.filename}
                         loading="lazy"
                         className="w-full h-full object-cover"
                       />
@@ -202,9 +202,9 @@ export function MediaPickerModal({
 
                   <p
                     className="text-xs font-bold text-ink truncate w-full"
-                    title={it.label}
+                    title={it.filename}
                   >
-                    {it.label}
+                    {it.filename}
                   </p>
                   <p className="text-[10px] text-ink/60 mt-0.5">
                     {it.type}

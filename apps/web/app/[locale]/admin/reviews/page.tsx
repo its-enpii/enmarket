@@ -143,14 +143,16 @@ export default async function ReviewsPage({ searchParams }: Props) {
         </div>
       )}
 
-      <AdminListProvider defaultQuery={{ q: params.q, is_published: params.is_published, rating: params.rating, page: params.page }}>
+      <AdminListProvider>
         <Card variant="surface" hoverable={false} className="p-0 overflow-hidden">
           <AdminTableHeader
-            searchPlaceholder={t('searchPlaceholder')}
-            totalCount={meta?.total ?? reviews.length}
+            q={params.q ?? ''}
+            sort="id"
+            dir="desc"
+            placeholder={t('searchPlaceholder')}
             filters={[
               {
-                name: 'is_published',
+                key: 'is_published',
                 label: t('filterStatus'),
                 options: [
                   { label: t('filterAllStatus'), value: '' },
@@ -159,7 +161,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
                 ],
               },
               {
-                name: 'rating',
+                key: 'rating',
                 label: t('filterRating'),
                 options: [
                   { label: t('filterAllRating'), value: '' },
@@ -173,7 +175,11 @@ export default async function ReviewsPage({ searchParams }: Props) {
             ]}
           />
 
-          <DataTableArea>
+          <DataTableArea
+            columnCount={columns.length}
+            columnWidths={columns.map((c) => c.width)}
+            skeletonCount={10}
+          >
             <DataTable
               columns={columns}
               rows={reviews}
@@ -181,15 +187,13 @@ export default async function ReviewsPage({ searchParams }: Props) {
               emptyState={
                 params.q ? (
                   <EmptyState
-                    icon="🔍"
                     title={t('empty.noResults', { query: params.q })}
-                    hint={t('empty.noResultsHint')}
+                    body={t('empty.noResultsHint')}
                   />
                 ) : (
                   <EmptyState
-                    icon="💬"
                     title={t('empty.noneYet')}
-                    hint={t('empty.noneYetHint')}
+                    body={t('empty.noneYetHint')}
                   />
                 )
               }
@@ -198,7 +202,12 @@ export default async function ReviewsPage({ searchParams }: Props) {
 
           {meta && meta.last_page > 1 && (
             <div className="p-4 border-t-2 border-ink bg-surface/50">
-              <Pagination meta={meta} />
+              <Pagination
+                currentPage={meta.current_page}
+                lastPage={meta.last_page}
+                basePath="/admin/reviews"
+                queryParams={params}
+              />
             </div>
           )}
         </Card>

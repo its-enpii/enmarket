@@ -8,7 +8,6 @@ import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { reviewApi } from '@/lib/review-api';
 import { toast } from '@/components/ui/toast-store';
 
 interface Props {
@@ -69,14 +68,25 @@ export function ReviewFormModal({
 
     startTransition(async () => {
       try {
-        await reviewApi.submitReview({
-          kode_order: kodeOrder,
-          product_id: productId,
-          rating,
-          comment: comment.trim() || undefined,
-          buyer_name: buyerName.trim() || undefined,
-          email_or_phone: emailOrPhone.trim() || undefined,
+        // Submit via fetch relatif (rewrite /api/* di next.config) — komponen
+        // client tidak boleh mengimpor lib/review-api karena menarik lib/api
+        // (next/headers, server-only) ke bundle browser.
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            kode_order: kodeOrder,
+            product_id: productId,
+            rating,
+            comment: comment.trim() || undefined,
+            buyer_name: buyerName.trim() || undefined,
+            email_or_phone: emailOrPhone.trim() || undefined,
+          }),
         });
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          throw new Error(body?.message || t('submitError'));
+        }
 
         setSubmitted(true);
         toast.success(t('submitSuccess'));
