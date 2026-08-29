@@ -85,6 +85,22 @@ class ProductController extends Controller
     {
         $data = $this->validateProduct($request);
 
+        // is_free + is_pre_order mutually exclusive (invariant): pre-order selalu
+        // punya DP > 0, free selalu Rp 0 — kombinasi tidak make sense dan bikin
+        // buyer bingung di checkout. Tolak 422 eksplisit (bukan 500).
+        if (! empty($data['is_free']) && ! empty($data['is_pre_order'])) {
+            return response()->json([
+                'message' => 'Produk tidak bisa sekaligus pre-order dan gratis.',
+                'errors' => ['is_free' => ['Tidak bisa digabung dengan pre-order.']],
+            ], 422);
+        }
+
+        // Single source of truth: kalau is_free, harga paksa 0. Admin bisa set
+        // harga berapapun di form (frontend disable field) — backend override.
+        if (! empty($data['is_free'])) {
+            $data['harga'] = 0;
+        }
+
         // Upload file produk kalau ada
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -98,11 +114,11 @@ class ProductController extends Controller
             abort(422, 'File produk wajib di-upload untuk tipe download atau bundle.');
         }
 
-        // preview_images: array of URLs (biasanya dari upload terpisah, tapi
-        // izinkan JSON string atau array)
-        if (isset($data['preview_images']) && is_string($data['preview_images'])) {
-            $decoded = json_decode($data['preview_images'], true);
-            $data['preview_images'] = is_array($decoded) ? $decoded : [];
+        $data['preview_images'] = $this->processPreviewImages($request);
+
+        if (isset($data['fitur']) && is_string($data['fitur'])) {
+            $decoded = json_decode($data['fitur'], true);
+            $data['fitur'] = is_array($decoded) ? $decoded : [];
         }
 
         $product = Product::create($data);
@@ -140,6 +156,25 @@ class ProductController extends Controller
     {
         $data = $this->validateProduct($request, $product);
 
+        // is_free + is_pre_order mutually exclusive — sama seperti di store().
+        // Resolve effective is_pre_order: kalau field ini tidak dikirim di request
+        // (partial update), pakai nilai existing di DB.
+        $effectivePreorder = array_key_exists('is_pre_order', $data)
+            ? ! empty($data['is_pre_order'])
+            : (bool) $product->is_pre_order;
+
+        if (! empty($data['is_free']) && $effectivePreorder) {
+            return response()->json([
+                'message' => 'Produk tidak bisa sekaligus pre-order dan gratis.',
+                'errors' => ['is_free' => ['Tidak bisa digabung dengan pre-order.']],
+            ], 422);
+        }
+
+        // Single source of truth — sama seperti di store().
+        if (! empty($data['is_free'])) {
+            $data['harga'] = 0;
+        }
+
         if ($request->hasFile('file')) {
             // Hapus file lama kalau ada
             if ($product->file_url) {
@@ -163,9 +198,11 @@ class ProductController extends Controller
             abort(422, 'File produk wajib di-upload untuk tipe download atau bundle.');
         }
 
-        if (isset($data['preview_images']) && is_string($data['preview_images'])) {
-            $decoded = json_decode($data['preview_images'], true);
-            $data['preview_images'] = is_array($decoded) ? $decoded : [];
+        $data['preview_images'] = $this->processPreviewImages($request, $product->preview_images ?? []);
+
+        if (isset($data['fitur']) && is_string($data['fitur'])) {
+            $decoded = json_decode($data['fitur'], true);
+            $data['fitur'] = is_array($decoded) ? $decoded : [];
         }
 
         $product->update($data);
@@ -218,6 +255,57 @@ class ProductController extends Controller
     /**
      * Validation rules untuk store & update.
      */
+    /**
+     * Process preview images from upload files and/or library URLs.
+     */
+    private function processPreviewImages(Request $request, array $existing = []): array
+    {
+        $previewImages = [];
+
+        if ($request->has('preview_images_urls')) {
+            $rawUrls = $request->input('preview_images_urls');
+            if (is_string($rawUrls)) {
+                $decoded = json_decode($rawUrls, true);
+                if (is_array($decoded)) {
+                    foreach ($decoded as $url) {
+                        if (is_string($url) && trim($url) !== '') {
+                            $previewImages[] = trim($url);
+                        }
+                    }
+                }
+            } elseif (is_array($rawUrls)) {
+                foreach ($rawUrls as $url) {
+                    if (is_string($url) && trim($url) !== '') {
+                        $previewImages[] = trim($url);
+                    }
+                }
+            }
+        } else {
+            foreach ($existing as $url) {
+                if (is_string($url) && trim($url) !== '') {
+                    $previewImages[] = trim($url);
+                }
+            }
+        }
+
+        if ($request->hasFile('preview_images')) {
+            $files = $request->file('preview_images');
+            if (! is_array($files)) {
+                $files = [$files];
+            }
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    $ext = $file->getClientOriginalExtension() ?: 'jpg';
+                    $filename = Str::random(20).'.'.$ext;
+                    $path = $this->storage->upload($file, "products/previews/{$filename}");
+                    $previewImages[] = $path;
+                }
+            }
+        }
+
+        return array_values(array_unique($previewImages));
+    }
+
     private function validateProduct(Request $request, ?Product $product = null): array
     {
         $uniqueSlugRule = 'unique:products,slug';
@@ -237,6 +325,9 @@ class ProductController extends Controller
             'fitur' => ['nullable'],
             'status' => ['required', 'in:aktif,draft,tidak_dijual'],
             'is_featured' => ['nullable', 'boolean'],
+            // Produk gratis: auto-set harga=0 di store()/update(). Mutex dengan
+            // is_pre_order di-handle setelah validate (di method).
+            'is_free' => ['nullable', 'boolean'],
             // Pre-order fields. Uncontrolled checkbox submit value="1" kalau dicentang,
             // tidak ada field kalau tidak dicentang. `nullable + boolean` handle keduanya.
             // `required_if:is_pre_order,1,1` (Laravel pakai boolean coerce dari '1' string).
@@ -246,7 +337,7 @@ class ProductController extends Controller
             'file' => [
                 'nullable',
                 'file',
-                'max:512000', // 500MB max
+                'max:1048576', // 1GB max
                 'required_if:tipe,download,bundle', // tipe download/bundle wajib upload file
             ],
             'remove_file' => ['nullable', 'boolean'],

@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Admin\OrderResendController;
 use App\Http\Controllers\Api\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Api\Admin\PreorderController;
 use App\Http\Controllers\Api\Admin\ProductController;
+use App\Http\Controllers\Api\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\Customer\Auth\LoginController as CustomerLoginController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\Api\Public\DownloadController;
 use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\PostController as PublicPostController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
+use App\Http\Controllers\Api\Public\ReviewController as PublicReviewController;
 use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
@@ -63,6 +65,7 @@ Route::prefix('public')->group(function () {
     Route::get('products', [PublicProductController::class, 'index']);
     Route::get('products/slugs', [PublicProductController::class, 'slugs']);
     Route::get('products/{slug}', [PublicProductController::class, 'show']);
+    Route::get('products/{slug}/reviews', [PublicReviewController::class, 'index']);
 
     // Kategori publik (untuk filter katalog & sitemap)
     Route::get('categories', [PublicCategoryController::class, 'index']);
@@ -114,6 +117,10 @@ Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy']);
 
 // ───── Custom Request (public, no auth) ─────
 Route::post('/custom-requests', [CustomRequestController::class, 'store']);
+
+// ????? Reviews (public / order-verified) ?????
+Route::post('/reviews', [PublicReviewController::class, 'store']);
+Route::get('/orders/{kodeOrder}/reviews', [PublicReviewController::class, 'byOrder']);
 
 // ───── Cart + Checkout + Orders (public, no auth, pakai cookie) ─────
 Route::middleware('throttle:cart')->group(function () {
@@ -228,6 +235,10 @@ Route::prefix('admin')->group(function () {
         Route::post('preorders/{order}/update-release-date', [PreorderController::class, 'updateReleaseDate']);
         Route::get('preorders/{order}', [PreorderController::class, 'show']);
         Route::get('preorders', [PreorderController::class, 'index']);
+
+                // Customer Reviews Moderation (stats HARUS sebelum apiResource)
+        Route::get('reviews/stats', [AdminReviewController::class, 'stats']);
+        Route::apiResource('reviews', AdminReviewController::class)->only(['index', 'update', 'destroy']);
 
         // Site settings (identity, social, footer, payment, channels)
         Route::get('settings', [SettingsController::class, 'index']);
