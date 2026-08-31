@@ -28,7 +28,7 @@ export async function CartBadge() {
     >
       <span className="inline-flex items-center gap-2">
         <CartIcon />
-        <span className="hidden sm:inline">{t('viewCart')}</span>
+        <span>{t('viewCart')}</span>
         {count > 0 && (
           <span className="inline-flex items-center justify-center bg-accent text-ink font-black text-xs px-2 py-0.5 border border-ink shadow-[1px_1px_0_0_var(--color-ink)] min-w-[1.25rem] rounded-none">
             {count > 99 ? '99+' : count}

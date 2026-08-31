@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
+import { Children } from 'react';
 
 interface Props {
   children?: ReactNode;
@@ -176,6 +177,18 @@ export function TopNav({ children }: Props) {
             >
               {t('admin')}
             </Button>
+
+            {/* Wishlist & Cart badge (server components) — sama dengan desktop nav */}
+            {Children.map(children, (child) =>
+              child ? (
+                <span
+                  onClick={() => setOpen(false)}
+                  className="[&>a]:block [&>a]:text-center [&>a]:w-full [&>a]:min-h-[44px]"
+                >
+                  {child}
+                </span>
+              ) : child,
+            )}
           </div>
         </nav>
       )}
