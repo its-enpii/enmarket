@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust proxy di depan (Nginx Proxy Manager + Cloudflare) agar
+        // Laravel melihat IP asli klien dan tahu request via HTTPS.
+        $middleware->trustProxies(at: '*');
+
         // CORS — handle preflight + add headers ke semua response API
         $middleware->prepend(HandleCors::class);
 

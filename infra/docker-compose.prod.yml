@@ -1,0 +1,131 @@
+# ───── enmarket — production stack (server sim-sppg) ─────
+#
+# Perbedaan dari docker-compose.yml (dev):
+#   - TANPA host port mapping (DB/API/Web internal saja) — semua akses publik
+#     lewat Nginx Proxy Manager (wa-nginx-proxy) di network `web-network`.
+#   - Web & API ikut join network external `web-network` supaya NPM bisa
+#     resolve hostname `web` dan `api`.
+#   - Web jalan production build (bukan npm run dev, tanpa bind mount).
+#   - env_file tidak dipakai — semua env eksplisit di sini, secret via root .env.
+#
+# Usage (dari root repo):
+#   docker compose -f infra/docker-compose.prod.yml --env-file .env up -d --build
+#
+# Kontrak domain:
+#   https://enmarket.enpiistudio.com        → web:3000 (Next.js)
+#   https://enmarket.enpiistudio.com/api/*  → api:8000 (Laravel)
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: enmarket-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD required}
+      MYSQL_DATABASE: enmarket
+      MYSQL_USER: enmarket
+      MYSQL_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+    # TANPA ports: — MySQL tidak boleh terekspos ke host (anti bentrok).
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    networks:
+      - enmarket
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/docker/api/Dockerfile
+    container_name: enmarket-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: "enmarket API"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: https://enmarket.enpiistudio.com
+      LOG_CHANNEL: stack
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: enmarket
+      DB_USERNAME: enmarket
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+      # Tripay
+      TRIPAY_MODE: ${TRIPAY_MODE:-sandbox}
+      TRIPAY_API_KEY: ${TRIPAY_API_KEY:-}
+      TRIPAY_PRIVATE_KEY: ${TRIPAY_PRIVATE_KEY:-}
+      TRIPAY_MERCHANT_CODE: ${TRIPAY_MERCHANT_CODE:-}
+      TRIPAY_CALLBACK_URL: https://enmarket.enpiistudio.com/api/tripay/callback
+      # EnStorage (kosong = LocalMockEnStorage)
+      ENSTORAGE_BASE_URL: ${ENSTORAGE_BASE_URL:-}
+      ENSTORAGE_API_KEY: ${ENSTORAGE_API_KEY:-}
+      # WhatsApp webhook agent
+      WA_WEBHOOK_URL: ${WA_WEBHOOK_URL:-}
+      WA_WEBHOOK_SECRET: ${WA_WEBHOOK_SECRET:-}
+      # Mail
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      # Admin
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?ADMIN_TOKEN required}
+      # Same-origin lewat proxy /api/* → CORS sebenarnya tidak diperlukan,
+      # di-set hanya untuk akses API lintas-origin yang sah.
+      CORS_ALLOWED_ORIGINS: https://enmarket.enpiistudio.com
+      # Next.js on-demand revalidation
+      NEXT_PUBLIC_SITE_URL: https://enmarket.enpiistudio.com
+      APP_NEXT_INTERNAL_URL: http://web:3000
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?REVALIDATE_SECRET required}
+    networks:
+      - enmarket
+      - web-network
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: ../../infra/docker/web/Dockerfile
+      args:
+        # Browser fetch /api relatif (same-origin, diproxy NPM ke api:8000).
+        # client-api.ts: NEXT_PUBLIC_API_URL kosong/'http://api…' → base ''.
+        NEXT_PUBLIC_API_URL: ""
+        NEXT_PUBLIC_SITE_NAME: enpiistudio
+        NEXT_PUBLIC_SITE_URL: https://enmarket.enpiistudio.com
+    container_name: enmarket-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      # Server-side fetch Next → Laravel (internal docker network)
+      API_INTERNAL_URL: http://api:8000
+      NEXT_PUBLIC_API_URL: ""
+      NEXT_PUBLIC_SITE_URL: https://enmarket.enpiistudio.com
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?REVALIDATE_SECRET required}
+    # TANPA ports: — hanya dijangkau via NPM di web-network.
+    networks:
+      - enmarket
+      - web-network
+
+networks:
+  enmarket:
+    driver: bridge
+  web-network:
+    external: true
+
+volumes:
+  db_data:
+    driver: local
