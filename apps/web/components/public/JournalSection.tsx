@@ -40,7 +40,7 @@ export async function JournalSection({ posts }: Props) {
     <section className="bg-surface">
       <SectionContainer py="xl">
         <div className="flex items-center gap-4 mb-20">
-          <h2 className="font-display text-headline-lg text-ink uppercase shrink-0">
+          <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-ink uppercase shrink-0">
             {t('journalTitle')}
           </h2>
           <div className="h-1 bg-ink w-full" />
@@ -126,7 +126,7 @@ function JournalEntry({
             {entry.date}
           </span>
         </div>
-        <h3 className="font-display text-headline-lg text-primary uppercase group-hover:underline underline-offset-8 decoration-4">
+        <h3 className="font-display text-headline-lg-mobile md:text-headline-lg text-primary uppercase group-hover:underline underline-offset-8 decoration-4">
           {entry.title}
         </h3>
         <p className="font-body text-body-lg text-ink/70">{entry.body}</p>

@@ -38,7 +38,7 @@ export function FeaturedSection({ products }: Props) {
     <section id="featured" className="border-b-4 border-ink">
       <SectionContainer py="xl">
         <div className="flex justify-between items-end mb-16">
-          <h2 className="font-display text-headline-lg text-ink uppercase leading-none">
+          <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-ink uppercase leading-none">
             {t('featuredTitle')}
           </h2>
           <div className="hidden md:block font-label text-label-sm uppercase tracking-widest text-ink/70 pb-2">

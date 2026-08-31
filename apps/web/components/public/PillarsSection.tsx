@@ -82,7 +82,7 @@ export function PillarsSection() {
             >
               {p.icon}
             </div>
-            <h2 className="font-display text-headline-lg text-primary uppercase">
+            <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-primary uppercase">
               {t(p.titleKey)}
             </h2>
             <p className="font-body text-body-lg text-ink/70 max-w-md">{t(p.bodyKey)}</p>
@@ -105,7 +105,7 @@ export function PillarsSection() {
           >
             ☷
           </div>
-          <h2 className="font-display text-headline-lg text-primary uppercase">
+          <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-primary uppercase">
             {t('pillarDisplay')}
           </h2>
           <p className="font-body text-body-lg text-ink/70 max-w-2xl">

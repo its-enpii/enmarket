@@ -64,18 +64,18 @@ export function TopNav({ children }: Props) {
 
   return (
     <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] relative">
-      <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 py-4">
+      <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 lg:px-8 xl:px-12 py-4">
         <NLink
           href="/"
           variant="primary"
           underline="none"
-          className="font-display text-2xl md:text-headline-md font-black uppercase tracking-tighter min-h-[44px] inline-flex items-center"
+          className="font-display text-2xl md:text-3xl lg:text-2xl xl:text-headline-md font-black uppercase tracking-tighter min-h-[44px] inline-flex items-center"
         >
           {siteName}
         </NLink>
 
-        {/* Desktop nav (≥md) */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+        {/* Desktop nav (≥lg) */}
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-8">
           {navItems.map((item) => {
             const active = isActive(pathname, item.href);
             return (
@@ -110,11 +110,11 @@ export function TopNav({ children }: Props) {
           </Button>
         </nav>
 
-        {/* Hamburger button (<md) */}
+        {/* Hamburger button (<lg) */}
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="md:hidden border-4 border-ink bg-surface text-ink w-11 h-11 flex items-center justify-center font-bold shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
+          className="lg:hidden border-4 border-ink bg-surface text-ink w-11 h-11 flex items-center justify-center font-bold shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
           aria-label={t('menu')}
           aria-expanded={open}
         >
@@ -122,9 +122,9 @@ export function TopNav({ children }: Props) {
         </button>
       </div>
 
-      {/* Mobile menu panel */}
+      {/* Mobile menu panel (<lg) */}
       {open && (
-        <nav className="md:hidden border-t-4 border-ink bg-surface">
+        <nav className="lg:hidden border-t-4 border-ink bg-surface">
           <div className="px-6 py-4 space-y-2">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
