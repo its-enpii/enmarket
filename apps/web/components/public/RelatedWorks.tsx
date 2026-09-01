@@ -18,7 +18,7 @@ import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
 import type { Product } from '@/lib/types';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { SectionIntro } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 
 interface Props {
@@ -56,14 +56,11 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
     <section className="border-t-4 border-ink bg-surface">
       <SectionContainer py="lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-          <div>
-            <Eyebrow size="md" color="accent" className="mb-3">
-              {t('relatedEyebrow')}
-            </Eyebrow>
+          <SectionIntro eyebrow={t('relatedEyebrow')}>
             <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
               {t('relatedTitle')}
             </h2>
-          </div>
+          </SectionIntro>
           <NLink
             href="/develop"
             variant="primary"

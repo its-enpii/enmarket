@@ -2,7 +2,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
-import { PageTitle } from '@/components/ui';
+import { PageTitle, SectionIntro } from '@/components/ui';
 import { CustomBuildForm } from './CustomBuildForm';
 
 export const dynamic = 'force-dynamic';
@@ -31,15 +31,14 @@ export default async function LayananPage() {
     <div className="mx-auto max-w-5xl px-6 py-8 sm:py-12 space-y-10">
       {/* Page Header */}
       <div className="border-b-4 border-ink pb-6">
-        <Eyebrow size="md" color="accent" className="mb-3">
-          {t('eyebrow')}
-        </Eyebrow>
+        <SectionIntro eyebrow={t('eyebrow')}>
         <PageTitle size="hero">
           {t('title')}<span className="text-primary">.</span>
         </PageTitle>
         <p className="mt-3 text-base text-ink/70 max-w-3xl leading-relaxed">
           {t('subtitle')}
         </p>
+        </SectionIntro>
       </div>
 
       {/* Intro service overview */}

@@ -6,7 +6,7 @@ import { ProductGrid } from '@/components/public/ProductGrid';
 import { wishlistApi, PublicFetchError } from '@/lib/wishlist-api';
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
-import { PageTitle } from '@/components/ui';
+import { PageTitle, SectionIntro } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -48,9 +48,9 @@ export default async function WishlistPage() {
     <div className="mx-auto max-w-6xl px-6 py-8 sm:py-12">
       {/* Page header */}
       <div className="mb-8 border-b-4 border-ink pb-6">
-        <Eyebrow size="md" color="accent" className="mb-3">
+        <SectionIntro eyebrow={<>♥ {t('title')}</>}>
           ♥ {t('title')}
-        </Eyebrow>
+        </SectionIntro>
         <PageTitle size="hero">
           {t('title')}<span className="text-primary">.</span>
         </PageTitle>

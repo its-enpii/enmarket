@@ -9,7 +9,6 @@ import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
 import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { FormField } from '@/components/admin/FormField';
@@ -24,7 +23,7 @@ import { toast } from '@/components/ui/toast-store';
 import type { Post, PostStatus } from '@/lib/types';
 
 import { createPost, updatePost, ActionResult } from './actions';
-import { FormSection } from '@/components/ui';
+import { FormFooter, FormSection } from '@/components/ui';
 
 interface Props {
   initial?: Post;
@@ -209,14 +208,13 @@ export function PostForm({ initial }: Props) {
         </AlertBanner>
       )}
 
-      <div className="flex gap-3 pt-2 border-t-2 border-ink">
-        <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
-        </Button>
-        <Button type="button" variant="ghost" size="md" flat onClick={() => router.back()}>
-          {tBtns('cancel')}
-        </Button>
-      </div>
+      <FormFooter
+        pending={pending}
+        submitLabel={pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
+        cancelLabel={tBtns('cancel')}
+        onCancel={() => router.back()}
+        className="border-t-2 border-ink"
+      />
     </form>
   );
 }

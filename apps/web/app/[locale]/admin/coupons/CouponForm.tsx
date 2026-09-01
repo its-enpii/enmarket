@@ -4,8 +4,8 @@ import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
 import { AlertBanner } from '@/components/ui/AlertBanner';
+import { FormFooter } from '@/components/ui';
 import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -129,20 +129,12 @@ export function CouponForm({ initial }: Props) {
         </AlertBanner>
       )}
 
-      <div className="flex gap-3 pt-2">
-        <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="md"
-          flat
-          onClick={() => router.push('/admin/coupons')}
-        >
-          {tBtns('cancel')}
-        </Button>
-      </div>
+      <FormFooter
+        pending={pending}
+        submitLabel={pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
+        cancelHref="/admin/coupons"
+        cancelLabel={tBtns('cancel')}
+      />
     </form>
   );
 }

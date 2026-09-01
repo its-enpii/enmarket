@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button } from '@/components/ui/neobrutal';
-import { PageTitle } from '@/components/ui';
+import { PageIntro } from '@/components/ui';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';
 import type { Order } from '@/lib/types';
@@ -43,14 +43,7 @@ export default function AkunPesananPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <PageTitle size="compact">
-          {t('title')}
-        </PageTitle>
-        <p className="text-sm text-ink/70 mt-1">
-          {t('subtitle')}
-        </p>
-      </div>
+      <PageIntro title={t('title')} subtitle={t('subtitle')} />
 
       {loading ? (
         <Card variant="surface" hoverable={false} className="p-8 text-center">

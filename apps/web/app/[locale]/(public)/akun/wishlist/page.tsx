@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button, NLink } from '@/components/ui/neobrutal';
-import { PageTitle } from '@/components/ui';
+import { PageIntro } from '@/components/ui';
 import { authApi } from '@/lib/auth-api';
 import type { WishlistItem } from '@/lib/types';
 
@@ -41,14 +41,7 @@ export default function AkunWishlistPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <PageTitle size="compact">
-          {tNav('wishlist')}
-        </PageTitle>
-        <p className="text-sm text-ink/70 mt-1">
-          {t('subtitle')}
-        </p>
-      </div>
+      <PageIntro title={tNav('wishlist')} subtitle={t('subtitle')} />
 
       {loading ? (
         <Card variant="surface" hoverable={false} className="p-8 text-center">

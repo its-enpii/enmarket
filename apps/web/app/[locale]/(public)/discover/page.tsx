@@ -9,7 +9,7 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { Card, Button, NLink } from '@/components/ui/neobrutal';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { SectionBand, SectionTitle } from '@/components/ui';
+import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 
 export async function generateMetadata({
   params,
@@ -113,14 +113,9 @@ export default async function DiscoverPage({
       {/* ───── 3. PILLARS ───── */}
       <SectionBand>
         <SectionContainer py="lg">
-          <div className="mb-12 max-w-2xl">
-            <Eyebrow size="md" color="accent" className="mb-3">
-              {t('pillarsHeading')}
-            </Eyebrow>
-            <SectionTitle>
-              {t('pillarsTitle')}
-            </SectionTitle>
-          </div>
+          <SectionIntro eyebrow={t('pillarsHeading')} className="mb-12 max-w-2xl">
+            <SectionTitle>{t('pillarsTitle')}</SectionTitle>
+          </SectionIntro>
           <Card as="div" variant="surface" thick elevation={8} hoverable={false} className="grid grid-cols-1 md:grid-cols-3">
             {PILLARS.map((pillar, i) => (
               <article

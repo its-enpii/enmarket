@@ -25,7 +25,7 @@ import { Eyebrow } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { SectionBand, SectionTitle } from '@/components/ui';
+import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateLong, formatDateShort } from '@/lib/format';
@@ -287,14 +287,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
         <section className="border-t-4 border-ink bg-surface">
           <SectionContainer py="md">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-              <div>
-                <Eyebrow size="md" color="accent" className="mb-3">
-                  {t('moreEyebrow')}
-                </Eyebrow>
-                <SectionTitle>
-                  {t('moreTitle')}
-                </SectionTitle>
-              </div>
+              <SectionIntro eyebrow={t('moreEyebrow')}>
+                <SectionTitle>{t('moreTitle')}</SectionTitle>
+              </SectionIntro>
               <NLink
                 href="/display"
                 variant="primary"

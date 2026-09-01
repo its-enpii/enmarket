@@ -28,7 +28,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
-import { SectionBand, SectionTitle } from '@/components/ui';
+import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { MetaLabel } from '@/components/ui';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
@@ -382,12 +382,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
       {specs.length > 0 && (
         <SectionBand>
           <SectionContainer py="lg">
-            <Eyebrow size="md" color="accent" className="mb-3">
-              {t('details')}
-            </Eyebrow>
-            <SectionTitle className="mb-10">
-              {t('specsTitle')}
-            </SectionTitle>
+            <SectionIntro eyebrow={t('details')}>
+              <SectionTitle className="mb-10">{t('specsTitle')}</SectionTitle>
+            </SectionIntro>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {specs.map((spec) => (
@@ -441,14 +438,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
         <SectionBand>
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-              <div>
-                <Eyebrow size="md" color="accent" className="mb-3">
-                  {t('gallery')}
-                </Eyebrow>
-                <SectionTitle>
-                  {t('galleryTitle')}
-                </SectionTitle>
-              </div>
+              <SectionIntro eyebrow={t('gallery')}>
+                <SectionTitle>{t('galleryTitle')}</SectionTitle>
+              </SectionIntro>
               <p className="font-body text-body-md text-ink/60">
                 {t('galleryHint')}
               </p>
@@ -468,14 +460,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
         <SectionBand>
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-              <div>
-                <Eyebrow size="md" color="accent" className="mb-3">
-                  {t('linkedPostsEyebrow')}
-                </Eyebrow>
-                <SectionTitle>
-                  {t('linkedPostsTitle')}
-                </SectionTitle>
-              </div>
+              <SectionIntro eyebrow={t('linkedPostsEyebrow')}>
+                <SectionTitle>{t('linkedPostsTitle')}</SectionTitle>
+              </SectionIntro>
               <p className="font-body text-body-md text-ink/60 max-w-md">
                 {t('linkedPostsHint')}
               </p>

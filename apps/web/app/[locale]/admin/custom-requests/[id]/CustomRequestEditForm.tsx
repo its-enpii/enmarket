@@ -3,8 +3,8 @@
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
 import { AlertBanner } from '@/components/ui/AlertBanner';
+import { FormFooter } from '@/components/ui';
 import { FormField } from '@/components/admin/FormField';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
@@ -58,11 +58,10 @@ export function CustomRequestEditForm({ customRequest }: Props) {
         </AlertBanner>
       )}
 
-      <div className="flex gap-3 pt-2">
-        <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? t('submitting') : tBtns('save')}
-        </Button>
-      </div>
+      <FormFooter
+        pending={pending}
+        submitLabel={pending ? t('submitting') : tBtns('save')}
+      />
     </form>
   );
 }

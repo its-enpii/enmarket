@@ -9,7 +9,7 @@ import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { Card } from '@/components/ui/neobrutal';
+import { InfoCard } from '@/components/ui';
 import { apiGet } from '@/lib/api';
 import type { SiteSettings } from '@/lib/types';
 
@@ -48,11 +48,7 @@ export default async function PaymentSettingsPage() {
           paymentGateways={initialData.payment_gateways}
         />
       ) : (
-        <Card variant="surface" className="p-6 text-ink/60">
-          <p className="font-display text-lg font-black uppercase">
-            {t('backendDownTitle')}
-          </p>
-        </Card>
+        <InfoCard title={t('backendDownTitle')} />
       )}
     </div>
   );

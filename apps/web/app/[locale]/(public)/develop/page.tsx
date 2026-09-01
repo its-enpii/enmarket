@@ -22,7 +22,7 @@ import { PageHeader } from '@/components/public/PageHeader';
 import { SearchBar } from '@/components/public/SearchBar';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, NLink } from '@/components/ui/neobrutal';
-import { SectionBand } from '@/components/ui';
+import { SectionBand, SectionIntro } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { PaginatedResponse, Product } from '@/lib/types';
 
@@ -208,12 +208,11 @@ export default async function DevelopPage({ searchParams }: PageProps) {
       <section className="bg-primary text-surface">
         <SectionContainer py="lg" className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <Eyebrow size="md" color="accent" className="mb-3">
-              {t('footerEyebrow')}
-            </Eyebrow>
-            <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight">
-              {t('footerTitle')}
-            </h2>
+            <SectionIntro eyebrow={t('footerEyebrow')}>
+              <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight">
+                {t('footerTitle')}
+              </h2>
+            </SectionIntro>
           </div>
           <NLink
             href="/display"

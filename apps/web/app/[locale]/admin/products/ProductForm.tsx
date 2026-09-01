@@ -8,8 +8,9 @@ import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
 import { AlertBanner } from '@/components/ui/AlertBanner';
+import { Button } from '@/components/ui/neobrutal';
+import { FormFooter } from '@/components/ui';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { FormField } from '@/components/admin/FormField';
@@ -623,14 +624,13 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
         </AlertBanner>
       )}
 
-      <div className="flex gap-3 pt-2 border-t-2 border-ink">
-        <Button type="submit" variant="primary" size="md" disabled={pending}>
-          {pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
-        </Button>
-        <Button type="button" variant="ghost" size="md" flat onClick={() => router.back()}>
-          {tBtns('cancel')}
-        </Button>
-      </div>
+      <FormFooter
+        pending={pending}
+        submitLabel={pending ? t('submitPending') : isEdit ? t('submitSave') : t('submitCreate')}
+        cancelLabel={tBtns('cancel')}
+        onCancel={() => router.back()}
+        className="border-t-2 border-ink"
+      />
     </form>
   );
 }

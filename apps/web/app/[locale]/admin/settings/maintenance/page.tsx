@@ -10,7 +10,7 @@ import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { Card } from '@/components/ui/neobrutal';
+import { InfoCard } from '@/components/ui';
 import { apiGet } from '@/lib/api';
 import type { MaintenanceStatus } from '@/lib/types';
 
@@ -47,14 +47,11 @@ export default async function MaintenanceSettingsPage() {
       {status ? (
         <MaintenanceForm status={status} />
       ) : (
-        <Card variant="surface" className="p-6 text-ink/60">
-          <p className="font-display text-lg font-black uppercase">
-            {t('backendDownTitle')}
-          </p>
+        <InfoCard title={t('backendDownTitle')}>
           <p className="mt-2 font-body text-sm">
             {t('backendDownHint')}
           </p>
-        </Card>
+        </InfoCard>
       )}
     </div>
   );
