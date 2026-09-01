@@ -19,6 +19,7 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+import { Button } from '@/components/ui/neobrutal';
 interface Props {
   images: string[];
   alt: string;
@@ -43,10 +44,12 @@ export function WorkGallery({ images, alt, title }: Props) {
   // Single image — block besar dengan subtle rotate
   if (images.length === 1) {
     return (
-      <button
+      <Button
         type="button"
+        variant="surface"
+        size="sm"
         onClick={() => setActiveIdx(0)}
-        className="block w-full bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform cursor-pointer"
+        className="block w-full p-0 shadow-[8px_8px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform"
         aria-label={t('galleryOpen', { name: alt })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -55,7 +58,7 @@ export function WorkGallery({ images, alt, title }: Props) {
           alt={alt}
           className="w-full aspect-[4/3] object-cover"
         />
-      </button>
+      </Button>
     );
   }
 
@@ -83,13 +86,15 @@ export function WorkGallery({ images, alt, title }: Props) {
           const shadowSize = isLarge ? 'shadow-[10px_10px_0_0_var(--color-ink)]' : 'shadow-[6px_6px_0_0_var(--color-ink)]';
 
           return (
-            <button
+            <Button
               key={src + i}
               type="button"
+              variant="surface"
+              size="sm"
               onClick={() => setActiveIdx(i)}
               className={[
                 colSpan,
-                'group block bg-surface border-4 border-ink overflow-hidden cursor-pointer',
+                'group block p-0 overflow-hidden',
                 shadowSize,
                 rotate,
                 'hover:rotate-0 transition-transform',
@@ -103,7 +108,7 @@ export function WorkGallery({ images, alt, title }: Props) {
                 loading="lazy"
                 className={`w-full ${aspectClass} object-cover group-hover:scale-[1.02] transition-transform`}
               />
-            </button>
+            </Button>
           );
         })}
       </div>

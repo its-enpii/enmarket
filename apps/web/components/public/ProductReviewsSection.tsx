@@ -113,14 +113,16 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                 const isSelected = filterRating === stars;
 
                 return (
-                  <button
+                  <Button
                     key={stars}
                     type="button"
+                    variant={isSelected ? 'primary' : 'surface'}
+                    size="sm"
                     onClick={() => {
                       setFilterRating(isSelected ? undefined : stars);
                       setPage(1);
                     }}
-                    className={`w-full flex items-center gap-3 text-xs font-bold py-1 px-2 rounded transition-all text-left ${
+                    className={`w-full gap-3 text-xs font-bold py-1 px-2 text-left ${
                       isSelected ? 'bg-primary text-surface' : 'hover:bg-accent/30 text-ink'
                     }`}
                   >
@@ -136,7 +138,7 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                     <span className="w-14 text-right font-mono shrink-0">
                       {count} ({percent}%)
                     </span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>

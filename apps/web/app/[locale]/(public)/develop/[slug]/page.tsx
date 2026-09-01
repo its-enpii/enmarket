@@ -146,14 +146,15 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {t('back')}
           </NLink>
           {product.rating_summary && product.rating_summary.count > 0 && (
-                <a
+                <NLink
                   href="#reviews"
+                  underline="none"
                   className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent transition-colors"
                 >
                   <span className="text-accent">?</span>
                   <span>{product.rating_summary.average.toFixed(1)}</span>
                   <span className="text-ink/60">({product.rating_summary.count})</span>
-                </a>
+                </NLink>
               )}
               {kategori && (
             <span className="ml-4 font-label text-label-sm uppercase text-ink/40">
@@ -204,14 +205,15 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 {tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}
               </Badge>
               {product.rating_summary && product.rating_summary.count > 0 && (
-                <a
+                <NLink
                   href="#reviews"
+                  underline="none"
                   className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent transition-colors"
                 >
                   <span className="text-accent">?</span>
                   <span>{product.rating_summary.average.toFixed(1)}</span>
                   <span className="text-ink/60">({product.rating_summary.count})</span>
-                </a>
+                </NLink>
               )}
               {kategori && (
                 <Badge tone="surface" size="md" shadow={false}>
@@ -308,14 +310,15 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   <dd className="font-bold text-ink">{tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}</dd>
                 </div>
                 {product.rating_summary && product.rating_summary.count > 0 && (
-                <a
+                <NLink
                   href="#reviews"
+                  underline="none"
                   className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-[2px_2px_0_0_var(--color-ink)] hover:bg-accent transition-colors"
                 >
                   <span className="text-accent">?</span>
                   <span>{product.rating_summary.average.toFixed(1)}</span>
                   <span className="text-ink/60">({product.rating_summary.count})</span>
-                </a>
+                </NLink>
               )}
               {kategori && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">

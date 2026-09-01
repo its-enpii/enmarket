@@ -1,9 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
-import { Card } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import {
   formatDateTime,
@@ -263,14 +262,19 @@ export default async function OrderDetailPage({ params }: Props) {
           >
             {order.qr_url}
           </a>
-          <details className="mt-3">
-            <summary className="text-xs font-bold cursor-pointer text-ink/60 hover:text-ink">
-              {t('qr.viewRaw')}
-            </summary>
-            <pre className="text-xs bg-ink/5 p-2 mt-2 border border-ink/20 overflow-x-auto font-mono">
+          <Disclosure
+            label={
+              <span className="text-xs font-bold text-ink/60 hover:text-ink">
+                {t('qr.viewRaw')}
+              </span>
+            }
+            className="mt-3"
+            contentClassName="mt-2"
+          >
+            <pre className="text-xs bg-ink/5 p-2 border border-ink/20 overflow-x-auto font-mono">
               {order.qr_string ?? t('qr.rawEmpty')}
             </pre>
-          </details>
+          </Disclosure>
         </Card>
       )}
     </div>

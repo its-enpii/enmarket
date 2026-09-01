@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
-import { NLink } from '@/components/ui/neobrutal';
+import { Button, NLink } from '@/components/ui/neobrutal';
 import { routing } from '@/i18n/routing';
 
 const NAV_HREFS = [
@@ -51,14 +49,15 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
     <>
       {/* Backdrop untuk mobile */}
       {open && (
-        <button
+        <Button
           type="button"
+          variant="surface"
+          size="sm"
           aria-label={tSidebar('closeMenu')}
           onClick={onClose}
-          className="lg:hidden fixed inset-0 bg-ink/60 z-40 cursor-default"
+          className="lg:hidden fixed inset-0 px-0 py-0 bg-ink/60 z-40 cursor-default"
         />
       )}
-
       {/* Sidebar — fixed position.
           - mobile: drawer overlay (translate-x animate)
           - lg+:    fixed left, tetap di tempat saat main scroll. */}
@@ -70,14 +69,14 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
         }
       >
         <div className="p-6 border-b-2 border-ink flex items-center justify-between">
-          <Link href="/admin" onClick={onClose} className="block">
+          <NLink href="/admin" onClick={onClose} underline="none" className="block">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
               {tSidebar('brandTitle')}
             </p>
             <p className="text-2xl font-bold text-surface leading-none mt-1">
               {tSidebar('brandSubtitle')}
             </p>
-          </Link>
+          </NLink>
           {/* Close button (mobile only) */}
           <Button
             type="button"

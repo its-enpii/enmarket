@@ -78,14 +78,16 @@ export function AddToCartControls({ productId, isPreOrder = false, isFree = fals
         {primaryLabel}
       </Button>
 
-      <button
+      <Button
         type="button"
+        variant="primary"
+        size="lg"
         onClick={handleBuyNow}
         disabled={pending}
-        className="w-full bg-transparent text-ink border-b-2 border-ink px-2 py-2 font-label text-label-sm uppercase font-bold tracking-wider hover:text-primary hover:border-primary transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full"
       >
         {buyNowLabel}
-      </button>
+      </Button>
 
       <NLink
         href="/keranjang"

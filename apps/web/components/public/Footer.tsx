@@ -13,7 +13,7 @@
 
 import { getTranslations } from 'next-intl/server';
 
-import { Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
+import { Button, Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { publicApi } from '@/lib/public-api';
 
@@ -92,13 +92,15 @@ export async function Footer() {
                   required
                   className="rounded-none border-0 px-4 py-4 font-label text-label-sm"
                 />
-                <button
+                <Button
                   type="submit"
+                  variant="primary"
+                  size="sm"
                   aria-label={t('subscribeAria')}
-                  className="bg-ink text-surface px-6 py-4 border-l-4 border-ink hover:bg-primary transition-colors"
+                  className="h-auto px-6 py-4 border-l-4 border-ink rounded-none"
                 >
                   <span aria-hidden="true">→</span>
-                </button>
+                </Button>
               </form>
             </Card>
 

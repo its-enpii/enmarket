@@ -7,6 +7,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
+import { NLink } from '@/components/ui/neobrutal';
 
 export function AdminFooter() {
   const t = useTranslations('admin.footer');
@@ -29,14 +30,12 @@ export function AdminFooter() {
           >
             GitHub
           </a>
-          <a
+          <NLink
             href="/"
-            target="_blank"
-            rel="noopener noreferrer"
             className="hover:text-ink font-bold"
           >
             {t('viewStore')}
-          </a>
+          </NLink>
         </div>
       </div>
     </footer>

@@ -10,6 +10,7 @@ export { Button, BUTTON_LABEL_CLS, BUTTON_LINK_BASE_CLS, BUTTON_LINK_SIZE_SM } f
 export type { ButtonProps } from './Button';
 export { Card } from './Card';
 export type { CardProps } from './Card';
+export { Disclosure } from './Disclosure';
 export { NLink } from './Link';
 
 export {

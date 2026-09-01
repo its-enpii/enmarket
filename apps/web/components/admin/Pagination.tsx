@@ -14,8 +14,6 @@
  * Hanya render kalau lastPage > 1 (caller biasanya wrap dengan conditional).
  */
 
-import Link from 'next/link';
-
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 
@@ -58,9 +56,9 @@ export function Pagination({ currentPage, lastPage, basePath, queryParams }: Pro
   return (
     <div className="flex gap-2 justify-center flex-wrap items-center">
       {currentPage > 1 && (
-        <Link href={pageHref(currentPage - 1)}>
-          <Button variant="ghost" size="sm">← Prev</Button>
-        </Link>
+        <Button href={pageHref(currentPage - 1)} variant="ghost" size="sm">
+          ← Prev
+        </Button>
       )}
       {pages.map((p, i) =>
         p === '…' ? (
@@ -81,15 +79,15 @@ export function Pagination({ currentPage, lastPage, basePath, queryParams }: Pro
             {p}
           </Badge>
         ) : (
-          <Link key={p} href={pageHref(p)}>
-            <Button variant="ghost" size="sm">{p}</Button>
-          </Link>
+          <Button key={p} href={pageHref(p)} variant="ghost" size="sm">
+            {p}
+          </Button>
         ),
       )}
       {currentPage < lastPage && (
-        <Link href={pageHref(currentPage + 1)}>
-          <Button variant="ghost" size="sm">Next →</Button>
-        </Link>
+        <Button href={pageHref(currentPage + 1)} variant="ghost" size="sm">
+          Next →
+        </Button>
       )}
     </div>
   );

@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Button } from '@/components/ui/neobrutal';
 import { toast } from '@/components/ui/toast-store';
 import { toggleWishlistAction } from '@/app/[locale]/(public)/wishlist/actions';
 
@@ -42,17 +43,19 @@ export function WishlistHeartButton({
   };
 
   return (
-    <button
+    <Button
       type="button"
+      variant="surface"
+      size="sm"
       onClick={handleToggle}
       aria-label={wishlisted ? t('remove') : t('add')}
-      className={`inline-flex items-center justify-center w-8 h-8 rounded-none border-2 border-ink bg-surface shadow-[2px_2px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer ${
+      className={`w-8 h-8 px-0 py-0 ${
         wishlisted ? 'text-red-500 hover:text-red-600' : 'text-ink/70 hover:text-ink hover:bg-accent'
       } ${className}`}
     >
       <span className="text-base leading-none select-none">
         {wishlisted ? '♥' : '♡'}
       </span>
-    </button>
+    </Button>
   );
 }

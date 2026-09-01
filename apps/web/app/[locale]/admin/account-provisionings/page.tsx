@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
-import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, Disclosure, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime } from '@/lib/format';
 import {
@@ -187,10 +187,15 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
                 </div>
 
                 {row.status === 'siap' && row.credentials && (
-                  <details className="mt-3 border-t-2 border-dashed border-ink/20 pt-3">
-                    <summary className="cursor-pointer text-xs font-bold uppercase tracking-wider text-ink/70">
-                      {t('viewCredentials')}
-                    </summary>
+                  <Disclosure
+                    label={
+                      <span className="text-xs font-bold uppercase tracking-wider text-ink/70">
+                        {t('viewCredentials')}
+                      </span>
+                    }
+                    className="mt-3 border-t-2 border-dashed border-ink/20 pt-3"
+                    contentClassName="mt-2"
+                  >
                     <dl className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">
                       {Object.entries(row.credentials).map(([k, v]) => (
                         <div key={k} className="flex gap-2">
@@ -202,7 +207,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
                     {row.catatan_admin && (
                       <p className="mt-2 text-xs italic text-ink/60">📝 {row.catatan_admin}</p>
                     )}
-                  </details>
+                  </Disclosure>
                 )}
                 </Card>
               </li>

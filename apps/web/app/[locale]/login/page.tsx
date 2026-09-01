@@ -43,7 +43,7 @@ export default async function LoginPage() {
   return (
     <main className="min-h-screen bg-surface flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <Card variant="surface" hoverable={false} thick className="p-8" style={{ boxShadow: '8px 8px 0 0 var(--color-ink)' }}>
+        <Card variant="surface" hoverable={false} thick raised className="p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
             enpiistudio Admin
           </p>

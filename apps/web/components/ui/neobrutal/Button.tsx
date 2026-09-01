@@ -12,7 +12,7 @@
  *   <Button variant="accent" size="lg" href="/katalog">Mulai Belanja</Button>
  */
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
@@ -53,7 +53,7 @@ type ButtonAsButton = CommonProps &
   };
 
 type ButtonAsLink = CommonProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | keyof CommonProps> & {
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | keyof CommonProps | 'popover'> & {
     href: string;
     /** Pakai native <a> untuk external URL (download, dll.). Hindari Next.js Link yang akan client-route. */
     external?: boolean;

@@ -227,12 +227,14 @@ export function SortableHeader({ field, currentSort, currentDir, children }: Hea
   }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="surface"
+      size="sm"
       onClick={push}
       disabled={pending}
       className={
-        'inline-flex items-center gap-1 font-bold uppercase tracking-wide text-xs transition-colors ' +
+        'gap-1 uppercase tracking-wide text-xs ' +
         (pending ? 'cursor-wait opacity-50 ' : 'cursor-pointer ') +
         (active ? 'text-accent' : 'text-surface hover:text-accent')
       }
@@ -242,6 +244,6 @@ export function SortableHeader({ field, currentSort, currentDir, children }: Hea
       {active && (
         <span aria-hidden="true">{currentDir === 'asc' ? '↑' : '↓'}</span>
       )}
-    </button>
+    </Button>
   );
 }

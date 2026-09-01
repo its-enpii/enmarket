@@ -86,8 +86,10 @@ export function MediaPickerModal({
       aria-labelledby="media-picker-title"
       className="fixed inset-0 z-[120] flex items-center justify-center p-4"
     >
-      <button
+      <Button
         type="button"
+        variant="surface"
+        size="sm"
         tabIndex={-1}
         aria-label={tCommon('closeDialog')}
         onClick={() => setOpen(false)}
@@ -104,14 +106,16 @@ export function MediaPickerModal({
               {t('modalSubtitle')}
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="sm"
             onClick={() => setOpen(false)}
             aria-label={tCommon('dismiss')}
-            className="w-8 h-8 flex items-center justify-center border-2 border-ink bg-surface font-bold text-ink hover:bg-primary hover:text-surface transition-colors shadow-[2px_2px_0_0_var(--color-ink)]"
+            className="w-8 h-8 px-0 py-0"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         <div className="p-4 border-b-2 border-ink bg-surface/50 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -177,11 +181,13 @@ export function MediaPickerModal({
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {filtered.map((it) => (
-                <button
+                <Button
                   key={`${it.source}-${it.sourceId}-${it.url}`}
                   type="button"
+                  variant="surface"
+                  size="sm"
                   onClick={() => handleSelect(it.url)}
-                  className="group relative border-2 border-ink bg-surface p-2 text-left hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-x-0 active:translate-y-0 transition-all flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="group relative p-2 text-left flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <div className="aspect-square bg-ink/5 border border-ink/30 mb-2 overflow-hidden flex items-center justify-center relative">
                     {it.type === 'image' ? (
@@ -213,7 +219,7 @@ export function MediaPickerModal({
                   <div className="absolute inset-0 bg-primary/90 text-surface font-bold text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     {t('chooseMedia')}
                   </div>
-                </button>
+                </Button>
               ))}
             </div>
           )}

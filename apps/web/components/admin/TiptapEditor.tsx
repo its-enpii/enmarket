@@ -18,6 +18,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/neobrutal';
 import { useTranslations } from 'next-intl';
 
 interface Props {
@@ -101,19 +102,21 @@ function Toolbar({ editor }: { editor: Editor }) {
     children: React.ReactNode;
     title: string;
   }) => (
-    <button
+    <Button
       type="button"
+      variant={active ? 'ink' : 'surface'}
+      size="sm"
       onClick={onClick}
       title={title}
       className={
-        'border-2 border-ink px-2.5 py-1 text-sm font-bold min-w-[36px] min-h-[36px] transition-all ' +
+        'px-2.5 py-1 text-sm min-w-[36px] min-h-[36px] ' +
         (active
           ? 'bg-ink text-surface shadow-[2px_2px_0_0_var(--color-primary)]'
           : 'bg-surface text-ink hover:bg-accent shadow-[2px_2px_0_0_var(--color-ink)]')
       }
     >
       {children}
-    </button>
+    </Button>
   );
 
   function addLink() {

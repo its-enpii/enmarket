@@ -108,12 +108,14 @@ export function ReviewFormModal({
       aria-labelledby="review-modal-title"
       className="fixed inset-0 z-[120] flex items-center justify-center p-4"
     >
-      <button
+      <Button
         type="button"
+        variant="surface"
+        size="sm"
         tabIndex={-1}
         aria-label={tCommon('closeDialog')}
         onClick={() => setOpen(false)}
-        className="absolute inset-0 bg-ink/70 cursor-default animate-fade-in"
+        className="absolute inset-0 px-0 py-0 bg-ink/70 cursor-default animate-fade-in"
       />
 
       <div className="relative bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] w-full max-w-lg max-h-[90vh] overflow-y-auto z-10 animate-scale-in p-6">
@@ -126,14 +128,16 @@ export function ReviewFormModal({
               {productName}
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="sm"
             onClick={() => setOpen(false)}
             aria-label={tCommon('dismiss')}
-            className="w-8 h-8 flex items-center justify-center border-2 border-ink bg-surface font-bold text-ink hover:bg-primary hover:text-surface transition-colors shadow-[2px_2px_0_0_var(--color-ink)]"
+            className="w-8 h-8 px-0 py-0"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         {submitted ? (
@@ -153,19 +157,21 @@ export function ReviewFormModal({
                 {[1, 2, 3, 4, 5].map((star) => {
                   const active = (hoverRating || rating) >= star;
                   return (
-                    <button
+                    <Button
                       key={star}
                       type="button"
+                      variant="surface"
+                      size="sm"
                       onClick={() => setRating(star)}
                       onMouseEnter={() => setHoverRating(star)}
                       onMouseLeave={() => setHoverRating(0)}
-                      className="text-3xl transition-transform hover:scale-125 focus:outline-none"
+                      className="text-3xl hover:scale-125 focus:outline-none"
                       aria-label={`${star} ${t('stars')}`}
                     >
                       <span className={active ? 'text-accent drop-shadow-[2px_2px_0_var(--color-ink)]' : 'text-ink/20'}>
                         ★
                       </span>
-                    </button>
+                    </Button>
                   );
                 })}
                 <span className="font-mono font-bold text-sm text-ink ml-2">

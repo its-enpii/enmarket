@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Card } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 
 interface Props {
   images: string[];
@@ -42,13 +42,15 @@ export function ImageGallery({ images, alt }: Props) {
       {images.length > 1 && (
         <div className="mt-4 flex flex-wrap gap-3">
           {images.map((img, i) => (
-            <button
+            <Button
               key={img + i}
               type="button"
+              variant={i === active ? 'primary' : 'surface'}
+              size="sm"
               onClick={() => setActive(i)}
               aria-label={`Lihat gambar ${i + 1}`}
               className={
-                'block border-2 border-ink w-20 h-20 overflow-hidden shadow-[2px_2px_0_0_var(--color-ink)] transition-all ' +
+                'block w-20 h-20 px-0 py-0 overflow-hidden shadow-[2px_2px_0_0_var(--color-ink)] transition-all ' +
                 (i === active
                   ? 'ring-4 ring-primary ring-offset-2 ring-offset-surface'
                   : 'opacity-70 hover:opacity-100')
@@ -61,7 +63,7 @@ export function ImageGallery({ images, alt }: Props) {
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-            </button>
+            </Button>
           ))}
         </div>
       )}

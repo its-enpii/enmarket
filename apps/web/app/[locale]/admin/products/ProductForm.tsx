@@ -17,7 +17,7 @@ import { CurrencyInput } from '@/components/ui/CurrencyInput';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
-import { Card } from '@/components/ui/neobrutal';
+import { Card, Disclosure } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
 import { toast } from '@/components/ui/toast-store';
 import type { Category, LinkedPost, Product } from '@/lib/types';
@@ -514,19 +514,25 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
 
         {/* Picker — daftar available published posts. */}
         {availablePosts.length > 0 ? (
-          <details className="border-2 border-ink/20 bg-surface">
-            <summary className="cursor-pointer px-4 py-2 font-label text-label-sm uppercase font-bold text-ink hover:bg-accent/40">
-              {t('linkedAddCta')} ({availablePosts.length})
-            </summary>
+          <Disclosure
+            label={
+              <span className="px-4 py-2 font-label text-label-sm uppercase font-bold text-ink hover:bg-accent/40">
+                {t('linkedAddCta')} ({availablePosts.length})
+              </span>
+            }
+            className="border-2 border-ink/20 bg-surface"
+          >
             <ul className="border-t-2 border-ink/20 divide-y-2 divide-ink/10 max-h-72 overflow-y-auto">
               {availablePosts
                 .filter((p) => !linkedIds.includes(p.id))
                 .map((p) => (
                   <li key={p.id}>
-                    <button
+                    <Button
                       type="button"
+                      variant="surface"
+                      size="sm"
                       onClick={() => toggleLinked(p.id)}
-                      className="w-full text-left px-4 py-2 hover:bg-accent/30 flex items-center gap-3"
+                      className="w-full justify-start text-left px-4 py-2 hover:bg-accent/30 gap-3"
                     >
                       <span className="inline-flex items-center justify-center w-6 h-6 border-2 border-ink text-xs font-bold">
                         +
@@ -535,7 +541,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                         <span className="block text-sm font-bold truncate">{p.title}</span>
                         <span className="block text-[10px] text-ink/50 font-mono truncate">/{p.slug}</span>
                       </span>
-                    </button>
+                    </Button>
                   </li>
                 ))}
               {availablePosts.filter((p) => !linkedIds.includes(p.id)).length === 0 && (
@@ -544,7 +550,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                 </li>
               )}
             </ul>
-          </details>
+          </Disclosure>
         ) : (
           <p className="text-xs italic text-ink/50 font-body">{t('linkedNoPostsAvailable')}</p>
         )}
@@ -569,13 +575,15 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                   <div key={url} className="relative border-2 border-ink bg-surface p-1">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={url} alt="Library preview" className="h-16 w-16 object-cover border border-ink" />
-                    <button
+                    <Button
                       type="button"
+                      variant="surface"
+                      size="sm"
                       onClick={() => setLibraryImages(libraryImages.filter((_, idx) => idx !== i))}
-                      className="absolute -top-2 -right-2 h-5 w-5 bg-accent border border-ink text-ink font-bold text-xs flex items-center justify-center hover:bg-primary hover:text-surface cursor-pointer"
+                      className="absolute -top-2 -right-2 h-5 w-5 px-0 py-0 text-xs"
                     >
                       ×
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>

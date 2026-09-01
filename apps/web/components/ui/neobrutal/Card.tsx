@@ -18,7 +18,7 @@
  *   </Card>
  */
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type {
   AnchorHTMLAttributes,
   HTMLAttributes,
@@ -42,6 +42,7 @@ type CommonProps = {
   variant?: CardVariant;
   hoverable?: boolean;
   thick?: boolean; // 4px border instead of 2px
+  raised?: boolean;
   as?: AllowedTag;
   className?: string;
   children?: ReactNode;
@@ -53,7 +54,7 @@ type CardAsContainer = CommonProps &
   };
 
 type CardAsLink = CommonProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | keyof CommonProps> & {
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | keyof CommonProps | 'popover'> & {
     href: string;
   };
 
@@ -64,6 +65,7 @@ export function Card(props: CardProps) {
     variant = 'surface',
     hoverable = true,
     thick = false,
+    raised = false,
     as = 'div',
     className = '',
     children,
@@ -76,7 +78,11 @@ export function Card(props: CardProps) {
   // Press-down mechanic saat hoverable: translate + shadow shrink together.
   // Memakai class raw CSS dari globals.css untuk menjamin hardware acceleration
   // dan menghindari bug ghosting Tailwind v4 translate property.
-  const interactive = hoverable ? 'neo-btn neo-btn-ink' : 'shadow-[6px_6px_0_0_var(--color-ink)]';
+  const interactive = hoverable
+    ? 'neo-btn neo-btn-ink'
+    : raised
+      ? 'shadow-[8px_8px_0_0_var(--color-ink)]'
+      : 'shadow-[6px_6px_0_0_var(--color-ink)]';
 
   const composed = [
     'block',

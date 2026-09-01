@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { toast } from '@/components/ui/toast-store';
 
 type Reaction = 'helpful' | 'not-really' | null;
@@ -166,7 +166,7 @@ interface BtnProps {
 
 function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps) {
   // Tone mapping: accent bg = gold (positive), primary bg = purple (negative-ish)
-  const baseCls =
+  const fillCls =
     tone === 'accent'
       ? 'bg-accent text-ink border-ink'
       : 'bg-primary text-surface border-ink';
@@ -177,13 +177,15 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
     : 'shadow-[4px_4px_0_0_var(--color-ink)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]';
 
   return (
-    <button
+    <Button
       type="button"
+      variant="surface"
+      size="sm"
       onClick={onClick}
       aria-pressed={active}
       className={[
-        'inline-flex items-center gap-2 border-2 px-4 py-3 font-label text-label-sm uppercase font-black tracking-wider transition-all cursor-pointer min-h-[48px]',
-        baseCls,
+        'gap-2 px-4 py-3 font-label text-label-sm uppercase font-black tracking-wider min-h-[48px]',
+        fillCls,
         activeCls,
       ].join(' ')}
     >
@@ -199,6 +201,6 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
           {count}
         </Badge>
       )}
-    </button>
+    </Button>
   );
 }

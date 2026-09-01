@@ -79,6 +79,17 @@
   --text-label-sm--line-height: 1.0;
   --text-label-sm--letter-spacing: 0.05em;
   --text-label-sm--font-weight: 700;
+
+  --animate-marquee: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 :root {

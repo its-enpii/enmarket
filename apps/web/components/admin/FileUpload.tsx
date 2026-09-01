@@ -8,6 +8,8 @@
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
+import { Button } from '@/components/ui/neobrutal';
+
 interface Props {
   name: string;
   accept?: string;
@@ -86,13 +88,15 @@ export function FileUpload({
         )}
 
         {files.length > 0 && (
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="sm"
             onClick={clearFile}
             className="mt-3 text-xs underline text-primary font-bold hover:text-accent"
           >
             {t('clearSelection')}
-          </button>
+          </Button>
         )}
       </div>
       {error && (

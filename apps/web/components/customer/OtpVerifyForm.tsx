@@ -99,13 +99,15 @@ export function OtpVerifyForm({
         <p className="text-xs text-ink/70 font-semibold uppercase">{t('phoneLabel')}</p>
         <div className="flex items-center justify-between mt-1">
           <span className="font-mono font-bold text-ink">{phone}</span>
-          <button
+          <Button
             type="button"
+            variant="surface"
+            size="sm"
             onClick={onChangePhone}
-            className="text-xs font-bold text-primary underline hover:text-ink transition-colors cursor-pointer"
+            className="text-xs font-bold text-primary underline hover:text-ink"
           >
             {t('changePhone')}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -149,8 +151,10 @@ export function OtpVerifyForm({
       </form>
 
       <div className="pt-2 text-center">
-        <button
+        <Button
           type="button"
+          variant="surface"
+          size="sm"
           onClick={handleResend}
           disabled={cooldown > 0 || resending || loading}
           className={`text-xs font-bold uppercase tracking-wider ${
@@ -158,7 +162,7 @@ export function OtpVerifyForm({
           }`}
         >
           {cooldown > 0 ? `${t('resendOtp')} (${cooldown}s)` : t('resendOtp')}
-        </button>
+        </Button>
       </div>
     </div>
   );

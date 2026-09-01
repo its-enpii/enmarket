@@ -26,11 +26,7 @@ export function MarqueeStrip() {
   return (
     <div className="relative overflow-hidden border-y-2 border-ink bg-accent text-ink">
       <div
-        className="flex whitespace-nowrap py-2 font-mono font-bold text-xs sm:text-sm tracking-widest"
-        style={{
-          animation: 'marquee 30s linear infinite',
-          width: 'max-content',
-        }}
+        className="flex w-max whitespace-nowrap py-2 font-mono font-bold text-xs sm:text-sm tracking-widest animate-marquee"
       >
         {seq.map((it, i) => (
           <span key={i} className="px-6 inline-flex items-center gap-2">
@@ -41,10 +37,6 @@ export function MarqueeStrip() {
         ))}
       </div>
       <style>{`
-        @keyframes marquee {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
         .group-hover-pause:hover > div {
           animation-play-state: paused;
         }
