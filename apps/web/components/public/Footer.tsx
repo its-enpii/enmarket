@@ -118,15 +118,15 @@ export async function Footer() {
                   </p>
                 ) : (
                   socialLinks.map((link) => (
-                    <a
+                    <NLink
                       key={`${link.label}-${link.url}`}
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-2 font-bold transition-all ${LINK_VARIANT_CLS['on-dark']}`}
+                      variant="on-dark"
                     >
                       {link.label}
-                    </a>
+                    </NLink>
                   ))
                 )}
               </div>

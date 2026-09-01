@@ -25,6 +25,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 
 import { CartHeader } from './CartHeader';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { CornerAccent } from '@/components/ui/CornerAccent';
 
 export async function EmptyCart() {
   const t = await getTranslations('keranjang');
@@ -42,15 +43,12 @@ export async function EmptyCart() {
             {/* Decorative icon — raw <div> karena no Card primitive match
                 (10px10px shadow + absolute accent child + no hover). */}
             <div className="relative inline-block mb-4">
-              <div className="w-40 h-40 md:w-48 md:h-48 bg-primary border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] flex items-center justify-center">
+              <Card variant="filled-primary" thick elevation={10} hoverable={false} className="w-40 h-40 md:w-48 md:h-48 flex items-center justify-center">
                 <span className="font-display text-6xl md:text-7xl font-black uppercase text-surface">
                   ✎
                 </span>
-              </div>
-              <div
-                aria-hidden="true"
-                className="absolute -bottom-6 -right-6 w-20 h-20 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] z-10"
-              />
+              </Card>
+              <CornerAccent size="w-20 h-20" className="absolute -bottom-6 -right-6 z-10" />
             </div>
 
             <Eyebrow size="md" color="accent">

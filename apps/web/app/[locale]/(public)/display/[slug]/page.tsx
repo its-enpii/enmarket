@@ -137,20 +137,18 @@ export default async function DisplayDetailPage({ params }: PageProps) {
         <section className="border-b-4 border-ink bg-surface relative overflow-hidden">
           <SectionContainer py="md">
             <div className="relative">
-              <div className="bg-surface border-4 border-ink shadow-[12px_12px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
+              <Card variant="surface" thick elevation={12} hoverable={false} className="overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.thumbnail}
                   alt={post.title}
                   className="w-full aspect-[16/9] object-cover"
                 />
-              </div>
+              </Card>
               {/* Decorative accent block — bottom-right, partially off-edge */}
-              <div className="hidden md:block absolute -bottom-6 -right-6 w-24 h-24 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] rotate-12 -z-0" />
+              <CornerAccent className="absolute -bottom-6 -right-6 -z-0" />
               {/* Small offset marker — top-left, signature stamp feel */}
-              <div className="hidden md:flex absolute -top-5 -left-4 w-14 h-14 bg-ink border-4 border-ink shadow-[4px_4px_0_0_var(--color-accent)] items-center justify-center font-display text-surface text-xl font-black uppercase -rotate-6">
-                №
-              </div>
+              <CornerAccent color="ink" size="w-14 h-14" elevation={4} rotate={-6} className="absolute -top-5 -left-4">№</CornerAccent>
             </div>
           </SectionContainer>
         </section>
@@ -161,7 +159,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       {!post.thumbnail && (
         <section className="border-b-4 border-ink bg-primary text-surface">
           <SectionContainer py="md">
-            <div className="border-4 border-ink bg-primary shadow-[12px_12px_0_0_var(--color-accent)] p-10 md:p-16 -rotate-1 max-w-4xl">
+            <div className="p-10 md:p-16 -rotate-1 max-w-4xl">
               <Eyebrow size="md" color="accent" className="mb-6">
                 {t('fallbackEyebrow')}
               </Eyebrow>
@@ -433,12 +431,10 @@ function RelatedNote({
     >
       <div className="aspect-square bg-primary/10 border-b-2 border-ink overflow-hidden">
         {post.thumbnail ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.thumbnail}
+            <HoverImage
+              src={post.thumbnail}
             alt={post.title}
-            loading="lazy"
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+            className="w-full h-full"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary text-surface font-display uppercase text-lg text-center px-3">
@@ -477,3 +473,5 @@ function formatDateShort(iso: string, locale: string): string {
 }
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { CornerAccent } from '@/components/ui/CornerAccent';
+import { HoverImage } from '@/components/ui/HoverImage';

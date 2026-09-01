@@ -205,7 +205,7 @@ function Fragment({
         viewLabel={viewLabel}
       />
       {showDivider && (
-        <div className="bg-primary text-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] p-10 md:p-16 -rotate-[0.5deg]">
+        <div className="p-10 md:p-16 -rotate-[0.5deg]">
           <Eyebrow size="md" color="accent" className="mb-4">
             {studioNote}
           </Eyebrow>

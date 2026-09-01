@@ -6,7 +6,7 @@
 
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 
-import { Button, NLink } from '@/components/ui/neobrutal';
+import { Card, Button, NLink } from '@/components/ui/neobrutal';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 
@@ -120,7 +120,7 @@ export default async function DiscoverPage({
               {t('pillarsTitle')}
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)]">
+          <Card as="div" variant="surface" thick elevation={8} hoverable={false} className="grid grid-cols-1 md:grid-cols-3">
             {PILLARS.map((pillar, i) => (
               <article
                 key={pillar.titleKey}
@@ -143,7 +143,7 @@ export default async function DiscoverPage({
                 </p>
               </article>
             ))}
-          </div>
+          </Card>
         </SectionContainer>
       </section>
 

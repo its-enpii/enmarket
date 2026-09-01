@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
+import { Radio } from '@/components/ui/Radio';
 import type { PaymentGateway } from '@/lib/types';
 
 interface Props {
@@ -47,13 +48,11 @@ export function PaymentMethodSelector({
                   isSelected ? 'shadow-[2px_2px_0px_#000]' : ''
                 }`}
               >
-                <input
-                  type="radio"
+                <Radio
                   name="payment_gateway"
                   value={key}
                   checked={isSelected}
                   onChange={() => onSelectGateway(key)}
-                  className="accent-primary"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-display font-black uppercase text-sm text-ink">

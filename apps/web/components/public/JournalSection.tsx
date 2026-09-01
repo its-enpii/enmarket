@@ -5,6 +5,7 @@ import { NLink } from '@/components/ui/neobrutal';
 import { SectionContainer } from '@/components/public/SectionContainer';
 
 import type { Post } from '@/lib/types';
+import { HoverImage } from '@/components/ui/HoverImage';
 
 interface Props {
   posts: Post[];
@@ -101,12 +102,10 @@ function JournalEntry({
           className="aspect-[4/3]"
         >
           {entry.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <HoverImage
               src={entry.image}
               alt={entry.title}
-              loading="lazy"
-              className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              className="h-full w-full"
             />
           ) : (
             <div className="h-full w-full bg-primary/10 flex items-center justify-center font-display text-headline-md text-primary uppercase text-center px-6">

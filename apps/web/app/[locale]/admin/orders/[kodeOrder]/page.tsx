@@ -19,7 +19,7 @@ import {
 import { GenerateDeliveriesForm } from '../GenerateDeliveriesForm';
 import { RegenerateTokenForm } from '../RegenerateTokenForm';
 import { ResendNotificationForm } from '../ResendNotificationForm';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { NLink, Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   params: Promise<{ kodeOrder: string }>;
@@ -250,14 +250,16 @@ export default async function OrderDetailPage({ params }: Props) {
               <> {t('qr.expired', { date: formatDateTime(order.qr_expired_at) })}</>
             )}
           </p>
-          <a
+          <NLink
             href={order.qr_url}
             target="_blank"
             rel="noreferrer"
-            className="text-xs underline text-primary hover:text-accent"
+            variant="primary"
+            underline="static"
+            className="text-xs"
           >
             {order.qr_url}
-          </a>
+          </NLink>
           <Disclosure
             label={
               <span className="text-xs font-bold text-ink/60 hover:text-ink">

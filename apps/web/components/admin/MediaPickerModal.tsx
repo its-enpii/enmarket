@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { fetchMediaLibrary } from '@/lib/media-actions';
@@ -96,7 +96,7 @@ export function MediaPickerModal({
         className="absolute inset-0 bg-ink/70 cursor-default animate-fade-in"
       />
 
-      <div className="relative bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] w-full max-w-4xl max-h-[85vh] flex flex-col z-10 animate-scale-in">
+      <Card variant="surface" thick elevation={8} className="relative w-full max-w-4xl max-h-[85vh] flex flex-col z-10 animate-scale-in">
         <div className="flex items-center justify-between border-b-3 border-ink px-5 py-4 bg-accent/20">
           <div>
             <h2 id="media-picker-title" className="text-lg font-black uppercase text-ink">
@@ -238,7 +238,7 @@ export function MediaPickerModal({
             {tBtn('cancel')}
           </Button>
         </div>
-      </div>
+      </Card>
     </div>
   ) : null;
 

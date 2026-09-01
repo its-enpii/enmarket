@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { FileInput } from '@/components/ui/FileInput';
 
 interface Props {
   name: string;
@@ -57,14 +58,12 @@ export function FileUpload({
   return (
     <div>
       <div className="border-2 border-dashed border-ink bg-surface p-4">
-        <input
+        <FileInput
           ref={inputRef}
-          type="file"
           name={multiple ? `${name}[]` : name}
           accept={accept}
           multiple={multiple}
           onChange={handleSelect}
-          className="block w-full text-sm text-ink file:mr-4 file:py-2 file:px-4 file:border-2 file:border-ink file:bg-accent file:text-ink file:font-bold file:shadow-[2px_2px_0_0_var(--color-ink)] file:cursor-pointer hover:file:-translate-x-[1px] hover:file:-translate-y-[1px] hover:file:shadow-[3px_3px_0_0_var(--color-ink)] file:transition-all"
         />
 
         {previewUrl && (

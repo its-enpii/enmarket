@@ -118,7 +118,7 @@ export function ReviewFormModal({
         className="absolute inset-0 px-0 py-0 bg-ink/70 cursor-default animate-fade-in"
       />
 
-      <div className="relative bg-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] w-full max-w-lg max-h-[90vh] overflow-y-auto z-10 animate-scale-in p-6">
+      <Card variant="surface" thick elevation={8} className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto z-10 animate-scale-in p-6">
         <div className="flex items-center justify-between border-b-2 border-ink pb-4 mb-5">
           <div>
             <h2 id="review-modal-title" className="text-xl font-black uppercase text-ink">
@@ -250,7 +250,7 @@ export function ReviewFormModal({
             </div>
           </form>
         )}
-      </div>
+      </Card>
     </div>
   ) : null;
 
@@ -271,3 +271,4 @@ export function ReviewFormModal({
   );
 }
 import { getClientApiBase } from '@/lib/api-base';
+import { Card } from '@/components/ui/neobrutal';

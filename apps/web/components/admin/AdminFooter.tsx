@@ -22,14 +22,14 @@ export function AdminFooter() {
           <span className="ml-2">{t('store')}</span>
         </p>
         <div className="flex gap-3">
-          <a
+          <NLink
             href="https://github.com/enpiistudio/enmarket"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-ink font-bold"
+            variant="default"
           >
             GitHub
-          </a>
+          </NLink>
           <NLink
             href="/"
             className="hover:text-ink font-bold"

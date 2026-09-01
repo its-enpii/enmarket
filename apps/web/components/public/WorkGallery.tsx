@@ -19,7 +19,7 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Card, Button } from '@/components/ui/neobrutal';
 interface Props {
   images: string[];
   alt: string;
@@ -33,11 +33,11 @@ export function WorkGallery({ images, alt, title }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="aspect-[4/3] bg-primary text-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] flex items-center justify-center -rotate-1">
+      <Card variant="filled-primary" thick elevation={8} hoverable={false} className="aspect-[4/3] flex items-center justify-center -rotate-1">
         <span className="font-display font-black uppercase text-3xl md:text-5xl text-center px-6 tracking-tighter">
           {title}
         </span>
-      </div>
+      </Card>
     );
   }
 

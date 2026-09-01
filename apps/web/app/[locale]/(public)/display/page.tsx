@@ -239,11 +239,10 @@ function FeaturedCover({
       <div className="grid grid-cols-1 lg:grid-cols-12">
         <div className="lg:col-span-7 relative bg-primary/10 border-b-4 lg:border-b-0 lg:border-r-4 border-ink overflow-hidden">
           {post.thumbnail ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <HoverImage
               src={post.thumbnail}
               alt={post.title}
-              className="w-full aspect-[4/3] lg:aspect-auto lg:h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              className="w-full aspect-[4/3] lg:aspect-auto lg:h-full"
             />
           ) : (
             <div className="aspect-[4/3] lg:aspect-auto lg:h-full min-h-[300px] flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-3xl md:text-5xl text-center px-8 tracking-tighter">
@@ -437,3 +436,4 @@ function pickTag(excerpt: string, labels: TagLabels): string {
 }
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { HoverImage } from '@/components/ui/HoverImage';

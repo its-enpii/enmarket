@@ -77,6 +77,17 @@ export function NLink({
     </>
   );
 
+  // External URL -> native <a> tanpa locale prefix (NextLink hanya untuk
+  // path internal). Deteksi: absolute http(s) atau protocol-relative.
+  if (/^(https?:)?\/\//.test(rest.href)) {
+    const { href, ...anchorRest } = rest;
+    return (
+      <a {...anchorRest} href={href} className={composed}>
+        {inner}
+      </a>
+    );
+  }
+
   return (
     <NextLink {...rest} href={rest.href} className={composed}>
       {inner}

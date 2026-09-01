@@ -171,7 +171,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
         <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10 lg:gap-16 items-center">
           {/* Image — large, thick border, hard shadow, slightly rotated */}
           <div className="relative">
-            <div className="bg-surface border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
+            <Card variant="surface" thick elevation={10} hoverable={false} className="overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
               {previewImages[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -184,9 +184,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   {product.nama}
                 </div>
               )}
-            </div>
+            </Card>
             {/* Decorative accent block — bottom-right */}
-            <div className="hidden md:block absolute -bottom-6 -right-6 w-24 h-24 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] rotate-12 -z-0" />
+            <CornerAccent className="absolute -bottom-6 -right-6 -z-0" />
           </div>
 
           {/* Info panel — title + chips + price + CTA */}
@@ -537,3 +537,4 @@ export default async function WorkDetailPage({ params }: PageProps) {
 }
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { CornerAccent } from '@/components/ui/CornerAccent';

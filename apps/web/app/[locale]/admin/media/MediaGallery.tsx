@@ -27,6 +27,7 @@ import {
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { CornerAccent } from '@/components/ui/CornerAccent';
 
 interface Props {
   initialItems: MediaItem[];
@@ -216,15 +217,12 @@ function EmptyGallery({ hasItems }: { hasItems: boolean }) {
     <Card variant="surface" className="p-12 text-center">
       <div className="max-w-md mx-auto">
         <div className="relative inline-block mb-6">
-          <div className="w-32 h-32 bg-primary border-4 border-ink shadow-[10px_10px_0_0_var(--color-ink)] flex items-center justify-center">
+          <Card variant="filled-primary" thick elevation={10} hoverable={false} className="w-32 h-32 flex items-center justify-center">
             <span className="font-display text-5xl font-black uppercase text-surface">
               ◰
             </span>
-          </div>
-          <div
-            aria-hidden="true"
-            className="absolute -bottom-5 -right-5 w-16 h-16 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] z-10"
-          />
+          </Card>
+          <CornerAccent size="w-16 h-16" className="absolute -bottom-5 -right-5 z-10" />
         </div>
         <Eyebrow size="sm" color="accent" className="mb-2">
           {hasItems ? t('eyebrowMatch') : t('eyebrowEmpty')}
