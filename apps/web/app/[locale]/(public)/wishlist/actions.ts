@@ -1,23 +1,13 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
-import { randomUUID } from 'crypto';
 
 import { wishlistApi } from '@/lib/wishlist-api';
+import { WISHLIST_SESSION_COOKIE, COOKIE_MAX_AGE } from '@/lib/constants';
+import { getOrCreateSession } from '@/lib/session-cookie';
 
 export async function toggleWishlistAction(productId: number) {
-  const cookieStore = await cookies();
-  let sessionId = cookieStore.get(WISHLIST_SESSION_COOKIE)?.value;
-  if (!sessionId || sessionId.length < 16) {
-    sessionId = randomUUID();
-    cookieStore.set(WISHLIST_SESSION_COOKIE, sessionId, {
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 30,
-    });
-  }
+  await getOrCreateSession(WISHLIST_SESSION_COOKIE, COOKIE_MAX_AGE.month30);
 
   try {
     const res = await wishlistApi.toggle(productId);
@@ -37,4 +27,3 @@ export async function removeWishlistAction(productId: number) {
     return { ok: false, error: 'Gagal menghapus dari wishlist.' };
   }
 }
-import { CART_SESSION_COOKIE, WISHLIST_SESSION_COOKIE } from '@/lib/constants';

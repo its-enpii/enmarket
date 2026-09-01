@@ -6,11 +6,24 @@
  */
 
 import { apiGet } from '@/lib/api';
+import { ADMIN_LIST_PER_PAGE } from './constants';
 import {
   deriveMediaMeta,
   type MediaItem,
 } from './media-shared';
 import type { PaginatedResponse, Post, Product } from './types';
+
+function emptyPageMeta<T>(): PaginatedResponse<T> {
+  return {
+    data: [],
+    meta: {
+      current_page: 1,
+      last_page: 1,
+      per_page: ADMIN_LIST_PER_PAGE,
+      total: 0,
+    },
+  };
+}
 
 /**
  * Scan all products (up to per_page=100) + posts (up to 100) → flatten to
@@ -18,14 +31,8 @@ import type { PaginatedResponse, Post, Product } from './types';
  */
 export async function loadAllMedia(): Promise<MediaItem[]> {
   const [productsRes, postsRes] = await Promise.all([
-    apiGet<PaginatedResponse<Product>>('/api/admin/products', { per_page: 100 }).catch(() => ({
-      data: [],
-      meta: { current_page: 1, last_page: 1, per_page: 100, total: 0 },
-    })),
-    apiGet<PaginatedResponse<Post>>('/api/admin/posts', { per_page: 100 }).catch(() => ({
-      data: [],
-      meta: { current_page: 1, last_page: 1, per_page: 100, total: 0 },
-    })),
+    apiGet<PaginatedResponse<Product>>('/api/admin/products', { per_page: ADMIN_LIST_PER_PAGE }).catch(emptyPageMeta<Product>),
+    apiGet<PaginatedResponse<Post>>('/api/admin/posts', { per_page: ADMIN_LIST_PER_PAGE }).catch(emptyPageMeta<Post>),
   ]);
 
   const items: MediaItem[] = [];

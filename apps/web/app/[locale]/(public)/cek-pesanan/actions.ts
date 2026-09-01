@@ -4,11 +4,11 @@
  * Server action untuk halaman cek pesanan publik.
  */
 
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { ApiRequestError, apiPost } from '@/lib/api';
+import { getLastOrderCode, setLastOrderCode } from '@/lib/order-session';
 
 interface CheckInput {
   kode_order: string;
@@ -26,13 +26,7 @@ export async function checkOrderAction(input: CheckInput): Promise<CheckResult> 
     const res = await apiPost<{ data: { kode_order: string } }>('/api/orders/check', input);
 
     // Save ke cookie last_order_code untuk auto-fill next time
-    const cookieStore = await cookies();
-    cookieStore.set('last_order_code', res.data.kode_order, {
-      httpOnly: false,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 30,
-    });
+    await setLastOrderCode(res.data.kode_order);
 
     redirect(`/cek-pesanan/${encodeURIComponent(res.data.kode_order)}`);
   } catch (err) {
@@ -53,7 +47,4 @@ export async function checkOrderAction(input: CheckInput): Promise<CheckResult> 
   }
 }
 
-export async function getLastOrderCode(): Promise<string | null> {
-  const c = await cookies();
-  return c.get('last_order_code')?.value ?? null;
-}
+export { getLastOrderCode };

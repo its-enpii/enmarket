@@ -12,13 +12,19 @@ import { SearchBar } from '@/components/public/SearchBar';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
+import { formatDateShort } from '@/lib/format';
+import { buildMetadata } from '@/lib/seo';
 import type { PaginatedResponse, Post } from '@/lib/types';
+
+import { Eyebrow } from '@/components/ui/neobrutal';
+import { HoverImage } from '@/components/ui/HoverImage';
+import { Image } from '@/components/ui/Image';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface PageProps {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: 'id' | 'en' }>;
   searchParams: Promise<{ tag?: string; q?: string }>;
 }
 
@@ -222,11 +228,11 @@ function FeaturedCover({
   post: Post;
   readEntryLabel: string;
   minutesLabel: string;
-  locale: string;
+  locale: 'id' | 'en';
   featuredLabel: string;
   tagLabels: TagLabels;
 }) {
-  const date = post.published_at ? formatDate(post.published_at, locale) : '';
+  const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
   const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
 
   return (
@@ -304,10 +310,10 @@ function PostCardZine({
   variant: ZineVariant;
   readEntryLabel: string;
   readLabel: string;
-  locale: string;
+  locale: 'id' | 'en';
   tagLabels: TagLabels;
 }) {
-  const date = post.published_at ? formatDate(post.published_at, locale) : '';
+  const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
   const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
   const tagTone: 'accent' | 'primary' = post.id % 2 === 0 ? 'accent' : 'primary';
   const href = `/display/${post.slug}`;
@@ -411,16 +417,6 @@ function PostCardZine({
   );
 }
 
-function formatDate(iso: string, locale: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
-
 function pickTag(excerpt: string, labels: TagLabels): string {
   const lower = excerpt.toLowerCase();
   if (lower.includes('design') || lower.includes('desain') || lower.includes('ui')) {
@@ -434,7 +430,3 @@ function pickTag(excerpt: string, labels: TagLabels): string {
   }
   return labels.note;
 }
-import { buildMetadata } from '@/lib/seo';
-import { Eyebrow } from '@/components/ui/neobrutal';
-import { HoverImage } from '@/components/ui/HoverImage';
-import { Image } from '@/components/ui/Image';

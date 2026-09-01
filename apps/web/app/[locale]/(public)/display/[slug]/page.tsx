@@ -21,17 +21,24 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Eyebrow } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
+import { formatDateLong, formatDateShort } from '@/lib/format';
+import { buildMetadata } from '@/lib/seo';
 import type { Post } from '@/lib/types';
+
+import { CornerAccent } from '@/components/ui/CornerAccent';
+import { HoverImage } from '@/components/ui/HoverImage';
+import { Image } from '@/components/ui/Image';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface PageProps {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{ slug: string; locale: 'id' | 'en' }>;
 }
 
 type TagLabels = {
@@ -346,16 +353,6 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
 // ───── Helpers ─────
 
-function formatDateLong(iso: string, locale: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
-
 function pickTag(excerpt: string, labels: TagLabels): string {
   const lower = excerpt.toLowerCase();
   if (lower.includes('design') || lower.includes('desain') || lower.includes('ui')) {
@@ -416,7 +413,7 @@ function RelatedNote({
   tagLabels,
 }: {
   post: Post;
-  locale: string;
+  locale: 'id' | 'en';
   tagLabels: TagLabels;
 }) {
   const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
@@ -465,14 +462,3 @@ function RelatedNote({
     </Card>
   );
 }
-
-function formatDateShort(iso: string, locale: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', { month: 'short', day: 'numeric' });
-}
-import { buildMetadata } from '@/lib/seo';
-import { Eyebrow } from '@/components/ui/neobrutal';
-import { CornerAccent } from '@/components/ui/CornerAccent';
-import { HoverImage } from '@/components/ui/HoverImage';
-import { Image } from '@/components/ui/Image';

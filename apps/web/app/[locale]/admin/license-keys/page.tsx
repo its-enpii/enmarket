@@ -11,6 +11,7 @@ import { Pagination } from '@/components/admin/Pagination';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
+import { ADMIN_LIST_PER_PAGE } from '@/lib/constants';
 import { formatDate } from '@/lib/format';
 import {
   LICENSE_STATUS_LABEL,
@@ -67,7 +68,7 @@ async function loadActiveProducts() {
   try {
     const res = await apiGet<{ data: Array<{ id: number; nama: string }> }>(
       '/api/admin/products',
-      { status: 'aktif', per_page: 100 },
+      { status: 'aktif', per_page: ADMIN_LIST_PER_PAGE },
     );
     return res.data ?? [];
   } catch {

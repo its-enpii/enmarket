@@ -6,7 +6,7 @@
  */
 
 import { cookies } from 'next/headers';
-import { ADMIN_TOKEN_COOKIE } from '@/lib/constants';
+import { ADMIN_TOKEN_COOKIE, COOKIE_MAX_AGE } from '@/lib/constants';
 import { redirect } from '@/i18n/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 
@@ -43,7 +43,7 @@ export async function loginAction(formData: FormData): Promise<LoginResult> {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: COOKIE_MAX_AGE.week,
   });
 
   const locale = await getLocale();

@@ -3,6 +3,7 @@
  */
 
 import { apiGet, apiPost } from './api';
+import { DEFAULT_GATEWAY } from './constants';
 import type { PaymentGateway, PublicSiteConfig, SingleResponse } from './types';
 
 export interface CheckoutPayload {
@@ -28,15 +29,15 @@ export async function getEnabledGateways(): Promise<Array<{ key: PaymentGateway 
   try {
     const res = await apiGet<SingleResponse<PublicSiteConfig>>('/api/public/site-config');
     const pgs = res.data.payment_gateways;
-    if (!pgs) return [{ key: 'tripay' }];
+    if (!pgs) return [{ key: DEFAULT_GATEWAY }];
 
     const enabled: Array<{ key: PaymentGateway }> = [];
-    if (pgs.tripay?.enabled) enabled.push({ key: 'tripay' });
+    if (pgs.tripay?.enabled) enabled.push({ key: DEFAULT_GATEWAY });
     if (pgs.duitku?.enabled) enabled.push({ key: 'duitku' });
 
-    return enabled.length > 0 ? enabled : [{ key: 'tripay' }];
+    return enabled.length > 0 ? enabled : [{ key: DEFAULT_GATEWAY }];
   } catch {
-    return [{ key: 'tripay' }];
+    return [{ key: DEFAULT_GATEWAY }];
   }
 }
 

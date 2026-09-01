@@ -23,6 +23,25 @@ export function formatDate(iso: string | null | undefined): string {
   }
 }
 
+/** Format ISO date dengan locale id/en; kosong untuk tanggal tidak valid. */
+export function formatDateWithLocale(
+  iso: string,
+  locale: 'id' | 'en',
+  options: Intl.DateTimeFormatOptions,
+): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', options);
+}
+
+export function formatDateShort(iso: string, locale: 'id' | 'en'): string {
+  return formatDateWithLocale(iso, locale, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+export function formatDateLong(iso: string, locale: 'id' | 'en'): string {
+  return formatDateWithLocale(iso, locale, { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
 /** Format ISO datetime jadi dd MMM yyyy HH:mm (id-ID). */
 export function formatDateTime(iso: string | null | undefined): string {
   if (!iso) return '—';

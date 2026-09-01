@@ -5,12 +5,11 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import { randomUUID } from 'crypto';
 
 import { apiPost } from '@/lib/api';
+import { getOrCreateCartSession } from '@/lib/cart-session';
 
 interface AddResult {
   error?: string;
@@ -23,17 +22,7 @@ interface AddResult {
 export async function addToCartAction(productId: number, qty = 1): Promise<AddResult> {
   const t = await getTranslations('developDetail');
   // Ensure cart session exists
-  const cookieStore = await cookies();
-  let sessionId = cookieStore.get(CART_SESSION_COOKIE)?.value;
-  if (!sessionId || sessionId.length < 16) {
-    sessionId = randomUUID();
-    cookieStore.set(CART_SESSION_COOKIE, sessionId, {
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24,
-    });
-  }
+  const sessionId = await getOrCreateCartSession();
 
   try {
     await apiPost('/api/cart/items', {
@@ -52,16 +41,7 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
  */
 export async function addToCartAndGoAction(productId: number, qty = 1) {
   const t = await getTranslations('developDetail');
-  const cookieStore = await cookies();
-  const existingSession = cookieStore.get(CART_SESSION_COOKIE)?.value;
-  if (!existingSession || existingSession.length < 16) {
-    cookieStore.set(CART_SESSION_COOKIE, randomUUID(), {
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24,
-    });
-  }
+  await getOrCreateCartSession();
 
   try {
     await apiPost('/api/cart/items', {
@@ -75,4 +55,3 @@ export async function addToCartAndGoAction(productId: number, qty = 1) {
   revalidatePath('/keranjang');
   redirect('/keranjang');
 }
-import { CART_SESSION_COOKIE } from '@/lib/constants';

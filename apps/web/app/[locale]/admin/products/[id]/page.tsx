@@ -7,6 +7,7 @@ import { PreviewImagesManager } from '@/components/admin/PreviewImagesManager';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
+import { ADMIN_LIST_PER_PAGE } from '@/lib/constants';
 import { getApiBase } from '@/lib/api-base';
 import { TIPE_LABEL, formatRupiah } from '@/lib/format';
 import type {
@@ -53,7 +54,7 @@ async function loadAvailablePosts(): Promise<LinkedPost[]> {
       title: string;
       excerpt: string | null;
       thumbnail: string | null;
-    }>>('/api/admin/posts', { status: 'published', per_page: 100 });
+    }>>('/api/admin/posts', { status: 'published', per_page: ADMIN_LIST_PER_PAGE });
     return res.data ?? [];
   } catch {
     return [];

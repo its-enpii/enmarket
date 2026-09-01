@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
 import { apiGet } from '@/lib/api';
+import { ADMIN_LIST_PER_PAGE } from '@/lib/constants';
 import type { Category, LinkedPost, PaginatedResponse, SingleResponse } from '@/lib/types';
 
 import { ProductForm } from '../ProductForm';
@@ -37,7 +38,7 @@ async function loadAvailablePosts(): Promise<LinkedPost[]> {
       title: string;
       excerpt: string | null;
       thumbnail: string | null;
-    }>>('/api/admin/posts', { status: 'published', per_page: 100 });
+    }>>('/api/admin/posts', { status: 'published', per_page: ADMIN_LIST_PER_PAGE });
     return res.data ?? [];
   } catch {
     return [];

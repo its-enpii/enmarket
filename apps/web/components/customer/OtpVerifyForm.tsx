@@ -8,6 +8,8 @@ import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from './AuthProvider';
 import { authApi } from '@/lib/auth-api';
+import { getClientCookie } from '@/lib/client-cookie';
+import { CART_SESSION_COOKIE, OTP_LENGTH, WISHLIST_SESSION_COOKIE } from '@/lib/constants';
 
 interface Props {
   phone: string;
@@ -42,22 +44,14 @@ export function OtpVerifyForm({
   }, [cooldown]);
 
   const handleVerify = async (codeToVerify: string) => {
-    if (codeToVerify.length !== 6 || loading) return;
+    if (codeToVerify.length !== OTP_LENGTH || loading) return;
     setLoading(true);
     setError(null);
 
     try {
       // Baca cookie sesi guest jika ada
-      let cartSession: string | undefined;
-      let wishlistSession: string | undefined;
-
-      if (typeof document !== 'undefined') {
-        const cartMatch = document.cookie.match(new RegExp(`(^| )${CART_SESSION_COOKIE}=([^;]+)`));
-        if (cartMatch) cartSession = decodeURIComponent(cartMatch[2]);
-
-        const wishlistMatch = document.cookie.match(new RegExp(`(^| )${WISHLIST_SESSION_COOKIE}=([^;]+)`));
-        if (wishlistMatch) wishlistSession = decodeURIComponent(wishlistMatch[2]);
-      }
+      const cartSession = getClientCookie(CART_SESSION_COOKIE) ?? undefined;
+      const wishlistSession = getClientCookie(WISHLIST_SESSION_COOKIE) ?? undefined;
 
       await login(phone, codeToVerify, cartSession, wishlistSession);
       onSuccess();
@@ -69,9 +63,9 @@ export function OtpVerifyForm({
   };
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+    const val = e.target.value.replace(/[^0-9]/g, '').slice(0, OTP_LENGTH);
     setCode(val);
-    if (val.length === 6) {
+    if (val.length === OTP_LENGTH) {
       handleVerify(val);
     }
   };
@@ -125,7 +119,7 @@ export function OtpVerifyForm({
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
-            maxLength={6}
+            maxLength={OTP_LENGTH}
             value={code}
             onChange={handleCodeChange}
             placeholder="000000"
@@ -140,7 +134,7 @@ export function OtpVerifyForm({
           type="submit"
           variant="primary"
           size="md"
-          disabled={loading || code.length !== 6}
+          disabled={loading || code.length !== OTP_LENGTH}
           className="w-full justify-center"
         >
           {loading ? '...' : t('verifyOtp')}
@@ -164,4 +158,3 @@ export function OtpVerifyForm({
     </div>
   );
 }
-import { CART_SESSION_COOKIE, WISHLIST_SESSION_COOKIE } from '@/lib/constants';

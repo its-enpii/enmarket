@@ -3,6 +3,8 @@
  */
 
 import { CUSTOMER_TOKEN_COOKIE } from './constants';
+import { COOKIE_MAX_AGE } from './constants';
+import { deleteClientCookie, getClientCookie, setClientCookie } from './client-cookie';
 import { getApiBase } from './api-base';
 
 const TOKEN_COOKIE = CUSTOMER_TOKEN_COOKIE;
@@ -11,23 +13,19 @@ export function getAuthToken(): string | null {
   if (typeof window === 'undefined') {
     return null;
   }
-  const match = document.cookie.match(new RegExp('(^| )' + TOKEN_COOKIE + '=([^;]+)'));
-  if (match) {
-    return decodeURIComponent(match[2]);
-  }
+  return getClientCookie(TOKEN_COOKIE) ?? localStorage.getItem(TOKEN_COOKIE);
   return localStorage.getItem(TOKEN_COOKIE);
 }
 
 export function setAuthToken(token: string): void {
   if (typeof window === 'undefined') return;
-  const maxAge = 60 * 60 * 24 * 30; // 30 days
-  document.cookie = `${TOKEN_COOKIE}=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; samesite=lax`;
+  setClientCookie(TOKEN_COOKIE, token, COOKIE_MAX_AGE.month30);
   localStorage.setItem(TOKEN_COOKIE, token);
 }
 
 export function clearAuthToken(): void {
   if (typeof window === 'undefined') return;
-  document.cookie = `${TOKEN_COOKIE}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=lax`;
+  deleteClientCookie(TOKEN_COOKIE);
   localStorage.removeItem(TOKEN_COOKIE);
 }
 
