@@ -1763,7 +1763,8 @@
     },
     "logout": {
       "confirm": "Are you sure you want to log out?",
-      "loggedOut": "You have been logged out."
+      "loggedOut": "You have been logged out.",
+      "confirmTitle": "Sign out?"
     },
     "loading": "Loading account data...",
     "loadingOrders": "Loading order history...",

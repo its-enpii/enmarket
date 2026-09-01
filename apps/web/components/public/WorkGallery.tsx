@@ -116,7 +116,7 @@ export function WorkGallery({ images, alt, title }: Props) {
       {/* Lightbox — minimal, modal overlay */}
       {activeIdx !== null && (
         <div
-          className="fixed inset-0 z-[60] bg-ink/95 flex items-center justify-center p-4 md:p-12 cursor-pointer"
+          className="fixed inset-0 z-lightbox bg-ink/95 flex items-center justify-center p-4 md:p-12 cursor-pointer"
           onClick={() => setActiveIdx(null)}
           role="dialog"
           aria-modal="true"

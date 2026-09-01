@@ -81,6 +81,10 @@
   --text-label-sm--font-weight: 700;
 
   --animate-marquee: marquee 30s linear infinite;
+
+  --z-index-nav: 50;
+  --z-index-lightbox: 60;
+  --z-index-modal: 120;
 }
 
 @keyframes marquee {

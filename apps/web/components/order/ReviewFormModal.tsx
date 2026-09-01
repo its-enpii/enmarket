@@ -106,7 +106,7 @@ export function ReviewFormModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="review-modal-title"
-      className="fixed inset-0 z-[120] flex items-center justify-center p-4"
+      className="fixed inset-0 z-modal flex items-center justify-center p-4"
     >
       <Button
         type="button"

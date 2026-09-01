@@ -31,7 +31,7 @@ interface Props {
   postSlug: string;
 }
 
-const STORAGE_KEY_PREFIX = 'enpii-display-reaction:';
+import { REACTION_STORAGE_PREFIX as STORAGE_KEY_PREFIX } from '@/lib/constants';
 
 interface StoredReaction {
   choice: Reaction;

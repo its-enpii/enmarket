@@ -1763,7 +1763,8 @@
     },
     "logout": {
       "confirm": "Apakah Anda yakin ingin keluar dari akun?",
-      "loggedOut": "Anda telah berhasil keluar."
+      "loggedOut": "Anda telah berhasil keluar.",
+      "confirmTitle": "Keluar dari akun?"
     },
     "loading": "Memuat data akun...",
     "loadingOrders": "Memuat riwayat pesanan...",

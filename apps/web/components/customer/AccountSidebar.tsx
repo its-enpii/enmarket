@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useAuth } from './AuthProvider';
 import { Button, Card } from '@/components/ui/neobrutal';
+import { confirmDialog } from '@/components/ui/dialog-store';
 
 export function AccountSidebar() {
   const t = useTranslations('account.nav');
@@ -15,7 +16,12 @@ export function AccountSidebar() {
   const { user, logout } = useAuth();
 
   const handleLogout = async () => {
-    if (window.confirm(tLogout('confirm'))) {
+    const ok = await confirmDialog({
+      title: tLogout('confirmTitle'),
+      message: tLogout('confirm'),
+      danger: true,
+    });
+    if (ok) {
       await logout();
       router.push('/masuk');
     }
