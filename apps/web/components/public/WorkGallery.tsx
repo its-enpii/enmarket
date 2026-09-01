@@ -19,6 +19,7 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+import { ModalShell } from '@/components/ui/ModalShell';
 import { Card, Button } from '@/components/ui/neobrutal';
 import { Image } from '@/components/ui/Image';
 interface Props {
@@ -115,12 +116,11 @@ export function WorkGallery({ images, alt, title }: Props) {
 
       {/* Lightbox — minimal, modal overlay */}
       {activeIdx !== null && (
-        <div
-          className="fixed inset-0 z-lightbox bg-ink/95 flex items-center justify-center p-4 md:p-12 cursor-pointer"
-          onClick={() => setActiveIdx(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('galleryDialog')}
+        <ModalShell
+          open={activeIdx !== null}
+          onClose={() => setActiveIdx(null)}
+          layer="lightbox"
+          ariaLabel={t('galleryDialog')}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <Image contain
@@ -134,7 +134,7 @@ export function WorkGallery({ images, alt, title }: Props) {
           <span className="absolute bottom-6 left-6 text-surface font-label text-label-sm uppercase font-bold tracking-wider">
             {activeIdx + 1} / {images.length}
           </span>
-        </div>
+        </ModalShell>
       )}
     </>
   );

@@ -56,7 +56,7 @@ function Modal({ state }: { state: DialogState }) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="dialog-title"
-      className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+      className="fixed inset-0 z-dialog flex items-center justify-center p-4"
     >
       {/* Backdrop */}
       <button

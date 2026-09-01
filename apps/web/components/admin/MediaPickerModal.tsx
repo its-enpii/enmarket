@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 
+import { ModalShell } from '@/components/ui/ModalShell';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
@@ -81,22 +82,12 @@ export function MediaPickerModal({
   }
 
   const modal = open ? (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="media-picker-title"
-      className="fixed inset-0 z-modal flex items-center justify-center p-4"
+    <ModalShell
+      open={open}
+      onClose={() => setOpen(false)}
+      labelledBy="media-picker-title"
+      ariaLabel={tCommon('closeDialog')}
     >
-      <Button
-        type="button"
-        variant="surface"
-        size="sm"
-        tabIndex={-1}
-        aria-label={tCommon('closeDialog')}
-        onClick={() => setOpen(false)}
-        className="absolute inset-0 bg-ink/70 cursor-default animate-fade-in"
-      />
-
       <Card variant="surface" thick elevation={8} className="relative w-full max-w-4xl max-h-[85vh] flex flex-col z-10 animate-scale-in">
         <div className="flex items-center justify-between border-b-3 border-ink px-5 py-4 bg-accent/20">
           <div>
@@ -239,7 +230,7 @@ export function MediaPickerModal({
           </Button>
         </div>
       </Card>
-    </div>
+    </ModalShell>
   ) : null;
 
   return (

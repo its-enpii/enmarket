@@ -85,9 +85,12 @@
 
   --animate-marquee: marquee 30s linear infinite;
 
+  /* Urutan layer: nav 50 < lightbox 60 < modal 120 < dialog 130 < toast 140. */
   --z-index-nav: 50;
   --z-index-lightbox: 60;
   --z-index-modal: 120;
+  --z-index-dialog: 130;
+  --z-index-toast: 140;
 }
 
 @keyframes marquee {
