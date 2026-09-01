@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from '@/i18n/navigation';
-import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
@@ -97,30 +96,32 @@ export function TopNav({ children }: Props) {
           {children}
 
           {hasCustomerToken ? (
-            <Button variant="primary" size="sm" href="/akun">
+            <Button variant="primary" size="md" href="/akun">
               {t('account')}
             </Button>
           ) : (
-            <Button variant="primary" size="sm" href="/masuk">
+            <Button variant="primary" size="md" href="/masuk">
               {t('login')}
             </Button>
           )}
 
-          <Button variant="surface" size="sm" href="/login">
+          <Button variant="surface" size="md" href="/login">
             {t('admin')}
           </Button>
         </nav>
 
-        {/* Hamburger button (<xl) */}
-        <button
+        {/* Hamburger button (<xl) — pakai Button primitive standar */}
+        <Button
           type="button"
           onClick={() => setOpen(!open)}
-          className="xl:hidden border-4 border-ink bg-surface text-ink w-11 h-11 flex items-center justify-center font-bold shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
+          variant="surface"
+          size="sm"
+          className="w-11 h-11 px-0 py-0 text-lg"
           aria-label={t('menu')}
           aria-expanded={open}
         >
           {open ? '✕' : '☰'}
-        </button>
+        </Button>
       </div>
 
       {/* Mobile menu panel (<xl) */}
@@ -130,19 +131,17 @@ export function TopNav({ children }: Props) {
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
               return (
-                <Link
+                <Button
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   aria-current={active ? 'page' : undefined}
-                  className={`block px-3 py-3 font-label text-base font-bold uppercase border-2 transition-all min-h-[44px] ${
-                    active
-                      ? 'bg-primary/10 text-primary border-primary'
-                      : 'text-ink border-transparent hover:bg-accent hover:border-ink'
-                  }`}
+                  variant={active ? 'primary' : 'surface'}
+                  size="md"
+                  className="block text-center w-full"
                 >
                   {t(item.key)}
-                </Link>
+                </Button>
               );
             })}
 
@@ -183,7 +182,7 @@ export function TopNav({ children }: Props) {
               child ? (
                 <span
                   onClick={() => setOpen(false)}
-                  className="[&>a]:block [&>a]:text-center [&>a]:w-full [&>a]:min-h-[44px]"
+                  className="[&>a]:flex [&>a]:w-full [&>a]:justify-center [&>a]:items-center [&>a]:min-h-[44px] [&>a]:!px-5 [&>a]:!py-2.5 [&>a]:!text-base"
                 >
                   {child}
                 </span>

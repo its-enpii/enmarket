@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 
 /**
@@ -22,17 +23,22 @@ export async function CartBadge() {
   return (
     <Button
       variant="surface"
-      size="sm"
+      size="md"
       href="/keranjang"
       aria-label={t('viewCart')}
     >
-      <span className="inline-flex items-center gap-2">
+      <span className="relative inline-flex items-center gap-1.5">
         <CartIcon />
         <span>{t('viewCart')}</span>
         {count > 0 && (
-          <span className="inline-flex items-center justify-center bg-accent text-ink font-black text-xs px-2 py-0.5 border border-ink shadow-[1px_1px_0_0_var(--color-ink)] min-w-[1.25rem] rounded-none">
+          <Badge
+            tone="accent"
+            size="sm"
+            shadow={false}
+            className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 min-w-[1.75rem] !h-7 px-1.5 !text-xs font-bold normal-case tracking-normal"
+          >
             {count > 99 ? '99+' : count}
-          </span>
+          </Badge>
         )}
       </span>
     </Button>
@@ -52,7 +58,7 @@ function CartIcon() {
       strokeLinecap="square"
       strokeLinejoin="miter"
       aria-hidden="true"
-      className="shrink-0"
+      className="block shrink-0"
     >
       <circle cx="9" cy="20" r="1" />
       <circle cx="20" cy="20" r="1" />
