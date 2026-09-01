@@ -174,10 +174,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
             <Card variant="surface" thick elevation={10} hoverable={false} className="overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
               {previewImages[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={previewImages[0]}
                   alt={product.nama}
-                  className="w-full aspect-[4/3] object-cover"
+                  className="w-full aspect-[4/3]"
                 />
               ) : (
                 <div className="w-full aspect-[4/3] bg-primary text-surface flex items-center justify-center font-display font-black uppercase text-3xl md:text-5xl text-center px-6 tracking-tighter">
@@ -538,3 +538,4 @@ export default async function WorkDetailPage({ params }: PageProps) {
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerAccent } from '@/components/ui/CornerAccent';
+import { Image } from '@/components/ui/Image';

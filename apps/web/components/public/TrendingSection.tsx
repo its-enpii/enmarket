@@ -7,6 +7,7 @@ import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   trending: Product[]; // biasanya featured
@@ -126,11 +127,10 @@ export function TrendingSection({ trending, latest }: Props) {
                   <div className="aspect-[4/3] bg-primary/10 border-b-2 border-ink overflow-hidden relative">
                     {p.preview_images?.[0] ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={p.preview_images[0]}
                         alt={p.nama}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
@@ -369,11 +369,10 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
       <div className="aspect-[16/10] bg-surface border-b-2 border-ink overflow-hidden relative">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={thumb}
             alt={product.nama}
-            loading="lazy"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary/30 text-surface font-bold uppercase tracking-wider">
@@ -428,11 +427,10 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
         <div className="sm:w-32 sm:h-32 w-full h-40 bg-primary/10 border-b-2 sm:border-b-0 sm:border-r-2 border-ink overflow-hidden relative shrink-0">
           {thumb ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={thumb}
               alt={product.nama}
-              loading="lazy"
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-primary text-surface">

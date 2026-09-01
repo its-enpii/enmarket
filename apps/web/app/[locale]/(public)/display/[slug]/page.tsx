@@ -139,10 +139,10 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             <div className="relative">
               <Card variant="surface" thick elevation={12} hoverable={false} className="overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={post.thumbnail}
                   alt={post.title}
-                  className="w-full aspect-[16/9] object-cover"
+                  className="w-full aspect-[16/9]"
                 />
               </Card>
               {/* Decorative accent block — bottom-right, partially off-edge */}
@@ -475,3 +475,4 @@ import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerAccent } from '@/components/ui/CornerAccent';
 import { HoverImage } from '@/components/ui/HoverImage';
+import { Image } from '@/components/ui/Image';

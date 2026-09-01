@@ -26,6 +26,7 @@ import type { Category, LinkedPost, Product } from '@/lib/types';
 import { createProduct, updateProduct, ActionResult } from './actions';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   categories: Category[];
@@ -576,7 +577,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                 {libraryImages.map((url, i) => (
                   <div key={url} className="relative border-2 border-ink bg-surface p-1">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt="Library preview" className="h-16 w-16 object-cover border border-ink" />
+                    <Image src={url} alt="Library preview" className="h-16 w-16 border border-ink" />
                     <Button
                       type="button"
                       variant="surface"

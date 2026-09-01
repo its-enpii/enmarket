@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { WishlistHeartButton } from '@/components/public/WishlistHeartButton';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   product: Product;
@@ -28,11 +29,10 @@ export async function ProductCard({ product }: Props) {
       <div className="aspect-video bg-primary/10 border-b-2 border-ink overflow-hidden relative">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={thumb}
             alt={product.nama}
-            className="w-full h-full object-cover"
-            loading="lazy"
+            className="w-full h-full"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary text-surface">

@@ -7,6 +7,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { PageHeader } from '@/components/public/PageHeader';
 import { Card } from '@/components/ui/neobrutal';
 import type { Game } from '@/lib/types';
+import { Image } from '@/components/ui/Image';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,10 +54,10 @@ export default async function TopupPage() {
             {games.map((game) => (
               <Card key={game.id} href={`/topup/${game.slug}`} variant="surface" className="p-4 text-center group">
                 {game.icon_url ? (
-                  <img
+                  <Image
                     src={game.icon_url}
                     alt={game.nama}
-                    className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink object-cover"
+                    className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink"
                   />
                 ) : (
                   <div className="w-16 h-16 mx-auto mb-3 rounded-lg border-2 border-ink bg-accent/20 flex items-center justify-center text-2xl">

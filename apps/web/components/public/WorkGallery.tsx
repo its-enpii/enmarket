@@ -20,6 +20,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Card, Button } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 interface Props {
   images: string[];
   alt: string;
@@ -53,10 +54,10 @@ export function WorkGallery({ images, alt, title }: Props) {
         aria-label={t('galleryOpen', { name: alt })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={images[0]}
           alt={alt}
-          className="w-full aspect-[4/3] object-cover"
+          className="w-full aspect-[4/3]"
         />
       </Button>
     );
@@ -102,10 +103,9 @@ export function WorkGallery({ images, alt, title }: Props) {
               aria-label={t('galleryOpenNumber', { number: i + 1 })}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={src}
                 alt={t('galleryFrame', { name: alt, number: i + 1 })}
-                loading="lazy"
                 className={`w-full ${aspectClass} object-cover group-hover:scale-[1.02] transition-transform`}
               />
             </Button>
@@ -123,10 +123,10 @@ export function WorkGallery({ images, alt, title }: Props) {
           aria-label={t('galleryDialog')}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image contain
             src={images[activeIdx]}
             alt={alt}
-            className="max-w-full max-h-full object-contain border-4 border-surface shadow-[12px_12px_0_0_var(--color-accent)]"
+            className="max-w-full max-h-full border-4 border-surface shadow-[12px_12px_0_0_var(--color-accent)]"
           />
           <span className="absolute top-6 right-6 text-surface font-label text-label-sm uppercase font-bold tracking-wider border-2 border-surface px-4 py-2">
             ✕ {t('galleryClose')}

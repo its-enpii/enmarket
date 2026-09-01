@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   images: string[];
@@ -32,10 +33,10 @@ export function ImageGallery({ images, alt }: Props) {
     <div>
       <Card variant="surface" hoverable={false} thick className="aspect-video overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={main}
           alt={alt}
-          className="w-full h-full object-cover"
+          className="w-full h-full"
         />
       </Card>
 
@@ -57,11 +58,10 @@ export function ImageGallery({ images, alt }: Props) {
               }
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={img}
                 alt=""
-                className="w-full h-full object-cover"
-                loading="lazy"
+                className="w-full h-full"
               />
             </Button>
           ))}

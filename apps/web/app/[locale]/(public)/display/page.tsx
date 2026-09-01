@@ -323,8 +323,8 @@ function PostCardZine({
         <div className="grid grid-cols-1 md:grid-cols-12">
           <div className="md:col-span-7 bg-primary/10 border-b-4 md:border-b-0 md:border-r-4 border-ink overflow-hidden">
             {post.thumbnail ? (
-              <img src={post.thumbnail} alt={post.title} loading="lazy"
-                className="w-full aspect-[16/9] object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+              <Image src={post.thumbnail} alt={post.title}
+                className="w-full aspect-[16/9] grayscale group-hover:grayscale-0 transition-all duration-700" />
             ) : (
               <div className="aspect-[16/9] flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-2xl md:text-4xl text-center px-6 tracking-tighter">
                 {post.title}
@@ -357,8 +357,8 @@ function PostCardZine({
       >
         <div className="aspect-square bg-primary/10 border-b-4 border-ink overflow-hidden">
           {post.thumbnail ? (
-            <img src={post.thumbnail} alt={post.title} loading="lazy"
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            <Image src={post.thumbnail} alt={post.title}
+              className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700" />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-2xl md:text-3xl text-center px-4 tracking-tighter">
               {post.title}
@@ -387,8 +387,8 @@ function PostCardZine({
       <div className="grid grid-cols-1 sm:grid-cols-3">
         <div className="sm:col-span-1 bg-primary/10 border-b-4 sm:border-b-0 sm:border-r-4 border-ink overflow-hidden">
           {post.thumbnail ? (
-            <img src={post.thumbnail} alt={post.title} loading="lazy"
-              className="w-full aspect-square sm:aspect-auto sm:h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            <Image src={post.thumbnail} alt={post.title}
+              className="w-full aspect-square sm:aspect-auto sm:h-full grayscale group-hover:grayscale-0 transition-all duration-700" />
           ) : (
             <div className="aspect-square sm:aspect-auto sm:h-full min-h-[160px] flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-xl md:text-2xl text-center px-3 tracking-tighter">
               {post.title}
@@ -437,3 +437,4 @@ function pickTag(excerpt: string, labels: TagLabels): string {
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { HoverImage } from '@/components/ui/HoverImage';
+import { Image } from '@/components/ui/Image';

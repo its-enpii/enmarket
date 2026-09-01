@@ -13,12 +13,13 @@
  *
  * @example
  *   <Card href="/develop/foo" variant="surface">
- *     <img src={...} />
+ *     <Image src={...} />
  *     <h3>...</h3>
  *   </Card>
  */
 
 import { Link } from '@/i18n/navigation';
+import { Image } from '@/components/ui/Image';
 import type {
   AnchorHTMLAttributes,
   HTMLAttributes,

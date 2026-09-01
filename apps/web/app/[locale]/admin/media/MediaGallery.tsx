@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerAccent } from '@/components/ui/CornerAccent';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   initialItems: MediaItem[];
@@ -171,11 +172,10 @@ function MediaCard({
       <div className="aspect-square bg-ink/10 border-b-2 border-ink overflow-hidden relative">
         {item.type === 'image' ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={item.url}
             alt={item.filename}
-            loading="lazy"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
         ) : item.type === 'video' ? (
           <div className="w-full h-full flex items-center justify-center bg-primary text-surface">

@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/Badge';
 
 import { formatDate } from '@/lib/format';
 import type { Post } from '@/lib/types';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   post: Post;
@@ -34,11 +35,10 @@ export function PostCard({ post, compact = false }: Props) {
       >
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={thumb}
             alt={post.title}
-            loading="lazy"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary text-surface">

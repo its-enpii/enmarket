@@ -10,6 +10,7 @@ import type { Game, PaginatedResponse } from '@/lib/types';
 import { deleteGame } from './actions';
 import { DeleteButton } from '@/components/admin/DeleteButton';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   searchParams: Promise<{ q?: string; page?: string }>;
@@ -74,7 +75,7 @@ export default async function GamesListPage({ searchParams }: Props) {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4 min-w-0">
                   {game.icon_url ? (
-                    <img src={game.icon_url} alt="" className="w-10 h-10 rounded border-2 border-ink object-cover shrink-0" />
+                    <Image src={game.icon_url} alt="" className="w-10 h-10 rounded border-2 border-ink shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded border-2 border-ink bg-accent/20 flex items-center justify-center shrink-0">🎮</div>
                   )}

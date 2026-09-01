@@ -18,6 +18,7 @@ import { confirmDialog } from '@/components/ui/dialog-store';
 import { toast } from '@/components/ui/toast-store';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { getClientApiBase } from '@/lib/client-api';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   productId: number;
@@ -123,10 +124,10 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
         {images.map((url, i) => (
           <div key={url} className="relative border-2 border-ink bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={url}
               alt={t('previewAlt', { n: i + 1 })}
-              className="h-24 w-24 object-cover"
+              className="h-24 w-24"
             />
             <Button
               type="button"

@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { FileInput } from '@/components/ui/FileInput';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   name: string;
@@ -73,7 +74,7 @@ export function FileUpload({
             </p>
             {files[0]?.type.startsWith('image/') || defaultPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={previewUrl}
                 alt="preview"
                 className="max-h-32 border-2 border-ink"

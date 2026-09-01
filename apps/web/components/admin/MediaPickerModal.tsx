@@ -8,6 +8,7 @@ import { Button, Card } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { fetchMediaLibrary } from '@/lib/media-actions';
+import { Image } from '@/components/ui/Image';
 import {
   filterMedia,
   type FilterMediaOptions,
@@ -192,11 +193,10 @@ export function MediaPickerModal({
                   <div className="aspect-square bg-ink/5 border border-ink/30 mb-2 overflow-hidden flex items-center justify-center relative">
                     {it.type === 'image' ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={it.url}
                         alt={it.filename}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full"
                       />
                     ) : (
                       <span className="text-3xl">📄</span>

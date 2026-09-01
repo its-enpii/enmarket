@@ -19,6 +19,7 @@ import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
 import type { Product } from '@/lib/types';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   currentSlug: string;
@@ -105,11 +106,10 @@ function RelatedCard({
       <div className="aspect-square bg-primary/10 border-b-2 border-ink overflow-hidden">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={thumb}
             alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
         ) : (
           <div className="w-full h-full bg-primary text-surface flex items-center justify-center font-display uppercase text-lg text-center px-3">

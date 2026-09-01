@@ -8,6 +8,7 @@ import { Button, Card } from '@/components/ui/neobrutal';
 import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
 import { getClientApiBase } from '@/lib/client-api';
 import { BackLink } from '@/components/ui/BackLink';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   kodeOrder: string;
@@ -224,10 +225,10 @@ export function PaymentPoller({
           <div className="aspect-square bg-surface border-2 border-ink overflow-hidden">
             {qrUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image contain
                 src={qrUrl}
                 alt={t('qrAlt', { code: kodeOrder })}
-                className="w-full h-full object-contain"
+                className="w-full h-full"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-ink/40 text-sm">

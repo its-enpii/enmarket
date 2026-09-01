@@ -9,6 +9,7 @@ import { Card, NLink } from '@/components/ui/neobrutal';
 import type { Game } from '@/lib/types';
 
 import { TopupForm } from './TopupForm';
+import { Image } from '@/components/ui/Image';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,13 +63,13 @@ export default async function TopupGamePage({ params }: { params: Promise<{ slug
           <div className="lg:w-1/3">
             <Card variant="surface" hoverable={false} className="p-6">
               {game.banner_url ? (
-                <img
+                <Image
                   src={game.banner_url}
                   alt={game.nama}
-                  className="w-full h-40 object-cover border-4 border-ink mb-4"
+                  className="w-full h-40 border-4 border-ink mb-4"
                 />
               ) : game.icon_url ? (
-                <img
+                <Image
                   src={game.icon_url}
                   alt={game.nama}
                   className="w-20 h-20 rounded-lg border-4 border-ink mb-4"

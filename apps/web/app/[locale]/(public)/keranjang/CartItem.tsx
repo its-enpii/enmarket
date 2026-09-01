@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 
 import { CartItemRow } from './CartItemRow';
+import { Image } from '@/components/ui/Image';
 
 type CartItemData = Awaited<
   ReturnType<typeof import('@/lib/cart-api').cartApi.get>
@@ -40,10 +41,10 @@ export async function CartItem({ item }: { item: CartItemData }) {
         >
           {thumb ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={thumb}
               alt={p.nama}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-xs text-center px-3">

@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import type { PaginationMeta, Product } from '@/lib/types';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   initialProducts: Product[];
@@ -244,11 +245,10 @@ function DevelopCard({
           <Card href={href} variant="surface" hoverable thick className="h-full">
             {thumb ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={thumb}
                 alt={title}
-                loading="lazy"
-                className="w-full aspect-video object-cover"
+                className="w-full aspect-video"
               />
             ) : (
               <div className="w-full aspect-video bg-primary text-surface flex items-center justify-center font-display uppercase text-2xl md:text-4xl text-center px-6">
@@ -292,11 +292,10 @@ function DevelopCard({
         <Card href={href} variant="surface" hoverable thick className="h-full">
           {thumb ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={thumb}
               alt={title}
-              loading="lazy"
-              className="w-full aspect-square object-cover"
+              className="w-full aspect-square"
             />
           ) : (
             <div className="w-full aspect-square bg-accent text-ink flex items-center justify-center font-display uppercase text-xl md:text-2xl text-center px-4">

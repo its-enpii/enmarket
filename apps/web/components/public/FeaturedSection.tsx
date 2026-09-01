@@ -8,6 +8,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 
 import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
+import { Image } from '@/components/ui/Image';
 
 interface Props {
   products: Product[];
@@ -91,11 +92,10 @@ function FeaturedRow({
         <Card href={item.href} variant="surface" hoverable thick>
           {item.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={item.image}
               alt={item.title}
-              loading="lazy"
-              className="w-full aspect-video object-cover"
+              className="w-full aspect-video"
             />
           ) : (
             <div className="w-full aspect-video bg-primary text-surface flex items-center justify-center font-display uppercase text-headline-md text-center px-6">

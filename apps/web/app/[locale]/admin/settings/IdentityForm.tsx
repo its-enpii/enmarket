@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { toast } from '@/components/ui/toast-store';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { Image } from '@/components/ui/Image';
 import type {
   SiteFooter,
   SiteIdentity,
@@ -351,10 +352,10 @@ function LogoUploader({
       {value && (
         <Card variant="surface" className="p-3 flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image contain
             src={value}
             alt={t('logoAlt')}
-            className="h-16 w-16 object-contain border-2 border-ink bg-surface"
+            className="h-16 w-16 border-2 border-ink bg-surface"
           />
           <div className="flex-1 min-w-0">
             <p className="font-display font-black uppercase text-xs text-ink">
