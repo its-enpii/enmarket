@@ -64,7 +64,7 @@ export function ReviewRowActions({ review }: Props) {
         size="sm"
         disabled={pending}
         onClick={handleDelete}
-        className="text-red-600 hover:bg-red-50 hover:border-red-600"
+        className="text-[var(--color-danger)] hover:bg-accent/40 hover:border-[var(--color-danger)]"
       >
         ✕
       </Button>

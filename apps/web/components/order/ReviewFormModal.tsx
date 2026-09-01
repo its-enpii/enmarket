@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { toast } from '@/components/ui/toast-store';
@@ -149,10 +150,7 @@ export function ReviewFormModal({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Interactive 5 Star Selector */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-2">
-                {t('ratingLabel')} *
-              </label>
+            <FormField label={`${t('ratingLabel')} *`}>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => {
                   const active = (hoverRating || rating) >= star;
@@ -178,13 +176,10 @@ export function ReviewFormModal({
                   {rating} / 5
                 </span>
               </div>
-            </div>
+            </FormField>
 
             {/* Comment Textarea */}
-            <div>
-              <label htmlFor="comment" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-                {t('commentLabel')}
-              </label>
+            <FormField label={t('commentLabel')} htmlFor="comment">
               <Textarea
                 id="comment"
                 value={comment}
@@ -193,27 +188,21 @@ export function ReviewFormModal({
                 placeholder={t('commentPlaceholder')}
                 className="text-sm"
               />
-            </div>
+            </FormField>
 
             {/* Buyer Name */}
-            <div>
-              <label htmlFor="buyerName" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-                {t('buyerNameLabel')}
-              </label>
+            <FormField label={t('buyerNameLabel')} htmlFor="buyerName">
               <Input
                 id="buyerName"
                 value={buyerName}
                 onChange={(e) => setBuyerName(e.target.value)}
                 placeholder={t('buyerNamePlaceholder')}
               />
-            </div>
+            </FormField>
 
             {/* Verification hint if no email / phone default */}
             {!defaultEmailOrPhone && (
-              <div>
-                <label htmlFor="emailOrPhone" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-                  {t('verificationLabel')} *
-                </label>
+              <FormField label={`${t('verificationLabel')} *`} htmlFor="emailOrPhone" hint={t('verificationHint')}>
                 <Input
                   id="emailOrPhone"
                   value={emailOrPhone}
@@ -221,10 +210,7 @@ export function ReviewFormModal({
                   placeholder="Email atau No. WhatsApp saat checkout"
                   required
                 />
-                <p className="text-[11px] text-ink/60 mt-1">
-                  {t('verificationHint')}
-                </p>
-              </div>
+              </FormField>
             )}
 
             {error && <FormError variant="box">{error}</FormError>}

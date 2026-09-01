@@ -94,7 +94,7 @@ export default function AkunWishlistPage() {
                   size="sm"
                   type="button"
                   onClick={() => handleRemove(item.product_id)}
-                  className="!text-red-600 hover:!text-red-800 uppercase !min-h-0 !p-1.5 text-xs"
+                  className="!text-[var(--color-danger)] hover:!text-[var(--color-danger)] uppercase !min-h-0 !p-1.5 text-xs"
                 >
                   {t('remove')}
                 </Button>

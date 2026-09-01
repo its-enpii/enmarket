@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { AlertBanner } from '@/components/ui/AlertBanner';
 import { useAuth } from './AuthProvider';
@@ -51,10 +52,7 @@ export function ProfileForm() {
         <FormError variant="box">{error}</FormError>
       )}
 
-      <div>
-        <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-          {t('nameLabel')}
-        </label>
+      <FormField label={t('nameLabel')} htmlFor="name">
         <Input
           id="name"
           type="text"
@@ -63,12 +61,9 @@ export function ProfileForm() {
           placeholder={t('nameLabel')}
           disabled={loading}
         />
-      </div>
+      </FormField>
 
-      <div>
-        <label htmlFor="phone" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-          {t('phoneLabel')}
-        </label>
+      <FormField label={t('phoneLabel')} htmlFor="phone" hint={t('phoneHint')}>
         <Input
           id="phone"
           type="tel"
@@ -78,15 +73,9 @@ export function ProfileForm() {
           disabled={loading}
           className="font-mono"
         />
-        <p className="mt-1 text-xs text-ink/70">
-          {t('phoneHint')}
-        </p>
-      </div>
+      </FormField>
 
-      <div>
-        <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-          {t('emailLabel')}
-        </label>
+      <FormField label={t('emailLabel')} htmlFor="email">
         <Input
           id="email"
           type="email"
@@ -95,7 +84,7 @@ export function ProfileForm() {
           placeholder={t('emailPlaceholder')}
           disabled={loading}
         />
-      </div>
+      </FormField>
 
       <div className="pt-2">
         <Button

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from './AuthProvider';
 import { authApi } from '@/lib/auth-api';
@@ -118,10 +119,7 @@ export function OtpVerifyForm({
         }}
         className="space-y-4"
       >
-        <div>
-          <label htmlFor="otp-code" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-            {t('otpLabel')}
-          </label>
+        <FormField label={t('otpLabel')} htmlFor="otp-code" hint={t('otpHint')}>
           <Input
             id="otp-code"
             type="text"
@@ -136,8 +134,7 @@ export function OtpVerifyForm({
             autoFocus
             autoComplete="one-time-code"
           />
-          <FormHint>{t('otpHint')}</FormHint>
-        </div>
+        </FormField>
 
         <Button
           type="submit"

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { formatRupiah } from '@/lib/format';
 import type { Game, GameItem } from '@/lib/types';
@@ -63,19 +64,16 @@ export function GameItemsSection({ game }: Props) {
 
       {showForm && (
         <div className="border-4 border-ink p-4 mb-4 space-y-3 bg-accent/10">
-          <div>
-            <label className="font-label text-xs uppercase font-bold block mb-1">{t('nama')}</label>
-            <Input value={nama} onChange={(e) => setNama(e.target.value)} />
-          </div>
+          <FormField label={t('nama')} htmlFor="game-item-nama">
+            <Input id="game-item-nama" value={nama} onChange={(e) => setNama(e.target.value)} />
+          </FormField>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="font-label text-xs uppercase font-bold block mb-1">{t('harga')}</label>
-              <Input type="number" value={harga} onChange={(e) => setHarga(e.target.value)} />
-            </div>
-            <div>
-              <label className="font-label text-xs uppercase font-bold block mb-1">{t('sku')}</label>
-              <Input value={sku} onChange={(e) => setSku(e.target.value)} />
-            </div>
+            <FormField label={t('harga')} htmlFor="game-item-harga">
+              <Input id="game-item-harga" type="number" value={harga} onChange={(e) => setHarga(e.target.value)} />
+            </FormField>
+            <FormField label={t('sku')} htmlFor="game-item-sku">
+              <Input id="game-item-sku" value={sku} onChange={(e) => setSku(e.target.value)} />
+            </FormField>
           </div>
           <Button type="button" variant="primary" size="sm" disabled={saving} onClick={handleAdd}>
             {saving ? '...' : t('add')}
@@ -98,7 +96,7 @@ export function GameItemsSection({ game }: Props) {
                 variant="outline"
                 size="sm"
                 onClick={() => handleDelete(item.id)}
-                className="!text-red-600 !min-h-0 !p-1.5 text-xs"
+                className="!text-[var(--color-danger)] !min-h-0 !p-1.5 text-xs"
               >
                 ✕
               </Button>

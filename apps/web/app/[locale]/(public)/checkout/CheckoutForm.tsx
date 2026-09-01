@@ -172,14 +172,12 @@ export function CheckoutForm({
         </div>
 
         {couponSuccess && (
-          <p className="mt-2 text-xs font-bold text-green-600 dark:text-green-400">
+          <span className="mt-2 block text-xs font-bold text-[var(--color-success)]">
             ✓ {couponSuccess}
-          </p>
+          </span>
         )}
         {couponError && (
-          <p className="mt-2 text-xs font-bold text-red-600">
-            ✕ {couponError}
-          </p>
+          <FormError>{couponError}</FormError>
         )}
         {appliedCoupon && (
           <Card variant="filled-accent" hoverable={false} className="mt-3 p-3 text-xs font-bold flex justify-between items-center">

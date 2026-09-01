@@ -34,6 +34,9 @@
   --color-accent: #E6AF2E;
   --color-surface: #F3F3F3;
   --color-ink: #040303;
+  --color-success: #276749;
+  --color-danger: #C53030;
+  --color-warning: #D69E2E;
 
   --color-background: var(--color-surface);
   --color-foreground: var(--color-ink);

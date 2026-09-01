@@ -24,6 +24,7 @@ import {
   type FilterMediaOptions,
   type MediaItem,
 } from '@/lib/media-shared';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Eyebrow } from '@/components/ui/neobrutal';
@@ -59,13 +60,7 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
       {/* Filter bar */}
       <Card variant="surface" className="p-4">
         <div className="flex flex-wrap gap-3 items-end">
-          <div className="flex-1 min-w-[200px]">
-            <label
-              htmlFor="media-search"
-              className="block text-xs font-bold uppercase tracking-wide mb-1"
-            >
-              {t('searchLabel')}
-            </label>
+          <FormField className="flex-1 min-w-[200px]" label={t('searchLabel')} htmlFor="media-search">
             <Input
               id="media-search"
               variant="flat"
@@ -74,7 +69,7 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
               onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
               placeholder={t('searchPlaceholder')}
             />
-          </div>
+          </FormField>
 
           <div className="w-44">
             <SelectSearch

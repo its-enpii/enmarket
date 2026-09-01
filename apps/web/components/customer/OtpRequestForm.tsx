@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { authApi } from '@/lib/auth-api';
 
@@ -70,10 +71,7 @@ export function OtpRequestForm({ initialPhone = '', onSuccess, locale }: Props) 
         <FormError variant="box">{error}</FormError>
       )}
 
-      <div>
-        <label htmlFor="customer-phone" className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
-          {t('phoneLabel')}
-        </label>
+      <FormField label={t('phoneLabel')} htmlFor="customer-phone" hint={t('phoneHint')}>
         <Input
           id="customer-phone"
           type="tel"
@@ -84,8 +82,7 @@ export function OtpRequestForm({ initialPhone = '', onSuccess, locale }: Props) 
           className="font-mono text-base font-semibold"
           autoFocus
         />
-        <FormHint>{t('phoneHint')}</FormHint>
-      </div>
+      </FormField>
 
       <Button
         type="submit"

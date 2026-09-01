@@ -8,6 +8,7 @@ export interface FormFieldProps {
   hint?: ReactNode;
   error?: ReactNode;
   required?: boolean;
+  className?: string;
   children: ReactNode;
 }
 
@@ -17,10 +18,11 @@ export function FormField({
   hint,
   error,
   required = false,
+  className,
   children,
 }: FormFieldProps) {
   return (
-    <div>
+    <div className={className}>
       <label
         htmlFor={htmlFor}
         className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5"

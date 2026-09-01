@@ -73,7 +73,7 @@ export function AccountSidebar() {
             variant="surface"
             size="sm"
             onClick={handleLogout}
-            className="w-full !justify-start gap-3 mt-4 !text-red-600 hover:!bg-red-50"
+            className="w-full !justify-start gap-3 mt-4 !text-[var(--color-danger)] hover:!bg-accent/40"
           >
             <span>🚪</span>
             <span>{t('logout')}</span>

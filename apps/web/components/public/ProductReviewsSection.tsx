@@ -9,6 +9,7 @@ import { reviewApi, ProductReviewsResponse } from '@/lib/review-api';
 import { formatDate } from '@/lib/format';
 import type { Review, ProductRatingSummary } from '@/lib/types';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { StatusPill } from '@/components/ui/StatusPill';
 
 interface Props {
   productSlug: string;
@@ -194,9 +195,9 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-sm text-ink">{rev.buyer_name}</p>
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 bg-green-100 border border-green-700 text-green-900">
+                      <StatusPill tone="success">
                         ✓ {t('verifiedBuyer')}
-                      </span>
+                      </StatusPill>
                     </div>
                     <p className="text-[11px] text-ink/50 mt-0.5">
                       {rev.created_at ? formatDate(rev.created_at) : '-'}

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
+import { StatusPill } from '@/components/ui/StatusPill';
 import { useAuth } from '@/components/customer/AuthProvider';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';
@@ -100,8 +101,10 @@ export default function AkunDashboardPage() {
 
         <Card variant="surface" hoverable={false} className="p-5">
           <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('verificationStatus')}</p>
-          <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-100 border-2 border-green-700 text-green-900 text-xs font-bold uppercase">
+          <div className="mt-2">
+            <StatusPill tone="success" className="text-xs">
             <span>✓</span> {t('verifiedWA')}
+            </StatusPill>
           </div>
           <p className="text-xs font-mono text-ink/60 mt-2 truncate">
             {user?.phone}

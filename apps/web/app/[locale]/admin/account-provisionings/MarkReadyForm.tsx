@@ -3,8 +3,10 @@
 import { useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
+import { StatusPill } from '@/components/ui/StatusPill';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 
@@ -104,55 +106,60 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
           >
             <input type="hidden" name="id" value={provisioningId} />
 
-            <Field label={t('fields.username')} required>
+            <FormField label={t('fields.username')} htmlFor="provisioning-username" required>
               <Input
+                id="provisioning-username"
                 name="username"
                 defaultValue={initialCredentials?.username ?? ''}
                 required
                 autoComplete="off"
               />
-            </Field>
-            <Field label={t('fields.password')} required>
+            </FormField>
+            <FormField label={t('fields.password')} htmlFor="provisioning-password" required>
               <Input
+                id="provisioning-password"
                 name="password"
                 type="text"
                 defaultValue={initialCredentials?.password ?? ''}
                 required
                 autoComplete="off"
               />
-            </Field>
-            <Field label={t('fields.server')}>
+            </FormField>
+            <FormField label={t('fields.server')} htmlFor="provisioning-server">
               <Input
+                id="provisioning-server"
                 name="server"
                 defaultValue={initialCredentials?.server ?? ''}
                 autoComplete="off"
               />
-            </Field>
-            <Field label={t('fields.profile')}>
+            </FormField>
+            <FormField label={t('fields.profile')} htmlFor="provisioning-profile">
               <Input
+                id="provisioning-profile"
                 name="profile"
                 defaultValue={initialCredentials?.profile ?? ''}
                 autoComplete="off"
               />
-            </Field>
-            <Field label={t('fields.expiry')}>
+            </FormField>
+            <FormField label={t('fields.expiry')} htmlFor="provisioning-expiry">
               <Input
+                id="provisioning-expiry"
                 name="expiry"
                 defaultValue={initialCredentials?.expiry ?? ''}
                 autoComplete="off"
               />
-            </Field>
-            <Field label={t('fields.catatan')}>
+            </FormField>
+            <FormField label={t('fields.catatan')} htmlFor="provisioning-catatan">
               <Textarea name="catatan" defaultValue={initialCatatan ?? ''} rows={2} />
-            </Field>
+            </FormField>
 
             {error && (
               <FormError variant="box">{error}</FormError>
             )}
             {success && (
-              <Card variant="filled-accent" hoverable={false} className="p-2 text-xs font-bold text-ink">
+              <StatusPill tone="success" className="text-xs">
                 ✓ {success}
-              </Card>
+              </StatusPill>
             )}
 
             <div className="flex gap-2 justify-end pt-2">
@@ -167,16 +174,5 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
         </div>
       </dialog>
     </>
-  );
-}
-
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="block text-xs font-bold uppercase tracking-wider text-ink/70 mb-1">
-        {label} {required && <span className="text-red-600">*</span>}
-      </span>
-      {children}
-    </label>
   );
 }

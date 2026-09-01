@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Checkbox } from '@/components/ui/Checkbox';
@@ -32,47 +33,39 @@ export function GameForm({ game }: Props) {
         <FormError variant="box">{state.error}</FormError>
       )}
 
-      <div>
-        <label className="font-label text-xs uppercase font-bold block mb-1">{t('nama')}</label>
+      <FormField label={t('nama')} htmlFor="game-nama" required>
         <Input name="nama" defaultValue={game?.nama ?? ''} required />
-      </div>
+      </FormField>
 
-      <div>
-        <label className="font-label text-xs uppercase font-bold block mb-1">{t('slug')}</label>
+      <FormField label={t('slug')} htmlFor="game-slug" required>
         <Input name="slug" defaultValue={game?.slug ?? ''} placeholder={t('slugPlaceholder')} />
-      </div>
+      </FormField>
 
-      <div>
-        <label className="font-label text-xs uppercase font-bold block mb-1">{t('brand')}</label>
-        <Input name="brand" defaultValue={game?.brand ?? ''} />
-      </div>
+        <FormField label={t('brand')} htmlFor="game-brand">
+          <Input name="brand" defaultValue={game?.brand ?? ''} />
+        </FormField>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="font-label text-xs uppercase font-bold block mb-1">{t('iconUrl')}</label>
+        <FormField label={t('iconUrl')} htmlFor="game-icon-url">
           <Input name="icon_url" defaultValue={game?.icon_url ?? ''} />
-        </div>
-        <div>
-          <label className="font-label text-xs uppercase font-bold block mb-1">{t('bannerUrl')}</label>
+        </FormField>
+        <FormField label={t('bannerUrl')} htmlFor="game-banner-url">
           <Input name="banner_url" defaultValue={game?.banner_url ?? ''} />
-        </div>
+        </FormField>
       </div>
 
-      <div>
-        <label className="font-label text-xs uppercase font-bold block mb-1">{t('description')}</label>
+      <FormField label={t('description')} htmlFor="game-description">
         <Textarea name="description" defaultValue={game?.description ?? ''} rows={3} />
-      </div>
+      </FormField>
 
-      <div>
-        <label className="font-label text-xs uppercase font-bold block mb-1">{t('digiflazzCategory')}</label>
+      <FormField label={t('digiflazzCategory')} htmlFor="game-digiflazz-category">
         <Input name="digiflazz_category" defaultValue={game?.digiflazz_category ?? ''} />
-      </div>
+      </FormField>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="font-label text-xs uppercase font-bold block mb-1">{t('sortOrder')}</label>
+        <FormField label={t('sortOrder')} htmlFor="game-sort-order">
           <Input name="sort_order" type="number" defaultValue={String(game?.sort_order ?? 0)} />
-        </div>
+        </FormField>
       </div>
 
       <div className="flex items-center gap-6">

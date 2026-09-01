@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Radio } from '@/components/ui/Radio';
 import type { Game, GameItem } from '@/lib/types';
@@ -174,36 +175,29 @@ export function TopupForm({ game }: Props) {
       </div>
 
       {/* User ID */}
-      <div>
-        <label className="font-label text-label-sm uppercase font-bold block mb-2">
-          {t('userId')}
-        </label>
+      <FormField label={t('userId')} htmlFor="topup-user-id">
         <Input
+          id="topup-user-id"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
           placeholder={t('userIdHint')}
         />
-      </div>
+      </FormField>
 
       {/* Server ID (conditional) */}
       {game.requires_server_id && (
-        <div>
-          <label className="font-label text-label-sm uppercase font-bold block mb-2">
-            {t('serverId')}
-          </label>
+        <FormField label={t('serverId')} htmlFor="topup-server-id">
           <Input
+            id="topup-server-id"
             value={serverId}
             onChange={(e) => setServerId(e.target.value)}
             placeholder={t('serverIdHint')}
           />
-        </div>
+        </FormField>
       )}
 
       {/* Contact */}
-      <div>
-        <label className="font-label text-label-sm uppercase font-bold block mb-2">
-          {t('contactLabel')}
-        </label>
+      <FormField label={t('contactLabel')} htmlFor="topup-contact">
         <div className="flex gap-4 mb-3">
           <Radio
             name="contact_type"
@@ -221,19 +215,17 @@ export function TopupForm({ game }: Props) {
           />
         </div>
         <Input
+          id="topup-contact"
           type={contactType === 'email' ? 'email' : 'tel'}
           value={contactValue}
           onChange={(e) => setContactValue(e.target.value)}
           placeholder={contactType === 'phone' ? '08xxxxxxxxxx' : 'email@example.com'}
         />
-      </div>
+      </FormField>
 
       {/* Payment method picker — muncul setelah preview fetch enabled gateways */}
       {availableGateways.length > 0 && (
-        <div>
-          <label className="font-label text-label-sm uppercase font-bold block mb-2">
-            {t('paymentMethod')}
-          </label>
+        <FormField label={t('paymentMethod')} htmlFor="topup-payment-method">
           <div className="flex flex-wrap gap-3">
             {availableGateways.map((gw) => (
               <Button
@@ -247,7 +239,7 @@ export function TopupForm({ game }: Props) {
               </Button>
             ))}
           </div>
-        </div>
+        </FormField>
       )}
 
       {/* Summary */}

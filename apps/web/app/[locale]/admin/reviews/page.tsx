@@ -8,6 +8,7 @@ import { DataTable, Column } from '@/components/admin/DataTable';
 import { DataTableArea } from '@/components/admin/DataTableArea';
 import { EmptyState } from '@/components/admin/EmptyState';
 import { Pagination } from '@/components/admin/Pagination';
+import { StatusPill } from '@/components/ui/StatusPill';
 import { apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import type { PaginatedResponse, Review, ReviewStats, SingleResponse } from '@/lib/types';
@@ -101,15 +102,9 @@ export default async function ReviewsPage({ searchParams }: Props) {
       header: t('columns.status'),
       width: '10%',
       render: (row) => (
-        <span
-          className={`inline-flex items-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
-            row.is_published
-              ? 'bg-green-100 border-green-700 text-green-900'
-              : 'bg-gray-100 border-gray-600 text-gray-700'
-          }`}
-        >
+        <StatusPill tone={row.is_published ? 'success' : 'neutral'}>
           {row.is_published ? t('published') : t('hidden')}
-        </span>
+        </StatusPill>
       ),
     },
     {
@@ -137,7 +132,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
             <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('stats.published')}</p>
-            <p className="text-2xl sm:text-3xl font-black font-mono text-green-700 mt-1">{stats.published}</p>
+            <p className="text-2xl sm:text-3xl font-black font-mono text-[var(--color-success)] mt-1">{stats.published}</p>
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
             <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('stats.hidden')}</p>

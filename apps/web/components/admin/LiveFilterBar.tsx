@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { DatePicker } from '@/components/ui/DatePicker';
@@ -117,11 +118,11 @@ export function LiveFilterBar({
     <Card variant="surface" hoverable={false} className="p-3 !shadow-[3px_3px_0_0_var(--color-ink)]">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         {/* Live search */}
-        <div className="w-full sm:flex-1 sm:min-w-[200px]">
-          <label htmlFor="live-search" className="block text-xs font-bold uppercase tracking-wide mb-1">
-            {t('search')}
-            {pending && <span className="ml-2 text-primary normal-case font-normal">{t('searchPending')}</span>}
-          </label>
+        <FormField
+          className="w-full sm:flex-1 sm:min-w-[200px]"
+          label={t('search')}
+          htmlFor="live-search"
+        >
           <Input
             id="live-search"
             variant="flat"
@@ -130,7 +131,9 @@ export function LiveFilterBar({
             onChange={(e) => setInput(e.target.value)}
             placeholder={placeholder}
           />
-        </div>
+          {pending && <span className="text-primary normal-case font-normal">{t('searchPending')}</span>}
+          {pending && <span className="text-primary normal-case font-normal">{t('searchPending')}</span>}
+        </FormField>
 
         {/* Filters */}
         {filters.map((f) => {

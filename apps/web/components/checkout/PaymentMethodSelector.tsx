@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Radio } from '@/components/ui/Radio';
 import type { PaymentGateway } from '@/lib/types';
@@ -66,10 +67,7 @@ export function PaymentMethodSelector({
       </div>
 
       {selectedGateway === 'duitku' && (
-        <div>
-          <label htmlFor="payment_method" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-            {tCheckout('paymentMethod')}
-          </label>
+        <FormField label={tCheckout('paymentMethod')} htmlFor="payment_method">
           <Input
             id="payment_method"
             name="payment_method"
@@ -79,7 +77,7 @@ export function PaymentMethodSelector({
             placeholder="VC, QR, OVO, etc."
             className="font-bold uppercase tracking-wide"
           />
-        </div>
+        </FormField>
       )}
     </div>
   );
