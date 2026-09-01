@@ -126,7 +126,7 @@ export default async function DiscoverPage({
                 ].join(' ')}
               >
                 <div
-                  className={`w-16 h-16 border-4 border-ink flex items-center justify-center text-3xl !shadow-brutal-4 ${pillar.iconBg} ${pillar.iconText}`}
+                  className={`w-16 h-16 border-4 border-ink flex items-center justify-center text-3xl shadow-brutal-4 ${pillar.iconBg} ${pillar.iconText}`}
                   aria-hidden="true"
                 >
                   {pillar.icon}

@@ -50,8 +50,9 @@ export function WorkGallery({ images, alt, title }: Props) {
         type="button"
         variant="surface"
         size="sm"
+        elevation={8}
         onClick={() => setActiveIdx(0)}
-        className="block w-full p-0 !shadow-brutal-8 overflow-hidden -rotate-1 hover:rotate-0 transition-transform"
+        className="block w-full p-0 overflow-hidden -rotate-1 hover:rotate-0 transition-transform"
         aria-label={t('galleryOpen', { name: alt })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -85,7 +86,7 @@ export function WorkGallery({ images, alt, title }: Props) {
             : 'col-span-1';
           const aspectClass = isLarge ? 'aspect-square' : isMedium ? 'aspect-[2/1] sm:aspect-[2/1]' : 'aspect-square';
           const rotate = i % 3 === 0 ? '-rotate-1' : i % 3 === 1 ? 'rotate-1' : '';
-          const shadowSize = isLarge ? '!shadow-brutal-10' : '!shadow-brutal-6';
+          const shadowSize = isLarge ? 'shadow-brutal-10' : 'shadow-brutal-6';
 
           return (
             <Button
@@ -93,6 +94,7 @@ export function WorkGallery({ images, alt, title }: Props) {
               type="button"
               variant="surface"
               size="sm"
+              elevation={isLarge ? 10 : 6}
               onClick={() => setActiveIdx(i)}
               className={[
                 colSpan,

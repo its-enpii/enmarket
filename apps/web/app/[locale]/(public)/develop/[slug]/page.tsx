@@ -153,7 +153,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 <NLink
                   href="#reviews"
                   underline="none"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs !shadow-brutal-2 hover:bg-accent transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
                 >
                   <span className="text-accent">?</span>
                   <span>{product.rating_summary.average.toFixed(1)}</span>
@@ -196,12 +196,12 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {/* Chips row */}
             <div className="flex flex-wrap gap-2">
               {product.is_featured && (
-                <Badge tone="accent" size="md" className="!shadow-brutal-2">
+                <Badge tone="accent" size="md" elevation={2}>
                   {t('studioPick')}
                 </Badge>
               )}
               {product.is_pre_order && (
-                <Badge tone="primary" size="md" className="!shadow-brutal-2">
+                <Badge tone="primary" size="md" elevation={2}>
                   {t('preorderBadge')}
                 </Badge>
               )}
@@ -212,7 +212,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 <NLink
                   href="#reviews"
                   underline="none"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs !shadow-brutal-2 hover:bg-accent transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
                 >
                   <span className="text-accent">?</span>
                   <span>{product.rating_summary.average.toFixed(1)}</span>
@@ -317,7 +317,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 <NLink
                   href="#reviews"
                   underline="none"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs !shadow-brutal-2 hover:bg-accent transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
                 >
                   <span className="text-accent">?</span>
                   <span>{product.rating_summary.average.toFixed(1)}</span>
@@ -413,7 +413,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {product.fitur.map((f, i) => (
                     <li key={i}>
-                      <Card variant="surface" hoverable={false} className="flex items-start gap-3 px-4 py-3 !shadow-brutal-3">
+                      <Card variant="surface" hoverable={false} elevation={3} className="flex items-start gap-3 px-4 py-3">
                         <span
                           aria-hidden="true"
                           className="inline-flex shrink-0 items-center justify-center w-6 h-6 bg-accent border-2 border-ink text-ink font-bold text-xs"

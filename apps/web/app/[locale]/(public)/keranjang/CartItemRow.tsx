@@ -40,7 +40,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
   return (
     <div className="flex items-center gap-3">
       {/* Chunky +/- group */}
-      <div className="flex items-stretch border-2 border-ink bg-surface !shadow-brutal-3">
+      <div className="flex items-stretch border-2 border-ink bg-surface shadow-brutal-3">
         <Button
           variant="surface"
           size="sm"

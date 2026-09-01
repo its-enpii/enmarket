@@ -85,10 +85,11 @@ export default function AkunWishlistPage() {
                 </Button>
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="tiny"
+                  tone="danger"
                   type="button"
                   onClick={() => handleRemove(item.product_id)}
-                  className="!text-[var(--color-danger)] hover:!text-[var(--color-danger)] uppercase !min-h-0 !p-1.5 text-xs"
+                  className="uppercase"
                 >
                   {t('remove')}
                 </Button>

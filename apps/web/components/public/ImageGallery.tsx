@@ -48,10 +48,11 @@ export function ImageGallery({ images, alt }: Props) {
               type="button"
               variant={i === active ? 'primary' : 'surface'}
               size="sm"
+              elevation={2}
               onClick={() => setActive(i)}
               aria-label={`Lihat gambar ${i + 1}`}
               className={
-                'block w-20 h-20 px-0 py-0 overflow-hidden !shadow-brutal-2 transition-all ' +
+                'block w-20 h-20 px-0 py-0 overflow-hidden transition-all ' +
                 (i === active
                   ? 'ring-4 ring-primary ring-offset-2 ring-offset-surface'
                   : 'opacity-70 hover:opacity-100')

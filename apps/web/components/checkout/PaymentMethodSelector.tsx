@@ -45,9 +45,8 @@ export function PaymentMethodSelector({
                 as="label"
                 variant={isSelected ? 'filled-accent' : 'surface'}
                 hoverable={false}
-                className={`flex items-center gap-3 p-3 cursor-pointer border-2 border-ink transition-colors ${
-                  isSelected ? '!shadow-brutal-2' : ''
-                }`}
+                elevation={2}
+                className="flex items-center gap-3 p-3 cursor-pointer border-2 border-ink transition-colors"
               >
                 <Radio
                   name="payment_gateway"

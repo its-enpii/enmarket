@@ -196,7 +196,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           )}
 
           {/* Meta strip — thin bordered box (per brief item 2) */}
-          <div className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-2 border-ink bg-surface px-5 py-3 !shadow-brutal-3">
+          <div className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-2 border-ink bg-surface px-5 py-3 shadow-brutal-3">
             <Badge tone="accent" size="sm" className="px-2.5 py-0.5 text-label-sm">
               {primaryTag}
             </Badge>
@@ -260,7 +260,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                     className={[
                       'inline-flex items-center px-3 py-1.5 font-label text-label-sm font-bold uppercase tracking-wider border-2 border-ink',
                       i === 0
-                        ? 'bg-accent text-ink !shadow-brutal-3'
+                        ? 'bg-accent text-ink shadow-brutal-3'
                         : 'bg-surface text-ink',
                     ].join(' ')}
                   >

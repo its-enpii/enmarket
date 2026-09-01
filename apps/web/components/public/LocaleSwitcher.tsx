@@ -28,7 +28,7 @@ export function LocaleSwitcher() {
     <div
       role="group"
       aria-label={t('switchTo')}
-      className="inline-flex border-2 border-ink !shadow-brutal-2"
+      className="inline-flex border-2 border-ink shadow-brutal-2"
     >
       {routing.locales.map((l) => {
         const active = l === locale;

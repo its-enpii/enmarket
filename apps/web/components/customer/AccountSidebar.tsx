@@ -57,11 +57,11 @@ export function AccountSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 text-sm font-bold border-2 transition-all ${
-                  active
-                    ? 'bg-primary text-white border-ink !shadow-brutal-2'
-                    : 'border-transparent text-ink hover:bg-accent/40 hover:border-ink'
-                }`}
+            className={`flex items-center gap-3 px-3 py-2.5 text-sm font-bold border-2 transition-all ${
+              active
+                ? 'bg-primary text-white border-ink shadow-brutal-2'
+                : 'border-transparent text-ink hover:bg-accent/40 hover:border-ink'
+            }`}
               >
                 <span>{item.icon}</span>
                 <span>{t(item.key)}</span>
@@ -73,8 +73,10 @@ export function AccountSidebar() {
             type="button"
             variant="surface"
             size="sm"
+            tone="danger"
+            fullWidth
             onClick={handleLogout}
-            className="w-full !justify-start gap-3 mt-4 !text-[var(--color-danger)] hover:!bg-accent/40"
+            className="gap-3 mt-4 justify-start text-center"
           >
             <span>🚪</span>
             <span>{t('logout')}</span>

@@ -37,8 +37,11 @@ export function ActivityRow({ entry }: { entry: ActivityLog }) {
           tone="primary"
           size="sm"
           shadow={false}
+          height="32"
+          width="32"
+          fontSize="base"
           aria-hidden="true"
-          className="shrink-0 !w-8 !h-8 !p-0 justify-center font-display font-black text-base"
+          className="shrink-0 p-0 justify-center font-display font-black"
         >
           {meta.icon}
         </Badge>

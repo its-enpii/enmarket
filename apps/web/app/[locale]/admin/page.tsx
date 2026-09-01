@@ -224,7 +224,9 @@ export default async function AdminHomePage() {
                   <Card
                     href="/admin/account-provisionings?status=menunggu_admin"
                     variant="surface"
-                    className="block p-4 hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-3"
+                    elevation={6}
+                    hoverElevation={3}
+                    className="block p-4 hover:translate-x-[1px] hover:translate-y-[1px]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
@@ -291,7 +293,9 @@ export default async function AdminHomePage() {
                   <Card
                     href={`/admin/orders/${o.kode_order}`}
                     variant="surface"
-                    className="block p-3 hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-2"
+                    elevation={6}
+                    hoverElevation={2}
+                    className="block p-3 hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">

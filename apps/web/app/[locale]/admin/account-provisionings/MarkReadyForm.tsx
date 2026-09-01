@@ -90,7 +90,7 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
 
       <dialog
         ref={dialogRef}
-        className="p-0 border-2 border-ink !shadow-brutal-6 bg-surface max-w-lg w-full backdrop:bg-ink/30"
+        className="p-0 border-2 border-ink shadow-brutal-6 bg-surface max-w-lg w-full backdrop:bg-ink/30"
       >
         <div className="p-5">
           <h2 className="font-display text-xl font-black uppercase tracking-tight mb-1">

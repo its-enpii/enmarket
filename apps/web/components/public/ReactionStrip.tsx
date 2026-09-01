@@ -170,17 +170,21 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
     tone === 'accent'
       ? 'bg-accent text-ink border-ink'
       : 'bg-primary text-surface border-ink';
+  const elevation = active ? 1 : 4;
+  const hoverElevation = active ? 1 : 2;
   const activeCls = active
     ? tone === 'accent'
-      ? '!shadow-brutal-1 translate-x-[2px] translate-y-[2px]'
+      ? 'translate-x-[2px] translate-y-[2px]'
       : 'shadow-[1px_1px_0_0_var(--color-accent)] translate-x-[2px] translate-y-[2px]'
-    : '!shadow-brutal-4 hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-2';
+    : 'hover:translate-x-[1px] hover:translate-y-[1px]';
 
   return (
     <Button
       type="button"
       variant="surface"
       size="sm"
+      elevation={elevation}
+      hoverElevation={hoverElevation}
       onClick={onClick}
       aria-pressed={active}
       className={[
@@ -197,7 +201,7 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
       </span>
       <span>{label}</span>
       {count > 0 && (
-        <Badge tone="ink" size="sm" shadow={false} className="min-w-[24px] !h-6 px-1.5 !text-xs font-bold normal-case tracking-normal">
+        <Badge tone="ink" size="sm" shadow={false} height="24" fontSize="xs" className="min-w-[24px] px-1.5 font-bold normal-case tracking-normal">
           {count}
         </Badge>
       )}

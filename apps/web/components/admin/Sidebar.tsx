@@ -83,8 +83,11 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             variant="outline"
             size="sm"
             flat
+            size-icon
+            borderColor="surface"
+            textColor="surface"
             onClick={onClose}
-            className="lg:hidden !w-11 !h-11 !px-0 !py-0 !text-2xl !border-surface !text-surface"
+            className="lg:hidden"
             srLabel={tSidebar('closeMenu')}
           >
             ✕

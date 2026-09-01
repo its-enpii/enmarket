@@ -95,8 +95,9 @@ export function GameItemsSection({ game }: Props) {
                 type="button"
                 variant="outline"
                 size="sm"
+                tone="danger"
                 onClick={() => handleDelete(item.id)}
-                className="!text-[var(--color-danger)] !min-h-0 !p-1.5 text-xs"
+                className="text-xs"
               >
                 ✕
               </Button>

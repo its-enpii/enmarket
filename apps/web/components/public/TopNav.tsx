@@ -63,7 +63,7 @@ export function TopNav({ children }: Props) {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink !shadow-brutal-6 relative">
+    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink shadow-brutal-6 relative">
       <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
         <NLink
           href="/"
@@ -182,12 +182,7 @@ export function TopNav({ children }: Props) {
             {/* Wishlist & Cart badge (server components) — sama dengan desktop nav */}
             {Children.map(children, (child) =>
               child ? (
-                <span
-                  onClick={() => setOpen(false)}
-                  className="[&>a]:flex [&>a]:w-full [&>a]:justify-center [&>a]:items-center [&>a]:min-h-touch [&>a]:!px-5 [&>a]:!py-2.5 [&>a]:!text-base"
-                >
-                  {child}
-                </span>
+                <span onClick={() => setOpen(false)}>{child}</span>
               ) : child,
             )}
           </div>

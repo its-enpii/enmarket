@@ -36,7 +36,9 @@ export async function WishlistBadge() {
             tone="accent"
             size="sm"
             shadow={false}
-            className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 min-w-[1.75rem] !h-7 px-1.5 !text-xs font-bold normal-case tracking-normal"
+            height="28"
+            fontSize="xs"
+            className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 min-w-[1.75rem] px-1.5 font-bold normal-case tracking-normal"
           >
             {count > 99 ? '99+' : count}
           </Badge>

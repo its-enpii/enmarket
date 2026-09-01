@@ -35,7 +35,7 @@ export function CategoryRail({ categories }: Props) {
       aria-label={t('ariaLabel')}
       variant="surface"
       hoverable={false}
-      className="!shadow-brutal-4"
+      elevation={4}
     >
       <div className="flex items-center justify-between gap-2 border-b-2 border-ink px-4 py-3">
         <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-ink">
@@ -61,7 +61,7 @@ export function CategoryRail({ categories }: Props) {
                 size="sm"
                 className="hover:bg-accent"
               >
-                <Badge tone="primary" size="sm" shadow={false} aria-hidden="true" className="!w-9 !h-9 !p-0 justify-center font-bold text-base">
+                <Badge tone="primary" size="sm" shadow={false} height="32" fontSize="base" aria-hidden="true" className="w-9 p-0 justify-center font-bold">
                   {cat.nama.charAt(0).toUpperCase()}
                 </Badge>
                 <span className="flex flex-col text-left">

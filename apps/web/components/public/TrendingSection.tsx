@@ -123,7 +123,7 @@ export function TrendingSection({ trending, latest }: Props) {
               <li key={p.id} className="shrink-0 w-56 sm:w-64">
                 <Link
                   href={latestIsPlaceholder ? '/katalog' : `/develop/${p.slug}`}
-                  className="group block bg-surface border-2 border-ink !shadow-brutal-3 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:!shadow-brutal-5 active:translate-x-[1px] active:translate-y-[1px] active:!shadow-brutal-1 transition-all"
+                  className="group block bg-surface border-2 border-ink shadow-brutal-3 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-brutal-5 active:translate-x-[1px] active:translate-y-[1px] active:shadow-brutal-1 transition-all"
                 >
                   <div className="aspect-43 bg-primary/10 border-b-2 border-ink overflow-hidden relative">
                     {p.preview_images?.[0] ? (
@@ -365,7 +365,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
   return (
     <Link
       href={isPlaceholder ? '/katalog' : `/develop/${product.slug}`}
-      className="group relative bg-primary text-surface border-2 border-ink !shadow-brutal-6 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:!shadow-brutal-8 active:translate-x-[1px] active:translate-y-[1px] active:!shadow-brutal-3 transition-all flex flex-col"
+      className="group relative bg-primary text-surface border-2 border-ink shadow-brutal-6 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-brutal-8 active:translate-x-[1px] active:translate-y-[1px] active:shadow-brutal-3 transition-all flex flex-col"
     >
       <div className="aspect-[16/10] bg-surface border-b-2 border-ink overflow-hidden relative">
         {thumb ? (
@@ -406,7 +406,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
               {formatRupiah(product.harga)}
             </p>
           </div>
-          <span className="inline-flex items-center gap-1 bg-accent text-ink border-2 border-ink px-3 py-2 text-xs font-bold !shadow-brutal-3 group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:!shadow-brutal-4 transition-all">
+          <span className="inline-flex items-center gap-1 bg-accent text-ink border-2 border-ink px-3 py-2 text-xs font-bold shadow-brutal-3 group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-brutal-4 transition-all">
             {t('viewCta')}
           </span>
         </div>
@@ -422,7 +422,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
   return (
     <Link
       href={isPlaceholder ? '/katalog' : `/develop/${product.slug}`}
-      className="group block bg-surface border-2 border-ink !shadow-brutal-4 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:!shadow-brutal-6 active:translate-x-[1px] active:translate-y-[1px] active:!shadow-brutal-2 transition-all"
+      className="group block bg-surface border-2 border-ink shadow-brutal-4 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-brutal-6 active:translate-x-[1px] active:translate-y-[1px] active:shadow-brutal-2 transition-all"
     >
       <div className="flex sm:flex-row flex-col">
         <div className="sm:w-32 sm:h-32 w-full h-40 bg-primary/10 border-b-2 sm:border-b-0 sm:border-r-2 border-ink overflow-hidden relative shrink-0">

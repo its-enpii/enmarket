@@ -30,10 +30,6 @@ import {
   BORDER,
   BORDER_THICK,
   CARD_VARIANT_CLS,
-  INTERACTIVE_BASE,
-  LIFT_HOVER,
-  LIFT_PRESS,
-  SHADOW_BASE,
   type CardVariant,
 } from './styles';
 
@@ -48,6 +44,7 @@ type CommonProps = {
   thick?: boolean; // 4px border instead of 2px
   raised?: boolean;
   elevation?: CardElevation;
+  hoverElevation?: CardElevation;
   shadowColor?: CardShadowColor;
   as?: AllowedTag;
   className?: string;

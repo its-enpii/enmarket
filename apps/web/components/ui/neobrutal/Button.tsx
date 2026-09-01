@@ -28,6 +28,7 @@ import {
   LIFT_PRESS,
   LIFT_SM_HOVER,
   LIFT_SM_PRESS,
+  BUTTON_TONE_CLS,
   TRANSITION,
   type ButtonSize,
   type ButtonVariant,
@@ -36,6 +37,12 @@ import {
 type CommonProps = {
   variant?: ButtonVariant | 'ghost';
   size?: ButtonSize;
+  tone?: keyof typeof BUTTON_TONE_CLS;
+  fullWidth?: boolean;
+  borderColor?: 'ink' | 'surface';
+  textColor?: 'ink' | 'surface';
+  elevation?: 1 | 2 | 4 | 6 | 8 | 10;
+  hoverElevation?: 1 | 2;
   /** Teks opsional untuk screen reader. */
   srLabel?: string;
   /** Tanpa shadow/border. Untuk button di dalam card yg sudah shadowed. */
@@ -74,6 +81,12 @@ export function Button(props: ButtonProps) {
   const {
     variant = 'primary',
     size = 'md',
+    tone,
+    fullWidth = false,
+    borderColor,
+    textColor,
+    elevation,
+    hoverElevation,
     flat = false,
     srLabel,
     shadowColor = 'ink',
@@ -96,12 +109,20 @@ export function Button(props: ButtonProps) {
   const variantKey: ButtonVariant = variant === 'ghost' ? 'surface' : variant;
   const fill = BUTTON_VARIANT_CLS[variantKey];
   const size_ = BUTTON_SIZE_CLS[size];
+  const tone_ = tone ? BUTTON_TONE_CLS[tone] : null;
 
   const composed = [
-    'inline-flex items-center justify-center text-center',
+    fullWidth
+      ? 'flex w-full justify-center items-center'
+      : 'inline-flex items-center justify-center text-center',
     baseShape,
     fill,
     size_,
+    borderColor ? `border-${borderColor}` : '',
+    textColor ? `text-${textColor}` : '',
+    elevation ? `!shadow-brutal-${elevation}` : '',
+    hoverElevation ? `hover:!shadow-brutal-${hoverElevation}` : '',
+    tone_ ? `${tone_.text} ${tone_.hover}` : '',
     'font-bold cursor-pointer',
     DISABLED_RESET,
     'disabled:opacity-50 disabled:cursor-not-allowed',

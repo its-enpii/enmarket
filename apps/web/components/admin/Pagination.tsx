@@ -73,8 +73,10 @@ export function Pagination({ currentPage, lastPage, basePath, queryParams }: Pro
             key={p}
             tone="primary"
             size="md"
+            height="36"
+            fontSize="xs"
             aria-current="page"
-            className="min-w-[40px] !h-[36px] !px-3 !text-sm normal-case tracking-wide cursor-default"
+            className="min-w-[40px] px-3 normal-case tracking-wide cursor-default"
           >
             {p}
           </Badge>

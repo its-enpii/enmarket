@@ -121,13 +121,24 @@ export const BUTTON_VARIANT_CLS: Record<ButtonVariant, string> = {
 
 // ───── Button sizes ─────
 
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'tiny' | 'compact' | 'icon' | 'icon-sm';
 
 export const BUTTON_SIZE_CLS: Record<ButtonSize, string> = {
   sm: 'px-3 py-1.5 text-sm min-h-[40px]',
   md: 'px-5 py-2.5 text-base min-h-touch',
   lg: 'px-12 py-5 text-lg sm:text-xl min-h-[56px] font-black uppercase',
+  tiny: 'min-h-0 p-1.5 text-xs',
+  compact: 'h-9 min-h-0 px-3 text-sm',
+  icon: 'w-11 h-11 min-h-0 p-0 text-2xl',
+  'icon-sm': 'w-8 h-8 min-h-0 p-0 justify-center text-base',
 };
+
+export const BUTTON_TONE_CLS = {
+  danger: {
+    text: 'text-[var(--color-danger)] hover:text-[var(--color-danger)]',
+    hover: 'hover:bg-accent/40',
+  },
+} as const;
 
 // ───── Card variant fills ─────
 
