@@ -20,6 +20,7 @@
  */
 
 import type { ReactNode } from 'react';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 type Size = 'compact' | 'default' | 'tall';
 
@@ -59,9 +60,9 @@ export function PageHeader({
     <section className="border-b-4 border-ink">
       <div className={`mx-auto max-w-screen-2xl px-6 md:px-12 ${PAD[size]}`}>
         {eyebrow && (
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
+          <Eyebrow size="md" color="accent" className="mb-6">
             ✎ {eyebrow}
-          </p>
+          </Eyebrow>
         )}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <h1 className="font-display text-5xl sm:text-6xl md:text-headline-xl text-ink break-words">

@@ -43,8 +43,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'develop' });
   return {
-    title: `${t('title')} — enpiistudio`,
-    description: t('listSubtitle'),
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('listSubtitle'),
+    }),
     alternates: { canonical: `/${locale}/develop` },
   };
 }
@@ -205,9 +207,9 @@ export default async function DevelopPage({ searchParams }: PageProps) {
       <section className="bg-primary text-surface">
         <SectionContainer py="lg" className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+            <Eyebrow size="md" color="accent" className="mb-3">
               {t('footerEyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight">
               {t('footerTitle')}
             </h2>
@@ -226,3 +228,5 @@ export default async function DevelopPage({ searchParams }: PageProps) {
     </>
   );
 }
+import { buildMetadata } from '@/lib/seo';
+import { Eyebrow } from '@/components/ui/neobrutal';

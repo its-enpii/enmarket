@@ -4,6 +4,8 @@ import { getTranslations } from 'next-intl/server';
 import { EmptyState } from '@/components/public/EmptyState';
 import { ProductGrid } from '@/components/public/ProductGrid';
 import { wishlistApi, PublicFetchError } from '@/lib/wishlist-api';
+import { buildMetadata } from '@/lib/seo';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -16,8 +18,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'wishlist' });
   return {
-    title: `${t('title')} — enpiistudio`,
-    description: t('title'),
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('title'),
+    }),
     alternates: { canonical: `/${locale}/wishlist` },
   };
 }
@@ -43,9 +47,9 @@ export default async function WishlistPage() {
     <div className="mx-auto max-w-6xl px-6 py-8 sm:py-12">
       {/* Page header */}
       <div className="mb-8 border-b-4 border-ink pb-6">
-        <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+        <Eyebrow size="md" color="accent" className="mb-3">
           ♥ {t('title')}
-        </p>
+        </Eyebrow>
         <h1 className="font-display text-5xl md:text-6xl font-black uppercase leading-[0.95] tracking-tight text-ink">
           {t('title')}<span className="text-primary">.</span>
         </h1>

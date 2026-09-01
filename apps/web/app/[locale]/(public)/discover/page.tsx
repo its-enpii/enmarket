@@ -18,8 +18,10 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'discover' });
   return {
-    title: t('title'),
-    description: t('subtitle'),
+    ...buildMetadata({
+      title: t('title'),
+      description: t('subtitle'),
+    }),
     alternates: { canonical: `/${locale}/discover` },
   };
 }
@@ -111,9 +113,9 @@ export default async function DiscoverPage({
       <section className="border-b-4 border-ink">
         <SectionContainer py="lg">
           <div className="mb-12 max-w-2xl">
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+            <Eyebrow size="md" color="accent" className="mb-3">
               {t('pillarsHeading')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
               {t('pillarsTitle')}
             </h2>
@@ -149,9 +151,9 @@ export default async function DiscoverPage({
       <section className="border-b-4 border-ink bg-ink text-surface">
         <SectionContainer py="md">
           <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8 mb-8">
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent shrink-0">
+            <Eyebrow size="md" color="accent" className="shrink-0">
               {t('valuesHeading')}
-            </p>
+            </Eyebrow>
             <p className="font-body text-body-md text-surface/70 max-w-xl">
               {t('valuesSubtitle')}
             </p>
@@ -178,9 +180,9 @@ export default async function DiscoverPage({
       {/* ───── 5. CTA ───── */}
       <section className="bg-accent border-b-4 border-ink">
         <SectionContainer py="xl" className="text-center">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink mb-6">
+          <Eyebrow size="md" color="ink" className="mb-6">
             {t('ctaEyebrow')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink mb-10 max-w-4xl mx-auto">
             {t('ctaTitle1')} <br />
             <span className="inline-block bg-ink text-accent px-3 py-1 -rotate-1">
@@ -214,3 +216,5 @@ export default async function DiscoverPage({
     </>
   );
 }
+import { buildMetadata } from '@/lib/seo';
+import { Eyebrow } from '@/components/ui/neobrutal';

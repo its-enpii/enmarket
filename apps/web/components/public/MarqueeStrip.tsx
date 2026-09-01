@@ -36,11 +36,6 @@ export function MarqueeStrip() {
           </span>
         ))}
       </div>
-      <style>{`
-        .group-hover-pause:hover > div {
-          animation-play-state: paused;
-        }
-      `}</style>
     </div>
   );
-}// HMR-TEST-122516
+}

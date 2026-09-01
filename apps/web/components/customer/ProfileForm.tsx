@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
+import { AlertBanner } from '@/components/ui/AlertBanner';
 import { useAuth } from './AuthProvider';
 
 export function ProfileForm() {
@@ -41,9 +42,9 @@ export function ProfileForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {success && (
-        <Card variant="filled-accent" hoverable={false} className="p-3 text-sm font-bold">
+        <AlertBanner variant="success" className="p-3">
           ✓ {t('profileUpdated')}
-        </Card>
+        </AlertBanner>
       )}
 
       {error && (

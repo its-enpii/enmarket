@@ -16,8 +16,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'checkOrder' });
   return {
-    title: `${t('title')} — enpiistudio`,
-    description: t('subtitle'),
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('subtitle'),
+    }),
     alternates: { canonical: `/${locale}/cek-pesanan` },
   };
 }
@@ -48,3 +50,4 @@ export default async function CekPesananPage() {
     </div>
   );
 }
+import { buildMetadata } from '@/lib/seo';

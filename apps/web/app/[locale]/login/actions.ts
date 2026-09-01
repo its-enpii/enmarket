@@ -6,6 +6,7 @@
  */
 
 import { cookies } from 'next/headers';
+import { ADMIN_TOKEN_COOKIE } from '@/lib/constants';
 import { redirect } from '@/i18n/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 
@@ -38,7 +39,7 @@ export async function loginAction(formData: FormData): Promise<LoginResult> {
   }
 
   const cookieStore = await cookies();
-  cookieStore.set('admin_token', token, {
+  cookieStore.set(ADMIN_TOKEN_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',

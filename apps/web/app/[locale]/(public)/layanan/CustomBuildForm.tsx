@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
@@ -47,37 +48,21 @@ export function CustomBuildForm() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label htmlFor="nama" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-            {t('fields.nama')} *
-          </label>
+        <FormField label={t('fields.nama')} htmlFor="nama" required error={fieldErr('nama')}>
           <Input id="nama" name="nama" type="text" required placeholder={t('fields.namaPlaceholder')} />
-          <FormError>{fieldErr('nama')}</FormError>
-        </div>
+        </FormField>
 
-        <div>
-          <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-            {t('fields.email')} *
-          </label>
+        <FormField label={t('fields.email')} htmlFor="email" required error={fieldErr('email')}>
           <Input id="email" name="email" type="email" required placeholder={t('fields.emailPlaceholder')} />
-          <FormError>{fieldErr('email')}</FormError>
-        </div>
+        </FormField>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div>
-          <label htmlFor="wa" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-            {t('fields.wa')} *
-          </label>
+        <FormField label={t('fields.wa')} htmlFor="wa" required hint={t('fields.waHint')} error={fieldErr('wa')}>
           <Input id="wa" name="wa" type="tel" required placeholder="08123456789" />
-          <FormHint>{t('fields.waHint')}</FormHint>
-          <FormError>{fieldErr('wa')}</FormError>
-        </div>
+        </FormField>
 
-        <div>
-          <label htmlFor="jenis_proyek" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-            {t('fields.jenisProyek.label')} *
-          </label>
+        <FormField label={t('fields.jenisProyek.label')} htmlFor="jenis_proyek" required error={fieldErr('jenis_proyek')}>
           <Select id="jenis_proyek" name="jenis_proyek" required defaultValue="website">
             <option value="website">{t('fields.jenisProyek.website')}</option>
             <option value="webapp">{t('fields.jenisProyek.webapp')}</option>
@@ -85,13 +70,9 @@ export function CustomBuildForm() {
             <option value="automation">{t('fields.jenisProyek.automation')}</option>
             <option value="other">{t('fields.jenisProyek.other')}</option>
           </Select>
-          <FormError>{fieldErr('jenis_proyek')}</FormError>
-        </div>
+        </FormField>
 
-        <div>
-          <label htmlFor="budget_range" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-            {t('fields.budgetRange.label')} *
-          </label>
+        <FormField label={t('fields.budgetRange.label')} htmlFor="budget_range" required error={fieldErr('budget_range')}>
           <Select id="budget_range" name="budget_range" required defaultValue="5-15jt">
             <option value="<5jt">{t('fields.budgetRange.under5m')}</option>
             <option value="5-15jt">{t('fields.budgetRange.5to15m')}</option>
@@ -99,14 +80,10 @@ export function CustomBuildForm() {
             <option value="50jt+">{t('fields.budgetRange.above50m')}</option>
             <option value="discuss">{t('fields.budgetRange.discuss')}</option>
           </Select>
-          <FormError>{fieldErr('budget_range')}</FormError>
-        </div>
+        </FormField>
       </div>
 
-      <div>
-        <label htmlFor="timeline" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('fields.timeline.label')} *
-        </label>
+      <FormField label={t('fields.timeline.label')} htmlFor="timeline" required error={fieldErr('timeline')}>
         <Select id="timeline" name="timeline" required defaultValue="1-3bulan">
           <option value="<2minggu">{t('fields.timeline.under2w')}</option>
           <option value="2-4minggu">{t('fields.timeline.2to4w')}</option>
@@ -114,13 +91,9 @@ export function CustomBuildForm() {
           <option value="3-6bulan">{t('fields.timeline.3to6m')}</option>
           <option value="flexible">{t('fields.timeline.flexible')}</option>
         </Select>
-        <FormError>{fieldErr('timeline')}</FormError>
-      </div>
+      </FormField>
 
-      <div>
-        <label htmlFor="deskripsi" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('fields.deskripsi')} *
-        </label>
+      <FormField label={t('fields.deskripsi')} htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
         <Textarea
           id="deskripsi"
           name="deskripsi"
@@ -128,8 +101,7 @@ export function CustomBuildForm() {
           required
           placeholder={t('fields.deskripsiPlaceholder')}
         />
-        <FormError>{fieldErr('deskripsi')}</FormError>
-      </div>
+      </FormField>
 
       {state.error && (
         <FormError variant="box">{state.error}</FormError>

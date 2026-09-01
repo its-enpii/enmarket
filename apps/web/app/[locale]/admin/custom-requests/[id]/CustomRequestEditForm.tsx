@@ -3,7 +3,8 @@
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button } from '@/components/ui/neobrutal';
+import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FormField } from '@/components/admin/FormField';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
@@ -46,15 +47,15 @@ export function CustomRequestEditForm({ customRequest }: Props) {
       </FormField>
 
       {state.success && (
-        <Card variant="filled-primary" hoverable={false} className="px-4 py-2 text-sm font-bold text-surface">
+        <AlertBanner variant="success">
           ✓ {t('updateSuccess')}
-        </Card>
+        </AlertBanner>
       )}
 
       {state.error && (
-        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
+        <AlertBanner variant="error">
           {state.error}
-        </Card>
+        </AlertBanner>
       )}
 
       <div className="flex gap-3 pt-2">

@@ -41,8 +41,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common.site' });
   return {
-    title: t('title'),
-    description: t('description'),
+    ...buildMetadata({
+      title: t('title'),
+      description: t('description'),
+    }),
     alternates: { canonical: `/${locale}` },
   };
 }
@@ -82,3 +84,4 @@ export default async function HomePage() {
     </>
   );
 }
+import { buildMetadata } from '@/lib/seo';

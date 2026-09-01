@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 
 import { checkOrderAction } from './actions';
@@ -32,10 +33,7 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
 
   return (
     <form action={formAction} className="space-y-4">
-      <div>
-        <label htmlFor="kode_order" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('codeLabel')}
-        </label>
+      <FormField label={t('codeLabel')} htmlFor="kode_order" error={state?.fieldErrors?.kode_order?.[0]}>
         <Input
           id="kode_order"
           name="kode_order"
@@ -46,13 +44,9 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
           autoComplete="off"
           className="font-mono"
         />
-        <FormError>{state?.fieldErrors?.kode_order?.[0]}</FormError>
-      </div>
+      </FormField>
 
-      <div>
-        <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('emailLabel')}
-        </label>
+      <FormField label={t('emailLabel')} htmlFor="email" required hint={t('emailHint')} error={state?.fieldErrors?.email?.[0]}>
         <Input
           id="email"
           name="email"
@@ -61,9 +55,7 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
           placeholder={t('emailPlaceholder')}
           autoComplete="email"
         />
-        <FormHint>{t('emailHint')}</FormHint>
-        <FormError>{state?.fieldErrors?.email?.[0]}</FormError>
-      </div>
+      </FormField>
 
       {state?.error && !state.fieldErrors && (
         <FormError variant="box">{state.error}</FormError>

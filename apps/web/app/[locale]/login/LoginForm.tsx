@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { FormError } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/neobrutal';
 
@@ -27,13 +28,7 @@ export function LoginForm({ action }: Props) {
 
   return (
     <form action={formAction} className="mt-6 space-y-4">
-      <div>
-        <label
-          htmlFor="token"
-          className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5"
-        >
-          {t('tokenLabel')}
-        </label>
+      <FormField label={t('tokenLabel')} htmlFor="token">
         <Input
           id="token"
           name="token"
@@ -43,7 +38,7 @@ export function LoginForm({ action }: Props) {
           autoFocus
           placeholder={t('tokenPlaceholder')}
         />
-      </div>
+      </FormField>
 
       {state?.error && (
         <FormError variant="box">{state.error}</FormError>

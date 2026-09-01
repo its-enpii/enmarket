@@ -18,6 +18,7 @@ import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
 import type { Product } from '@/lib/types';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   currentSlug: string;
@@ -55,9 +56,9 @@ export async function RelatedWorks({ currentSlug, categorySlug }: Props) {
       <SectionContainer py="lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+            <Eyebrow size="md" color="accent" className="mb-3">
               {t('relatedEyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
               {t('relatedTitle')}
             </h2>

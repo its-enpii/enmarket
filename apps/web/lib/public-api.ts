@@ -15,7 +15,9 @@ import type {
   PublicSiteConfig,
 } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api:8000';
+import { getApiBase } from './api-base';
+
+const API_URL = getApiBase();
 const REVALIDATE_SECONDS = 3600;
 
 class PublicFetchError extends Error {

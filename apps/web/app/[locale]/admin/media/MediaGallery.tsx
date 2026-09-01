@@ -26,6 +26,7 @@ import {
 } from '@/lib/media-shared';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   initialItems: MediaItem[];
@@ -225,9 +226,9 @@ function EmptyGallery({ hasItems }: { hasItems: boolean }) {
             className="absolute -bottom-5 -right-5 w-16 h-16 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] z-10"
           />
         </div>
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-2">
+        <Eyebrow size="sm" color="accent" className="mb-2">
           {hasItems ? t('eyebrowMatch') : t('eyebrowEmpty')}
-        </p>
+        </Eyebrow>
         <h3 className="font-display text-2xl md:text-3xl font-black uppercase leading-[0.95] tracking-tight text-ink">
           {hasItems ? t('titleMatch') : t('titleEmpty')}
         </h3>

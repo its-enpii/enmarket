@@ -4,9 +4,10 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
 import { getClientApiBase } from '@/lib/client-api';
+import { BackLink } from '@/components/ui/BackLink';
 
 interface Props {
   kodeOrder: string;
@@ -287,14 +288,11 @@ export function PaymentPoller({
             {isChecking ? t('checking') : t('checkStatus')}
           </Button>
 
-          <NLink
+          <BackLink
             href={`/cek-pesanan?kode_order=${encodeURIComponent(kodeOrder)}`}
-            variant="default"
-            underline="static"
-            className="block text-center text-sm text-ink/60 hover:text-primary font-bold"
-          >
-            {t('viewOrder')}
-          </NLink>
+            label={t('viewOrder')}
+            className="block text-center"
+          />
         </div>
       </div>
 

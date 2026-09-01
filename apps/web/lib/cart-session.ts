@@ -11,7 +11,9 @@
 import { cookies } from 'next/headers';
 import { randomUUID } from 'crypto';
 
-const COOKIE_NAME = 'cart_session';
+import { CART_SESSION_COOKIE } from './constants';
+
+const COOKIE_NAME = CART_SESSION_COOKIE;
 const MAX_AGE_SECONDS = 60 * 60 * 24; // 24 jam
 
 export async function readCartSession(): Promise<string | null> {

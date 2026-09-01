@@ -20,6 +20,7 @@ import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { toast } from '@/components/ui/toast-store';
+import { Eyebrow } from '@/components/ui/neobrutal';
 import type {
   SiteFooter,
   SiteIdentity,
@@ -69,9 +70,9 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionStudio')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionStudioTitle')}
         </h2>
@@ -170,9 +171,9 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionSocial')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionSocialTitle')}
         </h2>
@@ -256,9 +257,9 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionFooter')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionFooterTitle')}
         </h2>

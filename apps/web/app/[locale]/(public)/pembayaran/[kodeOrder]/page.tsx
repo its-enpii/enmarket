@@ -1,4 +1,4 @@
-import { NLink } from '@/components/ui/neobrutal';
+import { BackLink } from '@/components/ui/BackLink';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
@@ -18,8 +18,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { kodeOrder, locale } = await params;
   const t = await getTranslations({ locale, namespace: 'payment' });
   return {
-    title: `${t('title')} ${kodeOrder} — enpiistudio`,
-    description: t('instruction', { minutes: 30 }),
+    ...buildMetadata({
+      title: `${t('title')} ${kodeOrder} — enpiistudio`,
+      description: t('instruction', { minutes: 30 }),
+    }),
     robots: { index: false },
   };
 }
@@ -45,14 +47,11 @@ export default async function PembayaranPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-8 sm:py-12">
-      <NLink
+      <BackLink
         href="/keranjang"
-        variant="default"
-        underline="hover"
-        className="inline-block mb-4 text-sm font-bold text-ink/60"
-      >
-        {tCommon('back')}
-      </NLink>
+        label={tCommon('back')}
+        className="mb-4 hover:underline hover:underline-offset-4 hover:decoration-2"
+      />
 
       <h1 className="text-2xl sm:text-3xl font-bold text-ink mb-2">
         {t('title')}
@@ -72,3 +71,4 @@ export default async function PembayaranPage({ params }: PageProps) {
     </div>
   );
 }
+import { buildMetadata } from '@/lib/seo';

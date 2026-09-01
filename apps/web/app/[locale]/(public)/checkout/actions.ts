@@ -51,7 +51,7 @@ export async function applyCouponAction(
 export async function checkoutAction(input: CheckoutInput): Promise<CheckoutResult> {
   const t = await getTranslations('checkout');
   const cookieStore = await cookies();
-  const cartSession = cookieStore.get('cart_session')?.value;
+  const cartSession = cookieStore.get(CART_SESSION_COOKIE)?.value;
 
   try {
     const res = await apiPost<{ data: { kode_order: string; redirect_url: string } }>(
@@ -125,3 +125,4 @@ function pickFieldError(
   if (field === 'nama') return t('errorRequired');
   return laravelMsg || t('errorRequired');
 }
+import { CART_SESSION_COOKIE } from '@/lib/constants';

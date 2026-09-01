@@ -38,8 +38,8 @@ export function TopNav({ children }: Props) {
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const hasToken =
-        /(^| )customer_token=([^;]+)/.test(document.cookie) ||
-        !!localStorage.getItem('customer_token');
+        new RegExp(`(^| )${CUSTOMER_TOKEN_COOKIE}=([^;]+)`).test(document.cookie) ||
+        !!localStorage.getItem(CUSTOMER_TOKEN_COOKIE);
       setHasCustomerToken(hasToken);
     }
   }, [pathname]);
@@ -196,3 +196,4 @@ export function TopNav({ children }: Props) {
     </header>
   );
 }
+import { CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';

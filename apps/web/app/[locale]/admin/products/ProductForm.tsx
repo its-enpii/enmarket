@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { FormField } from '@/components/admin/FormField';
@@ -24,6 +25,7 @@ import type { Category, LinkedPost, Product } from '@/lib/types';
 
 import { createProduct, updateProduct, ActionResult } from './actions';
 import { DatePicker } from '@/components/ui/DatePicker';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   categories: Category[];
@@ -39,9 +41,9 @@ interface Props {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div className="border-b-2 border-ink pb-3">
-      <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+      <Eyebrow size="sm" color="accent">
         ✎ {eyebrow}
-      </p>
+      </Eyebrow>
       <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
         {title}
       </h2>
@@ -632,9 +634,9 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
       )}
 
       {state.error && (
-        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
+        <AlertBanner variant="error">
           {state.error}
-        </Card>
+        </AlertBanner>
       )}
 
       <div className="flex gap-3 pt-2 border-t-2 border-ink">

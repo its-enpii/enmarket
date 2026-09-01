@@ -5,6 +5,7 @@
  */
 
 import { cookies } from 'next/headers';
+import { ADMIN_TOKEN_COOKIE } from '@/lib/constants';
 import { redirect } from 'next/navigation';
 
 import { ApiRequestError, apiPost } from '@/lib/api';
@@ -21,7 +22,7 @@ export async function logoutAction() {
   }
 
   const cookieStore = await cookies();
-  cookieStore.delete('admin_token');
+  cookieStore.delete(ADMIN_TOKEN_COOKIE);
 
   redirect('/login');
 }

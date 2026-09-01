@@ -26,6 +26,7 @@ import { toast } from '@/components/ui/toast-store';
 import type { PaymentGatewaysMap, SiteChannels, SitePayment } from '@/lib/types';
 
 import { updateChannels, updatePayment, updatePaymentGateways, type ActionResult } from './actions';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 const INITIAL: ActionResult = {};
 
@@ -66,9 +67,9 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
       <Card variant="surface" className="p-5">
         <div className="flex items-center gap-4">
           <div className="flex-1 min-w-0">
-            <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+            <Eyebrow size="sm" color="accent">
               ✎ {t('modeEyebrow').replace('✎ ', '')}
-            </p>
+            </Eyebrow>
             <p className="mt-1 font-display text-2xl font-black uppercase text-ink leading-tight">
               {initial.tripay_mode === 'production' ? t('modeProductionTitle') : t('modeSandboxTitle')}
             </p>
@@ -92,9 +93,9 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
       {/* Tripay credentials */}
       <Card variant="surface" className="p-6 space-y-5">
         <div className="border-b-2 border-ink pb-3">
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+          <Eyebrow size="sm" color="accent">
             ✎ {t('sectionTripay')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
             {t('sectionTripayTitle')}
           </h2>
@@ -202,9 +203,9 @@ function ChannelsSection({ initial }: { initial: SiteChannels }) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionChannels')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionChannelsTitle')}
         </h2>
@@ -307,9 +308,9 @@ function GatewaysSection({ initial }: { initial?: PaymentGatewaysMap }) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionGateways')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionGatewaysTitle')}
         </h2>
@@ -360,9 +361,9 @@ function DuitkuSection({ initial }: { initial: SitePayment }) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionDuitku')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionDuitkuTitle')}
         </h2>

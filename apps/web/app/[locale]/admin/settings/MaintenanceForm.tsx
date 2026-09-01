@@ -23,6 +23,7 @@ import { confirmDialog } from '@/components/ui/dialog-store';
 import type { MaintenanceStatus } from '@/lib/types';
 
 import { setMaintenance, type ActionResult } from './actions';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 const INITIAL: ActionResult = {};
 
@@ -70,9 +71,9 @@ export function MaintenanceForm({ status }: Props) {
   return (
     <Card variant="surface" className="p-6 space-y-5">
       <div className="border-b-2 border-ink pb-3">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="sm" color="accent">
           ✎ {t('sectionStatus')}
-        </p>
+        </Eyebrow>
         <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
           {t('sectionStatusTitle')}
         </h2>

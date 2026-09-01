@@ -12,9 +12,11 @@
  * (parent window) + close. Untuk integrasi dengan form produk.
  */
 
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { loadAllMedia } from '@/lib/media';
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
 import { Badge } from '@/components/ui/Badge';
 
 import { MediaGallery } from './MediaGallery';
@@ -27,7 +29,9 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.media' });
-  return { title: `${t('listTitle')} — Admin` };
+  return buildMetadata({
+    title: `${t('listTitle')} — Admin`,
+  });
 }
 
 export default async function MediaPage({ searchParams }: Props) {
@@ -41,26 +45,19 @@ export default async function MediaPage({ searchParams }: Props) {
 
   return (
     <div className="p-6 sm:p-8 space-y-6">
-      <header className="border-b-4 border-ink pb-6">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-              {t('listEyebrow')}
-            </p>
-            <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-              {t('listTitle')}<span className="text-primary">.</span>
-            </h1>
-            <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-              {t('listSubtitle')}
-            </p>
-          </div>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <AdminPageHeader
+          className="border-b-0 pb-0"
+          eyebrow={t('listEyebrow')}
+          title={t('listTitle')}
+          subtitle={t('listSubtitle')}
+        />
           {pickerMode && (
             <Badge tone="accent" size="sm" className="gap-1 px-3 py-1.5 font-bold shadow-[2px_2px_0_0_var(--color-ink)] self-start">
               {t('pickerBadge')}
             </Badge>
           )}
-        </div>
-      </header>
+      </div>
 
       <MediaGallery
         initialItems={items}

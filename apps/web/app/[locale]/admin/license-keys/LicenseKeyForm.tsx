@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/toast-store';
 
 import { insertLicenseKey, type ActionResult } from './actions';
 import { useLicenseKey } from './LicenseKeyContext';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   products: Array<{ id: number; nama: string }>;
@@ -78,9 +79,9 @@ export function LicenseKeyFormCard({ products }: Props) {
     <Card variant="surface" className="p-6 space-y-4">
       <div className="flex items-center justify-between border-b-2 border-ink pb-3">
         <div>
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+          <Eyebrow size="sm" color="accent">
             {t('eyebrow')}
-          </p>
+          </Eyebrow>
           <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink">
             {t('title')}
           </h3>

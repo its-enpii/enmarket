@@ -1,10 +1,13 @@
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
 import { notFound } from 'next/navigation';
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { PreviewImagesManager } from '@/components/admin/PreviewImagesManager';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
+import { getApiBase } from '@/lib/api-base';
 import { TIPE_LABEL, formatRupiah } from '@/lib/format';
 import type {
   Category,
@@ -15,6 +18,7 @@ import type {
 } from '@/lib/types';
 
 import { ProductForm } from '../ProductForm';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   params: Promise<{ id: string; locale: string }>;
@@ -61,7 +65,9 @@ export async function generateMetadata({ params }: Props) {
   void id;
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.products' });
-  return { title: `${t('listTitle')} — Admin` };
+  return buildMetadata({
+    title: `${t('listTitle')} — Admin`,
+  });
 }
 
 export default async function EditProductPage({ params }: Props) {
@@ -77,21 +83,15 @@ export default async function EditProductPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = getApiBase();
 
   return (
     <div className="p-6 sm:p-8 space-y-6">
-      <header className="border-b-4 border-ink pb-6">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-          {t('editEyebrow')}
-        </p>
-        <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-          {product.nama}<span className="text-primary">.</span>
-        </h1>
-        <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          {t('editSubtitle')}
-        </p>
-      </header>
+      <AdminPageHeader
+        eyebrow={t('editEyebrow')}
+        title={product.nama}
+        subtitle={t('editSubtitle')}
+      />
 
       {/* Quick info */}
       <Card variant="surface" className="p-4 flex flex-wrap items-center gap-3">
@@ -122,9 +122,9 @@ export default async function EditProductPage({ params }: Props) {
       {/* Preview images — separate section, managed by client component */}
       <Card variant="surface" className="p-6 md:p-8">
         <div className="border-b-2 border-ink pb-3 mb-5">
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+          <Eyebrow size="sm" color="accent">
             {t('previewImagesEyebrow')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
             {t('previewImagesTitle')}
           </h2>

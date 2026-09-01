@@ -1,6 +1,8 @@
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
 import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
@@ -8,6 +10,7 @@ import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime, formatRupiah } from '@/lib/format';
 
 import { ActivityRow } from './ActivityRow';
+import { Eyebrow } from '@/components/ui/neobrutal';
 import type {
   ActivityLog,
   AdminOrderStats,
@@ -26,7 +29,9 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.dashboard' });
-  return { title: `${t('title')} — Admin` };
+  return buildMetadata({
+    title: `${t('title')} — Admin`,
+  });
 }
 
 async function loadProductStats() {
@@ -155,17 +160,11 @@ export default async function AdminHomePage() {
   return (
     <div className="p-6 sm:p-8 space-y-8">
       {/* ───── HEADER ───── */}
-      <header className="border-b-4 border-ink pb-6">
-        <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
-          {t('eyebrow')}
-        </p>
-        <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-          {t('title')}<span className="text-primary">.</span>
-        </h1>
-        <p className="mt-4 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          {t('subtitle')}
-        </p>
-      </header>
+      <AdminPageHeader
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        subtitle={t('subtitle')}
+      />
 
       {/* ───── STAT TILES ───── */}
       <section>
@@ -199,9 +198,9 @@ export default async function AdminHomePage() {
         <Card variant="surface" className="p-6 border-accent bg-accent/5">
           <div className="flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
             <div>
-              <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+              <Eyebrow size="sm" color="accent">
                 {t('provisioningEyebrow')}
-              </p>
+              </Eyebrow>
               <h2 className="font-display text-2xl font-black uppercase tracking-tight text-ink leading-tight mt-1">
                 {t('provisioningTitle')}
               </h2>
@@ -259,9 +258,9 @@ export default async function AdminHomePage() {
         <Card variant="surface" className="p-6 flex flex-col max-h-[28rem]">
           <div className="shrink-0 flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
             <div>
-              <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+              <Eyebrow size="sm" color="accent">
                 {t('pendingEyebrow')}
-              </p>
+              </Eyebrow>
               <h2 className="font-display text-2xl font-black uppercase tracking-tight text-ink leading-tight mt-1">
                 {t('pendingTitle')}
               </h2>
@@ -323,9 +322,9 @@ export default async function AdminHomePage() {
         <Card variant="surface" className="p-6 flex flex-col max-h-[28rem]">
           <div className="shrink-0 flex items-baseline justify-between mb-4 border-b-2 border-ink pb-3">
             <div>
-              <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+              <Eyebrow size="sm" color="accent">
                 {t('activityEyebrow')}
-              </p>
+              </Eyebrow>
               <h2 className="font-display text-2xl font-black uppercase tracking-tight text-ink leading-tight mt-1">
                 {t('activityTitle')}
               </h2>

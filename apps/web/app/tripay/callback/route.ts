@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { getApiBase } from '@/lib/api-base';
 
 /**
  * Fallback proxy route untuk Tripay IPN callback tanpa prefix `/api/`.
  * Forward request ke endpoint resmi Laravel: POST http://api:8000/api/tripay/callback
  */
 export async function POST(request: Request) {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://api:8000';
+  const apiBase = getApiBase();
   const body = await request.text();
 
   const headers: Record<string, string> = {

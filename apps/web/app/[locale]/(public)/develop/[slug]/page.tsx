@@ -75,8 +75,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const ogImage = previewImages[0];
 
   return {
-    title: `${product.nama} — enpiistudio`,
-    description,
+    ...buildMetadata({
+      title: `${product.nama} — enpiistudio`,
+      description,
+    }),
     keywords: [product.nama, product.category?.nama ?? '', TIPE_LABEL[product.tipe] ?? product.tipe].filter(Boolean),
     alternates: { canonical: `/develop/${product.slug}` },
     openGraph: {
@@ -278,9 +280,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
             {/* Pull-quote column — dominant */}
             <div>
-              <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
+              <Eyebrow size="md" color="accent" className="mb-6">
                 {t('about')}
-              </p>
+              </Eyebrow>
               <blockquote className="font-display text-3xl md:text-5xl font-black uppercase leading-[1.05] tracking-tight text-ink">
                 {paragraphs.map((p, i) =>
                   i === pullQuoteIdx ? (
@@ -301,9 +303,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
             {/* Sidebar — quick facts panel (data-driven, no boilerplate) */}
             <div className="space-y-4 font-body text-body-md text-ink/80 lg:pt-12">
-              <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-2">
+              <Eyebrow size="md" color="accent" className="mb-2">
                 {t('quickFacts')}
-              </p>
+              </Eyebrow>
               <dl className="space-y-3">
                 <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
                   <dt className="font-label text-label-sm uppercase text-ink/60">{t('type')}</dt>
@@ -378,9 +380,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
       {specs.length > 0 && (
         <section className="border-b-4 border-ink bg-surface">
           <SectionContainer py="lg">
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+            <Eyebrow size="md" color="accent" className="mb-3">
               {t('details')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink mb-10">
               {t('specsTitle')}
             </h2>
@@ -406,9 +408,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {/* Fitur checklist (kalau ada) */}
             {product.fitur && product.fitur.length > 0 && (
               <div className="mt-10">
-                <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink/60 mb-4">
+                <Eyebrow size="md" color="ink-muted" className="mb-4">
                   {t('includedTitle')}
-                </p>
+                </Eyebrow>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {product.fitur.map((f, i) => (
                     <li key={i}>
@@ -438,9 +440,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
-                <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+                <Eyebrow size="md" color="accent" className="mb-3">
                   {t('gallery')}
-                </p>
+                </Eyebrow>
                 <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
                   {t('galleryTitle')}
                 </h2>
@@ -465,9 +467,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
-                <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+                <Eyebrow size="md" color="accent" className="mb-3">
                   {t('linkedPostsEyebrow')}
-                </p>
+                </Eyebrow>
                 <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
                   {t('linkedPostsTitle')}
                 </h2>
@@ -486,9 +488,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
                     underline="hover"
                     className="block border-4 border-ink bg-surface p-5 neo-btn neo-btn-ink h-full"
                   >
-                    <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-2">
+                    <Eyebrow size="sm" color="accent" className="mb-2">
                       → {t('linkedPostsRead')}
-                    </p>
+                    </Eyebrow>
                     <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink leading-tight mb-2">
                       {p.title}
                     </h3>
@@ -511,9 +513,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
       {/* Final CTA — re-invoke primary action */}
       <section className="bg-primary text-surface">
         <SectionContainer py="lg" className="text-center">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
+          <Eyebrow size="md" color="accent" className="mb-4">
             {t('finalEyebrow', { name: product.nama })}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight mb-8 max-w-3xl mx-auto">
             {t('finalTitle')}
           </h2>
@@ -533,3 +535,5 @@ export default async function WorkDetailPage({ params }: PageProps) {
     </>
   );
 }
+import { buildMetadata } from '@/lib/seo';
+import { Eyebrow } from '@/components/ui/neobrutal';

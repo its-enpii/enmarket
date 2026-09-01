@@ -1,4 +1,5 @@
-﻿import { getTranslations } from 'next-intl/server';
+﻿import { buildMetadata } from '@/lib/seo';
+import { getTranslations } from 'next-intl/server';
 
 import { AdminListProvider } from '@/components/admin/AdminListProvider';
 import { AdminTableHeader } from '@/components/admin/AdminTableHeader';
@@ -20,7 +21,9 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.reviews' });
-  return { title: `${t('listTitle')} — Admin` };
+  return buildMetadata({
+    title: `${t('listTitle')} — Admin`,
+  });
 }
 
 async function loadReviews(searchParams: { q?: string; is_published?: string; rating?: string; page?: string }) {

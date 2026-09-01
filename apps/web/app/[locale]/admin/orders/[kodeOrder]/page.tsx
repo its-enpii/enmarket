@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
 import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -18,6 +19,7 @@ import {
 import { GenerateDeliveriesForm } from '../GenerateDeliveriesForm';
 import { RegenerateTokenForm } from '../RegenerateTokenForm';
 import { ResendNotificationForm } from '../ResendNotificationForm';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   params: Promise<{ kodeOrder: string }>;
@@ -49,17 +51,11 @@ export default async function OrderDetailPage({ params }: Props) {
 
   return (
     <div className="p-6 sm:p-8 space-y-6">
-      <header className="border-b-4 border-ink pb-6">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-          {t('eyebrow')}
-        </p>
-        <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-          {order.kode_order}<span className="text-primary">.</span>
-        </h1>
-        <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          {t('subtitle')}
-        </p>
-      </header>
+      <AdminPageHeader
+        eyebrow={t('eyebrow')}
+        title={order.kode_order}
+        subtitle={t('subtitle')}
+      />
 
       {/* Quick info + actions */}
       <Card variant="surface" className="p-4 flex flex-wrap items-center gap-3">
@@ -84,9 +80,9 @@ export default async function OrderDetailPage({ params }: Props) {
       {/* Buyer card */}
       <Card variant="surface" className="p-6 md:p-8">
         <div className="border-b-2 border-ink pb-3 mb-5">
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+          <Eyebrow size="sm" color="accent">
             ✎ {t('buyer.eyebrow').replace('✎ ', '')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
             {t('buyer.title')}
           </h2>
@@ -126,9 +122,9 @@ export default async function OrderDetailPage({ params }: Props) {
       {/* Items table */}
       <Card variant="surface" className="overflow-hidden">
         <div className="px-6 py-4 border-b-2 border-ink bg-primary text-surface">
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-1">
+          <Eyebrow size="sm" color="accent" className="mb-1">
             {t('items.eyebrow')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-xl font-black uppercase tracking-tight">
             {t('items.title')}
           </h2>
@@ -240,9 +236,9 @@ export default async function OrderDetailPage({ params }: Props) {
       {order.qr_url && order.status === 'pending' && (
         <Card variant="surface" className="p-6 md:p-8">
           <div className="border-b-2 border-ink pb-3 mb-5">
-            <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+            <Eyebrow size="sm" color="accent">
               {t('qr.eyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
               {t('qr.title')}
             </h2>

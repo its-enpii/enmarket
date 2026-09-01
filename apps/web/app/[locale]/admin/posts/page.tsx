@@ -1,3 +1,5 @@
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { AdminListProvider } from '@/components/admin/AdminListProvider';
@@ -11,6 +13,7 @@ import { StatusBadge } from '@/components/admin/StatusBadge';
 import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
+import { POST_STATUS_COLORS } from '@/lib/status';
 import {
   POST_STATUS_LABEL,
   type PaginatedResponse,
@@ -28,16 +31,12 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-const STATUS_BG: Record<string, string> = {
-  draft: 'bg-surface text-ink',
-  published: 'bg-accent text-ink',
-  archived: 'bg-ink text-surface',
-};
-
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.posts' });
-  return { title: `${t('listTitle')} — Admin` };
+  return buildMetadata({
+    title: `${t('listTitle')} — Admin`,
+  });
 }
 
 async function loadPosts(params: Awaited<Props['searchParams']>) {
@@ -82,7 +81,7 @@ export default async function PostsPage({ searchParams }: Props) {
       header: t('columns.status'),
       width: '120px',
       render: (p) => (
-        <StatusBadge status={p.status} labelMap={POST_STATUS_LABEL} bgOverride={STATUS_BG} />
+        <StatusBadge status={p.status} labelMap={POST_STATUS_LABEL} bgOverride={POST_STATUS_COLORS} />
       ),
     },
     {
@@ -134,17 +133,11 @@ export default async function PostsPage({ searchParams }: Props) {
   return (
     <AdminListProvider>
       <div className="p-6 sm:p-8 space-y-6">
-        <header className="border-b-4 border-ink pb-6">
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-            {t('listEyebrow')}
-          </p>
-          <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-            {t('listTitle')}<span className="text-primary">.</span>
-          </h1>
-          <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-            {t('listSubtitle')}
-          </p>
-        </header>
+        <AdminPageHeader
+        eyebrow={t('listEyebrow')}
+        title={t('listTitle')}
+        subtitle={t('listSubtitle')}
+      />
 
         <AdminTableHeader
           q={params.q ?? ''}

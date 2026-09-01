@@ -24,10 +24,10 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
   const t = await getTranslations('developDetail');
   // Ensure cart session exists
   const cookieStore = await cookies();
-  let sessionId = cookieStore.get('cart_session')?.value;
+  let sessionId = cookieStore.get(CART_SESSION_COOKIE)?.value;
   if (!sessionId || sessionId.length < 16) {
     sessionId = randomUUID();
-    cookieStore.set('cart_session', sessionId, {
+    cookieStore.set(CART_SESSION_COOKIE, sessionId, {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
@@ -53,9 +53,9 @@ export async function addToCartAction(productId: number, qty = 1): Promise<AddRe
 export async function addToCartAndGoAction(productId: number, qty = 1) {
   const t = await getTranslations('developDetail');
   const cookieStore = await cookies();
-  const existingSession = cookieStore.get('cart_session')?.value;
+  const existingSession = cookieStore.get(CART_SESSION_COOKIE)?.value;
   if (!existingSession || existingSession.length < 16) {
-    cookieStore.set('cart_session', randomUUID(), {
+    cookieStore.set(CART_SESSION_COOKIE, randomUUID(), {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
@@ -75,3 +75,4 @@ export async function addToCartAndGoAction(productId: number, qty = 1) {
   revalidatePath('/keranjang');
   redirect('/keranjang');
 }
+import { CART_SESSION_COOKIE } from '@/lib/constants';

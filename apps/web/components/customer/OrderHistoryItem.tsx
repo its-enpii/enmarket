@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { formatDate } from '@/lib/format';
+import { ORDER_STATUS_COLORS } from '@/lib/status';
 import type { Order } from '@/lib/types';
 
 interface Props {
@@ -13,16 +14,7 @@ interface Props {
 export function OrderHistoryItem({ order }: Props) {
   const t = useTranslations('account.orders');
 
-  const statusColors: Record<string, string> = {
-    pending: 'bg-yellow-100 border-yellow-600 text-yellow-900',
-    paid: 'bg-green-100 border-green-600 text-green-900',
-    preorder_deposit_paid: 'bg-blue-100 border-blue-600 text-blue-900',
-    failed: 'bg-red-100 border-red-600 text-red-900',
-    expired: 'bg-gray-100 border-gray-600 text-gray-800',
-    refunded: 'bg-purple-100 border-purple-600 text-purple-900',
-  };
-
-  const statusColor = statusColors[order.status] || 'bg-gray-100 border-gray-600 text-gray-800';
+  const statusColor = ORDER_STATUS_COLORS[order.status] || ORDER_STATUS_COLORS.expired;
   const statusLabel = t(`status.${order.status}` as any) || order.status;
 
   return (

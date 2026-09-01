@@ -18,8 +18,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { kodeOrder, locale } = await params;
   const t = await getTranslations({ locale, namespace: 'orderSuccess' });
   return {
-    title: `${t('title')} — enpiistudio`,
-    description: t('subtitle', { code: kodeOrder }),
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('subtitle', { code: kodeOrder }),
+    }),
     robots: { index: false },
   };
 }
@@ -239,3 +241,4 @@ function Info({ label, value, mono = false, primary = false }: { label: string; 
     </div>
   );
 }
+import { buildMetadata } from '@/lib/seo';

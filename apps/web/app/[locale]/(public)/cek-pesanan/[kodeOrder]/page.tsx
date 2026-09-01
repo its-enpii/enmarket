@@ -5,7 +5,7 @@ import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBo
 import { ReviewFormModal } from '@/components/order/ReviewFormModal';
 import { reviewApi } from '@/lib/review-api';
 import { Button, Card } from '@/components/ui/neobrutal';
-import { Link } from '@/i18n/navigation';
+import { BackLink } from '@/components/ui/BackLink';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
 
@@ -22,8 +22,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { kodeOrder, locale } = await params;
   const t = await getTranslations({ locale, namespace: 'checkOrder' });
   return {
-    title: `${t('detailTitle')} ${kodeOrder} — enpiistudio`,
-    description: t('subtitle'),
+    ...buildMetadata({
+      title: `${t('detailTitle')} ${kodeOrder} — enpiistudio`,
+      description: t('subtitle'),
+    }),
     robots: { index: false },
   };
 }
@@ -79,9 +81,7 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
-      <Link href="/cek-pesanan" className="inline-block mb-4 text-sm font-bold text-ink/60 hover:text-primary">
-        {t('otherOrder')}
-      </Link>
+      <BackLink href="/cek-pesanan" label={t('otherOrder')} className="mb-4" />
 
       <h1 className="text-2xl sm:text-3xl font-bold text-ink mb-2">{t('detailTitle')}</h1>
       <p className="text-sm text-ink/60 mb-6">
@@ -204,3 +204,4 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
     </div>
   );
 }
+import { buildMetadata } from '@/lib/seo';

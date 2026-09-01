@@ -1,3 +1,4 @@
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
@@ -8,6 +9,7 @@ import type { Game, PaginatedResponse } from '@/lib/types';
 
 import { deleteGame } from './actions';
 import { DeleteButton } from '@/components/admin/DeleteButton';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   searchParams: Promise<{ q?: string; page?: string }>;
@@ -17,7 +19,9 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.games' });
-  return { title: `${t('listTitle')} — Admin` };
+  return buildMetadata({
+    title: `${t('listTitle')} — Admin`,
+  });
 }
 
 async function loadGames(params: Awaited<Props['searchParams']>) {
@@ -44,9 +48,9 @@ export default async function GamesListPage({ searchParams }: Props) {
     <div className="p-6 sm:p-8 space-y-6">
       <header className="border-b-4 border-ink pb-6 flex items-end justify-between">
         <div>
-          <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
+          <Eyebrow size="sm" color="accent" className="mb-3">
             {t('listEyebrow')}
-          </p>
+          </Eyebrow>
           <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
             {t('listTitle')}<span className="text-primary">.</span>
           </h1>

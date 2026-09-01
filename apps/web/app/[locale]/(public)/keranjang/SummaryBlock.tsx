@@ -13,6 +13,7 @@ import { Button, Card } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import type { CartItem } from '@/lib/types';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   subtotal: number;
@@ -47,9 +48,9 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
   return (
     <Card variant="filled-primary" as="aside" thick hoverable={false}>
       <div className="p-6 md:p-8 space-y-5">
-        <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent">
+        <Eyebrow size="md" color="accent">
           ✎ {t('summary')}
-        </p>
+        </Eyebrow>
         <div className="flex items-baseline justify-between border-b border-surface/20 pb-3">
           <span className="font-label text-label-sm uppercase tracking-wider text-surface/80">
             {allPreorder ? t('preorderLabel') : t('subtotal')}

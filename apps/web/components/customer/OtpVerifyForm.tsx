@@ -51,10 +51,10 @@ export function OtpVerifyForm({
       let wishlistSession: string | undefined;
 
       if (typeof document !== 'undefined') {
-        const cartMatch = document.cookie.match(/(^| )cart_session=([^;]+)/);
+        const cartMatch = document.cookie.match(new RegExp(`(^| )${CART_SESSION_COOKIE}=([^;]+)`));
         if (cartMatch) cartSession = decodeURIComponent(cartMatch[2]);
 
-        const wishlistMatch = document.cookie.match(/(^| )wishlist_session=([^;]+)/);
+        const wishlistMatch = document.cookie.match(new RegExp(`(^| )${WISHLIST_SESSION_COOKIE}=([^;]+)`));
         if (wishlistMatch) wishlistSession = decodeURIComponent(wishlistMatch[2]);
       }
 
@@ -167,3 +167,4 @@ export function OtpVerifyForm({
     </div>
   );
 }
+import { CART_SESSION_COOKIE, WISHLIST_SESSION_COOKIE } from '@/lib/constants';

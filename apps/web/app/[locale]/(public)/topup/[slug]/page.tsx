@@ -1,5 +1,7 @@
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { getApiBase } from '@/lib/api-base';
 
 
 import { SectionContainer } from '@/components/public/SectionContainer';
@@ -10,7 +12,7 @@ import { TopupForm } from './TopupForm';
 
 export const dynamic = 'force-dynamic';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api:8000';
+const API_URL = getApiBase();
 
 async function loadGame(slug: string): Promise<Game | null> {
   try {
@@ -28,9 +30,13 @@ async function loadGame(slug: string): Promise<Game | null> {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   const game = await loadGame(slug);
-  if (!game) return { title: 'Not Found' };
+  if (!game) {
+    return buildMetadata({ title: 'Not Found' });
+  }
   const t = await getTranslations({ locale, namespace: 'topup' });
-  return { title: `${t('title')} — ${game.nama}` };
+  return buildMetadata({
+    title: `${t('title')} — ${game.nama}`,
+  });
 }
 
 export default async function TopupGamePage({ params }: { params: Promise<{ slug: string }> }) {

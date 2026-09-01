@@ -2,7 +2,10 @@
  * Customer authentication token management & authenticated fetch helper.
  */
 
-const TOKEN_COOKIE = 'customer_token';
+import { CUSTOMER_TOKEN_COOKIE } from './constants';
+import { getApiBase } from './api-base';
+
+const TOKEN_COOKIE = CUSTOMER_TOKEN_COOKIE;
 
 export function getAuthToken(): string | null {
   if (typeof window === 'undefined') {
@@ -28,16 +31,7 @@ export function clearAuthToken(): void {
   localStorage.removeItem(TOKEN_COOKIE);
 }
 
-const getApiUrl = () => {
-  if (typeof window !== 'undefined') {
-    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-  }
-  return (
-    process.env.API_INTERNAL_URL ||
-    process.env.NEXT_PUBLIC_API_URL ||
-    'http://api:8000'
-  );
-};
+const getApiUrl = () => getApiBase();
 
 export async function fetchWithAuth<T>(
   path: string,

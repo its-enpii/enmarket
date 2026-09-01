@@ -24,6 +24,7 @@ import { getTranslations } from 'next-intl/server';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { buildMetadata } from '@/lib/seo';
 
 import { CartHeader } from './CartHeader';
 import { CartItem } from './CartItem';
@@ -43,8 +44,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'keranjang' });
   return {
-    title: `${t('title')} — enpiistudio`,
-    description: t('subtitle'),
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('subtitle'),
+    }),
     alternates: { canonical: `/${locale}/keranjang` },
   };
 }

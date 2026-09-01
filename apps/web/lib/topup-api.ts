@@ -3,6 +3,7 @@
  */
 
 import { fetchWithAuth } from './auth';
+import { getApiBase } from './api-base';
 import type {
   Game,
   PaginatedResponse,
@@ -11,9 +12,7 @@ import type {
   TopupPreview,
 } from './types';
 
-const API_URL = typeof window !== 'undefined'
-  ? (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
-  : (process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || 'http://api:8000');
+const API_URL = getApiBase();
 
 async function publicFetch<T>(path: string): Promise<T> {
   const url = `${API_URL}${path.startsWith('/') ? path : `/${path}`}`;

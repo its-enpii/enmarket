@@ -8,6 +8,7 @@ import { SectionContainer } from './SectionContainer';
 import { reviewApi, ProductReviewsResponse } from '@/lib/review-api';
 import { formatDate } from '@/lib/format';
 import type { Review, ProductRatingSummary } from '@/lib/types';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   productSlug: string;
@@ -61,9 +62,9 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
       <SectionContainer py="lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-2">
+            <Eyebrow size="md" color="accent" className="mb-2">
               {t('eyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-3xl sm:text-4xl font-black uppercase text-ink leading-tight">
               {t('sectionTitle')}
             </h2>

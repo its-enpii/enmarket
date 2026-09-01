@@ -10,12 +10,12 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
-import { Card } from '@/components/ui/neobrutal';
 import { TiptapEditor } from '@/components/admin/TiptapEditor';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { DatePicker } from '@/components/ui/DatePicker';
@@ -24,6 +24,7 @@ import { toast } from '@/components/ui/toast-store';
 import type { Post, PostStatus } from '@/lib/types';
 
 import { createPost, updatePost, ActionResult } from './actions';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   initial?: Post;
@@ -36,9 +37,9 @@ interface Props {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div className="border-b-2 border-ink pb-3">
-      <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent">
+      <Eyebrow size="sm" color="accent">
         ✎ {eyebrow}
-      </p>
+      </Eyebrow>
       <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
         {title}
       </h2>
@@ -220,9 +221,9 @@ export function PostForm({ initial }: Props) {
       </section>
 
       {state.error && (
-        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
+        <AlertBanner variant="error">
           {state.error}
-        </Card>
+        </AlertBanner>
       )}
 
       <div className="flex gap-3 pt-2 border-t-2 border-ink">

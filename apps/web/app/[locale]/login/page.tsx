@@ -4,6 +4,7 @@
 
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Card, NLink } from '@/components/ui/neobrutal';
@@ -19,12 +20,14 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'login' });
-  return { title: `${t('title')} — enpiistudio` };
+  return buildMetadata({
+    title: `${t('title')} — enpiistudio`,
+  });
 }
 
 export default async function LoginPage() {
   const cookieStore = await cookies();
-  const existingToken = cookieStore.get('admin_token')?.value;
+  const existingToken = cookieStore.get(ADMIN_TOKEN_COOKIE)?.value;
 
   if (existingToken) {
     try {
@@ -70,3 +73,4 @@ export default async function LoginPage() {
     </main>
   );
 }
+import { ADMIN_TOKEN_COOKIE } from '@/lib/constants';

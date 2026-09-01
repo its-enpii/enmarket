@@ -1,3 +1,5 @@
+import { buildMetadata } from '@/lib/seo';
+import { getApiBase } from '@/lib/api-base';
 import { getTranslations } from 'next-intl/server';
 
 
@@ -8,7 +10,7 @@ import type { Game } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api:8000';
+const API_URL = getApiBase();
 
 async function loadGames(): Promise<Game[]> {
   try {
@@ -26,7 +28,9 @@ async function loadGames(): Promise<Game[]> {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'topup' });
-  return { title: t('title') };
+  return buildMetadata({
+    title: t('title'),
+  });
 }
 
 export default async function TopupPage() {

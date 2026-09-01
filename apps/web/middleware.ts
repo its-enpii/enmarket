@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
   // Admin auth gate — jalan SETELAH intl agar path sudah locale-prefixed.
   const isAdminPath = /^\/(id|en)\/admin(\/|$)/.test(pathname);
   if (isAdminPath) {
-    const token = request.cookies.get('admin_token')?.value;
+    const token = request.cookies.get(ADMIN_TOKEN_COOKIE)?.value;
     if (!token) {
       const localeMatch = pathname.match(/^\/(id|en)/);
       const locale = localeMatch?.[1] ?? routing.defaultLocale;
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
   // Customer auth gate — jalan SETELAH intl agar path sudah locale-prefixed.
   const isCustomerAccountPath = /^\/(id|en)\/akun(\/|$)/.test(pathname);
   if (isCustomerAccountPath) {
-    const customerToken = request.cookies.get('customer_token')?.value;
+    const customerToken = request.cookies.get(CUSTOMER_TOKEN_COOKIE)?.value;
     if (!customerToken) {
       const localeMatch = pathname.match(/^\/(id|en)/);
       const locale = localeMatch?.[1] ?? routing.defaultLocale;
@@ -53,3 +53,4 @@ export const config = {
   // Skip Next internals, static assets, dan SEMUA API routes (locale-unaware).
   matcher: ['/((?!api|tripay|_next|_vercel|.*\\..*).*)'],
 };
+import { ADMIN_TOKEN_COOKIE, CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';

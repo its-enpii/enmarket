@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/Badge';
 import { SectionContainer } from '@/components/public/SectionContainer';
 
 import { CartHeader } from './CartHeader';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 export async function EmptyCart() {
   const t = await getTranslations('keranjang');
@@ -52,9 +53,9 @@ export async function EmptyCart() {
               />
             </div>
 
-            <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent">
+            <Eyebrow size="md" color="accent">
               {t('emptyEyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="font-display text-4xl md:text-5xl font-black uppercase leading-[0.95] tracking-tight text-ink">
               {t('emptyTitle1')}<br />
               {t('emptyTitle2')}{' '}

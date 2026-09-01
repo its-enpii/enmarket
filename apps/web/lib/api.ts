@@ -8,6 +8,7 @@
  */
 
 import { cookies } from 'next/headers';
+import { ADMIN_TOKEN_COOKIE } from './constants';
 import type { ApiError } from './types';
 
 /**
@@ -21,13 +22,9 @@ import type { ApiError } from './types';
  * 3. http://api:8000 (Docker internal network)
  * 4. http://localhost:8000 (host dev fallback)
  */
-const API_URL =
-  process.env.API_INTERNAL_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NEXT_PUBLIC_API_URL?.startsWith('http://api')
-    ? process.env.NEXT_PUBLIC_API_URL
-    : `http://api:8000`) ||
-  'http://localhost:8000';
+import { getApiBase } from './api-base';
+
+const API_URL = getApiBase();
 
 export class ApiRequestError extends Error {
   status: number;
@@ -62,7 +59,7 @@ export async function apiFetch<T = unknown>(
   // Baca cookie kalau ada & skipAuth false
   if (!options.skipAuth) {
     const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token')?.value;
+    const token = cookieStore.get(ADMIN_TOKEN_COOKIE)?.value;
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }

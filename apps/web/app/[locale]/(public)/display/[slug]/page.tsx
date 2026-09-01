@@ -68,8 +68,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const ogImage = post.thumbnail ?? undefined;
 
   return {
-    title: `${post.title} — Display enpiistudio`,
-    description,
+    ...buildMetadata({
+      title: `${post.title} — Display enpiistudio`,
+      description,
+    }),
     keywords: post.excerpt ? [post.title, post.excerpt] : [post.title],
     alternates: { canonical: `/display/${post.slug}` },
     openGraph: {
@@ -160,9 +162,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
         <section className="border-b-4 border-ink bg-primary text-surface">
           <SectionContainer py="md">
             <div className="border-4 border-ink bg-primary shadow-[12px_12px_0_0_var(--color-accent)] p-10 md:p-16 -rotate-1 max-w-4xl">
-              <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
+              <Eyebrow size="md" color="accent" className="mb-6">
                 {t('fallbackEyebrow')}
-              </p>
+              </Eyebrow>
               <p className="font-display text-3xl md:text-5xl font-black uppercase leading-tight tracking-tight">
                 {t('fallbackCover')}
               </p>
@@ -174,9 +176,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       {/* ───── 3. TITLE + BYLINE ───── */}
       <section className="border-b-4 border-ink">
         <SectionContainer py="md">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-6">
+          <Eyebrow size="md" color="accent" className="mb-6">
             ✎ Display
-          </p>
+          </Eyebrow>
           <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.95] tracking-tight text-ink max-w-5xl">
             {post.title}
           </h1>
@@ -279,9 +281,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           <SectionContainer py="md">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
               <div>
-                <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-3">
+                <Eyebrow size="md" color="accent" className="mb-3">
                   {t('moreEyebrow')}
-                </p>
+                </Eyebrow>
                 <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
                   {t('moreTitle')}
                 </h2>
@@ -313,9 +315,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       {/* Final CTA — back to Display */}
       <section className="bg-primary text-surface">
         <SectionContainer py="md" className="text-center">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
+          <Eyebrow size="md" color="accent" className="mb-4">
             {t('finalEyebrow')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-2xl md:text-4xl font-black uppercase leading-tight mb-6 max-w-3xl mx-auto">
             {t('finalTitle')}
           </h2>
@@ -473,3 +475,5 @@ function formatDateShort(iso: string, locale: string): string {
   if (Number.isNaN(d.getTime())) return '';
   return d.toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', { month: 'short', day: 'numeric' });
 }
+import { buildMetadata } from '@/lib/seo';
+import { Eyebrow } from '@/components/ui/neobrutal';

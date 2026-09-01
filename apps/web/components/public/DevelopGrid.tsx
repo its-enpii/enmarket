@@ -23,6 +23,7 @@ import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import type { PaginationMeta, Product } from '@/lib/types';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
   initialProducts: Product[];
@@ -162,9 +163,9 @@ export function DevelopGrid({ initialProducts, initialMeta, filterKey }: Props) 
         )}
 
         {!hasMore && products.length > 0 && (
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink/40">
+          <Eyebrow size="md" color="ink-muted">
             {t('end', { count: meta.total })}
-          </p>
+          </Eyebrow>
         )}
 
         {error && (
@@ -205,9 +206,9 @@ function Fragment({
       />
       {showDivider && (
         <div className="bg-primary text-surface border-4 border-ink shadow-[8px_8px_0_0_var(--color-ink)] p-10 md:p-16 -rotate-[0.5deg]">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
+          <Eyebrow size="md" color="accent" className="mb-4">
             {studioNote}
-          </p>
+          </Eyebrow>
           <p className="font-display text-2xl md:text-4xl font-black uppercase leading-tight">
             “{quote}”
           </p>

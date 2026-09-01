@@ -10,10 +10,10 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { Card } from '@/components/ui/neobrutal';
 import { slugify } from '@/lib/format';
 import { toast } from '@/components/ui/toast-store';
 
@@ -109,9 +109,9 @@ export function CategoryForm({ initial }: Props) {
       </FormField>
 
       {state.error && (
-        <Card variant="filled-accent" hoverable={false} className="px-4 py-2 text-sm font-bold">
+        <AlertBanner variant="error">
           {state.error}
-        </Card>
+        </AlertBanner>
       )}
 
       <div className="flex gap-3 pt-2">

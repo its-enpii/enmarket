@@ -35,8 +35,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'displayList' });
   return {
-    title: t('title'),
-    description: t('subtitle'),
+    ...buildMetadata({
+      title: t('title'),
+      description: t('subtitle'),
+    }),
     alternates: { canonical: `/${locale}/display` },
   };
 }
@@ -181,9 +183,9 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
       {/* FOOTER TEASER */}
       <section className="bg-primary text-surface">
         <SectionContainer py="lg" className="text-center">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4">
+          <Eyebrow size="md" color="accent" className="mb-4">
             {t('footerEyebrow')}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-3xl md:text-5xl font-black uppercase leading-tight mb-6 max-w-3xl mx-auto">
             {t('footerTitle1')}{' '}
             <span className="inline-block bg-accent text-ink px-2 py-0.5 -rotate-1">
@@ -259,10 +261,10 @@ function FeaturedCover({
         </div>
 
         <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-center gap-5 bg-surface">
-          <p className="font-label text-label-sm uppercase tracking-[0.3em] text-ink/60">
+          <Eyebrow size="md" color="ink-muted">
             {date}
             {post.reading_time_minutes ? ` · ${post.reading_time_minutes} ${minutesLabel}` : ''}
-          </p>
+          </Eyebrow>
           <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[0.95] text-ink group-hover:text-primary transition-colors">
             {post.title}
           </h2>
@@ -433,3 +435,5 @@ function pickTag(excerpt: string, labels: TagLabels): string {
   }
   return labels.note;
 }
+import { buildMetadata } from '@/lib/seo';
+import { Eyebrow } from '@/components/ui/neobrutal';

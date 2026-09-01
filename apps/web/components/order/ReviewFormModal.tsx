@@ -4,7 +4,7 @@ import React, { useEffect, useState, useTransition } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -71,7 +71,7 @@ export function ReviewFormModal({
         // Submit via fetch relatif (rewrite /api/* di next.config) — komponen
         // client tidak boleh mengimpor lib/review-api karena menarik lib/api
         // (next/headers, server-only) ke bundle browser.
-        const res = await fetch('/api/reviews', {
+        const res = await fetch(`${getClientApiBase()}/api/reviews`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
@@ -270,3 +270,4 @@ export function ReviewFormModal({
     </>
   );
 }
+import { getClientApiBase } from '@/lib/api-base';

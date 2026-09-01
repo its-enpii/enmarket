@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { PaymentMethodSelector } from '@/components/checkout/PaymentMethodSelector';
 import { formatRupiah } from '@/lib/format';
@@ -101,10 +102,7 @@ export function CheckoutForm({
         </span>
       </div>
 
-      <div>
-        <label htmlFor="nama" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('name')}
-        </label>
+      <FormField label={t('name')} htmlFor="nama" error={state?.fieldErrors?.nama?.[0]}>
         <Input
           id="nama"
           name="nama"
@@ -113,13 +111,9 @@ export function CheckoutForm({
           autoComplete="name"
           placeholder={t('namePlaceholder')}
         />
-        <FormError>{state?.fieldErrors?.nama?.[0]}</FormError>
-      </div>
+      </FormField>
 
-      <div>
-        <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('email')}
-        </label>
+      <FormField label={t('email')} htmlFor="email" required hint={t('emailHint')} error={state?.fieldErrors?.email?.[0]}>
         <Input
           id="email"
           name="email"
@@ -129,14 +123,9 @@ export function CheckoutForm({
           defaultValue={defaultEmail}
           placeholder={t('emailPlaceholder')}
         />
-        <FormHint>{t('emailHint')}</FormHint>
-        <FormError>{state?.fieldErrors?.email?.[0]}</FormError>
-      </div>
+      </FormField>
 
-      <div>
-        <label htmlFor="wa" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('phone')}
-        </label>
+      <FormField label={t('phone')} htmlFor="wa" required hint={t('phoneHint')} error={state?.fieldErrors?.wa?.[0]}>
         <Input
           id="wa"
           name="wa"
@@ -145,15 +134,10 @@ export function CheckoutForm({
           autoComplete="tel"
           placeholder="08123456789"
         />
-        <FormHint>{t('phoneHint')}</FormHint>
-        <FormError>{state?.fieldErrors?.wa?.[0]}</FormError>
-      </div>
+      </FormField>
 
       {/* Coupon section */}
-      <div className="border-t-2 border-ink/10 pt-4">
-        <label htmlFor="coupon_code" className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('couponLabel')}
-        </label>
+      <FormField label={t('couponLabel')} htmlFor="coupon_code">
         <div className="flex gap-2">
           <Input
             id="coupon_code"
@@ -203,7 +187,7 @@ export function CheckoutForm({
             <span>− {formatRupiah(appliedCoupon.discount_amount)}</span>
           </Card>
         )}
-      </div>
+      </FormField>
 
       <PaymentMethodSelector
         enabledGateways={enabledGateways}

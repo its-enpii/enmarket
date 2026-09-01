@@ -1,3 +1,4 @@
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
@@ -7,7 +8,9 @@ import { Card, Button } from '@/components/ui/neobrutal';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'topup' });
-  return { title: t('successTitle') };
+  return buildMetadata({
+    title: t('successTitle'),
+  });
 }
 
 export default async function TopupSuccessPage() {

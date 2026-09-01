@@ -8,10 +8,10 @@ import { wishlistApi } from '@/lib/wishlist-api';
 
 export async function toggleWishlistAction(productId: number) {
   const cookieStore = await cookies();
-  let sessionId = cookieStore.get('wishlist_session')?.value;
+  let sessionId = cookieStore.get(WISHLIST_SESSION_COOKIE)?.value;
   if (!sessionId || sessionId.length < 16) {
     sessionId = randomUUID();
-    cookieStore.set('wishlist_session', sessionId, {
+    cookieStore.set(WISHLIST_SESSION_COOKIE, sessionId, {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
@@ -37,3 +37,4 @@ export async function removeWishlistAction(productId: number) {
     return { ok: false, error: 'Gagal menghapus dari wishlist.' };
   }
 }
+import { CART_SESSION_COOKIE, WISHLIST_SESSION_COOKIE } from '@/lib/constants';

@@ -1,3 +1,5 @@
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
@@ -25,7 +27,9 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.accountProvisionings' });
-  return { title: `${t('title')} — Admin` };
+  return buildMetadata({
+    title: `${t('title')} — Admin`,
+  });
 }
 
 async function loadRows(params: Awaited<Props['searchParams']>) {
@@ -86,17 +90,11 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
   return (
     <div className="p-6 sm:p-8 space-y-6">
       {/* ───── HEADER ───── */}
-      <header className="border-b-4 border-ink pb-6">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-          {t('eyebrow')}
-        </p>
-        <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
-          {t('title')}<span className="text-primary">.</span>
-        </h1>
-        <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          {t('subtitle')}
-        </p>
-      </header>
+      <AdminPageHeader
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        subtitle={t('subtitle')}
+      />
 
       {/* ───── STAT TILES (4) ───── */}
       <section>

@@ -1,6 +1,9 @@
 ﻿import { notFound } from 'next/navigation';
+import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
+import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { BackLink } from '@/components/ui/BackLink';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { apiGet } from '@/lib/api';
@@ -15,7 +18,9 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.customRequests' });
-  return { title: `${t('detailTitle')} #${id} — Admin` };
+  return buildMetadata({
+    title: `${t('detailTitle')} #${id} — Admin`,
+  });
 }
 
 export default async function CustomRequestDetailPage({ params }: Props) {
@@ -36,25 +41,17 @@ export default async function CustomRequestDetailPage({ params }: Props) {
 
   return (
     <div className="p-6 sm:p-8 space-y-6">
-      <header className="border-b-4 border-ink pb-6">
-        <p className="font-label text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
-          {t('detailEyebrow')}
-        </p>
-        <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.9] tracking-tight text-ink">
-          {t('detailTitle')} #{request.id}
-          <span className="text-primary">.</span>
-        </h1>
-        <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
-          {request.deskripsi.length > 140 ? `${request.deskripsi.slice(0, 140)}…` : request.deskripsi}
-        </p>
-      </header>
+      <AdminPageHeader
+        eyebrow={t('detailEyebrow')}
+        title={`${t('detailTitle')} #${request.id}`}
+        subtitle={request.deskripsi.length > 140 ? `${request.deskripsi.slice(0, 140)}…` : request.deskripsi}
+      />
 
-      {/* Quick actions — konsisten dengan detail pages lain (back to list) */}
-      <div className="flex justify-end">
-        <Button href="/admin/custom-requests" variant="ghost" size="sm">
-          ← {t('listTitle')}
-        </Button>
-      </div>
+      <BackLink
+        href="/admin/custom-requests"
+        label={`← ${t('listTitle')}`}
+        className="w-fit border-2 border-ink px-3 py-1.5 text-sm hover:bg-surface"
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 cols: Details */}

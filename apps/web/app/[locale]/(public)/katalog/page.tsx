@@ -7,6 +7,7 @@ import { Pagination } from '@/components/public/Pagination';
 import { ProductGrid } from '@/components/public/ProductGrid';
 import { SearchBar } from '@/components/public/SearchBar';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
+import { buildMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -23,8 +24,10 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'katalog' });
   return {
-    title: t('title'),
-    description: t('subtitle'),
+    ...buildMetadata({
+      title: t('title'),
+      description: t('subtitle'),
+    }),
     alternates: { canonical: `/${locale}/katalog` },
   };
 }
