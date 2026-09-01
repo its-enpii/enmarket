@@ -116,7 +116,7 @@ export function TopNav({ children }: Props) {
           onClick={() => setOpen(!open)}
           variant="surface"
           size="sm"
-          className="w-11 h-11 px-0 py-0 text-lg"
+          className="w-11 h-11 px-0 py-0 text-lg xl:hidden"
           aria-label={t('menu')}
           aria-expanded={open}
         >
