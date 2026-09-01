@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -38,7 +38,7 @@ export default async function EditGamePage({ params }: { params: Promise<{ id: s
   if (!game) notFound();
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('listEyebrow')}
         title={t('editTitle')}
@@ -50,6 +50,6 @@ export default async function EditGamePage({ params }: { params: Promise<{ id: s
       </Card>
 
       <GameItemsSection game={game} />
-    </div>
+    </AdminPageBody>
   );
 }

@@ -6,6 +6,7 @@ import { ProductGrid } from '@/components/public/ProductGrid';
 import { wishlistApi, PublicFetchError } from '@/lib/wishlist-api';
 import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { PageTitle } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -50,9 +51,9 @@ export default async function WishlistPage() {
         <Eyebrow size="md" color="accent" className="mb-3">
           ♥ {t('title')}
         </Eyebrow>
-        <h1 className="font-display text-5xl md:text-6xl font-black uppercase leading-[0.95] tracking-tight text-ink">
+        <PageTitle size="hero">
           {t('title')}<span className="text-primary">.</span>
-        </h1>
+        </PageTitle>
         <p className="mt-3 text-sm text-ink/60 max-w-2xl">
           {products.length} {tKatalog('itemsSuffix')}
         </p>

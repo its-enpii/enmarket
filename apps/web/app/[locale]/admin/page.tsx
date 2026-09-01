@@ -2,7 +2,7 @@ import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';

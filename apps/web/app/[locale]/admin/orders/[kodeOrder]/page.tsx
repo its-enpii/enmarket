@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody, FormSection } from '@/components/ui';
 import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -50,7 +50,7 @@ export default async function OrderDetailPage({ params }: Props) {
   const itemsWithoutDelivery = items.filter((it) => !it.delivery).length;
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('eyebrow')}
         title={order.kode_order}
@@ -79,14 +79,7 @@ export default async function OrderDetailPage({ params }: Props) {
 
       {/* Buyer card */}
       <Card variant="surface" className="p-6 md:p-8">
-        <div className="border-b-2 border-ink pb-3 mb-5">
-          <Eyebrow size="sm" color="accent">
-            ✎ {t('buyer.eyebrow').replace('✎ ', '')}
-          </Eyebrow>
-          <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-            {t('buyer.title')}
-          </h2>
-        </div>
+        <FormSection className="mb-5" mark eyebrow={t('buyer.eyebrow').replace('✎ ', '')} title={t('buyer.title')} />
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
           <div>
             <dt className="text-ink/60 uppercase text-xs font-bold tracking-wide">{t('buyer.name')}</dt>
@@ -235,14 +228,7 @@ export default async function OrderDetailPage({ params }: Props) {
       {/* QR info */}
       {order.qr_url && order.status === 'pending' && (
         <Card variant="surface" className="p-6 md:p-8">
-          <div className="border-b-2 border-ink pb-3 mb-5">
-            <Eyebrow size="sm" color="accent">
-              {t('qr.eyebrow')}
-            </Eyebrow>
-            <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-              {t('qr.title')}
-            </h2>
-          </div>
+          <FormSection className="mb-5" mark={false} eyebrow={t('qr.eyebrow')} title={t('qr.title')} />
           <p className="text-body-sm text-ink/70 mb-3">
             {t('qr.hint')}{' '}
             <code>{t('qr.atUrl', { code: order.kode_order })}</code>.
@@ -275,6 +261,6 @@ export default async function OrderDetailPage({ params }: Props) {
           </Disclosure>
         </Card>
       )}
-    </div>
+    </AdminPageBody>
   );
 }

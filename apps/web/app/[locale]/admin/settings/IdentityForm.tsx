@@ -20,7 +20,7 @@ import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { toast } from '@/components/ui/toast-store';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { FormActions, FormSection } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 import type {
   SiteFooter,
@@ -70,14 +70,7 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionStudio')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionStudioTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionStudio')} title={t('sectionStudioTitle')} />
 
       <form action={action} className="space-y-4">
         <FormError variant="box">{state.error}</FormError>
@@ -122,11 +115,11 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
           />
         </FormField>
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submit')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );
@@ -171,14 +164,7 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionSocial')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionSocialTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionSocial')} title={t('sectionSocialTitle')} />
 
       <form action={action} className="space-y-4">
         <FormError variant="box">{state.error}</FormError>
@@ -229,11 +215,11 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
           {t('addLink')}
         </Button>
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submitSocial')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );
@@ -257,14 +243,7 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionFooter')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionFooterTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionFooter')} title={t('sectionFooterTitle')} />
 
       <form action={action} className="space-y-4">
         <FormError variant="box">{state.error}</FormError>
@@ -283,11 +262,11 @@ function FooterSection({ initial }: { initial: SiteFooter }) {
           />
         </FormField>
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submitFooter')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );

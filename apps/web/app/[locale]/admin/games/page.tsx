@@ -10,6 +10,7 @@ import type { Game, PaginatedResponse } from '@/lib/types';
 import { deleteGame } from './actions';
 import { DeleteButton } from '@/components/admin/DeleteButton';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { AdminPageBody } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 
 interface Props {
@@ -46,7 +47,7 @@ export default async function GamesListPage({ searchParams }: Props) {
   const games = result.data ?? [];
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <header className="border-b-4 border-ink pb-6 flex items-end justify-between">
         <div>
           <Eyebrow size="sm" color="accent" className="mb-3">
@@ -101,6 +102,6 @@ export default async function GamesListPage({ searchParams }: Props) {
           ))}
         </div>
       )}
-    </div>
+    </AdminPageBody>
   );
 }

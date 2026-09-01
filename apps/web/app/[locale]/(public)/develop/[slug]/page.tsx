@@ -28,6 +28,8 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { SectionBand, SectionTitle } from '@/components/ui';
+import { MetaLabel } from '@/components/ui';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
 
@@ -167,7 +169,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
       </div>
 
       {/* ───── 2. HERO ───── */}
-      <section className="border-b-4 border-ink">
+      <SectionBand>
         <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10 lg:gap-16 items-center">
           {/* Image — large, thick border, hard shadow, slightly rotated */}
           <div className="relative">
@@ -247,9 +249,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
                       : formatRupiah(product.harga)}
                 </Badge>
                 {product.needs_license_key && (
-                  <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
+                  <MetaLabel as="span" size="sm">
                     {t('licenseIncluded')}
-                  </span>
+                  </MetaLabel>
                 )}
               </div>
               {product.is_pre_order && product.deposit_amount && (
@@ -272,11 +274,11 @@ export default async function WorkDetailPage({ params }: PageProps) {
             </div>
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* ───── 3. ABOUT (asymmetric 2-col) ───── */}
       {paragraphs.length > 0 && (
-        <section className="border-b-4 border-ink">
+        <SectionBand>
           <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
             {/* Pull-quote column — dominant */}
             <div>
@@ -373,19 +375,19 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </div>
             </div>
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* ───── 4. DETAILS (bordered checklist grid) ───── */}
       {specs.length > 0 && (
-        <section className="border-b-4 border-ink bg-surface">
+        <SectionBand>
           <SectionContainer py="lg">
             <Eyebrow size="md" color="accent" className="mb-3">
               {t('details')}
             </Eyebrow>
-            <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink mb-10">
+            <SectionTitle className="mb-10">
               {t('specsTitle')}
-            </h2>
+            </SectionTitle>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {specs.map((spec) => (
@@ -431,21 +433,21 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </div>
             )}
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* ───── 5. GALLERY (irregular grid) ───── */}
       {previewImages.length > 1 && (
-        <section className="border-b-4 border-ink">
+        <SectionBand>
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <Eyebrow size="md" color="accent" className="mb-3">
                   {t('gallery')}
                 </Eyebrow>
-                <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
+                <SectionTitle>
                   {t('galleryTitle')}
-                </h2>
+                </SectionTitle>
               </div>
               <p className="font-body text-body-md text-ink/60">
                 {t('galleryHint')}
@@ -458,21 +460,21 @@ export default async function WorkDetailPage({ params }: PageProps) {
               title={product.nama}
             />
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* ───── 6. LINKED POSTS (panduan, warning, catatan admin) ───── */}
       {product.linked_posts && product.linked_posts.length > 0 && (
-        <section className="border-b-4 border-ink bg-surface">
+        <SectionBand>
           <SectionContainer py="lg">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
               <div>
                 <Eyebrow size="md" color="accent" className="mb-3">
                   {t('linkedPostsEyebrow')}
                 </Eyebrow>
-                <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
+                <SectionTitle>
                   {t('linkedPostsTitle')}
-                </h2>
+                </SectionTitle>
               </div>
               <p className="font-body text-body-md text-ink/60 max-w-md">
                 {t('linkedPostsHint')}
@@ -504,7 +506,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               ))}
             </ul>
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* ───── 7. RELATED WORKS ───── */}

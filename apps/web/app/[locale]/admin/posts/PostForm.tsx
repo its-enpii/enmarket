@@ -24,27 +24,10 @@ import { toast } from '@/components/ui/toast-store';
 import type { Post, PostStatus } from '@/lib/types';
 
 import { createPost, updatePost, ActionResult } from './actions';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { FormSection } from '@/components/ui';
 
 interface Props {
   initial?: Post;
-}
-
-/**
- * Sub-section header — border-b-2 + label kecil + h2 medium.
- * Konsisten dengan style halaman settings/dashboard.
- */
-function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <div className="border-b-2 border-ink pb-3">
-      <Eyebrow size="sm" color="accent">
-        ✎ {eyebrow}
-      </Eyebrow>
-      <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-        {title}
-      </h2>
-    </div>
-  );
 }
 
 export function PostForm({ initial }: Props) {
@@ -90,7 +73,7 @@ export function PostForm({ initial }: Props) {
     <form action={formAction} className="space-y-8">
       {/* ————— Title + Slug ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
+        <FormSection eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
           <FormField label={t('fieldTitle')} htmlFor="title" required error={fieldErr('title')}>
             <Input
@@ -124,7 +107,7 @@ export function PostForm({ initial }: Props) {
 
       {/* ————— Konten ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
+        <FormSection eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
         <FormField
           label={t('fieldExcerpt')}
           htmlFor="excerpt"
@@ -158,7 +141,7 @@ export function PostForm({ initial }: Props) {
 
       {/* ————— Media ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionMedia')} title={t('sectionMediaTitle')} />
+        <FormSection eyebrow={t('sectionMedia')} title={t('sectionMediaTitle')} />
         <FormField
           label={t('fieldThumbnail')}
           htmlFor="thumbnail"
@@ -183,7 +166,7 @@ export function PostForm({ initial }: Props) {
 
       {/* ————— Publish ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionPublish')} title={t('sectionPublishTitle')} />
+        <FormSection eyebrow={t('sectionPublish')} title={t('sectionPublishTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
           <FormField label={t('fieldStatus')} htmlFor="status" required error={fieldErr('status')}>
             <SelectSearch

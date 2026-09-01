@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/neobrutal';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { ErrorDigest } from '@/components/ui';
 
 interface Props {
   error: Error & { digest?: string };
@@ -32,10 +33,10 @@ export default function GlobalError({ error, reset }: Props) {
       }
     >
       {process.env.NODE_ENV === 'development' && (
-        <pre className="mt-4 text-xs text-left bg-ink/5 p-3 border border-ink/20 overflow-x-auto font-mono max-w-xl mx-auto">
+        <ErrorDigest>
           {error.message}
           {error.digest && `\nDigest: ${error.digest}`}
-        </pre>
+        </ErrorDigest>
       )}
     </ErrorState>
   );

@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody, FormSection } from '@/components/ui';
 import { notFound } from 'next/navigation';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
@@ -87,7 +87,7 @@ export default async function EditProductPage({ params }: Props) {
   const apiUrl = getApiBase();
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('editEyebrow')}
         title={product.nama}
@@ -122,14 +122,7 @@ export default async function EditProductPage({ params }: Props) {
 
       {/* Preview images — separate section, managed by client component */}
       <Card variant="surface" className="p-6 md:p-8">
-        <div className="border-b-2 border-ink pb-3 mb-5">
-          <Eyebrow size="sm" color="accent">
-            {t('previewImagesEyebrow')}
-          </Eyebrow>
-          <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-            {t('previewImagesTitle')}
-          </h2>
-        </div>
+        <FormSection className="mb-5" mark={false} eyebrow={t('previewImagesEyebrow')} title={t('previewImagesTitle')} />
         <p className="text-sm text-ink/60 mb-4">
           {t('previewImagesSubtitle')}
         </p>
@@ -139,6 +132,6 @@ export default async function EditProductPage({ params }: Props) {
           apiUrl={apiUrl}
         />
       </Card>
-    </div>
+    </AdminPageBody>
   );
 }

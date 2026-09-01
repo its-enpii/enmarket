@@ -30,6 +30,7 @@ import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerAccent } from '@/components/ui/CornerAccent';
 import { Image } from '@/components/ui/Image';
+import { ImagePlaceholder } from '@/components/ui';
 
 interface Props {
   initialItems: MediaItem[];
@@ -173,9 +174,9 @@ function MediaCard({
             className="w-full h-full"
           />
         ) : item.type === 'video' ? (
-          <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
+          <ImagePlaceholder>
             <span className="font-display text-3xl">▶</span>
-          </div>
+          </ImagePlaceholder>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-surface text-ink">
             <span className="font-display text-2xl">📎</span>

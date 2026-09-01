@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
 import { Button, Card } from '@/components/ui/neobrutal';
+import { MetaLabel } from '@/components/ui';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
@@ -236,7 +237,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
 function Info({ label, value, mono = false, primary = false }: { label: string; value: string; mono?: boolean; primary?: boolean }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{label}</p>
+      <MetaLabel>{label}</MetaLabel>
       <p className={`text-lg font-bold mt-1 break-words ${primary ? 'text-primary' : 'text-ink'} ${mono ? 'font-mono' : ''}`}>{value}</p>
     </div>
   );

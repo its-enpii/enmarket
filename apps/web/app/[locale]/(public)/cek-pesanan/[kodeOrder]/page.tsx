@@ -6,6 +6,7 @@ import { ReviewFormModal } from '@/components/order/ReviewFormModal';
 import { reviewApi } from '@/lib/review-api';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { BackLink } from '@/components/ui/BackLink';
+import { DataItem, MetaLabel } from '@/components/ui';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
 
@@ -114,13 +115,10 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
             [t('email'), order.email_pembeli],
             [t('phone'), order.wa_pembeli],
           ].map(([label, value]) => (
-            <div key={label}>
-              <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{label}</p>
-              <p className="text-sm font-bold text-ink mt-0.5">{value}</p>
-            </div>
+            <DataItem key={label} label={label} value={value} />
           ))}
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('total')}</p>
+            <MetaLabel>{t('total')}</MetaLabel>
             <p className="text-lg font-bold text-primary mt-0.5">{order.total_harga_formatted}</p>
           </div>
         </div>

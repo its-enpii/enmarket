@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function NewPostPage() {
   const t = await getTranslations('admin.posts');
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('listEyebrow')}
         title={t('newTitle')}
@@ -27,6 +27,6 @@ export default async function NewPostPage() {
       <Card variant="surface" className="p-6 md:p-8">
         <PostForm />
       </Card>
-    </div>
+    </AdminPageBody>
   );
 }

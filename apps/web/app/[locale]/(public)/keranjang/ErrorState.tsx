@@ -9,6 +9,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { SectionBand } from '@/components/ui';
 
 import { CartHeader } from './CartHeader';
 import { Eyebrow } from '@/components/ui/neobrutal';
@@ -18,7 +19,7 @@ export async function ErrorState({ message }: { message: string }) {
   return (
     <>
       <CartHeader />
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="xl">
           <Card variant="surface" thick hoverable={false} className="max-w-2xl mx-auto p-8">
             <Eyebrow size="md" color="accent" className="mb-3">
@@ -33,7 +34,7 @@ export async function ErrorState({ message }: { message: string }) {
             </Button>
           </Card>
         </SectionContainer>
-      </section>
+      </SectionBand>
     </>
   );
 }

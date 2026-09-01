@@ -25,6 +25,8 @@ import { Eyebrow } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { SectionBand, SectionTitle } from '@/components/ui';
+import { ImagePlaceholder } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateLong, formatDateShort } from '@/lib/format';
 import { buildMetadata } from '@/lib/seo';
@@ -141,7 +143,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
       {/* ───── 2. COVER ───── */}
       {post.thumbnail && (
-        <section className="border-b-4 border-ink bg-surface relative overflow-hidden">
+        <SectionBand className="relative overflow-hidden">
           <SectionContainer py="md">
             <div className="relative">
               <Card variant="surface" thick elevation={12} hoverable={false} className="overflow-hidden -rotate-1 hover:rotate-0 transition-transform">
@@ -158,7 +160,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               <CornerAccent color="ink" size="w-14 h-14" elevation={4} rotate={-6} className="absolute -top-5 -left-4">№</CornerAccent>
             </div>
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* Cover fallback — zine-style blockquote sebagai visual anchor saat
@@ -179,7 +181,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       )}
 
       {/* ───── 3. TITLE + BYLINE ───── */}
-      <section className="border-b-4 border-ink">
+      <SectionBand>
         <SectionContainer py="md">
           <Eyebrow size="md" color="accent" className="mb-6">
             ✎ Display
@@ -215,10 +217,10 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             </span>
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* ───── 4. ARTICLE BODY ───── */}
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="lg">
           <div className="max-w-3xl mx-auto">
             <article className="prose-content">
@@ -241,11 +243,11 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             </div>
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* 5. TAGS — small bordered pills (per brief item 5) */}
       {tags.length > 0 && (
-        <section className="border-b-4 border-ink bg-surface">
+        <SectionBand>
           <SectionContainer py="md">
             <div className="max-w-3xl mx-auto">
               <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-4">
@@ -268,17 +270,17 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               </div>
             </div>
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* 6. REACTION STRIP — "Was this helpful?" + chunky icon buttons (per brief item 7) */}
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="md">
           <div className="max-w-3xl mx-auto">
             <ReactionStrip postSlug={post.slug} />
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* ───── 5. RELATED NOTES ───── */}
       {related.length > 0 && (
@@ -289,9 +291,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 <Eyebrow size="md" color="accent" className="mb-3">
                   {t('moreEyebrow')}
                 </Eyebrow>
-                <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
+                <SectionTitle>
                   {t('moreTitle')}
-                </h2>
+                </SectionTitle>
               </div>
               <NLink
                 href="/display"
@@ -434,9 +436,9 @@ function RelatedNote({
             className="w-full h-full"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-primary text-surface font-display uppercase text-lg text-center px-3">
+          <ImagePlaceholder className="font-display uppercase text-lg text-center px-3">
             {post.title}
-          </div>
+          </ImagePlaceholder>
         )}
       </div>
       <div className="p-4 space-y-2">

@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
@@ -31,7 +31,7 @@ export default async function EditCategoryPage({ params }: Props) {
   const t = await getTranslations('admin.categories');
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('editEyebrow')}
         title={category.nama}
@@ -48,6 +48,6 @@ export default async function EditCategoryPage({ params }: Props) {
           }}
         />
       </Card>
-    </div>
+    </AdminPageBody>
   );
 }

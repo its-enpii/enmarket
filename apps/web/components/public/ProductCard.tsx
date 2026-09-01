@@ -6,6 +6,7 @@ import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { WishlistHeartButton } from '@/components/public/WishlistHeartButton';
 import { Image } from '@/components/ui/Image';
+import { ImagePlaceholder } from '@/components/ui';
 
 interface Props {
   product: Product;
@@ -35,11 +36,11 @@ export async function ProductCard({ product }: Props) {
             className="w-full h-full"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
+          <ImagePlaceholder>
             <span className="font-bold text-sm uppercase tracking-wider opacity-80">
               {t('noImage')}
             </span>
-          </div>
+          </ImagePlaceholder>
         )}
 
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">

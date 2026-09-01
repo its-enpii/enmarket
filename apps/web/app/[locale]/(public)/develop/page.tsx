@@ -22,6 +22,7 @@ import { PageHeader } from '@/components/public/PageHeader';
 import { SearchBar } from '@/components/public/SearchBar';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, NLink } from '@/components/ui/neobrutal';
+import { SectionBand } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { PaginatedResponse, Product } from '@/lib/types';
 
@@ -120,7 +121,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
       />
 
       {/* ───── 2. FILTER PILLS (left) + SEARCH (right) ───── */}
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Filter pills */}
           <div className="flex flex-wrap items-center gap-3">
@@ -165,11 +166,11 @@ export default async function DevelopPage({ searchParams }: PageProps) {
             />
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* ───── 3. ASYMMETRIC GRID + INFINITE SCROLL ───── */}
       {products.length === 0 ? (
-        <section className="border-b-4 border-ink">
+        <SectionBand>
           <SectionContainer py="xl" className="text-center">
             <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
               {q ? t('noResults', { query: q }) : t('empty')}
@@ -190,9 +191,9 @@ export default async function DevelopPage({ searchParams }: PageProps) {
               {q ? t('resetSearch') : t('viewAll')}
             </Button>
           </SectionContainer>
-        </section>
+        </SectionBand>
       ) : (
-        <section className="border-b-4 border-ink">
+        <SectionBand>
           <SectionContainer py="md">
             <DevelopGrid
               initialProducts={products}
@@ -200,7 +201,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
               filterKey={filterKey}
             />
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {/* ───── 4. FOOTER TEASER ───── */}

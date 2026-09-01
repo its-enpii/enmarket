@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -129,7 +129,7 @@ export default async function CustomRequestsPage({ searchParams }: Props) {
 
   return (
     <AdminListProvider>
-      <div className="p-6 sm:p-8 space-y-6">
+      <AdminPageBody>
         <AdminPageHeader
         eyebrow={t('listEyebrow')}
         title={t('listTitle')}
@@ -194,7 +194,7 @@ export default async function CustomRequestsPage({ searchParams }: Props) {
             queryParams={{ ...(params.q ? { q: params.q } : {}), ...(params.status ? { status: params.status } : {}) }}
           />
         )}
-      </div>
+      </AdminPageBody>
     </AdminListProvider>
   );
 }

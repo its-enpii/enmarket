@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { notFound } from 'next/navigation';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
@@ -40,7 +40,7 @@ export default async function EditCouponPage({ params }: Props) {
   const t = await getTranslations('admin.coupons');
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('editEyebrow')}
         title={coupon.code}
@@ -50,6 +50,6 @@ export default async function EditCouponPage({ params }: Props) {
       <Card variant="surface" className="p-6 md:p-8 max-w-3xl">
         <CouponForm initial={coupon} />
       </Card>
-    </div>
+    </AdminPageBody>
   );
 }

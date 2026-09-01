@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatDate } from '@/lib/format';
 import type { Post } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
+import { ImagePlaceholder } from '@/components/ui';
 
 interface Props {
   post: Post;
@@ -41,11 +42,11 @@ export function PostCard({ post, compact = false }: Props) {
             className="w-full h-full"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
+          <ImagePlaceholder>
             <span className="font-bold text-sm uppercase tracking-wider opacity-80">
               ✎ Catatan
             </span>
-          </div>
+          </ImagePlaceholder>
         )}
         {isPublished && (
           <Badge tone="accent" size="sm" className="absolute top-2 right-2 font-bold">

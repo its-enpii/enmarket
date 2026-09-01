@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
+import { ImagePlaceholder } from '@/components/ui';
 
 interface Props {
   trending: Product[]; // biasanya featured
@@ -133,11 +134,11 @@ export function TrendingSection({ trending, latest }: Props) {
                         className="w-full h-full"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
+                      <ImagePlaceholder>
                         <span className="font-bold text-xs uppercase tracking-wider opacity-80">
                           {p.nama.split(' ').slice(0, 2).join(' ')}
                         </span>
-                      </div>
+                      </ImagePlaceholder>
                     )}
                     <Badge tone="ink" size="sm" className="absolute top-2 right-2 font-bold">
                       {TIPE_LABEL[p.tipe] ?? p.tipe}
@@ -433,11 +434,11 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
               className="w-full h-full"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-primary text-surface">
+            <ImagePlaceholder>
               <span className="font-bold text-[10px] uppercase tracking-wider opacity-80">
                 {t('noImage')}
               </span>
-            </div>
+            </ImagePlaceholder>
           )}
         </div>
         <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between min-w-0">

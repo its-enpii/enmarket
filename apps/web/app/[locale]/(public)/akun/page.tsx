@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Card, Button } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { StatusPill } from '@/components/ui/StatusPill';
+import { MetaLabel } from '@/components/ui';
 import { useAuth } from '@/components/customer/AuthProvider';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';
@@ -76,7 +77,7 @@ export default function AkunDashboardPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card variant="surface" hoverable={false} className="p-5">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('totalOrders')}</p>
+          <MetaLabel>{t('totalOrders')}</MetaLabel>
           <p className="text-3xl font-black font-mono text-ink mt-2">
             {loadingStats ? '-' : orders.length}
           </p>
@@ -88,7 +89,7 @@ export default function AkunDashboardPage() {
         </Card>
 
         <Card variant="surface" hoverable={false} className="p-5">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{tNav('wishlist')}</p>
+          <MetaLabel>{tNav('wishlist')}</MetaLabel>
           <p className="text-3xl font-black font-mono text-ink mt-2">
             {loadingStats ? '-' : wishlistCount}
           </p>
@@ -100,7 +101,7 @@ export default function AkunDashboardPage() {
         </Card>
 
         <Card variant="surface" hoverable={false} className="p-5">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('verificationStatus')}</p>
+          <MetaLabel>{t('verificationStatus')}</MetaLabel>
           <div className="mt-2">
             <StatusPill tone="success" className="text-xs">
             <span>✓</span> {t('verifiedWA')}

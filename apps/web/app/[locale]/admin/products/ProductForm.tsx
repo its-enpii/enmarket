@@ -25,7 +25,7 @@ import type { Category, LinkedPost, Product } from '@/lib/types';
 
 import { createProduct, updateProduct, ActionResult } from './actions';
 import { DatePicker } from '@/components/ui/DatePicker';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { FormSection } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 
 interface Props {
@@ -33,23 +33,6 @@ interface Props {
   initial?: Product;
   /** Post published yang tersedia untuk di-link — di-load server-side. */
   availablePosts?: LinkedPost[];
-}
-
-/**
- * Sub-section header — border-b-2 + label kecil + h2 medium.
- * Konsisten dengan style halaman settings/dashboard.
- */
-function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <div className="border-b-2 border-ink pb-3">
-      <Eyebrow size="sm" color="accent">
-        ✎ {eyebrow}
-      </Eyebrow>
-      <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-        {title}
-      </h2>
-    </div>
-  );
 }
 
 /** Tipe produk yang butuh file upload (download/bundle). */
@@ -190,7 +173,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
     <form action={formAction} className="space-y-8">
       {/* ————— Identitas ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
+        <FormSection eyebrow={t('sectionIdentity')} title={t('sectionIdentityTitle')} />
         <div className="grid md:grid-cols-2 gap-5">
           <FormField label={t('fieldName')} htmlFor="nama" required error={fieldErr('nama')}>
             <Input
@@ -240,7 +223,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
 
       {/* ————— Harga & Tipe ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionPricing')} title={t('sectionPricingTitle')} />
+        <FormSection eyebrow={t('sectionPricing')} title={t('sectionPricingTitle')} />
         <FormField
           htmlFor="is_free"
           label={t('fieldFree')}
@@ -328,7 +311,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
       {/* Mutual exclusion: pre-order tidak bisa dikombinasi dengan gratis */}
       {!isFree && (
         <section className="space-y-5">
-          <SectionHeader eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
+          <FormSection eyebrow={t('sectionPreOrder')} title={t('sectionPreOrderTitle')} />
           <FormField
             htmlFor="is_pre_order"
             label={t('fieldPreOrder')}
@@ -385,7 +368,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
 
       {/* ————— Deskripsi ————— */}
       <section className="space-y-5">
-        <SectionHeader eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
+        <FormSection eyebrow={t('sectionContent')} title={t('sectionContentTitle')} />
         <FormField label={t('fieldDescription')} htmlFor="deskripsi" required error={fieldErr('deskripsi')}>
           <Textarea
             id="deskripsi"
@@ -452,7 +435,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
 
       {/* ————— Linked Posts (panduan / warning / catatan) ————— */}
       <section className="space-y-4">
-        <SectionHeader eyebrow={t('sectionLinkedPosts')} title={t('sectionLinkedPostsTitle')} />
+        <FormSection eyebrow={t('sectionLinkedPosts')} title={t('sectionLinkedPostsTitle')} />
         <p className="text-xs text-ink/60 font-body">{t('sectionLinkedPostsHint')}</p>
 
         {/* Hidden inputs untuk serialize linked_posts ke backend (array of post_id). */}
@@ -562,7 +545,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
       {/* ————— Gambar Preview (hanya saat create) ————— */}
       {!isEdit && (
       <section className="space-y-5">
-        <SectionHeader eyebrow={tProd('previewImagesEyebrow').replace('✎ ', '')} title={tProd('previewImagesTitle')} />
+        <FormSection mark={false} eyebrow={tProd('previewImagesEyebrow').replace('✎ ', '')} title={tProd('previewImagesTitle')} />
         <FormField
           label={tProd('previewImagesTitle')}
           htmlFor="preview_images"
@@ -614,7 +597,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
       {/* ————— File produk (hanya untuk tipe download/bundle) ————— */}
       {needsFile && (
         <section className="space-y-5">
-          <SectionHeader eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
+          <FormSection eyebrow={t('sectionFile')} title={t('sectionFileTitle')} />
           <FormField
             label={t('fieldFile')}
             htmlFor="file"

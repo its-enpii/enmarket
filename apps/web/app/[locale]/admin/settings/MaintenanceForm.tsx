@@ -23,7 +23,7 @@ import { confirmDialog } from '@/components/ui/dialog-store';
 import type { MaintenanceStatus } from '@/lib/types';
 
 import { setMaintenance, type ActionResult } from './actions';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { FormActions, FormSection } from '@/components/ui';
 
 const INITIAL: ActionResult = {};
 
@@ -70,14 +70,7 @@ export function MaintenanceForm({ status }: Props) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionStatus')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionStatusTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionStatus')} title={t('sectionStatusTitle')} />
 
       <form action={handleSubmit} className="space-y-4">
         <FormError variant="box">{state.error}</FormError>
@@ -118,7 +111,7 @@ export function MaintenanceForm({ status }: Props) {
 
         <input type="hidden" name="enabled" value={enabled ? '0' : '1'} />
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending
               ? t('submitPending')
@@ -126,7 +119,7 @@ export function MaintenanceForm({ status }: Props) {
                 ? t('submitInactive')
                 : t('submitActive')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );

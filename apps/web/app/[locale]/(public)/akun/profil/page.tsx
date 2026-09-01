@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/ui/neobrutal';
+import { PageTitle } from '@/components/ui';
 import { ProfileForm } from '@/components/customer/ProfileForm';
 
 export default function AkunProfilPage() {
@@ -11,9 +12,9 @@ export default function AkunProfilPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black uppercase text-ink tracking-tight">
+        <PageTitle size="compact">
           {t('title')}
-        </h1>
+        </PageTitle>
         <p className="text-sm text-ink/70 mt-1">
           {t('subtitle')}
         </p>

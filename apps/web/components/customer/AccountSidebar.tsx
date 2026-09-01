@@ -6,6 +6,7 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useAuth } from './AuthProvider';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
+import { MetaLabel } from '@/components/ui';
 
 export function AccountSidebar() {
   const t = useTranslations('account.nav');
@@ -39,7 +40,7 @@ export function AccountSidebar() {
     <aside className="w-full md:w-64 shrink-0">
       <Card variant="surface" hoverable={false} className="p-5">
         <div className="pb-4 mb-4 border-b-2 border-ink">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('customerAccount')}</p>
+          <MetaLabel>{t('customerAccount')}</MetaLabel>
           <p className="text-lg font-black text-ink truncate mt-1">
             {user?.name || tDash('defaultCustomerName')}
           </p>

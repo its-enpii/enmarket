@@ -2,7 +2,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { BackLink } from '@/components/ui/BackLink';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -40,7 +40,7 @@ export default async function CustomRequestDetailPage({ params }: Props) {
   }
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('detailEyebrow')}
         title={`${t('detailTitle')} #${request.id}`}
@@ -132,6 +132,6 @@ export default async function CustomRequestDetailPage({ params }: Props) {
           </Card>
         </div>
       </div>
-    </div>
+    </AdminPageBody>
   );
 }

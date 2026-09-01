@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -88,7 +88,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
   const activeStatus = (params.status ?? '') as ProvisioningStatus | '';
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       {/* ───── HEADER ───── */}
       <AdminPageHeader
         eyebrow={t('eyebrow')}
@@ -236,7 +236,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
           })}
         </div>
       )}
-    </div>
+    </AdminPageBody>
   );
 }
 

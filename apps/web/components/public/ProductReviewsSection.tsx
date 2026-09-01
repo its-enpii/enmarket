@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { SectionContainer } from './SectionContainer';
+import { SectionBand } from '@/components/ui';
 import { reviewApi, ProductReviewsResponse } from '@/lib/review-api';
 import { formatDate } from '@/lib/format';
 import type { Review, ProductRatingSummary } from '@/lib/types';
@@ -59,7 +60,7 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
   const totalReviews = summary.count;
 
   return (
-    <section id="reviews" className="border-b-4 border-ink bg-surface">
+    <SectionBand id="reviews">
       <SectionContainer py="lg">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
@@ -253,6 +254,6 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
           </div>
         )}
       </SectionContainer>
-    </section>
+    </SectionBand>
   );
 }

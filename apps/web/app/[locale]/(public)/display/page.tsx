@@ -19,6 +19,8 @@ import type { PaginatedResponse, Post } from '@/lib/types';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { HoverImage } from '@/components/ui/HoverImage';
 import { Image } from '@/components/ui/Image';
+import { SectionBand } from '@/components/ui';
+import { ImagePlaceholder } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -96,7 +98,7 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
       />
 
       {/* TAG PILLS + SEARCH */}
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3">
             <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
@@ -134,10 +136,10 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
             />
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {featured && (
-        <section className="border-b-4 border-ink bg-surface">
+        <SectionBand>
           <SectionContainer py="md">
             <FeaturedCover
               post={featured}
@@ -148,11 +150,11 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
               tagLabels={tagLabels}
             />
           </SectionContainer>
-        </section>
+        </SectionBand>
       )}
 
       {!featured && rest.length === 0 ? (
-        <section className="border-b-4 border-ink">
+        <SectionBand>
           <SectionContainer py="xl" className="text-center">
             <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
               {q
@@ -165,9 +167,9 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
                 : t('hintEmpty')}
             </p>
           </SectionContainer>
-        </section>
+        </SectionBand>
       ) : rest.length > 0 ? (
-        <section className="border-b-4 border-ink">
+        <SectionBand>
           <SectionContainer py="md">
             <div className="space-y-10">
               {rest.map((post, i) => (
@@ -183,7 +185,7 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
               ))}
             </div>
           </SectionContainer>
-        </section>
+        </SectionBand>
       ) : null}
 
       {/* FOOTER TEASER */}
@@ -366,9 +368,9 @@ function PostCardZine({
             <Image src={post.thumbnail} alt={post.title}
               className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-2xl md:text-3xl text-center px-4 tracking-tighter">
+            <ImagePlaceholder className="font-display font-black uppercase text-2xl md:text-3xl text-center px-4 tracking-tighter">
               {post.title}
-            </div>
+            </ImagePlaceholder>
           )}
         </div>
         <div className="p-5 md:p-6 space-y-3">

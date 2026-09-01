@@ -13,7 +13,7 @@ import { toast } from '@/components/ui/toast-store';
 
 import { insertLicenseKey, type ActionResult } from './actions';
 import { useLicenseKey } from './LicenseKeyContext';
-import { Eyebrow } from '@/components/ui/neobrutal';
+import { FormActions, FormSection } from '@/components/ui';
 
 interface Props {
   products: Array<{ id: number; nama: string }>;
@@ -77,15 +77,8 @@ export function LicenseKeyFormCard({ products }: Props) {
 
   return (
     <Card variant="surface" className="p-6 space-y-4">
-      <div className="flex items-center justify-between border-b-2 border-ink pb-3">
-        <div>
-          <Eyebrow size="sm" color="accent">
-            {t('eyebrow')}
-          </Eyebrow>
-          <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-            {t('title')}
-          </h3>
-        </div>
+      <div className="flex items-center justify-between">
+        <FormSection as="h3" mark={false} eyebrow={t('eyebrow')} title={t('title')} />
         <Button type="button" variant="ghost" size="sm" flat onClick={() => setOpen(false)}>
           {t('close')}
         </Button>
@@ -140,14 +133,14 @@ export function LicenseKeyFormCard({ products }: Props) {
           </FormField>
         </div>
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submitGenerate')}
           </Button>
           <Button type="button" variant="ghost" size="md" flat onClick={() => setOpen(false)}>
             {t('cancel')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );

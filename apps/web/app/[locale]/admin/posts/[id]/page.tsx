@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
@@ -40,7 +40,7 @@ export default async function EditPostPage({ params }: Props) {
   if (!post) notFound();
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('editEyebrow')}
         title={post.title}
@@ -71,6 +71,6 @@ export default async function EditPostPage({ params }: Props) {
       <Card variant="surface" className="p-6 md:p-8">
         <PostForm initial={post} />
       </Card>
-    </div>
+    </AdminPageBody>
   );
 }

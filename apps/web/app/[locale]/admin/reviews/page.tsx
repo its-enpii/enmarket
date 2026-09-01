@@ -9,6 +9,7 @@ import { DataTableArea } from '@/components/admin/DataTableArea';
 import { EmptyState } from '@/components/admin/EmptyState';
 import { Pagination } from '@/components/admin/Pagination';
 import { StatusPill } from '@/components/ui/StatusPill';
+import { AdminPageHeader, MetaLabel } from '@/components/ui';
 import { apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import type { PaginatedResponse, Review, ReviewStats, SingleResponse } from '@/lib/types';
@@ -121,21 +122,21 @@ export default async function ReviewsPage({ searchParams }: Props) {
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card variant="surface" hoverable={false} className="p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('stats.total')}</p>
+            <MetaLabel>{t('stats.total')}</MetaLabel>
             <p className="text-2xl sm:text-3xl font-black font-mono text-ink mt-1">{stats.total}</p>
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('stats.avgRating')}</p>
+            <MetaLabel>{t('stats.avgRating')}</MetaLabel>
             <p className="text-2xl sm:text-3xl font-black font-mono text-accent mt-1">
               ★ {stats.average_rating.toFixed(1)}
             </p>
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('stats.published')}</p>
+            <MetaLabel>{t('stats.published')}</MetaLabel>
             <p className="text-2xl sm:text-3xl font-black font-mono text-[var(--color-success)] mt-1">{stats.published}</p>
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-ink/60">{t('stats.hidden')}</p>
+            <MetaLabel>{t('stats.hidden')}</MetaLabel>
             <p className="text-2xl sm:text-3xl font-black font-mono text-ink/50 mt-1">{stats.hidden}</p>
           </Card>
         </div>

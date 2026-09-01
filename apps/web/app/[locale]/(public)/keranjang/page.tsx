@@ -32,6 +32,7 @@ import { EmptyCart } from './EmptyCart';
 import { ErrorState } from './ErrorState';
 import { SummaryBlock } from './SummaryBlock';
 import { TrustNote } from './TrustNote';
+import { MetaLabel, SectionBand } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -79,16 +80,16 @@ export default async function KeranjangPage() {
     <>
       <CartHeader />
 
-      <section className="border-b-4 border-ink">
+      <SectionBand>
         <SectionContainer py="md" className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-10 lg:gap-12 items-start">
           <div className="space-y-6">
             <div className="flex items-baseline justify-between border-b-2 border-ink pb-3">
               <h2 className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/70">
                 ✎ {t('selectedWorks')}
               </h2>
-              <span className="font-label text-label-sm uppercase tracking-wider text-ink/60">
+              <MetaLabel as="span" size="sm">
                 {itemCount} {t('itemsSuffix')}
-              </span>
+              </MetaLabel>
             </div>
             <div className="space-y-5">
               {cart.items.map((item) => (
@@ -108,7 +109,7 @@ export default async function KeranjangPage() {
             <TrustNote />
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
     </>
   );
 }

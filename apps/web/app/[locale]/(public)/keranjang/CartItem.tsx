@@ -16,6 +16,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
+import { ImagePlaceholder } from '@/components/ui';
 
 import { CartItemRow } from './CartItemRow';
 import { Image } from '@/components/ui/Image';
@@ -47,9 +48,9 @@ export async function CartItem({ item }: { item: CartItemData }) {
               className="w-full h-full"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-xs text-center px-3">
+            <ImagePlaceholder className="font-display font-black uppercase text-xs text-center px-3">
               {p.nama}
-            </div>
+            </ImagePlaceholder>
           )}
         </NLink>
 

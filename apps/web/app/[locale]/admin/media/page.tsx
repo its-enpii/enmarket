@@ -16,7 +16,7 @@ import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { loadAllMedia } from '@/lib/media';
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { Badge } from '@/components/ui/Badge';
 
 import { MediaGallery } from './MediaGallery';
@@ -44,7 +44,7 @@ export default async function MediaPage({ searchParams }: Props) {
   const items = await loadAllMedia();
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <AdminPageHeader
           className="border-b-0 pb-0"
@@ -68,6 +68,6 @@ export default async function MediaPage({ searchParams }: Props) {
         }}
         pickerMode={pickerMode}
       />
-    </div>
+    </AdminPageBody>
   );
 }

@@ -26,6 +26,7 @@ import { toast } from '@/components/ui/toast-store';
 import type { PaymentGatewaysMap, SiteChannels, SitePayment } from '@/lib/types';
 
 import { updateChannels, updatePayment, updatePaymentGateways, type ActionResult } from './actions';
+import { FormActions, FormSection } from '@/components/ui';
 import { Eyebrow } from '@/components/ui/neobrutal';
 
 const INITIAL: ActionResult = {};
@@ -92,14 +93,7 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
 
       {/* Tripay credentials */}
       <Card variant="surface" className="p-6 space-y-5">
-        <div className="border-b-2 border-ink pb-3">
-          <Eyebrow size="sm" color="accent">
-            ✎ {t('sectionTripay')}
-          </Eyebrow>
-          <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-            {t('sectionTripayTitle')}
-          </h2>
-        </div>
+        <FormSection eyebrow={t('sectionTripay')} title={t('sectionTripayTitle')} />
 
         <form action={action} className="space-y-4">
           <FormError variant="box">{state.error}</FormError>
@@ -176,11 +170,11 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
             />
           </FormField>
 
-          <div className="flex gap-2 pt-2 border-t-2 border-ink">
+          <FormActions>
             <Button type="submit" variant="primary" size="md" disabled={pending}>
               {pending ? t('submitPending') : t('submit')}
             </Button>
-          </div>
+          </FormActions>
         </form>
       </Card>
     </>
@@ -202,14 +196,7 @@ function ChannelsSection({ initial }: { initial: SiteChannels }) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionChannels')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionChannelsTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionChannels')} title={t('sectionChannelsTitle')} />
 
       <form action={action} className="space-y-3">
         <FormError variant="box">{state.error}</FormError>
@@ -239,11 +226,11 @@ function ChannelsSection({ initial }: { initial: SiteChannels }) {
           defaultEnabled={initial.convenience_store}
         />
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submitChannels')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );
@@ -307,14 +294,7 @@ function GatewaysSection({ initial }: { initial?: PaymentGatewaysMap }) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionGateways')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionGatewaysTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionGateways')} title={t('sectionGatewaysTitle')} />
 
       <form action={action} className="space-y-3">
         <FormError variant="box">{state.error}</FormError>
@@ -332,11 +312,11 @@ function GatewaysSection({ initial }: { initial?: PaymentGatewaysMap }) {
           defaultEnabled={duitkuEnabled}
         />
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submitGateways')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );
@@ -360,14 +340,7 @@ function DuitkuSection({ initial }: { initial: SitePayment }) {
 
   return (
     <Card variant="surface" className="p-6 space-y-5">
-      <div className="border-b-2 border-ink pb-3">
-        <Eyebrow size="sm" color="accent">
-          ✎ {t('sectionDuitku')}
-        </Eyebrow>
-        <h2 className="font-display text-xl font-black uppercase tracking-tight text-ink">
-          {t('sectionDuitkuTitle')}
-        </h2>
-      </div>
+      <FormSection eyebrow={t('sectionDuitku')} title={t('sectionDuitkuTitle')} />
 
       <form action={action} className="space-y-4">
         <FormError variant="box">{state.error}</FormError>
@@ -421,11 +394,11 @@ function DuitkuSection({ initial }: { initial: SitePayment }) {
           />
         </FormField>
 
-        <div className="flex gap-2 pt-2 border-t-2 border-ink">
+        <FormActions>
           <Button type="submit" variant="primary" size="md" disabled={pending}>
             {pending ? t('submitPending') : t('submitDuitku')}
           </Button>
-        </div>
+        </FormActions>
       </form>
     </Card>
   );

@@ -1,4 +1,4 @@
-import { AdminPageHeader } from '@/components/ui/AdminPageHeader';
+import { AdminPageHeader, AdminPageBody } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -18,7 +18,7 @@ export default async function NewGamePage() {
   const t = await getTranslations('admin.games');
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <AdminPageBody>
       <AdminPageHeader
         eyebrow={t('listEyebrow')}
         title={t('newTitle')}
@@ -28,6 +28,6 @@ export default async function NewGamePage() {
       <Card variant="surface" className="p-6 md:p-8">
         <GameForm />
       </Card>
-    </div>
+    </AdminPageBody>
   );
 }

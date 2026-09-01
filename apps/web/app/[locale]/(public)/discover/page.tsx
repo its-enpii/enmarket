@@ -9,6 +9,7 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { Card, Button, NLink } from '@/components/ui/neobrutal';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { SectionBand, SectionTitle } from '@/components/ui';
 
 export async function generateMetadata({
   params,
@@ -81,7 +82,7 @@ export default async function DiscoverPage({
       />
 
       {/* ───── 2. STORY ───── */}
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="xl" className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] gap-10 lg:gap-16 items-start">
           {/* Pull-quote — kolom kiri, dominant. Frasa studio identity (EN),
               dibungkus span dengan background color + hard shadow Neobrutalism. */}
@@ -107,18 +108,18 @@ export default async function DiscoverPage({
             </p>
           </div>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* ───── 3. PILLARS ───── */}
-      <section className="border-b-4 border-ink">
+      <SectionBand>
         <SectionContainer py="lg">
           <div className="mb-12 max-w-2xl">
             <Eyebrow size="md" color="accent" className="mb-3">
               {t('pillarsHeading')}
             </Eyebrow>
-            <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-extrabold uppercase tracking-tight text-ink">
+            <SectionTitle>
               {t('pillarsTitle')}
-            </h2>
+            </SectionTitle>
           </div>
           <Card as="div" variant="surface" thick elevation={8} hoverable={false} className="grid grid-cols-1 md:grid-cols-3">
             {PILLARS.map((pillar, i) => (
@@ -145,7 +146,7 @@ export default async function DiscoverPage({
             ))}
           </Card>
         </SectionContainer>
-      </section>
+      </SectionBand>
 
       {/* ───── 4. VALUES ───── */}
       <section className="border-b-4 border-ink bg-ink text-surface">

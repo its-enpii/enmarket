@@ -22,6 +22,7 @@ import { getTranslations } from 'next-intl/server';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { SectionBand } from '@/components/ui';
 
 import { CartHeader } from './CartHeader';
 import { Eyebrow } from '@/components/ui/neobrutal';
@@ -33,7 +34,7 @@ export async function EmptyCart() {
     <>
       <CartHeader />
 
-      <section className="border-b-4 border-ink bg-surface">
+      <SectionBand>
         <SectionContainer py="xl">
           <Card
             variant="surface"
@@ -80,7 +81,7 @@ export async function EmptyCart() {
             </div>
           </Card>
         </SectionContainer>
-      </section>
+      </SectionBand>
     </>
   );
 }

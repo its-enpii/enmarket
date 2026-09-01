@@ -9,6 +9,7 @@ import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
 import { getClientApiBase } from '@/lib/client-api';
 import { BackLink } from '@/components/ui/BackLink';
 import { Image } from '@/components/ui/Image';
+import { MetaLabel } from '@/components/ui';
 
 interface Props {
   kodeOrder: string;
@@ -219,9 +220,9 @@ export function PaymentPoller({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* QR image */}
         <Card variant="surface" hoverable={false} className="p-6">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink/60 mb-3 text-center">
+          <MetaLabel className="mb-3 text-center">
             {t('scanTitle')}
-          </p>
+          </MetaLabel>
           <div className="aspect-square bg-surface border-2 border-ink overflow-hidden">
             {qrUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -244,15 +245,15 @@ export function PaymentPoller({
         {/* Order info + manual check */}
         <div className="space-y-4">
           <Card variant="surface" hoverable={false} className="p-5">
-            <p className="text-xs font-bold uppercase tracking-wider text-ink/60">
+            <MetaLabel>
               {t('orderCode')}
-            </p>
+            </MetaLabel>
             <p className="text-xl font-bold text-ink mt-1 font-mono break-words">
               {kodeOrder}
             </p>
-            <p className="mt-3 text-xs font-bold uppercase tracking-wider text-ink/60">
+            <MetaLabel className="mt-3">
               {t('total')}
-            </p>
+            </MetaLabel>
             <p className="text-2xl font-bold text-primary">
               {totalFormatted}
             </p>
@@ -260,9 +261,9 @@ export function PaymentPoller({
 
           {qrString && (
             <Card variant="surface" hoverable={false} className="p-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-ink/60 mb-2">
+              <MetaLabel className="mb-2">
                 {t('qrData')}
-              </p>
+              </MetaLabel>
               <p className="text-xs font-mono text-ink/80 break-all line-clamp-3">
                 {qrString}
               </p>
