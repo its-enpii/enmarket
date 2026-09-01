@@ -17,13 +17,10 @@
 import { revalidatePath } from 'next/cache';
 
 import { ApiRequestError, apiPatch, apiPost, apiPostForm } from '@/lib/api';
+import type { ActionResult } from '@/lib/action-result';
 import type { SiteSettings } from '@/lib/types';
 
-export interface ActionResult {
-  ok?: boolean;
-  error?: string;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
+export interface SettingsActionResult extends ActionResult {
   data?: SiteSettings;
 }
 
@@ -47,9 +44,9 @@ function errorMessage(err: unknown, fallback: string): string {
 // ───── Identity (studio_name, tagline, logo_url) ─────
 
 export async function updateIdentity(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const values = {
     studio_name: String(formData.get('studio_name') ?? '').trim(),
     tagline: String(formData.get('tagline') ?? '').trim(),
@@ -110,9 +107,9 @@ export async function uploadLogo(formData: FormData): Promise<{
 // Backend stores as JSON in site_settings.social_links.
 
 export async function updateSocial(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const raw = formData.get('social_links');
   if (typeof raw !== 'string') {
     return { error: 'Data social links tidak valid.' };
@@ -148,9 +145,9 @@ export async function updateSocial(
 // ───── Footer text ─────
 
 export async function updateFooter(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const values = {
     footer_text: String(formData.get('footer_text') ?? '').trim(),
   };
@@ -170,9 +167,9 @@ export async function updateFooter(
 // ───── Payment (Tripay config + mode) ─────
 
 export async function updatePayment(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const values = {
     tripay_merchant: String(formData.get('tripay_merchant') ?? '').trim(),
     // Kirim string kosong kalau tidak diubah (backend skip empty secret)
@@ -205,9 +202,9 @@ export async function updatePayment(
 // ───── Channels (QRIS, VA, E-Wallet, Convenience Store) ─────
 
 export async function updateChannels(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const values = {
     channel_qris: formData.get('channel_qris') === 'on',
     channel_va: formData.get('channel_va') === 'on',
@@ -230,9 +227,9 @@ export async function updateChannels(
 // ───── Payment Gateways (Tripay / Duitku enable toggles) ─────
 
 export async function updatePaymentGateways(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const values = {
     tripay: { enabled: formData.get('gateway_tripay') === 'on' },
     duitku: { enabled: formData.get('gateway_duitku') === 'on' },
@@ -253,9 +250,9 @@ export async function updatePaymentGateways(
 // ───── Maintenance toggle ─────
 
 export async function setMaintenance(
-  _prev: ActionResult,
+  _prev: SettingsActionResult,
   formData: FormData,
-): Promise<ActionResult> {
+): Promise<SettingsActionResult> {
   const enabled = formData.get('enabled') === '1';
   const message = String(formData.get('message') ?? '').trim();
 

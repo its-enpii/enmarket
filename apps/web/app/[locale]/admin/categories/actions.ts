@@ -9,13 +9,9 @@ import { revalidatePath } from 'next/cache';
 
 import { ApiRequestError, apiDelete, apiPost, apiPut } from '@/lib/api';
 
-export interface ActionResult {
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-  ok?: boolean;
-  message?: string;
-  redirectTo?: string;
-}
+import type { ActionResult } from '@/lib/action-result';
+
+export type { ActionResult };
 
 // ───── Create ─────
 export async function createCategory(_prev: ActionResult, formData: FormData): Promise<ActionResult> {

@@ -28,16 +28,15 @@ import type {
   SiteSocial,
   SocialLink,
 } from '@/lib/types';
+import { EMPTY_ACTION_RESULT } from '@/lib/action-result';
 
 import {
   updateFooter,
   updateIdentity,
   updateSocial,
   uploadLogo,
-  type ActionResult,
+  type SettingsActionResult,
 } from './actions';
-
-const INITIAL: ActionResult = {};
 
 interface Props {
   identity: SiteIdentity;
@@ -49,13 +48,13 @@ interface Props {
 
 function IdentitySection({ initial }: { initial: SiteIdentity }) {
   const t = useTranslations('admin.settings.identity');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updateIdentity(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   // Lift logo URL state ke sini supaya hidden input identity form + LogoUploader
@@ -137,13 +136,13 @@ function emptyLink(): SocialLink {
 
 function SocialSection({ initial }: { initial: SiteSocial }) {
   const t = useTranslations('admin.settings.identity');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updateSocial(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   const [links, setLinks] = useState<SocialLink[]>(
@@ -229,13 +228,13 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
 
 function FooterSection({ initial }: { initial: SiteFooter }) {
   const t = useTranslations('admin.settings.identity');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updateFooter(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   // Controlled state supaya isian tidak hilang saat submit gagal.

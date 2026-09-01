@@ -23,13 +23,17 @@ import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { toast } from '@/components/ui/toast-store';
+import { EMPTY_ACTION_RESULT } from '@/lib/action-result';
 import type { PaymentGatewaysMap, SiteChannels, SitePayment } from '@/lib/types';
 
-import { updateChannels, updatePayment, updatePaymentGateways, type ActionResult } from './actions';
+import {
+  updateChannels,
+  updatePayment,
+  updatePaymentGateways,
+  type SettingsActionResult,
+} from './actions';
 import { FormActions, FormSection } from '@/components/ui';
 import { Eyebrow } from '@/components/ui/neobrutal';
-
-const INITIAL: ActionResult = {};
 
 interface Props {
   payment: SitePayment;
@@ -41,13 +45,13 @@ interface Props {
 
 function PaymentSection({ initial }: { initial: SitePayment }) {
   const t = useTranslations('admin.settings.payment');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updatePayment(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
@@ -185,13 +189,13 @@ function PaymentSection({ initial }: { initial: SitePayment }) {
 
 function ChannelsSection({ initial }: { initial: SiteChannels }) {
   const t = useTranslations('admin.settings.payment');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updateChannels(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   return (
@@ -280,13 +284,13 @@ export function PaymentForm({ payment, channels, paymentGateways }: Props) {
 
 function GatewaysSection({ initial }: { initial?: PaymentGatewaysMap }) {
   const t = useTranslations('admin.settings.payment');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updatePaymentGateways(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   const tripayEnabled = initial?.tripay?.enabled ?? true;
@@ -324,13 +328,13 @@ function GatewaysSection({ initial }: { initial?: PaymentGatewaysMap }) {
 
 function DuitkuSection({ initial }: { initial: SitePayment }) {
   const t = useTranslations('admin.settings.payment');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await updatePayment(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   const modeOptions = [

@@ -14,10 +14,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
-
-const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
-type Tipe = (typeof VALID_TIPE)[number];
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;

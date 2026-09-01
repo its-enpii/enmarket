@@ -8,13 +8,9 @@ import { revalidatePath } from 'next/cache';
 
 import { ApiRequestError, apiDelete, apiPost, apiPostForm, apiPutForm } from '@/lib/api';
 
-export interface ActionResult {
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-  ok?: boolean;
-  message?: string;
-  redirectTo?: string;
-}
+import type { ActionResult } from '@/lib/action-result';
+
+export type { ActionResult };
 
 // ───── Helpers ─────
 function pickFieldError(err: ApiRequestError): Record<string, string[]> {

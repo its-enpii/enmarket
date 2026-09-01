@@ -5,10 +5,9 @@ import { redirect } from 'next/navigation';
 
 import { ApiRequestError, apiDelete, apiPost, apiPatch } from '@/lib/api';
 
-export interface ActionResult {
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-}
+import type { ActionResult } from '@/lib/action-result';
+
+export type { ActionResult };
 
 function pickFieldError(err: ApiRequestError): Record<string, string[]> {
   const out: Record<string, string[]> = {};

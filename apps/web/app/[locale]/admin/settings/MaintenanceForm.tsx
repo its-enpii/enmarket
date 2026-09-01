@@ -21,11 +21,10 @@ import { Textarea } from '@/components/ui/Textarea';
 import { toast } from '@/components/ui/toast-store';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import type { MaintenanceStatus } from '@/lib/types';
+import { EMPTY_ACTION_RESULT } from '@/lib/action-result';
 
-import { setMaintenance, type ActionResult } from './actions';
+import { setMaintenance, type SettingsActionResult } from './actions';
 import { FormActions, FormSection } from '@/components/ui';
-
-const INITIAL: ActionResult = {};
 
 interface Props {
   status: MaintenanceStatus;
@@ -33,13 +32,13 @@ interface Props {
 
 export function MaintenanceForm({ status }: Props) {
   const t = useTranslations('admin.settings.maintenance');
-  const [state, action, pending] = useActionState<ActionResult, FormData>(
+  const [state, action, pending] = useActionState<SettingsActionResult, FormData>(
     async (prev, fd) => {
       const res = await setMaintenance(prev, fd);
       if (res.ok && res.message) toast.success(res.message);
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   const enabled = status.enabled;

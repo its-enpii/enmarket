@@ -9,6 +9,7 @@ import { BackLink } from '@/components/ui/BackLink';
 import { DataItem, MetaLabel } from '@/components/ui';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
+import { ORDER_TYPE_I18N_KEYS } from '@/lib/constants';
 
 import { StatusPoller } from './StatusPoller';
 
@@ -45,13 +46,6 @@ const STATUS_KEYS = {
   failed: 'statusFailed',
   expired: 'statusExpired',
   refunded: 'statusRefunded',
-} as const;
-
-const TYPE_KEYS = {
-  download: 'typeDownload',
-  license: 'typeLicense',
-  bundle: 'typeBundle',
-  account_manual: 'typeAccount',
 } as const;
 
 export default async function CekPesananDetailPage({ params }: PageProps) {
@@ -135,7 +129,7 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
               const hasLicense = Boolean(delivery?.license_key);
               const expired = Boolean(delivery?.token_expired_at && new Date(delivery.token_expired_at) < new Date());
               const showDelivery = order.status === 'paid' && (hasDownload || hasLicense);
-              const typeKey = TYPE_KEYS[item.tipe_produk as keyof typeof TYPE_KEYS];
+              const typeKey = ORDER_TYPE_I18N_KEYS[item.tipe_produk as keyof typeof ORDER_TYPE_I18N_KEYS];
 
               return (
                 <li key={item.id} className="border-b-2 border-dashed border-ink/20 pb-3 last:border-b-0 last:pb-0">

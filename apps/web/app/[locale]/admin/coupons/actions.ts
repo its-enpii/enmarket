@@ -9,10 +9,9 @@ import { redirect } from 'next/navigation';
 
 import { ApiRequestError, apiDelete, apiPatch, apiPost } from '@/lib/api';
 
-export interface ActionResult {
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-}
+import type { ActionResult } from '@/lib/action-result';
+
+export type { ActionResult };
 
 // ───── Create ─────
 export async function createCoupon(_prev: ActionResult, formData: FormData): Promise<ActionResult> {

@@ -11,12 +11,9 @@ import { revalidatePath } from 'next/cache';
 
 import { ApiRequestError, apiPost } from '@/lib/api';
 
-export interface ActionResult {
-  ok?: boolean;
-  error?: string;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
-}
+import type { ActionResult } from '@/lib/action-result';
+
+export type { ActionResult };
 
 function errorMessage(err: unknown, fallback: string): string {
   if (err instanceof ApiRequestError) {

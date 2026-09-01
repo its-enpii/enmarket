@@ -14,6 +14,16 @@ export const COOKIE_MAX_AGE = {
 export const ADMIN_LIST_PER_PAGE = 100;
 export const OTP_LENGTH = 6;
 
+export const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
+export type Tipe = (typeof VALID_TIPE)[number];
+
+export const ORDER_TYPE_I18N_KEYS = {
+  download: 'typeDownload',
+  license: 'typeLicense',
+  bundle: 'typeBundle',
+  account_manual: 'typeAccount',
+} as const;
+
 export const DEFAULT_GATEWAY = 'tripay' as const;
 
 /** z-index layers terpusat — modal dialog harus di atas TopNav/Sidebar (z-50). */

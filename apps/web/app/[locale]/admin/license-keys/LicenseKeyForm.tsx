@@ -10,6 +10,7 @@ import { FormError } from '@/components/ui/FormMessage';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { toast } from '@/components/ui/toast-store';
+import { EMPTY_ACTION_RESULT } from '@/lib/action-result';
 
 import { insertLicenseKey, type ActionResult } from './actions';
 import { useLicenseKey } from './LicenseKeyContext';
@@ -18,8 +19,6 @@ import { FormActions, FormSection } from '@/components/ui';
 interface Props {
   products: Array<{ id: number; nama: string }>;
 }
-
-const INITIAL: ActionResult = {};
 
 /**
  * License Key insert form. Split jadi 2 sub-components:
@@ -70,7 +69,7 @@ export function LicenseKeyFormCard({ products }: Props) {
       }
       return res;
     },
-    INITIAL,
+    EMPTY_ACTION_RESULT,
   );
 
   if (!open) return null;

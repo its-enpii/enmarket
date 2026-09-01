@@ -7,6 +7,7 @@ import { Pagination } from '@/components/public/Pagination';
 import { ProductGrid } from '@/components/public/ProductGrid';
 import { SearchBar } from '@/components/public/SearchBar';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
+import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import { buildMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
@@ -16,9 +17,6 @@ interface PageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ category?: string; q?: string; tipe?: string; page?: string }>;
 }
-
-const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
-type Tipe = (typeof VALID_TIPE)[number];
 
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;

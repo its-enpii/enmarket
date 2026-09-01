@@ -24,6 +24,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { SectionBand, SectionIntro } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
+import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import type { PaginatedResponse, Product } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -31,9 +32,6 @@ export const revalidate = 0;
 
 
 // ───── Constants ─────
-
-const VALID_TIPE = ['download', 'license', 'bundle', 'account_manual'] as const;
-type Tipe = (typeof VALID_TIPE)[number];
 
 interface PageProps {
   params: Promise<{ locale: string }>;
