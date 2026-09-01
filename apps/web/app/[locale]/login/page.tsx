@@ -47,7 +47,7 @@ export default async function LoginPage() {
     <main className="min-h-screen bg-surface flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Card variant="surface" hoverable={false} thick raised className="p-8">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          <p className="mb-2 text-xs font-bold uppercase tracking-label text-primary">
             enpiistudio Admin
           </p>
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-ink">

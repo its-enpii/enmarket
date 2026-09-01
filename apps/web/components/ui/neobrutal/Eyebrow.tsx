@@ -12,10 +12,10 @@ interface EyebrowProps extends HTMLAttributes<HTMLParagraphElement> {
 }
 
 const SIZE_CLS: Record<EyebrowSize, string> = {
-  sm: 'text-[10px] tracking-[0.2em]',
-  md: 'text-xs tracking-[0.3em]',
+  sm: 'text-micro tracking-label',
+  md: 'text-xs tracking-label-lg',
   lg: 'text-xs tracking-[10px]',
-  'mono-otp': 'tracking-[0.5em] font-mono text-2xl',
+  'mono-otp': 'tracking-otp font-mono text-2xl',
 };
 
 const COLOR_CLS: Record<EyebrowColor, string> = {

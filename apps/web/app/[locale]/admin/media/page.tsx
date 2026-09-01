@@ -53,7 +53,7 @@ export default async function MediaPage({ searchParams }: Props) {
           subtitle={t('listSubtitle')}
         />
           {pickerMode && (
-            <Badge tone="accent" size="sm" className="gap-1 px-3 py-1.5 font-bold shadow-[2px_2px_0_0_var(--color-ink)] self-start">
+            <Badge tone="accent" size="sm" className="gap-1 px-3 py-1.5 font-bold !shadow-brutal-2 self-start">
               {t('pickerBadge')}
             </Badge>
           )}

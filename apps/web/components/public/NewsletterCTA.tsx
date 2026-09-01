@@ -29,7 +29,7 @@ export function NewsletterCTA() {
         className="absolute right-10 bottom-4 w-16 h-16 bg-primary border-2 border-primary"
       />
       <div className="relative max-w-2xl">
-        <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-accent">
+        <p className="text-micro sm:text-xs font-bold uppercase tracking-label text-accent">
           {t('eyebrow')}
         </p>
         <h2 className="mt-3 text-2xl sm:text-4xl font-bold leading-tight">

@@ -200,7 +200,7 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                         ✓ {t('verifiedBuyer')}
                       </StatusPill>
                     </div>
-                    <p className="text-[11px] text-ink/50 mt-0.5">
+                    <p className="text-fine text-ink/50 mt-0.5">
                       {rev.created_at ? formatDate(rev.created_at) : '-'}
                     </p>
                   </div>

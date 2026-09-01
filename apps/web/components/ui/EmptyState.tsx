@@ -67,7 +67,7 @@ export function EmptyState(props: EmptyStateProps) {
       hoverable={false}
       className="flex flex-col items-center gap-4 p-8 sm:p-12 text-center sm:gap-6"
     >
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink/60">
+      <p className="text-xs font-bold uppercase tracking-label text-ink/60">
         {t('title')}
       </p>
       <h2 className="text-2xl sm:text-3xl font-bold leading-tight text-ink">

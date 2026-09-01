@@ -51,7 +51,7 @@ export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
     editorProps: {
       attributes: {
         class:
-          'prose-content min-h-[280px] max-h-[60vh] overflow-y-auto bg-surface border-2 border-ink p-4 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:shadow-[4px_4px_0_0_var(--color-ink)] transition-all',
+          'prose-content min-h-[280px] max-h-[60vh] overflow-y-auto bg-surface border-2 border-ink p-4 focus:outline-none focus:-translate-x-[2px] focus:-translate-y-[2px] focus:!shadow-brutal-4 transition-all',
       },
     },
     onUpdate: ({ editor }) => {
@@ -112,7 +112,7 @@ function Toolbar({ editor }: { editor: Editor }) {
         'px-2.5 py-1 text-sm min-w-[36px] min-h-[36px] ' +
         (active
           ? 'bg-ink text-surface shadow-[2px_2px_0_0_var(--color-primary)]'
-          : 'bg-surface text-ink hover:bg-accent shadow-[2px_2px_0_0_var(--color-ink)]')
+          : 'bg-surface text-ink hover:bg-accent !shadow-brutal-2')
       }
     >
       {children}

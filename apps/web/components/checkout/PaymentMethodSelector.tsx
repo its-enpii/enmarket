@@ -46,7 +46,7 @@ export function PaymentMethodSelector({
                 variant={isSelected ? 'filled-accent' : 'surface'}
                 hoverable={false}
                 className={`flex items-center gap-3 p-3 cursor-pointer border-2 border-ink transition-colors ${
-                  isSelected ? 'shadow-[2px_2px_0_0_var(--color-ink)]' : ''
+                  isSelected ? '!shadow-brutal-2' : ''
                 }`}
               >
                 <Radio

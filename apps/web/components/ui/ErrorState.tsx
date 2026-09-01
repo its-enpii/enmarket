@@ -26,7 +26,7 @@ export function ErrorState({
   return (
     <div className={className}>
       <p
-        className={`text-xs font-bold uppercase tracking-[0.2em] ${
+        className={`text-xs font-bold uppercase tracking-label ${
           eyebrowColor === 'primary' ? 'text-primary' : 'text-ink/60'
         }`}
       >

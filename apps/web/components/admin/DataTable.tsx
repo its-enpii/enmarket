@@ -43,7 +43,7 @@ export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }
   }
 
   return (
-    <Card variant="surface" hoverable={false} className="relative !shadow-[4px_4px_0_0_var(--color-ink)]">
+    <Card variant="surface" hoverable={false} className="relative !shadow-brutal-4">
       {/* Scroll indicator — gradient samar di kanan (mobile only) untuk kasih
           tahu user ada kolom yang off-screen. Pointer-events-none jadi tidak
           block scroll horizontal. Hidden di sm+ karena tabel biasanya fit. */}

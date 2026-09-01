@@ -42,7 +42,7 @@ export function CustomBuildForm() {
   return (
     <form action={formAction} className="space-y-6">
       <div className="border-b-2 border-ink/20 pb-3 flex items-baseline justify-between">
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/70">
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/70">
           ✎ {t('formTitle')}
         </p>
       </div>

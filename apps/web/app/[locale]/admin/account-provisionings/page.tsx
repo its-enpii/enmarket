@@ -98,7 +98,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
 
       {/* ───── STAT TILES (4) ───── */}
       <section>
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-3">
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-3">
           {t('sectionStats')}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -157,7 +157,7 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
                         {order.kode_order} · {order.nama_pembeli}
                       </p>
                     )}
-                    <p className="text-[11px] text-ink/50 mt-0.5">
+                    <p className="text-fine text-ink/50 mt-0.5">
                       {t('created')} {formatDateTime(row.created_at)}
                     </p>
                   </div>
@@ -255,7 +255,7 @@ function StatTile({
       hoverable={false}
       className="p-4"
     >
-      <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">{label}</p>
+      <p className="text-micro font-bold uppercase tracking-widest opacity-70">{label}</p>
       <p className="mt-2 font-display text-3xl font-black leading-none">{value}</p>
     </Card>
   );

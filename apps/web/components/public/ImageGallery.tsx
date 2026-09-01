@@ -51,7 +51,7 @@ export function ImageGallery({ images, alt }: Props) {
               onClick={() => setActive(i)}
               aria-label={`Lihat gambar ${i + 1}`}
               className={
-                'block w-20 h-20 px-0 py-0 overflow-hidden shadow-[2px_2px_0_0_var(--color-ink)] transition-all ' +
+                'block w-20 h-20 px-0 py-0 overflow-hidden !shadow-brutal-2 transition-all ' +
                 (i === active
                   ? 'ring-4 ring-primary ring-offset-2 ring-offset-surface'
                   : 'opacity-70 hover:opacity-100')

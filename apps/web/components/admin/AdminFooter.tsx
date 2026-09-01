@@ -15,7 +15,7 @@ export function AdminFooter() {
     <footer className="border-t-4 border-ink bg-surface mt-auto">
       <div className="px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-ink/60">
         <p>
-          <Badge tone="primary" size="sm" shadow={false} className="mr-1.5 px-1.5 py-0.5 !text-[10px] font-bold uppercase tracking-wide">
+          <Badge tone="primary" size="sm" shadow={false} className="mr-1.5 px-1.5 py-0.5 !text-micro font-bold uppercase tracking-wide">
             enpii
           </Badge>
           <span className="font-bold text-ink">{t('brand')}</span>

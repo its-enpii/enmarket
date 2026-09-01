@@ -259,7 +259,7 @@ function DevelopCard({
         </div>
         <div className="md:col-span-5 flex flex-col justify-center gap-4 border-l-4 border-ink pl-6">
           {kategoriNama && (
-            <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">
+            <p className="font-label text-label-sm uppercase tracking-label text-ink/60">
               {kategoriNama}
             </p>
           )}
@@ -306,7 +306,7 @@ function DevelopCard({
       </div>
       <div className="md:col-span-7 md:order-1 flex flex-col justify-center gap-3 border-l-4 border-ink pl-6">
         {kategoriNama && (
-          <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">
+          <p className="font-label text-label-sm uppercase tracking-label text-ink/60">
             {kategoriNama}
           </p>
         )}

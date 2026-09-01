@@ -12,7 +12,7 @@
  *   - surface: bg-surface text-ink — neutral chip
  *
  * Size:
- *   - sm : px-2.5 py-0.5 text-[10px] — corner badge (ProductCard overlay)
+ *   - sm : px-2.5 py-0.5 text-micro — corner badge (ProductCard overlay)
  *   - md : px-3 py-1 text-label-sm — chip inline (kategori, status)
  *   - lg : px-4 py-2 text-display    — price tag (font besar)
  *
@@ -42,7 +42,7 @@ const TONE_CLS: Record<BadgeTone, string> = {
 };
 
 const SIZE_CLS: Record<BadgeSize, string> = {
-  sm: 'px-2 py-0.5 text-[10px]',
+  sm: 'px-2 py-0.5 text-micro',
   md: 'px-3 py-1 text-label-sm font-black uppercase tracking-wider',
   lg: 'px-4 py-2 font-display text-2xl md:text-3xl font-black uppercase',
 };

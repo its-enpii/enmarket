@@ -35,7 +35,7 @@ export function WorkGallery({ images, alt, title }: Props) {
 
   if (images.length === 0) {
     return (
-      <Card variant="filled-primary" thick elevation={8} hoverable={false} className="aspect-[4/3] flex items-center justify-center -rotate-1">
+      <Card variant="filled-primary" thick elevation={8} hoverable={false} className="aspect-43 flex items-center justify-center -rotate-1">
         <span className="font-display font-black uppercase text-3xl md:text-5xl text-center px-6 tracking-tighter">
           {title}
         </span>
@@ -51,14 +51,14 @@ export function WorkGallery({ images, alt, title }: Props) {
         variant="surface"
         size="sm"
         onClick={() => setActiveIdx(0)}
-        className="block w-full p-0 shadow-[8px_8px_0_0_var(--color-ink)] overflow-hidden -rotate-1 hover:rotate-0 transition-transform"
+        className="block w-full p-0 !shadow-brutal-8 overflow-hidden -rotate-1 hover:rotate-0 transition-transform"
         aria-label={t('galleryOpen', { name: alt })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <Image
           src={images[0]}
           alt={alt}
-          className="w-full aspect-[4/3]"
+          className="w-full aspect-43"
         />
       </Button>
     );
@@ -85,7 +85,7 @@ export function WorkGallery({ images, alt, title }: Props) {
             : 'col-span-1';
           const aspectClass = isLarge ? 'aspect-square' : isMedium ? 'aspect-[2/1] sm:aspect-[2/1]' : 'aspect-square';
           const rotate = i % 3 === 0 ? '-rotate-1' : i % 3 === 1 ? 'rotate-1' : '';
-          const shadowSize = isLarge ? 'shadow-[10px_10px_0_0_var(--color-ink)]' : 'shadow-[6px_6px_0_0_var(--color-ink)]';
+          const shadowSize = isLarge ? '!shadow-brutal-10' : '!shadow-brutal-6';
 
           return (
             <Button

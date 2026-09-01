@@ -86,7 +86,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
           </div>
         )}
         <div className="pt-2">
-          <p className="font-label text-label-sm uppercase tracking-[0.2em] text-surface/70 mb-2">
+          <p className="font-label text-label-sm uppercase tracking-label text-surface/70 mb-2">
             {allPreorder ? t('preorderLabel') : allFree ? t('free') : t('total')}
           </p>
           <Badge tone="accent" size="lg" shadow={false} className="px-6 py-4">
@@ -94,7 +94,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
               {allFree ? t('free') : formatRupiah(displayTotal)}
             </span>
           </Badge>
-          <p className="mt-3 font-label text-[10px] uppercase tracking-wider text-surface/60">
+          <p className="mt-3 font-label text-micro uppercase tracking-wider text-surface/60">
             {itemCount} {t('itemsSuffix')}
           </p>
         </div>
@@ -115,7 +115,7 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
           {allFree ? t('checkoutFree') : allPreorder ? t('checkoutPreOrder') : t('checkout')}
         </Button>
 
-        <p className="text-center font-label text-[10px] uppercase tracking-wider text-surface/60">
+        <p className="text-center font-label text-micro uppercase tracking-wider text-surface/60">
           {t('paymentNote')}
         </p>
       </div>

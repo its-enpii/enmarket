@@ -99,7 +99,7 @@ function JournalEntry({
           variant="surface"
           hoverable
           thick
-          className="aspect-[4/3]"
+          className="aspect-43"
         >
           {entry.image ? (
             <HoverImage

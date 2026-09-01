@@ -70,7 +70,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
       >
         <div className="p-6 border-b-2 border-ink flex items-center justify-between">
           <NLink href="/admin" onClick={onClose} underline="none" className="block">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+            <p className="text-xs font-bold uppercase tracking-label text-accent">
               {tSidebar('brandTitle')}
             </p>
             <p className="text-2xl font-bold text-surface leading-none mt-1">
@@ -107,9 +107,9 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
                   underline="none"
                   onClick={onClose}
                   className={
-                    'flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all min-h-[44px] w-full ' +
+                    'flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all min-h-touch w-full ' +
                     (active
-                      ? 'bg-accent text-ink border-ink shadow-[4px_4px_0_0_var(--color-ink)] translate-x-[-1px] translate-y-[-1px]'
+                      ? 'bg-accent text-ink border-ink !shadow-brutal-4 translate-x-[-1px] translate-y-[-1px]'
                       : 'bg-transparent text-surface border-transparent hover:border-ink hover:bg-accent hover:text-ink')
                   }
                 >
@@ -127,7 +127,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             href="/"
             variant="on-dark"
             underline="none"
-            className="text-xs font-bold uppercase tracking-wide min-h-[44px] inline-flex items-center"
+            className="text-xs font-bold uppercase tracking-wide min-h-touch inline-flex items-center"
           >
             {tSidebar('viewStore')}
           </NLink>

@@ -101,7 +101,7 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
       <SectionBand>
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
+            <span className="font-label text-label-sm uppercase tracking-label text-ink/60 mr-2">
               {t('tagsLabel')}
             </span>
             {TAG_KEYS.map((tag) => {
@@ -120,7 +120,7 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
                 </span>
               );
             })}
-            <span className="ml-2 font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">
+            <span className="ml-2 font-label text-label-sm uppercase tracking-label text-ink/60">
               {total} {t('itemsSuffix')}
             </span>
           </div>
@@ -250,10 +250,10 @@ function FeaturedCover({
             <HoverImage
               src={post.thumbnail}
               alt={post.title}
-              className="w-full aspect-[4/3] lg:aspect-auto lg:h-full"
+              className="w-full aspect-43 lg:aspect-auto lg:h-full"
             />
           ) : (
-            <div className="aspect-[4/3] lg:aspect-auto lg:h-full min-h-[300px] flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-3xl md:text-5xl text-center px-8 tracking-tighter">
+            <div className="aspect-43 lg:aspect-auto lg:h-full min-h-[300px] flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-3xl md:text-5xl text-center px-8 tracking-tighter">
               {post.title}
             </div>
           )}
@@ -332,9 +332,9 @@ function PostCardZine({
           <div className="md:col-span-7 bg-primary/10 border-b-4 md:border-b-0 md:border-r-4 border-ink overflow-hidden">
             {post.thumbnail ? (
               <Image src={post.thumbnail} alt={post.title}
-                className="w-full aspect-[16/9] grayscale group-hover:grayscale-0 transition-all duration-700" />
+                className="w-full aspect-video grayscale group-hover:grayscale-0 transition-all duration-700" />
             ) : (
-              <div className="aspect-[16/9] flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-2xl md:text-4xl text-center px-6 tracking-tighter">
+              <div className="aspect-video flex items-center justify-center bg-primary text-surface font-display font-black uppercase text-2xl md:text-4xl text-center px-6 tracking-tighter">
                 {post.title}
               </div>
             )}

@@ -168,7 +168,7 @@ export default async function AdminHomePage() {
 
       {/* ───── STAT TILES ───── */}
       <section>
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-3">
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-3">
           {t('sectionStats')}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
@@ -181,7 +181,7 @@ export default async function AdminHomePage() {
                   : 'surface';
             return (
               <Card key={tile.label} variant={cardVariant} className="p-4 flex flex-col justify-between">
-                <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">
+                <p className="text-micro font-bold uppercase tracking-widest opacity-70">
                   {tile.label}
                 </p>
                 <p className="mt-2 font-display text-2xl md:text-3xl font-black leading-none break-all">
@@ -209,7 +209,7 @@ export default async function AdminHomePage() {
               href="/admin/account-provisionings?status=menunggu_admin"
               variant="primary"
               underline="static"
-              className="font-label text-[10px] uppercase"
+              className="font-label text-micro uppercase"
             >
               {t('provisioningViewAll')}
             </NLink>
@@ -224,7 +224,7 @@ export default async function AdminHomePage() {
                   <Card
                     href="/admin/account-provisionings?status=menunggu_admin"
                     variant="surface"
-                    className="block p-4 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0_0_var(--color-ink)]"
+                    className="block p-4 hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
@@ -239,7 +239,7 @@ export default async function AdminHomePage() {
                         )}
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-[10px] text-ink/50">
+                        <p className="text-micro text-ink/50">
                           {formatDateTime(p.created_at)}
                         </p>
                       </div>
@@ -269,7 +269,7 @@ export default async function AdminHomePage() {
               href="/admin/orders?status=pending"
               variant="primary"
               underline="static"
-              className="font-label text-[10px] uppercase"
+              className="font-label text-micro uppercase"
             >
               {t('pendingViewAll')}
             </NLink>
@@ -291,14 +291,14 @@ export default async function AdminHomePage() {
                   <Card
                     href={`/admin/orders/${o.kode_order}`}
                     variant="surface"
-                    className="block p-3 hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]"
+                    className="block p-3 hover:bg-accent hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-2"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <p className="font-bold text-sm truncate text-ink">
                           {o.nama_pembeli}
                         </p>
-                        <p className="font-mono text-[10px] text-ink/60 mt-0.5 truncate">
+                        <p className="font-mono text-micro text-ink/60 mt-0.5 truncate">
                           {o.kode_order}
                         </p>
                       </div>
@@ -306,7 +306,7 @@ export default async function AdminHomePage() {
                         <p className="font-display font-black text-sm text-primary">
                           {o.total_harga_formatted}
                         </p>
-                        <p className="text-[10px] text-ink/50 mt-0.5">
+                        <p className="text-micro text-ink/50 mt-0.5">
                           {formatDateTime(o.created_at)}
                         </p>
                       </div>
@@ -329,7 +329,7 @@ export default async function AdminHomePage() {
                 {t('activityTitle')}
               </h2>
             </div>
-            <span className="text-[10px] text-ink/50 italic font-body">
+            <span className="text-micro text-ink/50 italic font-body">
               {t('activityCount', { count: activityCount })}
             </span>
           </div>
@@ -355,7 +355,7 @@ export default async function AdminHomePage() {
 
       {/* ───── QUICK SHORTCUTS ───── */}
       <section>
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-3">
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-3">
           {t('sectionQuick')}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

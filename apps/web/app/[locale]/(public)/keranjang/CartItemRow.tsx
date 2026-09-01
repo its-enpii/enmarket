@@ -40,7 +40,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
   return (
     <div className="flex items-center gap-3">
       {/* Chunky +/- group */}
-      <div className="flex items-stretch border-2 border-ink bg-surface shadow-[3px_3px_0_0_var(--color-ink)]">
+      <div className="flex items-stretch border-2 border-ink bg-surface !shadow-brutal-3">
         <Button
           variant="surface"
           size="sm"
@@ -49,7 +49,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
           aria-label={t('decrease')}
           onClick={() => setQty(Math.max(0, qty - 1))}
           disabled={disabled || pending || qty <= 1}
-          className="min-w-[44px] min-h-[44px] w-11 h-11"
+          className="min-w-[44px] min-h-touch w-11 h-11"
         >
           −
         </Button>
@@ -64,7 +64,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
           aria-label={t('increase')}
           onClick={() => setQty(qty + 1)}
           disabled={disabled || pending}
-          className="min-w-[44px] min-h-[44px] w-11 h-11"
+          className="min-w-[44px] min-h-touch w-11 h-11"
         >
           +
         </Button>
@@ -78,7 +78,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
         type="button"
         onClick={remove}
         disabled={disabled || pending}
-        className="min-h-[44px] inline-flex items-center gap-1.5"
+        className="min-h-touch inline-flex items-center gap-1.5"
       >
         <span aria-hidden="true">✕</span>
         {t('remove')}

@@ -203,7 +203,7 @@ export function MediaPickerModal({
                   >
                     {it.filename}
                   </p>
-                  <p className="text-[10px] text-ink/60 mt-0.5">
+                  <p className="text-micro text-ink/60 mt-0.5">
                     {it.type}
                   </p>
 

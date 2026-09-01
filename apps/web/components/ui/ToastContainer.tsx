@@ -87,7 +87,7 @@ function ToastItem({ toast: t }: { toast: Toast }) {
           setTimeout(() => toast.dismiss(t.id), 200);
         }}
         aria-label="Dismiss"
-        className="shrink-0 min-w-[44px] min-h-[44px] w-11 h-11 inline-flex items-center justify-center font-bold opacity-80 hover:opacity-100"
+        className="shrink-0 min-w-[44px] min-h-touch w-11 h-11 inline-flex items-center justify-center font-bold opacity-80 hover:opacity-100"
       >
         ✕
       </button>

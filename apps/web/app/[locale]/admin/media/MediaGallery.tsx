@@ -113,7 +113,7 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
           </div>
 
           <div className="ml-auto self-end">
-            <p className="font-label text-[10px] uppercase tracking-wider text-ink/60">
+            <p className="font-label text-micro uppercase tracking-wider text-ink/60">
               {filtered.length !== items.length
                 ? t('countWithTotal', { count: filtered.length, total: items.length })
                 : t('count', { count: filtered.length })}
@@ -186,7 +186,7 @@ function MediaCard({
         {/* Source badge */}
         <span
           className={
-            'absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border-2 border-ink ' +
+            'absolute top-2 left-2 px-2 py-0.5 text-micro font-bold uppercase tracking-wider border-2 border-ink ' +
             (item.source === 'product' ? 'bg-accent text-ink' : 'bg-primary text-surface')
           }
         >
@@ -199,7 +199,7 @@ function MediaCard({
         <p className="font-mono text-xs text-ink truncate" title={item.filename}>
           {item.filename}
         </p>
-        <p className="mt-1 font-label text-[10px] uppercase tracking-wide text-ink/60 truncate">
+        <p className="mt-1 font-label text-micro uppercase tracking-wide text-ink/60 truncate">
           {item.sourceLabel}
         </p>
       </div>

@@ -50,7 +50,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
   if (order.status === 'pending') {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">{t('pendingLabel')}</p>
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/60">{t('pendingLabel')}</p>
         <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-ink">{t('pendingTitle')}</h1>
         <p className="mt-4 text-base text-ink/70">{t('pendingBody')}</p>
         <Button href={`/pembayaran/${order.kode_order}`} variant="primary" size="lg" className="mt-8">
@@ -64,7 +64,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
     const expired = order.status === 'expired';
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">{t(expired ? 'expiredLabel' : 'failedLabel')}</p>
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/60">{t(expired ? 'expiredLabel' : 'failedLabel')}</p>
         <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-ink">{t(expired ? 'expiredTitle' : 'failedTitle')}</h1>
         <p className="mt-4 text-base text-ink/70">{t(expired ? 'expiredBody' : 'failedBody')}</p>
         <Button href="/katalog" variant="primary" size="lg" className="mt-8">
@@ -81,7 +81,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
         <Card variant="filled-accent" thick hoverable={false} className="p-8 text-center mb-8">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-ink/80">✓ {t('preorderDepositLabel')}</p>
+          <p className="text-sm font-bold uppercase tracking-label text-ink/80">✓ {t('preorderDepositLabel')}</p>
           <h1 className="mt-2 text-3xl sm:text-4xl font-bold leading-tight text-ink">
             {t('preorderDepositTitle')}
           </h1>
@@ -147,7 +147,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
   return (
     <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
       <Card variant="filled-primary" thick hoverable={false} className="p-8 text-center mb-8">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+        <p className="text-sm font-bold uppercase tracking-label text-accent">
           ✓ {order.is_preorder && order.preorder_release_processed_at
             ? t('preorderReadyNow')
             : t('paymentReceived')}
@@ -198,7 +198,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                   {hasDownload && expired && <p className="mt-2 text-xs text-ink/60">{t('expiredDownload')}</p>}
                   {hasLicense && (
                     <div className="mt-2 bg-ink text-surface border-2 border-ink p-2.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">{t('licenseKey')}</p>
+                      <p className="text-micro font-bold uppercase tracking-wider opacity-70">{t('licenseKey')}</p>
                       <p className="font-mono font-bold text-sm break-words select-all">{delivery!.license_key}</p>
                     </div>
                   )}

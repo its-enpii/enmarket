@@ -103,7 +103,7 @@ export default async function DiscoverPage({
             <p>{t('storyBody1')}</p>
             <p>{t('storyBody2')}</p>
             <p>{t('storyBody3')}</p>
-            <p className="font-label text-label-sm uppercase tracking-[0.2em] text-accent pt-2">
+            <p className="font-label text-label-sm uppercase tracking-label text-accent pt-2">
               {t('signature')}
             </p>
           </div>
@@ -126,7 +126,7 @@ export default async function DiscoverPage({
                 ].join(' ')}
               >
                 <div
-                  className={`w-16 h-16 border-4 border-ink flex items-center justify-center text-3xl shadow-[4px_4px_0_0_var(--color-ink)] ${pillar.iconBg} ${pillar.iconText}`}
+                  className={`w-16 h-16 border-4 border-ink flex items-center justify-center text-3xl !shadow-brutal-4 ${pillar.iconBg} ${pillar.iconText}`}
                   aria-hidden="true"
                 >
                   {pillar.icon}

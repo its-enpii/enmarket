@@ -84,7 +84,7 @@ export default async function KeranjangPage() {
         <SectionContainer py="md" className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-10 lg:gap-12 items-start">
           <div className="space-y-6">
             <div className="flex items-baseline justify-between border-b-2 border-ink pb-3">
-              <h2 className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/70">
+              <h2 className="font-label text-label-sm uppercase tracking-label text-ink/70">
                 ✎ {t('selectedWorks')}
               </h2>
               <MetaLabel as="span" size="sm">

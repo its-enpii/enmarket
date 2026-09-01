@@ -31,7 +31,7 @@ export function PostCard({ post, compact = false }: Props) {
       <div
         className={
           'bg-primary/10 border-b-2 border-ink overflow-hidden relative ' +
-          (compact ? 'aspect-[16/9]' : 'aspect-[16/9]')
+          (compact ? 'aspect-video' : 'aspect-video')
         }
       >
         {thumb ? (
@@ -74,7 +74,7 @@ export function PostCard({ post, compact = false }: Props) {
             {post.excerpt}
           </p>
         )}
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-bold text-ink/60 uppercase tracking-wide">
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-fine font-bold text-ink/60 uppercase tracking-wide">
           {post.published_at && <span>{formatDate(post.published_at)}</span>}
           {post.reading_time_minutes && (
             <>

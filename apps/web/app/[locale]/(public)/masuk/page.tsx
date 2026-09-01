@@ -37,7 +37,7 @@ export default async function MasukPage({ params, searchParams }: PageProps) {
     <section className="py-12 md:py-20 px-4 sm:px-6 min-h-[70vh] flex items-center justify-center">
       <div className="w-full max-w-md">
         <Card variant="surface" hoverable={false} thick raised className="p-6 sm:p-8">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          <p className="mb-2 text-xs font-bold uppercase tracking-label text-primary">
             enpiistudio Akun
           </p>
           <h1 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight text-ink">

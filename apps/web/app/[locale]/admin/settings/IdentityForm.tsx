@@ -340,7 +340,7 @@ function LogoUploader({
             <p className="font-display font-black uppercase text-xs text-ink">
               {t('logoActive')}
             </p>
-            <p className="mt-1 text-[10px] text-ink/60 font-mono truncate">{value}</p>
+            <p className="mt-1 text-micro text-ink/60 font-mono truncate">{value}</p>
           </div>
           <Button
             type="button"

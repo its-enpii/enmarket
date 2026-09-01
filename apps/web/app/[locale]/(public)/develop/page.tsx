@@ -125,7 +125,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Filter pills */}
           <div className="flex flex-wrap items-center gap-3">
-            <span className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mr-2">
+            <span className="font-label text-label-sm uppercase tracking-label text-ink/60 mr-2">
               {t('filterLabel')}
             </span>
             {FILTER_PILLS.map((pill) => {
@@ -149,7 +149,7 @@ export default async function DevelopPage({ searchParams }: PageProps) {
                 </Button>
               );
             })}
-            <span className="ml-2 font-label text-label-sm uppercase tracking-[0.2em] text-ink/60">
+            <span className="ml-2 font-label text-label-sm uppercase tracking-label text-ink/60">
               {t('items', { count: meta.total })}
             </span>
           </div>

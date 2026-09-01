@@ -151,7 +151,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 <Image
                   src={post.thumbnail}
                   alt={post.title}
-                  className="w-full aspect-[16/9]"
+                  className="w-full aspect-video"
                 />
               </Card>
               {/* Decorative accent block — bottom-right, partially off-edge */}
@@ -196,7 +196,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           )}
 
           {/* Meta strip — thin bordered box (per brief item 2) */}
-          <div className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-2 border-ink bg-surface px-5 py-3 shadow-[3px_3px_0_0_var(--color-ink)]">
+          <div className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-2 border-ink bg-surface px-5 py-3 !shadow-brutal-3">
             <Badge tone="accent" size="sm" className="px-2.5 py-0.5 text-label-sm">
               {primaryTag}
             </Badge>
@@ -237,7 +237,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             )}
 
             {/* End-of-article signature mark */}
-            <div className="mt-16 flex items-center gap-3 font-label text-label-sm uppercase tracking-[0.3em] text-ink/40">
+            <div className="mt-16 flex items-center gap-3 font-label text-label-sm uppercase tracking-label-lg text-ink/40">
               <span aria-hidden="true">— ✎ —</span>
               <span>{t('end')}</span>
             </div>
@@ -250,7 +250,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
         <SectionBand>
           <SectionContainer py="md">
             <div className="max-w-3xl mx-auto">
-              <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/60 mb-4">
+              <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-4">
                 {t('filedUnder')}
               </p>
               <div className="flex flex-wrap items-center gap-2">
@@ -260,7 +260,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                     className={[
                       'inline-flex items-center px-3 py-1.5 font-label text-label-sm font-bold uppercase tracking-wider border-2 border-ink',
                       i === 0
-                        ? 'bg-accent text-ink shadow-[3px_3px_0_0_var(--color-ink)]'
+                        ? 'bg-accent text-ink !shadow-brutal-3'
                         : 'bg-surface text-ink',
                     ].join(' ')}
                   >
@@ -440,7 +440,7 @@ function RelatedNote({
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={[
-              'inline-flex items-center px-2 py-0.5 font-label text-[10px] font-black uppercase tracking-wider border border-ink',
+              'inline-flex items-center px-2 py-0.5 font-label text-micro font-black uppercase tracking-wider border border-ink',
               tagTone === 'accent'
                 ? 'bg-accent text-ink'
                 : 'bg-primary text-surface',
@@ -448,7 +448,7 @@ function RelatedNote({
           >
             {tag}
           </span>
-          <span className="font-label text-[10px] text-ink/60 uppercase tracking-wider">
+          <span className="font-label text-micro text-ink/60 uppercase tracking-wider">
             {date}
           </span>
         </div>

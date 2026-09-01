@@ -18,7 +18,7 @@ interface StatusPillProps {
 export function StatusPill({ tone, children, className }: StatusPillProps) {
   return (
     <span
-      className={`inline-flex items-center border-2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${TONE_CLASSES[tone]} ${className ?? ''}`}
+      className={`inline-flex items-center border-2 px-2 py-0.5 text-micro font-bold uppercase tracking-wider ${TONE_CLASSES[tone]} ${className ?? ''}`}
     >
       {children}
     </span>

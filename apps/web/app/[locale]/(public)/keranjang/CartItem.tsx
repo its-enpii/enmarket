@@ -58,7 +58,7 @@ export async function CartItem({ item }: { item: CartItemData }) {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               {category && (
-                <p className="font-label text-[10px] uppercase tracking-[0.2em] text-ink/60 mb-1">
+                <p className="font-label text-micro uppercase tracking-label text-ink/60 mb-1">
                   {category}
                 </p>
               )}
@@ -77,14 +77,14 @@ export async function CartItem({ item }: { item: CartItemData }) {
           </div>
 
           <div className="flex items-baseline gap-2 border-l-2 border-ink/20 pl-3">
-            <span className="font-label text-[10px] uppercase tracking-wider text-ink/50">
+            <span className="font-label text-micro uppercase tracking-wider text-ink/50">
               {t('subtotal')}
             </span>
             <span className="font-display font-black text-base text-ink">
               {formatRupiah(item.subtotal)}
             </span>
             {item.qty > 1 && (
-              <span className="font-label text-[10px] uppercase text-ink/50">
+              <span className="font-label text-micro uppercase text-ink/50">
                 × {item.qty}
               </span>
             )}

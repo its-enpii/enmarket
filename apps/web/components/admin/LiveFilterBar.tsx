@@ -115,7 +115,7 @@ export function LiveFilterBar({
   }
 
   return (
-    <Card variant="surface" hoverable={false} className="p-3 !shadow-[3px_3px_0_0_var(--color-ink)]">
+    <Card variant="surface" hoverable={false} className="p-3 !shadow-brutal-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         {/* Live search */}
         <FormField

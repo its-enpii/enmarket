@@ -45,7 +45,7 @@ export function AccountProvisioningBox({ provisioning }: Props) {
     return (
       <div className="mt-2 bg-ink text-surface border-2 border-ink p-3">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+          <p className="text-micro font-bold uppercase tracking-wider opacity-70">
             ✓ {t('statusReady')}
           </p>
         </div>
@@ -60,7 +60,7 @@ export function AccountProvisioningBox({ provisioning }: Props) {
           ))}
         </div>
         {provisioning.catatan && (
-          <p className="mt-2 pt-2 border-t border-surface/20 text-[10px] italic opacity-70">
+          <p className="mt-2 pt-2 border-t border-surface/20 text-micro italic opacity-70">
             📝 {provisioning.catatan}
           </p>
         )}

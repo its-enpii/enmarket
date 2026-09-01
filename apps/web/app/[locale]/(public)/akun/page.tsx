@@ -63,7 +63,7 @@ export default function AkunDashboardPage() {
   return (
     <div className="space-y-6">
       <Card variant="surface" hoverable={false} className="p-6 md:p-8 bg-accent/10 border-3">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+        <p className="text-xs font-bold uppercase tracking-label text-primary">
           {t('title')}
         </p>
         <h1 className="text-2xl sm:text-3xl font-black text-ink mt-1">

@@ -456,7 +456,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                     <span className="text-primary font-bold w-6 text-center">{i + 1}.</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold truncate">{post.title}</p>
-                      <p className="text-[10px] text-ink/50 font-mono truncate">/{post.slug}</p>
+                      <p className="text-micro text-ink/50 font-mono truncate">/{post.slug}</p>
                     </div>
                     <Button
                       type="button"
@@ -526,7 +526,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
                       </span>
                       <span className="flex-1 min-w-0">
                         <span className="block text-sm font-bold truncate">{p.title}</span>
-                        <span className="block text-[10px] text-ink/50 font-mono truncate">/{p.slug}</span>
+                        <span className="block text-micro text-ink/50 font-mono truncate">/{p.slug}</span>
                       </span>
                     </Button>
                   </li>

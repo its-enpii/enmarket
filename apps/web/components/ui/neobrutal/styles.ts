@@ -125,7 +125,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export const BUTTON_SIZE_CLS: Record<ButtonSize, string> = {
   sm: 'px-3 py-1.5 text-sm min-h-[40px]',
-  md: 'px-5 py-2.5 text-base min-h-[44px]',
+  md: 'px-5 py-2.5 text-base min-h-touch',
   lg: 'px-12 py-5 text-lg sm:text-xl min-h-[56px] font-black uppercase',
 };
 

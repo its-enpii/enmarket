@@ -26,10 +26,10 @@ export default function AdminError({ error, reset }: Props) {
       description={t('backToDashboard')}
       actions={
         <div className="flex flex-wrap gap-3 items-center justify-center">
-          <Button variant="accent" size="md" onClick={reset} className="min-h-[44px]">
+          <Button variant="accent" size="md" onClick={reset} className="min-h-touch">
             {tCommon('retry')}
           </Button>
-          <Button variant="surface" size="md" href="/admin" className="min-h-[44px]">
+          <Button variant="surface" size="md" href="/admin" className="min-h-touch">
             {t('backToDashboard')}
           </Button>
         </div>

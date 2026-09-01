@@ -118,7 +118,7 @@ export function ReactionStrip({ postSlug }: Props) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         {/* Prompt */}
         <div className="flex-1">
-          <p className="font-label text-label-sm uppercase tracking-[0.2em] text-accent mb-2">
+          <p className="font-label text-label-sm uppercase tracking-label text-accent mb-2">
             {t('eyebrow')}
           </p>
           <p className="font-display text-2xl md:text-3xl font-black uppercase leading-tight text-ink">
@@ -172,9 +172,9 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
       : 'bg-primary text-surface border-ink';
   const activeCls = active
     ? tone === 'accent'
-      ? 'shadow-[1px_1px_0_0_var(--color-ink)] translate-x-[2px] translate-y-[2px]'
+      ? '!shadow-brutal-1 translate-x-[2px] translate-y-[2px]'
       : 'shadow-[1px_1px_0_0_var(--color-accent)] translate-x-[2px] translate-y-[2px]'
-    : 'shadow-[4px_4px_0_0_var(--color-ink)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_var(--color-ink)]';
+    : '!shadow-brutal-4 hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-2';
 
   return (
     <Button

@@ -22,10 +22,10 @@ export default function PublicError({ error, reset }: Props) {
       description={t('body500')}
       actions={
         <div className="flex flex-wrap gap-3 items-center justify-center">
-          <Button variant="accent" size="md" onClick={reset} className="min-h-[44px]">
+          <Button variant="accent" size="md" onClick={reset} className="min-h-touch">
             {t('retry')}
           </Button>
-          <Button variant="surface" size="md" href="/katalog" className="min-h-[44px]">
+          <Button variant="surface" size="md" href="/katalog" className="min-h-touch">
             {t('viewCatalog').replace('← ', '')}
           </Button>
         </div>

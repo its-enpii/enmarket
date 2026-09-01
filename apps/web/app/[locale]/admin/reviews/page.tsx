@@ -62,7 +62,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
       render: (row) => (
         <div>
           <p className="font-bold text-ink truncate max-w-xs">{row.product?.nama || '-'}</p>
-          <p className="text-[11px] font-mono text-ink/60">#{row.order_kode}</p>
+          <p className="text-fine font-mono text-ink/60">#{row.order_kode}</p>
         </div>
       ),
     },
@@ -73,7 +73,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
       render: (row) => (
         <div>
           <p className="font-bold text-ink truncate">{row.buyer_name}</p>
-          <p className="text-[11px] text-ink/60">{row.created_at ? formatDate(row.created_at) : '-'}</p>
+          <p className="text-fine text-ink/60">{row.created_at ? formatDate(row.created_at) : '-'}</p>
         </div>
       ),
     },

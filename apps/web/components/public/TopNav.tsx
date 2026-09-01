@@ -63,13 +63,13 @@ export function TopNav({ children }: Props) {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] relative">
+    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink !shadow-brutal-6 relative">
       <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
         <NLink
           href="/"
           variant="primary"
           underline="none"
-          className="font-display text-2xl md:text-3xl xl:text-2xl 2xl:text-headline-md font-black uppercase tracking-tighter min-h-[44px] inline-flex items-center"
+          className="font-display text-2xl md:text-3xl xl:text-2xl 2xl:text-headline-md font-black uppercase tracking-tighter min-h-touch inline-flex items-center"
         >
           {siteName}
         </NLink>
@@ -85,7 +85,7 @@ export function TopNav({ children }: Props) {
                 variant="primary"
                 underline={active ? 'static' : 'hover'}
                 aria-current={active ? 'page' : undefined}
-                className={`font-label text-label-sm uppercase font-bold min-h-[44px] inline-flex items-center pb-1 ${
+                className={`font-label text-label-sm uppercase font-bold min-h-touch inline-flex items-center pb-1 ${
                   active ? 'border-b-4 border-primary' : ''
                 }`}
               >
@@ -184,7 +184,7 @@ export function TopNav({ children }: Props) {
               child ? (
                 <span
                   onClick={() => setOpen(false)}
-                  className="[&>a]:flex [&>a]:w-full [&>a]:justify-center [&>a]:items-center [&>a]:min-h-[44px] [&>a]:!px-5 [&>a]:!py-2.5 [&>a]:!text-base"
+                  className="[&>a]:flex [&>a]:w-full [&>a]:justify-center [&>a]:items-center [&>a]:min-h-touch [&>a]:!px-5 [&>a]:!py-2.5 [&>a]:!text-base"
                 >
                   {child}
                 </span>

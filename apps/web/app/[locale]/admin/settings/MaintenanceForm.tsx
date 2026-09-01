@@ -86,7 +86,7 @@ export function MaintenanceForm({ status }: Props) {
           </div>
           <span
             className={
-              'inline-flex items-center gap-1 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-2 border-ink shrink-0 ' +
+              'inline-flex items-center gap-1 px-3 py-1.5 text-micro font-bold uppercase tracking-wider border-2 border-ink shrink-0 ' +
               (enabled ? 'bg-primary text-surface' : 'bg-surface text-ink')
             }
           >

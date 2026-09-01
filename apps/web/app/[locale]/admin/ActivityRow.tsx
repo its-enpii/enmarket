@@ -45,7 +45,7 @@ export function ActivityRow({ entry }: { entry: ActivityLog }) {
         <div className="flex-1 min-w-0">
           <p className="font-body text-sm text-ink">
             <span className="font-bold">{verb}</span>{' '}
-            <span className="text-ink/60 uppercase font-bold tracking-wide text-[10px]">
+            <span className="text-ink/60 uppercase font-bold tracking-wide text-micro">
               {subject}
             </span>
             {detail && (
@@ -55,7 +55,7 @@ export function ActivityRow({ entry }: { entry: ActivityLog }) {
               </>
             )}
           </p>
-          <p className="mt-1 text-[10px] text-ink/50 italic" suppressHydrationWarning>
+          <p className="mt-1 text-micro text-ink/50 italic" suppressHydrationWarning>
             {formatDateTime(entry.created_at)}
           </p>
         </div>

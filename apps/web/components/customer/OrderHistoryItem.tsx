@@ -26,7 +26,7 @@ export function OrderHistoryItem({ order }: Props) {
               #{order.kode_order}
             </span>
             <span
-              className={`text-[11px] font-bold px-2 py-0.5 border-2 uppercase tracking-wide ${statusColor}`}
+              className={`text-fine font-bold px-2 py-0.5 border-2 uppercase tracking-wide ${statusColor}`}
             >
               {statusLabel}
             </span>

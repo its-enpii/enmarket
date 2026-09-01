@@ -30,7 +30,7 @@ export function StatsBar({ stats }: Props) {
           <li key={i}>
             <Card variant={variant} hoverable={false} className="p-3 sm:p-4 text-center">
               <p className="font-mono text-2xl sm:text-3xl font-bold leading-none">{s.value}</p>
-              <p className="mt-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider opacity-80">
+              <p className="mt-1 text-micro sm:text-xs font-bold uppercase tracking-wider opacity-80">
                 {s.label}
               </p>
             </Card>

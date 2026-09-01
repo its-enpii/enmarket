@@ -24,7 +24,7 @@ export function PromoBanner() {
     <div className="border-y-2 border-ink bg-ink text-surface overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex items-center gap-3 py-2 overflow-x-auto whitespace-nowrap text-xs sm:text-sm font-bold uppercase tracking-wider scrollbar-none">
-          <span className="shrink-0 bg-accent text-ink border-2 border-accent px-2 py-0.5 text-[10px] sm:text-xs">
+          <span className="shrink-0 bg-accent text-ink border-2 border-accent px-2 py-0.5 text-micro sm:text-xs">
             {t('badge')}
           </span>
           {items.map((it, i) => (

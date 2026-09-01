@@ -40,7 +40,7 @@ export function TrendingSection({ trending, latest }: Props) {
       <div className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-accent">
+            <p className="text-micro sm:text-xs font-bold uppercase tracking-label text-accent">
               {t('eyebrow')}
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-ink leading-tight">
@@ -73,7 +73,7 @@ export function TrendingSection({ trending, latest }: Props) {
               // Isi slot terakhir dengan CTA bundle
               <Card variant="filled-accent" hoverable={false} className="p-4 flex flex-col justify-between">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider">📦 Paket Hemat</p>
+                  <p className="text-micro font-bold uppercase tracking-wider">📦 Paket Hemat</p>
                   <p className="mt-1 font-bold text-lg leading-snug">
                     {t('bundleBody')}
                   </p>
@@ -109,7 +109,7 @@ export function TrendingSection({ trending, latest }: Props) {
       <div className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            <p className="text-micro sm:text-xs font-bold uppercase tracking-label text-primary">
               {t('latestEyebrow')}
             </p>
             <h2 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
@@ -123,9 +123,9 @@ export function TrendingSection({ trending, latest }: Props) {
               <li key={p.id} className="shrink-0 w-56 sm:w-64">
                 <Link
                   href={latestIsPlaceholder ? '/katalog' : `/develop/${p.slug}`}
-                  className="group block bg-surface border-2 border-ink shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--color-ink)] transition-all"
+                  className="group block bg-surface border-2 border-ink !shadow-brutal-3 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:!shadow-brutal-5 active:translate-x-[1px] active:translate-y-[1px] active:!shadow-brutal-1 transition-all"
                 >
-                  <div className="aspect-[4/3] bg-primary/10 border-b-2 border-ink overflow-hidden relative">
+                  <div className="aspect-43 bg-primary/10 border-b-2 border-ink overflow-hidden relative">
                     {p.preview_images?.[0] ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <Image
@@ -365,7 +365,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
   return (
     <Link
       href={isPlaceholder ? '/katalog' : `/develop/${product.slug}`}
-      className="group relative bg-primary text-surface border-2 border-ink shadow-[6px_6px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[8px_8px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[3px_3px_0_0_var(--color-ink)] transition-all flex flex-col"
+      className="group relative bg-primary text-surface border-2 border-ink !shadow-brutal-6 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:!shadow-brutal-8 active:translate-x-[1px] active:translate-y-[1px] active:!shadow-brutal-3 transition-all flex flex-col"
     >
       <div className="aspect-[16/10] bg-surface border-b-2 border-ink overflow-hidden relative">
         {thumb ? (
@@ -390,7 +390,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
         </Badge>
       </div>
       <div className="p-5 flex-1 flex flex-col">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-accent">
+        <p className="text-micro font-bold uppercase tracking-wider text-accent">
           {product.category?.nama ?? t('noCategory')}
         </p>
         <h3 className="mt-2 text-2xl sm:text-3xl font-bold leading-tight text-surface line-clamp-2">
@@ -401,12 +401,12 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
         </p>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-surface/70">{t('priceLabel')}</p>
+            <p className="text-micro font-bold uppercase tracking-wider text-surface/70">{t('priceLabel')}</p>
             <p className="font-mono text-2xl sm:text-3xl font-bold leading-none text-accent">
               {formatRupiah(product.harga)}
             </p>
           </div>
-          <span className="inline-flex items-center gap-1 bg-accent text-ink border-2 border-ink px-3 py-2 text-xs font-bold shadow-[3px_3px_0_0_var(--color-ink)] group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-[4px_4px_0_0_var(--color-ink)] transition-all">
+          <span className="inline-flex items-center gap-1 bg-accent text-ink border-2 border-ink px-3 py-2 text-xs font-bold !shadow-brutal-3 group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:!shadow-brutal-4 transition-all">
             {t('viewCta')}
           </span>
         </div>
@@ -422,7 +422,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
   return (
     <Link
       href={isPlaceholder ? '/katalog' : `/develop/${product.slug}`}
-      className="group block bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0_0_var(--color-ink)] transition-all"
+      className="group block bg-surface border-2 border-ink !shadow-brutal-4 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:!shadow-brutal-6 active:translate-x-[1px] active:translate-y-[1px] active:!shadow-brutal-2 transition-all"
     >
       <div className="flex sm:flex-row flex-col">
         <div className="sm:w-32 sm:h-32 w-full h-40 bg-primary/10 border-b-2 sm:border-b-0 sm:border-r-2 border-ink overflow-hidden relative shrink-0">
@@ -435,7 +435,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
             />
           ) : (
             <ImagePlaceholder>
-              <span className="font-bold text-[10px] uppercase tracking-wider opacity-80">
+              <span className="font-bold text-micro uppercase tracking-wider opacity-80">
                 {t('noImage')}
               </span>
             </ImagePlaceholder>
@@ -443,7 +443,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
         </div>
         <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between min-w-0">
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-ink/60">
+            <p className="text-micro font-bold uppercase tracking-wider text-ink/60">
               {product.category?.nama ?? t('noCategory')}
             </p>
             <h3 className="mt-1 font-bold text-sm sm:text-base leading-tight text-ink line-clamp-2 group-hover:text-primary transition-colors">

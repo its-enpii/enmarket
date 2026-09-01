@@ -83,6 +83,25 @@
   --text-label-sm--letter-spacing: 0.05em;
   --text-label-sm--font-weight: 700;
 
+  --text-micro: 10px;
+  --text-fine: 11px;
+
+  --tracking-label: 0.2em;
+  --tracking-label-lg: 0.3em;
+  --tracking-otp: 0.5em;
+
+  --shadow-brutal-1: 1px 1px 0 0 var(--color-ink);
+  --shadow-brutal-2: 2px 2px 0 0 var(--color-ink);
+  --shadow-brutal-3: 3px 3px 0 0 var(--color-ink);
+  --shadow-brutal-4: 4px 4px 0 0 var(--color-ink);
+  --shadow-brutal-5: 5px 5px 0 0 var(--color-ink);
+  --shadow-brutal-6: 6px 6px 0 0 var(--color-ink);
+  --shadow-brutal-8: 8px 8px 0 0 var(--color-ink);
+  --shadow-brutal-10: 10px 10px 0 0 var(--color-ink);
+  --shadow-brutal-12: 12px 12px 0 0 var(--color-ink);
+
+  --aspect-43: 4 / 3;
+
   --animate-marquee: marquee 30s linear infinite;
 
   /* Urutan layer: nav 50 < lightbox 60 < modal 120 < dialog 130 < toast 140. */
@@ -111,6 +130,10 @@
   --foreground: #040303;
   --border-width-neobrutal: 4px;
   --shadow-offset-neobrutal: 6px;
+}
+
+@utility min-h-touch {
+  min-height: 44px;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -35,7 +35,7 @@ export function CategoryRail({ categories }: Props) {
       aria-label={t('ariaLabel')}
       variant="surface"
       hoverable={false}
-      className="!shadow-[4px_4px_0_0_var(--color-ink)]"
+      className="!shadow-brutal-4"
     >
       <div className="flex items-center justify-between gap-2 border-b-2 border-ink px-4 py-3">
         <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-ink">
@@ -67,7 +67,7 @@ export function CategoryRail({ categories }: Props) {
                 <span className="flex flex-col text-left">
                   <span className="font-bold text-sm leading-tight">{cat.nama}</span>
                   {typeof cat.products_count === 'number' && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-ink/60">
+                    <span className="text-micro font-bold uppercase tracking-wider text-ink/60">
                       {cat.products_count} {t('suffix')}
                     </span>
                   )}
@@ -78,7 +78,7 @@ export function CategoryRail({ categories }: Props) {
         </ul>
       </div>
       {isEmpty && (
-        <p className="text-[10px] text-ink/50 px-4 pb-3 italic">
+        <p className="text-micro text-ink/50 px-4 pb-3 italic">
           {t('placeholderHint')}
         </p>
       )}

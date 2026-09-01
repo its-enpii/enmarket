@@ -18,13 +18,13 @@ export default async function AdminNotFound() {
       description={t('backToDashboard')}
       actions={
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button variant="primary" size="md" href="/admin" className="min-h-[44px]">
+          <Button variant="primary" size="md" href="/admin" className="min-h-touch">
             {t('backToDashboard')}
           </Button>
-          <Button variant="surface" size="md" href="/admin/products" className="min-h-[44px]">
+          <Button variant="surface" size="md" href="/admin/products" className="min-h-touch">
             {tNav('products')}
           </Button>
-          <Button variant="surface" size="md" href="/admin/orders" className="min-h-[44px]">
+          <Button variant="surface" size="md" href="/admin/orders" className="min-h-touch">
             {tNav('orders')}
           </Button>
         </div>

@@ -16,8 +16,8 @@ export async function CategoryFilter({ categories, activeSlug }: Props) {
   const t = await getTranslations('katalog');
 
   return (
-    <aside className="bg-surface border-2 border-ink p-4 shadow-[4px_4px_0_0_var(--color-ink)]">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-ink">
+    <aside className="bg-surface border-2 border-ink p-4 !shadow-brutal-4">
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-label text-ink">
         {t('categoryLabel')}
       </h2>
       <ul className="flex flex-col gap-2">
@@ -28,8 +28,8 @@ export async function CategoryFilter({ categories, activeSlug }: Props) {
             underline="none"
             className={`block border-2 border-ink px-3 py-2 text-sm font-bold transition-all ${
               !activeSlug
-                ? 'bg-primary text-surface shadow-[2px_2px_0_0_var(--color-ink)]'
-                : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_var(--color-ink)]'
+                ? 'bg-primary text-surface !shadow-brutal-2'
+                : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-1'
             }`}
           >
             {t('allCategories')}
@@ -45,8 +45,8 @@ export async function CategoryFilter({ categories, activeSlug }: Props) {
                 underline="none"
                 className={`flex items-center justify-between gap-2 border-2 border-ink px-3 py-2 text-sm font-bold transition-all ${
                   isActive
-                    ? 'bg-primary text-surface shadow-[2px_2px_0_0_var(--color-ink)]'
-                    : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_0_var(--color-ink)]'
+                    ? 'bg-primary text-surface !shadow-brutal-2'
+                    : 'bg-surface text-ink hover:translate-x-[1px] hover:translate-y-[1px] hover:!shadow-brutal-1'
                 }`}
               >
                 <span className="truncate">{cat.nama}</span>

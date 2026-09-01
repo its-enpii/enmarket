@@ -94,10 +94,10 @@ export function CheckoutForm({
     <form action={formAction} className="space-y-6">
       {/* Header strip — matches theme eyebrow */}
       <div className="border-b-2 border-ink/20 pb-3 flex items-baseline justify-between">
-        <p className="font-label text-label-sm uppercase tracking-[0.2em] text-ink/70">
+        <p className="font-label text-label-sm uppercase tracking-label text-ink/70">
           ✎ {t('buyerInfo')}
         </p>
-        <span className="font-label text-[10px] uppercase tracking-wider text-ink/50">
+        <span className="font-label text-micro uppercase tracking-wider text-ink/50">
           {t('required')}
         </span>
       </div>

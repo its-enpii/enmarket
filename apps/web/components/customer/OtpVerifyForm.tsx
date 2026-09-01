@@ -124,7 +124,7 @@ export function OtpVerifyForm({
             onChange={handleCodeChange}
             placeholder="000000"
             disabled={loading}
-            className="text-center tracking-[0.5em] font-mono text-2xl font-black"
+            className="text-center tracking-otp font-mono text-2xl font-black"
             autoFocus
             autoComplete="one-time-code"
           />

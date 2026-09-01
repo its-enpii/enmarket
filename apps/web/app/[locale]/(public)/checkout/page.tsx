@@ -86,7 +86,7 @@ export default async function CheckoutPage() {
         </Card>
 
         <Card variant="filled-primary" as="aside" thick hoverable={false} className="p-5 h-fit">
-          <h2 className="font-label text-label-sm uppercase tracking-[0.3em] text-accent mb-4 border-b border-surface/30 pb-2">
+          <h2 className="font-label text-label-sm uppercase tracking-label-lg text-accent mb-4 border-b border-surface/30 pb-2">
             ✎ {t('orderSummary')}
           </h2>
           <ul className="space-y-3 mb-5">
@@ -100,7 +100,7 @@ export default async function CheckoutPage() {
             ))}
           </ul>
           <div className="border-t-2 border-surface/30 pt-3">
-            <p className="font-label text-[10px] uppercase tracking-[0.2em] opacity-80 mb-1">{t('total')}</p>
+            <p className="font-label text-micro uppercase tracking-label opacity-80 mb-1">{t('total')}</p>
             <p className="font-display text-3xl font-black leading-none">{cart.total_formatted}</p>
           </div>
           <p className="mt-4 text-xs opacity-70 border-t border-surface/20 pt-3">
