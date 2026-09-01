@@ -28,3 +28,5 @@ export { DataItem } from './DataItem';
 export type { DataItemProps } from './DataItem';
 export { ImagePlaceholder } from './ImagePlaceholder';
 export type { ImagePlaceholderProps } from './ImagePlaceholder';
+export { Spinner } from './Spinner';
+export type { SpinnerProps } from './Spinner';

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from './AuthProvider';
@@ -90,7 +91,7 @@ export function OtpVerifyForm({
         <FormError variant="box">{error}</FormError>
       )}
 
-      <div className="p-3 bg-accent/20 border-2 border-ink text-sm">
+      <AlertBanner variant="accent-soft">
         <p className="text-xs text-ink/70 font-semibold uppercase">{t('phoneLabel')}</p>
         <div className="flex items-center justify-between mt-1">
           <span className="font-mono font-bold text-ink">{phone}</span>
@@ -104,7 +105,7 @@ export function OtpVerifyForm({
             {t('changePhone')}
           </Button>
         </div>
-      </div>
+      </AlertBanner>
 
       <form
         onSubmit={(e) => {

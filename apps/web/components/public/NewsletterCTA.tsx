@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 
 /**
  * Newsletter / update CTA — banner besar sebelum footer.
@@ -16,9 +16,15 @@ import { Button } from '@/components/ui/neobrutal';
 export function NewsletterCTA() {
   const t = useTranslations('newsletter');
   return (
-    <section
+    <Card
       aria-label={t('ariaLabel')}
-      className="bg-ink text-surface border-4 border-ink p-6 sm:p-10 shadow-[6px_6px_0_0_var(--color-accent)] relative overflow-hidden"
+      as="section"
+      variant="ink"
+      thick
+      hoverable={false}
+      shadowColor="accent"
+      elevation={6}
+      className="p-6 sm:p-10 relative overflow-hidden"
     >
       <div
         aria-hidden="true"
@@ -47,6 +53,6 @@ export function NewsletterCTA() {
           </Button>
         </div>
       </div>
-    </section>
+    </Card>
   );
 }

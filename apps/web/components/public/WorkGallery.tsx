@@ -46,13 +46,14 @@ export function WorkGallery({ images, alt, title }: Props) {
   // Single image — block besar dengan subtle rotate
   if (images.length === 1) {
     return (
-      <Button
+      <Card
+        as="button"
         type="button"
         variant="surface"
-        size="sm"
+        hoverable={false}
         elevation={8}
         onClick={() => setActiveIdx(0)}
-        className="block w-full p-0 overflow-hidden -rotate-1 hover:rotate-0 transition-transform"
+        className="w-full p-0 shadow-brutal-8 overflow-hidden -rotate-1 hover:rotate-0 transition-transform cursor-pointer"
         aria-label={t('galleryOpen', { name: alt })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -61,7 +62,7 @@ export function WorkGallery({ images, alt, title }: Props) {
           alt={alt}
           className="w-full aspect-43"
         />
-      </Button>
+      </Card>
     );
   }
 

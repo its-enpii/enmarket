@@ -8,6 +8,7 @@ import { ModalShell } from '@/components/ui/ModalShell';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
+import { Spinner } from '@/components/ui/Spinner';
 import { fetchMediaLibrary } from '@/lib/media-actions';
 import { Image } from '@/components/ui/Image';
 import {
@@ -155,7 +156,7 @@ export function MediaPickerModal({
         <div className="p-5 overflow-y-auto flex-1 min-h-[260px]">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-2 text-ink/60">
-              <span className="animate-spin text-2xl">⏳</span>
+              <Spinner className="text-2xl">⏳</Spinner>
               <p className="text-xs font-bold uppercase tracking-wider">
                 {tShared('loadingMedia')}
               </p>
