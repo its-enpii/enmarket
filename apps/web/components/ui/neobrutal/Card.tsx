@@ -44,6 +44,7 @@ type CommonProps = {
   thick?: boolean; // 4px border instead of 2px
   raised?: boolean;
   elevation?: CardElevation;
+  activeElevation?: CardElevation;
   hoverElevation?: CardElevation;
   shadowColor?: CardShadowColor;
   as?: AllowedTag;
@@ -87,6 +88,7 @@ export function Card(props: CardProps) {
     thick = false,
     raised = false,
     elevation,
+    activeElevation,
     shadowColor = 'ink',
     as = 'div',
     className = '',
@@ -101,7 +103,7 @@ export function Card(props: CardProps) {
   // Memakai class raw CSS dari globals.css untuk menjamin hardware acceleration
   // dan menghindari bug ghosting Tailwind v4 translate property.
   const interactive = hoverable
-    ? 'neo-btn neo-btn-ink'
+    ? `neo-btn neo-btn-ink${activeElevation ? ` active:${SHADOW_CLS[activeElevation]}` : ''}`
     : SHADOW_CLS[elevation ?? (raised ? 8 : 6)];
 
   const composed = [

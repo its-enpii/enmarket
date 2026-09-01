@@ -86,9 +86,9 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
           </div>
         )}
         <div className="pt-2">
-          <p className="font-label text-label-sm uppercase tracking-label text-surface/70 mb-2">
+          <Eyebrow size="label-sm" color="surface-soft" className="mb-2">
             {allPreorder ? t('preorderLabel') : allFree ? t('free') : t('total')}
-          </p>
+          </Eyebrow>
           <Badge tone="accent" size="lg" shadow={false} className="px-6 py-4">
             <span className="font-display font-black text-3xl md:text-4xl uppercase tracking-tight">
               {allFree ? t('free') : formatRupiah(displayTotal)}

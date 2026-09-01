@@ -21,7 +21,7 @@ import { DevelopGrid } from '@/components/public/DevelopGrid';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SearchBar } from '@/components/public/SearchBar';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { Button, NLink } from '@/components/ui/neobrutal';
+import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { SectionBand, SectionIntro } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { PaginatedResponse, Product } from '@/lib/types';
@@ -125,9 +125,9 @@ export default async function DevelopPage({ searchParams }: PageProps) {
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           {/* Filter pills */}
           <div className="flex flex-wrap items-center gap-3">
-            <span className="font-label text-label-sm uppercase tracking-label text-ink/60 mr-2">
+            <Eyebrow as="span" size="label-sm" color="ink-muted" className="mr-2">
               {t('filterLabel')}
-            </span>
+            </Eyebrow>
             {FILTER_PILLS.map((pill) => {
               const isActive = pill.value === activeTipe;
               const params = new URLSearchParams();
@@ -149,9 +149,9 @@ export default async function DevelopPage({ searchParams }: PageProps) {
                 </Button>
               );
             })}
-            <span className="ml-2 font-label text-label-sm uppercase tracking-label text-ink/60">
+            <Eyebrow as="span" size="label-sm" color="ink-muted" className="ml-2">
               {t('items', { count: meta.total })}
-            </span>
+            </Eyebrow>
           </div>
 
           {/* Search bar — right */}
@@ -229,4 +229,3 @@ export default async function DevelopPage({ searchParams }: PageProps) {
   );
 }
 import { buildMetadata } from '@/lib/seo';
-import { Eyebrow } from '@/components/ui/neobrutal';

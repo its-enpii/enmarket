@@ -6,10 +6,11 @@
 
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 
-import { Card, Button, NLink } from '@/components/ui/neobrutal';
+import { Card, Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
+import { Badge } from '@/components/ui/Badge';
 
 export async function generateMetadata({
   params,
@@ -89,13 +90,13 @@ export default async function DiscoverPage({
           <blockquote className="font-display text-2xl sm:text-3xl md:text-5xl font-black uppercase leading-[1.05] tracking-tight text-ink break-words">
             <span className="text-primary">“</span>
             Code is a{' '}
-            <span className="inline-block bg-primary text-surface px-2 py-0.5 border-2 border-ink shadow-[4px_4px_0_0_var(--color-accent)]">
+            <Badge tone="primary" size="sm" shadowColor="accent" className="text-2xl sm:text-3xl md:text-5xl">
               material
-            </span>
+            </Badge>
             , not a delivery{' '}
-            <span className="inline-block bg-accent text-ink px-2 py-0.5 border-2 border-ink shadow-[4px_4px_0_0_var(--color-primary)]">
+            <Badge tone="accent" size="sm" shadowColor="primary" className="text-2xl sm:text-3xl md:text-5xl">
               mechanism
-            </span>
+            </Badge>
             .
             <span className="text-primary">”</span>
           </blockquote>
@@ -103,9 +104,9 @@ export default async function DiscoverPage({
             <p>{t('storyBody1')}</p>
             <p>{t('storyBody2')}</p>
             <p>{t('storyBody3')}</p>
-            <p className="font-label text-label-sm uppercase tracking-label text-accent pt-2">
+            <Eyebrow size="label-sm" color="accent" className="pt-2">
               {t('signature')}
-            </p>
+            </Eyebrow>
           </div>
         </SectionContainer>
       </SectionBand>
@@ -179,12 +180,12 @@ export default async function DiscoverPage({
           <Eyebrow size="md" color="ink" className="mb-6">
             {t('ctaEyebrow')}
           </Eyebrow>
-          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink mb-10 max-w-4xl mx-auto">
+          <SectionTitle size="xxxl" className="mb-10 max-w-4xl mx-auto">
             {t('ctaTitle1')} <br />
             <span className="inline-block bg-ink text-accent px-3 py-1 -rotate-1">
               {t('ctaTitle2')}
             </span>
-          </h2>
+          </SectionTitle>
           <p className="font-body text-body-lg text-ink/80 max-w-2xl mx-auto mb-12">
             {t('ctaBody')}
           </p>
@@ -213,4 +214,3 @@ export default async function DiscoverPage({
   );
 }
 import { buildMetadata } from '@/lib/seo';
-import { Eyebrow } from '@/components/ui/neobrutal';

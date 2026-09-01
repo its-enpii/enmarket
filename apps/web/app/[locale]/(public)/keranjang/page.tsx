@@ -23,6 +23,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
+import { Eyebrow } from '@/components/ui/neobrutal';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { buildMetadata } from '@/lib/seo';
 
@@ -84,9 +85,9 @@ export default async function KeranjangPage() {
         <SectionContainer py="md" className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-10 lg:gap-12 items-start">
           <div className="space-y-6">
             <div className="flex items-baseline justify-between border-b-2 border-ink pb-3">
-              <h2 className="font-label text-label-sm uppercase tracking-label text-ink/70">
+              <Eyebrow as="h2" size="label-sm" color="ink-soft">
                 ✎ {t('selectedWorks')}
-              </h2>
+              </Eyebrow>
               <MetaLabel as="span" size="sm">
                 {itemCount} {t('itemsSuffix')}
               </MetaLabel>

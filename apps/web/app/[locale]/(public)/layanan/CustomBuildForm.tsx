@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
@@ -42,9 +42,9 @@ export function CustomBuildForm() {
   return (
     <form action={formAction} className="space-y-6">
       <div className="border-b-2 border-ink/20 pb-3 flex items-baseline justify-between">
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/70">
+        <Eyebrow size="label-sm" color="ink-soft">
           ✎ {t('formTitle')}
-        </p>
+        </Eyebrow>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

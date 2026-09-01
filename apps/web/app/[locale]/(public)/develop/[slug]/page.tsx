@@ -27,8 +27,8 @@ import { ProductReviewsSection } from '@/components/public/ProductReviewsSection
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
-import { Button, Card, NLink } from '@/components/ui/neobrutal';
-import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
+import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
+import { PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { MetaLabel } from '@/components/ui';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
@@ -227,9 +227,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
+            <PageTitle size="hero-xl">
               {product.nama}
-            </h1>
+            </PageTitle>
 
             {/* One-liner description */}
             {oneLineDesc && (
@@ -394,9 +394,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   hoverable={false}
                   className="p-4"
                 >
-                  <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-2">
+                  <Eyebrow size="label-sm" color="ink-muted" className="mb-2">
                     → {spec.label}
-                  </p>
+                  </Eyebrow>
                   <p className="font-display text-xl font-black uppercase text-ink leading-tight">
                     {spec.value}
                   </p>
@@ -525,6 +525,5 @@ export default async function WorkDetailPage({ params }: PageProps) {
   );
 }
 import { buildMetadata } from '@/lib/seo';
-import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerAccent } from '@/components/ui/CornerAccent';
 import { Image } from '@/components/ui/Image';

@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 
 import { removeCartItemAction, updateCartItemAction } from './actions';
 
@@ -40,7 +40,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
   return (
     <div className="flex items-center gap-3">
       {/* Chunky +/- group */}
-      <div className="flex items-stretch border-2 border-ink bg-surface shadow-brutal-3">
+      <Card as="div" hoverable={false} elevation={3} className="flex items-stretch">
         <Button
           variant="surface"
           size="sm"
@@ -68,7 +68,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
         >
           +
         </Button>
-      </div>
+      </Card>
 
       {/* Remove — bordered pill */}
       <Button

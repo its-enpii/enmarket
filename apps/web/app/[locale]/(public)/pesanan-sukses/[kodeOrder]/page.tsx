@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { MetaLabel } from '@/components/ui';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
@@ -50,7 +50,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
   if (order.status === 'pending') {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/60">{t('pendingLabel')}</p>
+        <Eyebrow size="label-sm" color="ink-muted">{t('pendingLabel')}</Eyebrow>
         <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-ink">{t('pendingTitle')}</h1>
         <p className="mt-4 text-base text-ink/70">{t('pendingBody')}</p>
         <Button href={`/pembayaran/${order.kode_order}`} variant="primary" size="lg" className="mt-8">
@@ -64,7 +64,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
     const expired = order.status === 'expired';
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/60">{t(expired ? 'expiredLabel' : 'failedLabel')}</p>
+        <Eyebrow size="label-sm" color="ink-muted">{t(expired ? 'expiredLabel' : 'failedLabel')}</Eyebrow>
         <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-ink">{t(expired ? 'expiredTitle' : 'failedTitle')}</h1>
         <p className="mt-4 text-base text-ink/70">{t(expired ? 'expiredBody' : 'failedBody')}</p>
         <Button href="/katalog" variant="primary" size="lg" className="mt-8">

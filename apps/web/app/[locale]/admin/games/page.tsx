@@ -11,6 +11,7 @@ import { deleteGame } from './actions';
 import { DeleteButton } from '@/components/admin/DeleteButton';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { AdminPageBody } from '@/components/ui';
+import { PageTitle } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 
 interface Props {
@@ -53,9 +54,9 @@ export default async function GamesListPage({ searchParams }: Props) {
           <Eyebrow size="sm" color="accent" className="mb-3">
             {t('listEyebrow')}
           </Eyebrow>
-          <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-[0.95] tracking-tight text-ink">
+          <PageTitle size="hero-xl">
             {t('listTitle')}<span className="text-primary">.</span>
-          </h1>
+          </PageTitle>
           <p className="mt-3 font-body text-body-md italic text-ink/70 max-w-2xl border-l-4 border-accent pl-4">
             {t('listSubtitle')}
           </p>

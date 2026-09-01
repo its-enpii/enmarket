@@ -1,14 +1,13 @@
 import { getTranslations } from 'next-intl/server';
 
 import { EmptyState } from '@/components/public/EmptyState';
-import { Card, NLink } from '@/components/ui/neobrutal';
+import { Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 import { getEnabledGateways } from '@/lib/payment-api';
 import { buildMetadata } from '@/lib/seo';
 
 import { CheckoutForm } from './CheckoutForm';
-import { Eyebrow } from '@/components/ui/neobrutal';
 import { PageTitle } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
@@ -86,9 +85,9 @@ export default async function CheckoutPage() {
         </Card>
 
         <Card variant="filled-primary" as="aside" thick hoverable={false} className="p-5 h-fit">
-          <h2 className="font-label text-label-sm uppercase tracking-label-lg text-accent mb-4 border-b border-surface/30 pb-2">
+          <Eyebrow as="h2" size="label-lg" color="accent" className="mb-4 border-b border-surface/30 pb-2">
             ✎ {t('orderSummary')}
-          </h2>
+          </Eyebrow>
           <ul className="space-y-3 mb-5">
             {cart.items.map((item) => (
               <li key={item.product_id} className="flex justify-between gap-2 text-sm border-b border-surface/10 pb-2 last:border-b-0">
@@ -100,7 +99,7 @@ export default async function CheckoutPage() {
             ))}
           </ul>
           <div className="border-t-2 border-surface/30 pt-3">
-            <p className="font-label text-micro uppercase tracking-label opacity-80 mb-1">{t('total')}</p>
+            <Eyebrow size="micro" className="opacity-80 mb-1">{t('total')}</Eyebrow>
             <p className="font-display text-3xl font-black leading-none">{cart.total_formatted}</p>
           </div>
           <p className="mt-4 text-xs opacity-70 border-t border-surface/20 pt-3">

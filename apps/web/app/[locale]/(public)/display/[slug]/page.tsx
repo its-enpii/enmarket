@@ -25,7 +25,7 @@ import { Eyebrow } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
+import { PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateLong, formatDateShort } from '@/lib/format';
@@ -186,9 +186,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           <Eyebrow size="md" color="accent" className="mb-6">
             ✎ Display
           </Eyebrow>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.95] tracking-tight text-ink max-w-5xl">
+          <PageTitle size="hero-2xl" className="max-w-5xl">
             {post.title}
-          </h1>
+          </PageTitle>
           {post.excerpt && (
             <p className="mt-8 font-body text-body-xl text-ink/80 max-w-3xl border-l-4 border-accent pl-6 italic leading-relaxed">
               {post.excerpt}
@@ -196,7 +196,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
           )}
 
           {/* Meta strip — thin bordered box (per brief item 2) */}
-          <div className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 border-2 border-ink bg-surface px-5 py-3 shadow-brutal-3">
+          <Card as="div" hoverable={false} elevation={3} className="mt-10 inline-flex flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3">
             <Badge tone="accent" size="sm" className="px-2.5 py-0.5 text-label-sm">
               {primaryTag}
             </Badge>
@@ -215,7 +215,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             <span className="font-label text-label-sm uppercase tracking-wider text-ink/70">
               {t('studioNotes')}
             </span>
-          </div>
+          </Card>
         </SectionContainer>
       </SectionBand>
 
@@ -237,10 +237,10 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             )}
 
             {/* End-of-article signature mark */}
-            <div className="mt-16 flex items-center gap-3 font-label text-label-sm uppercase tracking-label-lg text-ink/40">
+            <Eyebrow as="div" size="label-lg" color="ink-subtle" className="mt-16 flex items-center gap-3">
               <span aria-hidden="true">— ✎ —</span>
               <span>{t('end')}</span>
-            </div>
+            </Eyebrow>
           </div>
         </SectionContainer>
       </SectionBand>
@@ -250,9 +250,9 @@ export default async function DisplayDetailPage({ params }: PageProps) {
         <SectionBand>
           <SectionContainer py="md">
             <div className="max-w-3xl mx-auto">
-              <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-4">
+              <Eyebrow size="label-sm" color="ink-muted" className="mb-4">
                 {t('filedUnder')}
-              </p>
+              </Eyebrow>
               <div className="flex flex-wrap items-center gap-2">
                 {tags.map((t, i) => (
                   <span

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { SectionTitle } from '@/components/ui';
 
 import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
@@ -39,9 +40,9 @@ export function FeaturedSection({ products }: Props) {
     <section id="featured" className="border-b-4 border-ink">
       <SectionContainer py="xl">
         <div className="flex justify-between items-end mb-16">
-          <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-ink uppercase leading-none">
+          <SectionTitle className="leading-none">
             {t('featuredTitle')}
-          </h2>
+          </SectionTitle>
           <div className="hidden md:block font-label text-label-sm uppercase tracking-widest text-ink/70 pb-2">
             {t('featuredSubtitle')}
           </div>

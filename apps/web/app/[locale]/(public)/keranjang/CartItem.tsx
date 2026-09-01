@@ -14,6 +14,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Card, NLink } from '@/components/ui/neobrutal';
+import { Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import { ImagePlaceholder } from '@/components/ui';
@@ -58,9 +59,9 @@ export async function CartItem({ item }: { item: CartItemData }) {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               {category && (
-                <p className="font-label text-micro uppercase tracking-label text-ink/60 mb-1">
+                <Eyebrow size="micro" color="ink-muted" className="mb-1">
                   {category}
-                </p>
+                </Eyebrow>
               )}
               <NLink
                 href={`/develop/${p.slug}`}

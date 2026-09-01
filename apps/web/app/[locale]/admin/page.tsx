@@ -3,14 +3,13 @@ import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
 import { AdminPageHeader, AdminPageBody } from '@/components/ui';
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Eyebrow } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime, formatRupiah } from '@/lib/format';
 
 import { ActivityRow } from './ActivityRow';
-import { Eyebrow } from '@/components/ui/neobrutal';
 import type {
   ActivityLog,
   AdminOrderStats,
@@ -168,9 +167,9 @@ export default async function AdminHomePage() {
 
       {/* ───── STAT TILES ───── */}
       <section>
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-3">
+        <Eyebrow size="label-sm" color="ink-muted" className="mb-3">
           {t('sectionStats')}
-        </p>
+        </Eyebrow>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
           {tiles.map((tile) => {
             const cardVariant =
@@ -359,9 +358,9 @@ export default async function AdminHomePage() {
 
       {/* ───── QUICK SHORTCUTS ───── */}
       <section>
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-3">
+        <Eyebrow size="label-sm" color="ink-muted" className="mb-3">
           {t('sectionQuick')}
-        </p>
+        </Eyebrow>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Button href="/admin/products/new" variant="primary" size="md">{t('quickNewProduct')}</Button>
           <Button href="/admin/posts/new" variant="primary" size="md">{t('quickNewPost')}</Button>

@@ -1,4 +1,4 @@
-import { NLink } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 import { getTranslations } from 'next-intl/server';
 
 import type { Category } from '@/lib/types';
@@ -16,7 +16,7 @@ export async function CategoryFilter({ categories, activeSlug }: Props) {
   const t = await getTranslations('katalog');
 
   return (
-    <aside className="bg-surface border-2 border-ink p-4 shadow-brutal-4">
+    <Card as="aside" hoverable={false} elevation={4} className="p-4">
       <h2 className="mb-3 text-xs font-bold uppercase tracking-label text-ink">
         {t('categoryLabel')}
       </h2>
@@ -64,6 +64,6 @@ export async function CategoryFilter({ categories, activeSlug }: Props) {
           );
         })}
       </ul>
-    </aside>
+    </Card>
   );
 }

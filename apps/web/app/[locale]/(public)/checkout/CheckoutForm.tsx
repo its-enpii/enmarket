@@ -3,7 +3,7 @@
 import { useActionState, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
@@ -94,12 +94,12 @@ export function CheckoutForm({
     <form action={formAction} className="space-y-6">
       {/* Header strip — matches theme eyebrow */}
       <div className="border-b-2 border-ink/20 pb-3 flex items-baseline justify-between">
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/70">
+        <Eyebrow size="md" color="ink" className="text-ink/70">
           ✎ {t('buyerInfo')}
-        </p>
-        <span className="font-label text-micro uppercase tracking-wider text-ink/50">
+        </Eyebrow>
+        <Eyebrow size="sm" className="tracking-wider text-ink/50">
           {t('required')}
-        </span>
+        </Eyebrow>
       </div>
 
       <FormField label={t('name')} htmlFor="nama" error={state?.fieldErrors?.nama?.[0]}>

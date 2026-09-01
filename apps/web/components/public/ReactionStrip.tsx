@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { toast } from '@/components/ui/toast-store';
 
 type Reaction = 'helpful' | 'not-really' | null;
@@ -118,9 +118,9 @@ export function ReactionStrip({ postSlug }: Props) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         {/* Prompt */}
         <div className="flex-1">
-          <p className="font-label text-label-sm uppercase tracking-label text-accent mb-2">
+          <Eyebrow size="label-sm" color="accent" className="mb-2">
             {t('eyebrow')}
-          </p>
+          </Eyebrow>
           <p className="font-display text-2xl md:text-3xl font-black uppercase leading-tight text-ink">
             {t('question')}
           </p>

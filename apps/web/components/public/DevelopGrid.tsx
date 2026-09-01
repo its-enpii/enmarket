@@ -19,11 +19,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
 import type { PaginationMeta, Product } from '@/lib/types';
-import { Eyebrow } from '@/components/ui/neobrutal';
 import { Image } from '@/components/ui/Image';
 
 interface Props {
@@ -259,9 +258,9 @@ function DevelopCard({
         </div>
         <div className="md:col-span-5 flex flex-col justify-center gap-4 border-l-4 border-ink pl-6">
           {kategoriNama && (
-            <p className="font-label text-label-sm uppercase tracking-label text-ink/60">
+            <Eyebrow size="label-sm" color="ink-muted">
               {kategoriNama}
-            </p>
+            </Eyebrow>
           )}
           <h3 className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-ink leading-tight">
             {title}
@@ -306,9 +305,9 @@ function DevelopCard({
       </div>
       <div className="md:col-span-7 md:order-1 flex flex-col justify-center gap-3 border-l-4 border-ink pl-6">
         {kategoriNama && (
-          <p className="font-label text-label-sm uppercase tracking-label text-ink/60">
+          <Eyebrow size="label-sm" color="ink-muted">
             {kategoriNama}
-          </p>
+          </Eyebrow>
         )}
         <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink leading-tight">
           {title}

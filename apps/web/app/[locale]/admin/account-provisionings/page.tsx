@@ -3,7 +3,7 @@ import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
-import { Button, Card, Disclosure, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, Disclosure, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
 import { formatDateTime } from '@/lib/format';
 import {
@@ -98,9 +98,9 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
 
       {/* ───── STAT TILES (4) ───── */}
       <section>
-        <p className="font-label text-label-sm uppercase tracking-label text-ink/60 mb-3">
+        <Eyebrow size="label-sm" color="ink-muted" className="mb-3">
           {t('sectionStats')}
-        </p>
+        </Eyebrow>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatTile label={t('statMenungguAdmin')} value={stats.menunggu_admin} variant="filled-accent" />
           <StatTile label={t('statSiap')} value={stats.siap} variant="filled-primary" />

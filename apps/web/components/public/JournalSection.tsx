@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { SectionTitle } from '@/components/ui';
 
 import type { Post } from '@/lib/types';
 import { HoverImage } from '@/components/ui/HoverImage';
@@ -41,9 +42,9 @@ export async function JournalSection({ posts }: Props) {
     <section className="bg-surface">
       <SectionContainer py="xl">
         <div className="flex items-center gap-4 mb-20">
-          <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-ink uppercase shrink-0">
+          <SectionTitle className="shrink-0">
             {t('journalTitle')}
-          </h2>
+          </SectionTitle>
           <div className="h-1 bg-ink w-full" />
         </div>
 

@@ -26,6 +26,7 @@ import { SectionBand } from '@/components/ui';
 
 import { CartHeader } from './CartHeader';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { SectionTitle } from '@/components/ui';
 import { CornerAccent } from '@/components/ui/CornerAccent';
 
 export async function EmptyCart() {
@@ -55,7 +56,7 @@ export async function EmptyCart() {
             <Eyebrow size="md" color="accent">
               {t('emptyEyebrow')}
             </Eyebrow>
-            <h2 className="font-display text-4xl md:text-5xl font-black uppercase leading-[0.95] tracking-tight text-ink">
+            <SectionTitle size="md">
               {t('emptyTitle1')}<br />
               {t('emptyTitle2')}{' '}
               <Badge
@@ -66,7 +67,7 @@ export async function EmptyCart() {
               >
                 {t('emptyTitle3')}
               </Badge>
-            </h2>
+            </SectionTitle>
             <p className="text-body-md font-body text-ink/70 max-w-md">
               {t('emptyBody')}
             </p>

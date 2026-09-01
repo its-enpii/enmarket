@@ -5,7 +5,7 @@
 
 import { getTranslations } from 'next-intl/server';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 
 import { SearchBar } from '@/components/public/SearchBar';
@@ -16,10 +16,9 @@ import { formatDateShort } from '@/lib/format';
 import { buildMetadata } from '@/lib/seo';
 import type { PaginatedResponse, Post } from '@/lib/types';
 
-import { Eyebrow } from '@/components/ui/neobrutal';
 import { HoverImage } from '@/components/ui/HoverImage';
 import { Image } from '@/components/ui/Image';
-import { SectionBand } from '@/components/ui';
+import { SectionBand, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
@@ -101,9 +100,9 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
       <SectionBand>
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="font-label text-label-sm uppercase tracking-label text-ink/60 mr-2">
+            <Eyebrow as="span" size="label-sm" color="ink-muted" className="mr-2">
               {t('tagsLabel')}
-            </span>
+            </Eyebrow>
             {TAG_KEYS.map((tag) => {
               const tone = tag === 'devLog' || tag === 'process' ? 'primary' : 'accent';
               return (
@@ -120,9 +119,9 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
                 </span>
               );
             })}
-            <span className="ml-2 font-label text-label-sm uppercase tracking-label text-ink/60">
+            <Eyebrow as="span" size="label-sm" color="ink-muted" className="ml-2">
               {total} {t('itemsSuffix')}
-            </span>
+            </Eyebrow>
           </div>
 
           <div className="w-full lg:w-80 lg:shrink-0">
@@ -272,9 +271,9 @@ function FeaturedCover({
             {date}
             {post.reading_time_minutes ? ` · ${post.reading_time_minutes} ${minutesLabel}` : ''}
           </Eyebrow>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[0.95] text-ink group-hover:text-primary transition-colors">
+          <SectionTitle size="xl" className="group-hover:text-primary transition-colors">
             {post.title}
-          </h2>
+          </SectionTitle>
           {post.excerpt && (
             <p className="font-body text-body-lg text-ink/75 leading-relaxed border-l-4 border-accent pl-4 italic">
               {post.excerpt}

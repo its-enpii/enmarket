@@ -35,6 +35,7 @@ interface Props extends HTMLAttributes<HTMLSpanElement> {
   /** Pakai shadow (default md=true, sm=false, lg=true). Override untuk tone tertentu. */
   shadow?: boolean;
   elevation?: BadgeElevation;
+  shadowColor?: 'accent' | 'primary' | 'ink';
   height?: BadgeHeight;
   width?: BadgeWidth;
   fontSize?: 'micro' | 'fine' | 'xs' | 'base';
@@ -96,6 +97,7 @@ export function Badge({
   size = 'md',
   shadow,
   elevation,
+  shadowColor = 'ink',
   height,
   width,
   fontSize,
@@ -106,7 +108,11 @@ export function Badge({
   const useShadow = shadow ?? (elevation === undefined ? size !== 'sm' : true);
   const shadowCls = elevation
     ? ELEVATION_CLS[elevation]
-    : size === 'sm' ? '' : size === 'md' ? 'shadow-brutal-3' : 'shadow-brutal-4';
+    : shadowColor === 'accent'
+      ? 'shadow-[4px_4px_0_0_var(--color-accent)]'
+      : shadowColor === 'primary'
+        ? 'shadow-[4px_4px_0_0_var(--color-primary)]'
+        : size === 'sm' ? '' : size === 'md' ? 'shadow-brutal-3' : 'shadow-brutal-4';
 
   const composed = [
     'inline-flex items-center border-2 border-ink',

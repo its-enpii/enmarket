@@ -8,14 +8,15 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
+import { Eyebrow } from '@/components/ui/neobrutal';
 
 export async function TrustNote() {
   const t = await getTranslations('keranjang');
   return (
     <Card variant="surface" hoverable={false} className="p-5">
-      <p className="font-label text-micro uppercase tracking-label text-accent mb-2">
+      <Eyebrow size="micro" color="accent" className="mb-2">
         {t('trustNoteEyebrow')}
-      </p>
+      </Eyebrow>
       <p className="font-display text-base font-black uppercase leading-tight text-ink">
         {t('trustNoteTitle')}
       </p>
