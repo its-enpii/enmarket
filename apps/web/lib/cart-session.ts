@@ -9,10 +9,10 @@
  */
 
 import { CART_SESSION_COOKIE, COOKIE_MAX_AGE } from './constants';
-import { getOrCreateSession } from './session-cookie';
+import { getSession, getOrCreateSession } from './session-cookie';
 
 export async function readCartSession(): Promise<string | null> {
-  const session = await getOrCreateSession(CART_SESSION_COOKIE, COOKIE_MAX_AGE.day);
+  const session = await getSession(CART_SESSION_COOKIE);
   return session;
 }
 
