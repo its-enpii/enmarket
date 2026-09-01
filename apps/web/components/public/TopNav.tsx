@@ -93,8 +93,10 @@ export function TopNav({ children }: Props) {
               </NLink>
             );
           })}
-          {children}
-
+          {/* Wishlist & Cart: icon-only di desktop nav, berlabel di panel mobile */}
+          <span className="flex items-center gap-2 [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
+            {children}
+          </span>
           {hasCustomerToken ? (
             <Button variant="primary" size="md" href="/akun">
               {t('account')}

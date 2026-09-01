@@ -29,7 +29,7 @@ export async function CartBadge() {
     >
       <span className="relative inline-flex items-center gap-1.5">
         <CartIcon />
-        <span>{t('viewCart')}</span>
+        <span className="badge-label">{t('viewCart')}</span>
         {count > 0 && (
           <Badge
             tone="accent"

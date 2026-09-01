@@ -30,7 +30,7 @@ export async function WishlistBadge() {
     >
       <span className="relative inline-flex items-center gap-1.5">
         <span aria-hidden="true" className="text-red-500">♥</span>
-        <span>{t('wishlist')}</span>
+        <span className="badge-label">{t('wishlist')}</span>
         {count > 0 && (
           <Badge
             tone="accent"
