@@ -1,5 +1,5 @@
-import { PageFormLoading } from '@/components/admin/PageFormLoading';
+import { AdminListLoader, PageLoader } from '@/components/ui/neobrutal';
 
-export default function NewCouponLoading() {
-  return <PageFormLoading fieldCount={6} />;
+export default function newLoading() {
+  return <PageLoader />
 }

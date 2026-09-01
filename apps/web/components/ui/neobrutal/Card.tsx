@@ -38,11 +38,16 @@ import {
 
 type AllowedTag = 'div' | 'article' | 'section' | 'aside' | 'label' | 'button';
 
+export type CardElevation = 1 | 2 | 3 | 4 | 6 | 8 | 10 | 12;
+export type CardShadowColor = 'ink' | 'accent' | 'primary';
+
 type CommonProps = {
   variant?: CardVariant;
   hoverable?: boolean;
   thick?: boolean; // 4px border instead of 2px
   raised?: boolean;
+  elevation?: CardElevation;
+  shadowColor?: CardShadowColor;
   as?: AllowedTag;
   className?: string;
   children?: ReactNode;
@@ -60,12 +65,31 @@ type CardAsLink = CommonProps &
 
 export type CardProps = CardAsContainer | CardAsLink;
 
+const SHADOW_CLS: Record<CardElevation, string> = {
+  1: 'shadow-[1px_1px_0_0_var(--card-shadow-color)]',
+  2: 'shadow-[2px_2px_0_0_var(--card-shadow-color)]',
+  3: 'shadow-[3px_3px_0_0_var(--card-shadow-color)]',
+  4: 'shadow-[4px_4px_0_0_var(--card-shadow-color)]',
+  6: 'shadow-[6px_6px_0_0_var(--card-shadow-color)]',
+  8: 'shadow-[8px_8px_0_0_var(--card-shadow-color)]',
+  10: 'shadow-[10px_10px_0_0_var(--card-shadow-color)]',
+  12: 'shadow-[12px_12px_0_0_var(--card-shadow-color)]',
+};
+
+const SHADOW_COLOR_CLS: Record<CardShadowColor, string> = {
+  ink: '[--card-shadow-color:var(--color-ink)]',
+  accent: '[--card-shadow-color:var(--color-accent)]',
+  primary: '[--card-shadow-color:var(--color-primary)]',
+};
+
 export function Card(props: CardProps) {
   const {
     variant = 'surface',
     hoverable = true,
     thick = false,
     raised = false,
+    elevation,
+    shadowColor = 'ink',
     as = 'div',
     className = '',
     children,
@@ -80,12 +104,11 @@ export function Card(props: CardProps) {
   // dan menghindari bug ghosting Tailwind v4 translate property.
   const interactive = hoverable
     ? 'neo-btn neo-btn-ink'
-    : raised
-      ? 'shadow-[8px_8px_0_0_var(--color-ink)]'
-      : 'shadow-[6px_6px_0_0_var(--color-ink)]';
+    : SHADOW_CLS[elevation ?? (raised ? 8 : 6)];
 
   const composed = [
     'block',
+    SHADOW_COLOR_CLS[shadowColor],
     borderCls,
     fill,
     interactive,

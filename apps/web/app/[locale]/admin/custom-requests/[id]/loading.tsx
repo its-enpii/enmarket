@@ -1,5 +1,5 @@
-import { PageFormLoading } from '@/components/admin/PageFormLoading';
+import { AdminListLoader, PageLoader } from '@/components/ui/neobrutal';
 
-export default function CustomRequestDetailLoading() {
-  return <PageFormLoading fieldCount={5} />;
+export default function idLoading() {
+  return <PageLoader />
 }
