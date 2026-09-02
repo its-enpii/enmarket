@@ -9,6 +9,7 @@ type EmptyStateVariant = 'admin' | 'public';
 
 interface AdminEmptyStateProps {
   variant: 'admin';
+  compact?: false;
   title: string;
   body?: string;
   action?: ReactNode;
@@ -16,15 +17,50 @@ interface AdminEmptyStateProps {
 
 interface PublicEmptyStateProps {
   variant?: 'public';
+  compact?: false;
   title: string;
   message?: string;
   cta?: { href: string; label: string };
 }
 
-export type EmptyStateProps = AdminEmptyStateProps | PublicEmptyStateProps;
+interface CompactEmptyStateProps {
+  compact: true;
+  size: 'lg' | 'sm';
+  title: string;
+  hint?: string;
+  cta: { href: string; label: string };
+}
+
+export type EmptyStateProps =
+  | AdminEmptyStateProps
+  | PublicEmptyStateProps
+  | CompactEmptyStateProps;
 
 export function EmptyState(props: EmptyStateProps) {
   const t = useTranslations('common.empty');
+
+  if (props.compact) {
+    if (props.size === 'sm') {
+      return (
+        <Card className="p-8 text-center">
+          <p className="text-sm font-semibold text-ink/70 mb-4">{props.title}</p>
+          <Button variant="primary" size="md" href={props.cta.href}>
+            {props.cta.label}
+          </Button>
+        </Card>
+      );
+    }
+
+    return (
+      <Card variant="surface" hoverable={false} className="p-12 text-center">
+        <p className="text-base font-bold text-ink mb-2">{props.title}</p>
+        {props.hint && <p className="text-xs text-ink/70 mb-6">{props.hint}</p>}
+        <Button variant="primary" size="md" href={props.cta.href}>
+          {props.cta.label}
+        </Button>
+      </Card>
+    );
+  }
 
   if (props.variant === 'admin') {
     return (

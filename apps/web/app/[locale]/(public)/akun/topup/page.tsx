@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Card } from '@/components/ui/neobrutal';
+import { CardMessage } from '@/components/ui';
 import { TopupHistoryItem } from '@/components/customer/TopupHistoryItem';
 import { topupApi } from '@/lib/topup-api';
 import type { TopupOrder } from '@/lib/types';
@@ -34,13 +34,11 @@ export default function TopupHistoryPage() {
       <h1 className="font-display text-3xl font-black text-ink mb-6">{t('title')}</h1>
 
       {loading ? (
-        <Card variant="surface" hoverable={false} className="p-8 text-center">
-          <p className="text-ink/60 animate-pulse">Loading...</p>
-        </Card>
+        <CardMessage size="sm" tone="muted" pulse>
+          Loading...
+        </CardMessage>
       ) : orders.length === 0 ? (
-        <Card variant="surface" hoverable={false} className="p-8 text-center">
-          <p className="text-ink/60">{t('empty')}</p>
-        </Card>
+        <CardMessage size="sm" tone="muted">{t('empty')}</CardMessage>
       ) : (
         <div className="space-y-3">
           {orders.map((order) => (

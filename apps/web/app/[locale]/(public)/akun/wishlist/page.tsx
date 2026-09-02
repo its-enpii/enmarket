@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button, NLink } from '@/components/ui/neobrutal';
-import { PageIntro } from '@/components/ui';
+import { CardMessage, EmptyState, PageIntro } from '@/components/ui';
 import { authApi } from '@/lib/auth-api';
 import type { WishlistItem } from '@/lib/types';
 
@@ -44,19 +44,17 @@ export default function AkunWishlistPage() {
       <PageIntro title={tNav('wishlist')} subtitle={t('subtitle')} />
 
       {loading ? (
-        <Card variant="surface" hoverable={false} className="p-8 text-center">
-          <p className="text-sm font-bold text-ink">{tAcc('loadingWishlist')}</p>
-        </Card>
+        <CardMessage size="lg" tone="bold">
+          {tAcc('loadingWishlist')}
+        </CardMessage>
       ) : items.length === 0 ? (
-        <Card variant="surface" hoverable={false} className="p-12 text-center">
-          <p className="text-base font-bold text-ink mb-2">{t('emptyTitle')}</p>
-          <p className="text-xs text-ink/70 mb-6">
-            {t('emptyHint')}
-          </p>
-          <Button variant="primary" size="md" href="/katalog">
-            {t('exploreCatalog')}
-          </Button>
-        </Card>
+        <EmptyState
+          compact
+          size="lg"
+          title={t('emptyTitle')}
+          hint={t('emptyHint')}
+          cta={{ href: '/katalog', label: t('exploreCatalog') }}
+        />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {items.map((item) => (

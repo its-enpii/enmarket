@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, Button } from '@/components/ui/neobrutal';
-import { PageIntro } from '@/components/ui';
+import { Button } from '@/components/ui/neobrutal';
+import { CardMessage, EmptyState, PageIntro } from '@/components/ui';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';
 import type { Order } from '@/lib/types';
@@ -46,19 +46,17 @@ export default function AkunPesananPage() {
       <PageIntro title={t('title')} subtitle={t('subtitle')} />
 
       {loading ? (
-        <Card variant="surface" hoverable={false} className="p-8 text-center">
-          <p className="text-sm font-bold text-ink">{tAcc('loadingOrders')}</p>
-        </Card>
+        <CardMessage size="lg" tone="bold">
+          {tAcc('loadingOrders')}
+        </CardMessage>
       ) : orders.length === 0 ? (
-        <Card variant="surface" hoverable={false} className="p-12 text-center">
-          <p className="text-base font-bold text-ink mb-2">{t('empty')}</p>
-          <p className="text-xs text-ink/70 mb-6">
-            {t('emptyHint')}
-          </p>
-          <Button variant="primary" size="md" href="/katalog">
-            {t('startShopping')}
-          </Button>
-        </Card>
+        <EmptyState
+          compact
+          size="lg"
+          title={t('empty')}
+          hint={t('emptyHint')}
+          cta={{ href: '/katalog', label: t('startShopping') }}
+        />
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (

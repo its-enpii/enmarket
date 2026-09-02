@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Card, Button } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { StatusPill } from '@/components/ui/StatusPill';
-import { MetaLabel } from '@/components/ui';
+import { CardMessage, EmptyState, MetaLabel } from '@/components/ui';
 import { useAuth } from '@/components/customer/AuthProvider';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';
@@ -51,11 +51,7 @@ export default function AkunDashboardPage() {
   }, []);
 
   if (isLoading) {
-    return (
-      <Card variant="surface" hoverable={false} className="p-8 text-center">
-        <p className="text-sm font-bold text-ink">{tAcc('loading')}</p>
-      </Card>
-    );
+    return <CardMessage size="lg" tone="bold">{tAcc('loading')}</CardMessage>;
   }
 
   const name = user?.name || t('defaultCustomerName');
@@ -129,12 +125,12 @@ export default function AkunDashboardPage() {
         {loadingStats ? (
           <p className="text-sm text-ink/70">{tAcc('loadingOrders')}</p>
         ) : orders.length === 0 ? (
-          <Card variant="surface" hoverable={false} className="p-8 text-center">
-            <p className="text-sm font-semibold text-ink/70 mb-4">{tOrders('empty')}</p>
-            <Button variant="primary" size="md" href="/katalog">
-              {t('exploreCatalog')}
-            </Button>
-          </Card>
+          <EmptyState
+            compact
+            size="sm"
+            title={tOrders('empty')}
+            cta={{ href: '/katalog', label: t('exploreCatalog') }}
+          />
         ) : (
           <div className="space-y-3">
             {orders.slice(0, 3).map((order) => (
