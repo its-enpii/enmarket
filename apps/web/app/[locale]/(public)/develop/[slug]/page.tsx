@@ -34,7 +34,7 @@ import { Link } from '@/i18n/navigation';
 
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
-import type { Product } from '@/lib/types';
+import type { Product, ProductRatingSummary } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -53,6 +53,20 @@ async function fetchProduct(slug: string): Promise<Product | null> {
     }
     throw err;
   }
+}
+
+function RatingChip({ summary }: { summary: ProductRatingSummary }) {
+  return (
+    <NLink
+      href="#reviews"
+      underline="none"
+      className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
+    >
+      <span className="text-accent">?</span>
+      <span>{summary.average.toFixed(1)}</span>
+      <span className="text-ink/60">({summary.count})</span>
+    </NLink>
+  );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -149,16 +163,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
             {t('back')}
           </NLink>
           {product.rating_summary && product.rating_summary.count > 0 && (
-                <NLink
-                  href="#reviews"
-                  underline="none"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
-                >
-                  <span className="text-accent">?</span>
-                  <span>{product.rating_summary.average.toFixed(1)}</span>
-                  <span className="text-ink/60">({product.rating_summary.count})</span>
-                </NLink>
-              )}
+            <RatingChip summary={product.rating_summary} />
+          )}
               {kategori && (
             <span className="ml-4 font-label text-label-sm uppercase text-ink/40">
               · {kategori.nama}
@@ -208,15 +214,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 {tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}
               </Badge>
               {product.rating_summary && product.rating_summary.count > 0 && (
-                <NLink
-                  href="#reviews"
-                  underline="none"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
-                >
-                  <span className="text-accent">?</span>
-                  <span>{product.rating_summary.average.toFixed(1)}</span>
-                  <span className="text-ink/60">({product.rating_summary.count})</span>
-                </NLink>
+                <RatingChip summary={product.rating_summary} />
               )}
               {kategori && (
                 <Badge tone="surface" size="md" shadow={false}>
@@ -313,16 +311,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   <dd className="font-bold text-ink">{tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}</dd>
                 </div>
                 {product.rating_summary && product.rating_summary.count > 0 && (
-                <NLink
-                  href="#reviews"
-                  underline="none"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
-                >
-                  <span className="text-accent">?</span>
-                  <span>{product.rating_summary.average.toFixed(1)}</span>
-                  <span className="text-ink/60">({product.rating_summary.count})</span>
-                </NLink>
-              )}
+                  <RatingChip summary={product.rating_summary} />
+                )}
               {kategori && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
                     <MetaLabel as="dt" size="sm">{t('category')}</MetaLabel>

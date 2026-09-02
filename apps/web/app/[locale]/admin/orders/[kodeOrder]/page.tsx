@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { AdminPageHeader, AdminPageBody, DataItem, FormSection } from '@/components/ui';
+import { Badge } from '@/components/ui/Badge';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -106,12 +107,14 @@ export default async function OrderDetailPage({ params }: Props) {
           <div className="space-y-2">
             {delivery.has_download && (
               <div className="flex flex-wrap items-center gap-2">
-                <span className={
-                  'text-xs font-bold px-2 py-0.5 border-2 border-ink ' +
-                  (tokenValid ? 'bg-accent text-ink' : 'bg-ink text-surface')
-                }>
+                <Badge
+                  tone={tokenValid ? 'accent' : 'ink'}
+                  size="md"
+                  shadow={false}
+                  className="px-2 py-0.5 text-xs font-bold normal-case tracking-normal"
+                >
                   {tokenValid ? t('items.tokenActive') : t('items.tokenExpired')}
-                </span>
+                </Badge>
                 {delivery.download_token && (
                   <code className="text-xs bg-ink/5 px-2 py-1 border border-ink/20 font-mono">
                     {delivery.download_token.substring(0, 16)}…
@@ -202,7 +205,12 @@ export default async function OrderDetailPage({ params }: Props) {
       )}
 
       {/* Items table */}
-      <div className="border-2 border-ink bg-primary text-surface shadow-[4px_4px_0_0_var(--color-ink)]">
+      <Card
+        variant="filled-primary"
+        hoverable={false}
+        elevation={4}
+        className="shadow-[4px_4px_0_0_var(--color-ink)]"
+      >
         <div className="px-6 py-4 border-b-2 border-ink bg-primary text-surface">
           <Eyebrow size="sm" color="accent" className="mb-1">
             {t('items.eyebrow')}
@@ -211,7 +219,7 @@ export default async function OrderDetailPage({ params }: Props) {
             {t('items.title')}
           </h2>
         </div>
-      </div>
+      </Card>
       <DataTable
         columns={columns}
         rows={items}
