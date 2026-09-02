@@ -13,6 +13,7 @@
 
 import { getTranslations } from 'next-intl/server';
 
+import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
 import { MetaLabel } from '@/components/ui/MetaLabel';
 import { Input } from '@/components/ui/Input';
@@ -39,7 +40,7 @@ export async function Footer() {
 
   return (
     <footer className="bg-ink text-surface">
-      <div className="mx-auto max-w-screen-2xl px-6 md:px-12 py-12 md:py-24">
+      <SectionContainer py="py-12 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
           {/* Left col: brand */}
           <div className="flex flex-col gap-8">
@@ -160,7 +161,7 @@ export async function Footer() {
               : t('copyright', { year: new Date().getFullYear() })}
           </span>
         </div>
-      </div>
+      </SectionContainer>
     </footer>
   );
 }
