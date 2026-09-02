@@ -2,7 +2,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader, AdminPageBody, DataItem } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, DataItem, MetaLabel } from '@/components/ui';
 import { BackLink } from '@/components/ui/BackLink';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -69,7 +69,7 @@ export default async function CustomRequestDetailPage({ params }: Props) {
             </div>
 
             <div className="pt-2">
-              <p className="text-xs font-bold text-ink/60 uppercase mb-1">{t('fields.description')}</p>
+              <MetaLabel className="mb-1">{t('fields.description')}</MetaLabel>
               <div className="p-4 bg-primary/5 border-2 border-ink text-sm leading-relaxed whitespace-pre-wrap font-body">
                 {request.deskripsi}
               </div>

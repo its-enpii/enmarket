@@ -2,7 +2,7 @@ import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, StatTile } from '@/components/ui';
 import { Button, Eyebrow } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
@@ -179,14 +179,15 @@ export default async function AdminHomePage() {
                   ? 'filled-accent'
                   : 'surface';
             return (
-              <Card key={tile.label} variant={cardVariant} className="p-4 flex flex-col justify-between">
-                <p className="text-micro font-bold uppercase tracking-widest opacity-70">
-                  {tile.label}
-                </p>
-                <p className="mt-2 font-display text-2xl md:text-3xl font-black leading-none break-all">
-                  {tile.value}
-                </p>
-              </Card>
+              <StatTile
+                key={tile.label}
+                label={tile.label}
+                value={tile.value}
+                variant={cardVariant}
+                size="md"
+                valueClassName="break-all"
+                className="p-4 flex flex-col justify-between"
+              />
             );
           })}
         </div>

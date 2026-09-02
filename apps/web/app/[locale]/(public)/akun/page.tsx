@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, Button } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { StatusPill } from '@/components/ui/StatusPill';
 import { CardMessage, EmptyState, MetaLabel } from '@/components/ui';
@@ -59,9 +59,9 @@ export default function AkunDashboardPage() {
   return (
     <div className="space-y-6">
       <Card variant="surface" hoverable={false} className="p-6 md:p-8 bg-accent/10 border-3">
-        <p className="text-xs font-bold uppercase tracking-label text-primary">
+        <Eyebrow size="md" color="primary" className="text-xs tracking-label">
           {t('title')}
-        </p>
+        </Eyebrow>
         <h1 className="text-2xl sm:text-3xl font-black text-ink mt-1">
           {t('welcomeGreeting', { name })}
         </h1>

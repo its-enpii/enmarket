@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader, AdminPageBody, FormSection } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, DataItem, FormSection } from '@/components/ui';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -181,24 +181,12 @@ export default async function OrderDetailPage({ params }: Props) {
       {/* Buyer card */}
       <Card variant="surface" className="p-6 md:p-8">
         <FormSection className="mb-5" mark eyebrow={t('buyer.eyebrow').replace('✎ ', '')} title={t('buyer.title')} />
-        <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-          <div>
-            <dt className="text-ink/60 uppercase text-xs font-bold tracking-wide">{t('buyer.name')}</dt>
-            <dd className="font-bold">{order.nama_pembeli}</dd>
-          </div>
-          <div>
-            <dt className="text-ink/60 uppercase text-xs font-bold tracking-wide">{t('buyer.email')}</dt>
-            <dd className="font-bold">{order.email_pembeli}</dd>
-          </div>
-          <div>
-            <dt className="text-ink/60 uppercase text-xs font-bold tracking-wide">{t('buyer.whatsapp')}</dt>
-            <dd className="font-bold">{order.wa_pembeli}</dd>
-          </div>
-          <div>
-            <dt className="text-ink/60 uppercase text-xs font-bold tracking-wide">{t('buyer.tripayRef')}</dt>
-            <dd className="font-mono text-xs">{order.tripay_reference ?? '—'}</dd>
-          </div>
-        </dl>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+          <DataItem label={t('buyer.name')} value={order.nama_pembeli} />
+          <DataItem label={t('buyer.email')} value={order.email_pembeli} />
+          <DataItem label={t('buyer.whatsapp')} value={order.wa_pembeli} />
+          <DataItem label={t('buyer.tripayRef')} value={order.tripay_reference ?? '—'} valueClassName="font-mono" />
+        </div>
       </Card>
 
       {/* Re-trigger delivery kalau ada item tanpa delivery */}

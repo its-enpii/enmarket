@@ -28,8 +28,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
-import { PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
-import { MetaLabel } from '@/components/ui';
+import { MetaLabel, PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
 
@@ -310,7 +309,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               </Eyebrow>
               <dl className="space-y-3">
                 <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                  <dt className="font-label text-label-sm uppercase text-ink/60">{t('type')}</dt>
+                  <MetaLabel as="dt" size="sm">{t('type')}</MetaLabel>
                   <dd className="font-bold text-ink">{tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}</dd>
                 </div>
                 {product.rating_summary && product.rating_summary.count > 0 && (
@@ -326,7 +325,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
               )}
               {kategori && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('category')}</dt>
+                    <MetaLabel as="dt" size="sm">{t('category')}</MetaLabel>
                     <dd>
                       <NLink
                         href={`/develop?category=${kategori.slug}`}
@@ -340,25 +339,25 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 )}
                 {product.fitur && product.fitur.length > 0 && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('features')}</dt>
+                    <MetaLabel as="dt" size="sm">{t('features')}</MetaLabel>
                     <dd className="font-bold text-ink">{t('items', { count: product.fitur.length })}</dd>
                   </div>
                 )}
                 {previewImages.length > 0 && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('preview')}</dt>
+                    <MetaLabel as="dt" size="sm">{t('preview')}</MetaLabel>
                     <dd className="font-bold text-ink">{t('images', { count: previewImages.length })}</dd>
                   </div>
                 )}
                 {product.has_downloadable_file && product.download_expiry_days && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('access')}</dt>
+                    <MetaLabel as="dt" size="sm">{t('access')}</MetaLabel>
                     <dd className="font-bold text-ink">{t('days', { count: product.download_expiry_days })}</dd>
                   </div>
                 )}
                 {product.needs_license_key && (
                   <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <dt className="font-label text-label-sm uppercase text-ink/60">{t('license')}</dt>
+                    <MetaLabel as="dt" size="sm">{t('license')}</MetaLabel>
                     <dd className="font-bold text-ink">{t('included')}</dd>
                   </div>
                 )}

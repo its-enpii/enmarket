@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 
 /**
  * Newsletter / update CTA — banner besar sebelum footer.
@@ -35,9 +35,9 @@ export function NewsletterCTA() {
         className="absolute right-10 bottom-4 w-16 h-16 bg-primary border-2 border-primary"
       />
       <div className="relative max-w-2xl">
-        <p className="text-micro sm:text-xs font-bold uppercase tracking-label text-accent">
+        <Eyebrow size="md" color="accent" className="text-micro sm:text-xs tracking-label">
           {t('eyebrow')}
-        </p>
+        </Eyebrow>
         <h2 className="mt-3 text-2xl sm:text-4xl font-bold leading-tight">
           {t('heading')}
         </h2>

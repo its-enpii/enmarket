@@ -1,4 +1,4 @@
-import { Card, NLink } from '@/components/ui/neobrutal';
+import { Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { getTranslations } from 'next-intl/server';
 
 import type { Category } from '@/lib/types';
@@ -17,9 +17,9 @@ export async function CategoryFilter({ categories, activeSlug }: Props) {
 
   return (
     <Card as="aside" hoverable={false} elevation={4} className="p-4">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-label text-ink">
+      <Eyebrow as="h2" size="md" color="ink" className="mb-3 text-xs tracking-label">
         {t('categoryLabel')}
-      </h2>
+      </Eyebrow>
       <ul className="flex flex-col gap-2">
         <li>
           <NLink

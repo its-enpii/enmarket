@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
@@ -39,9 +39,9 @@ export function TrendingSection({ trending, latest }: Props) {
       <div className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <div>
-            <p className="text-micro sm:text-xs font-bold uppercase tracking-label text-accent">
+            <Eyebrow size="md" color="accent" className="text-micro sm:text-xs tracking-label">
               {t('eyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="text-2xl sm:text-3xl font-bold text-ink leading-tight">
               {trendingIsPlaceholder ? t('headingPlaceholder') : t('headingReal')}
             </h2>
@@ -108,9 +108,9 @@ export function TrendingSection({ trending, latest }: Props) {
       <div className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <div>
-            <p className="text-micro sm:text-xs font-bold uppercase tracking-label text-primary">
+            <Eyebrow size="md" color="primary" className="text-micro sm:text-xs tracking-label">
               {t('latestEyebrow')}
-            </p>
+            </Eyebrow>
             <h2 className="text-xl sm:text-2xl font-bold text-ink leading-tight">
               {t('latestHeading')}
             </h2>

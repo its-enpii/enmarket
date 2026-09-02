@@ -25,7 +25,7 @@ import { Eyebrow } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
+import { MetaLabel, PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateLong, formatDateShort } from '@/lib/format';
@@ -448,9 +448,9 @@ function RelatedNote({
           >
             {tag}
           </span>
-          <span className="font-label text-micro text-ink/60 uppercase tracking-wider">
+          <MetaLabel as="span" size="sm">
             {date}
-          </span>
+          </MetaLabel>
         </div>
         <h3 className="font-display text-lg font-black uppercase tracking-tight text-ink leading-tight line-clamp-2 group-hover:text-primary transition-colors">
           {post.title}

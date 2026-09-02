@@ -17,7 +17,7 @@ import { buildMetadata } from '@/lib/seo';
 import type { PaginatedResponse, Post } from '@/lib/types';
 
 import { HoverImage } from '@/components/ui/HoverImage';
-import { SectionBand, SectionTitle } from '@/components/ui';
+import { MetaLabel, SectionBand, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
@@ -340,7 +340,7 @@ function PostCardZine({
           <div className="md:col-span-5 p-6 md:p-8 flex flex-col justify-center gap-4 bg-surface">
             <div className="flex flex-wrap items-center gap-2">
               <span className={`inline-flex items-center px-3 py-1 font-label text-label-sm font-black uppercase tracking-wider border-2 border-ink ${tagTone === 'accent' ? 'bg-accent text-ink' : 'bg-primary text-surface'}`}>{tag}</span>
-              <span className="font-label text-label-sm text-ink/60 uppercase tracking-wider">{date}</span>
+              <MetaLabel as="span" size="sm">{date}</MetaLabel>
             </div>
             <h3 className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
             {post.excerpt && <p className="font-body text-body-md text-ink/75 leading-snug">{post.excerpt}</p>}
@@ -374,7 +374,7 @@ function PostCardZine({
         <div className="p-5 md:p-6 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className={`inline-flex items-center px-2.5 py-0.5 font-label text-label-sm font-black uppercase tracking-wider border-2 border-ink ${tagTone === 'accent' ? 'bg-accent text-ink' : 'bg-primary text-surface'}`}>{tag}</span>
-            <span className="font-label text-label-sm text-ink/60 uppercase tracking-wider">{date}</span>
+            <MetaLabel as="span" size="sm">{date}</MetaLabel>
           </div>
           <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
           {post.excerpt && <p className="font-body text-body-sm text-ink/70 leading-snug line-clamp-3">{post.excerpt}</p>}
@@ -404,7 +404,7 @@ function PostCardZine({
         <div className="sm:col-span-2 p-5 md:p-6 space-y-3 flex flex-col justify-center">
           <div className="flex flex-wrap items-center gap-2">
             <span className={`inline-flex items-center px-2.5 py-0.5 font-label text-label-sm font-black uppercase tracking-wider border-2 border-ink ${tagTone === 'accent' ? 'bg-accent text-ink' : 'bg-primary text-surface'}`}>{tag}</span>
-            <span className="font-label text-label-sm text-ink/60 uppercase tracking-wider">{date}</span>
+            <MetaLabel as="span" size="sm">{date}</MetaLabel>
           </div>
           <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
           {post.excerpt && <p className="font-body text-body-sm text-ink/70 leading-snug line-clamp-3">{post.excerpt}</p>}

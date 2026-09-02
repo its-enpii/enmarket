@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Button, NLink } from '@/components/ui/neobrutal';
+import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { routing } from '@/i18n/routing';
 
 const NAV_HREFS = [
@@ -70,9 +70,9 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
       >
         <div className="p-6 border-b-2 border-ink flex items-center justify-between">
           <NLink href="/admin" onClick={onClose} underline="none" className="block">
-            <p className="text-xs font-bold uppercase tracking-label text-accent">
+            <Eyebrow size="md" color="accent" className="text-xs tracking-label">
               {tSidebar('brandTitle')}
-            </p>
+            </Eyebrow>
             <p className="text-2xl font-bold text-surface leading-none mt-1">
               {tSidebar('brandSubtitle')}
             </p>

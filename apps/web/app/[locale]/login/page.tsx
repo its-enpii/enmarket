@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { Card, NLink } from '@/components/ui/neobrutal';
+import { Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { apiFetch } from '@/lib/api';
 import { LoginForm } from './LoginForm';
 
@@ -47,9 +47,9 @@ export default async function LoginPage() {
     <main className="min-h-screen bg-surface flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Card variant="surface" hoverable={false} thick raised className="p-8">
-          <p className="mb-2 text-xs font-bold uppercase tracking-label text-primary">
+          <Eyebrow size="md" color="primary" className="mb-2 text-xs tracking-label">
             enpiistudio Admin
-          </p>
+          </Eyebrow>
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-ink">
             {t('title')}
           </h1>

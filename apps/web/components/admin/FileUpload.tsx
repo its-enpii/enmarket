@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { MetaLabel } from '@/components/ui';
 import { FileInput } from '@/components/ui/FileInput';
 import { Image } from '@/components/ui/Image';
 
@@ -69,9 +70,7 @@ export function FileUpload({
 
         {previewUrl && (
           <div className="mt-3">
-            <p className="text-xs text-ink/60 mb-1.5 font-bold uppercase tracking-wide">
-              {t('filePreview')}
-            </p>
+            <MetaLabel className="mb-1.5">{t('filePreview')}</MetaLabel>
             {files[0]?.type.startsWith('image/') || defaultPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <Image
