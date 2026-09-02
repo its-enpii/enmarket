@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, Button, NLink } from '@/components/ui/neobrutal';
-import { CardMessage, EmptyState, PageIntro } from '@/components/ui';
+import { CardMessage, EmptyState, MetaLabel, PageIntro } from '@/components/ui';
 import { authApi } from '@/lib/auth-api';
 import type { WishlistItem } from '@/lib/types';
 
@@ -60,9 +60,9 @@ export default function AkunWishlistPage() {
           {items.map((item) => (
             <Card key={item.id} variant="surface" hoverable={false} className="p-4 flex flex-col justify-between">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-primary">
+                <MetaLabel as="span" color="primary">
                   {item.product?.category?.nama || t('defaultCategory')}
-                </span>
+                </MetaLabel>
                 <h3 className="font-bold text-base text-ink mt-1">
                   <NLink href={`/katalog/${item.product?.slug}`}>
                     {item.product?.nama}

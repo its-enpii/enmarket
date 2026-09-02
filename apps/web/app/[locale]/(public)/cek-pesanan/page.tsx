@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 
 import { CekPesananForm } from './CekPesananForm';
 import { getLastOrderCode } from './actions';
@@ -40,12 +41,12 @@ export default async function CekPesananPage() {
       <Card variant="surface" hoverable={false} className="p-6">
         <CekPesananForm defaultKode={lastCode ?? ''} />
 
-        <p className="text-xs text-ink/60 mt-4">
+        <Text className="mt-4">
           {t('formatLabel')}{' '}
           <code className="font-mono bg-surface border border-ink px-1.5 py-0.5 text-xs">
             EPS-YYYYMMDD-XXXX
           </code>
-        </p>
+        </Text>
       </Card>
     </div>
   );

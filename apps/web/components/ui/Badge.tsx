@@ -32,6 +32,8 @@ export type BadgeWidth = '24' | '28' | '32' | '36' | '40' | '56' | '80';
 interface Props extends HTMLAttributes<HTMLSpanElement> {
   tone?: BadgeTone;
   size?: BadgeSize;
+  /** Pakai border tipis (1px) alih-alih border standar (2px). */
+  thin?: boolean;
   /** Pakai shadow (default md=true, sm=false, lg=true). Override untuk tone tertentu. */
   shadow?: boolean;
   elevation?: BadgeElevation;
@@ -95,6 +97,7 @@ const FONT_SIZE_CLS: Record<'micro' | 'fine' | 'xs' | 'base', string> = {
 export function Badge({
   tone = 'accent',
   size = 'md',
+  thin = false,
   shadow,
   elevation,
   shadowColor = 'ink',
@@ -115,7 +118,7 @@ export function Badge({
         : size === 'sm' ? '' : size === 'md' ? 'shadow-brutal-3' : 'shadow-brutal-4';
 
   const composed = [
-    'inline-flex items-center border-2 border-ink',
+    `inline-flex items-center ${thin ? 'border' : 'border-2'} border-ink`,
     TONE_CLS[tone],
     SIZE_CLS[size],
     height ? HEIGHT_CLS[height] : '',

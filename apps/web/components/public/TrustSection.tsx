@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Card, NLink } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 
 interface Benefit {
   icon: string;
@@ -57,7 +58,7 @@ export function TrustSection() {
           );
         })}
       </div>
-      <p className="text-xs text-ink/60 text-center pt-2">
+      <Text className="text-center pt-2">
         {t('footerText')}{' '}
         <NLink
           href="/katalog"
@@ -67,7 +68,7 @@ export function TrustSection() {
           {t('footerCta')}
         </NLink>{' '}
         {t('footerSuffix')}
-      </p>
+      </Text>
     </section>
   );
 }

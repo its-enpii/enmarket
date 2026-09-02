@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { ModalShell } from '@/components/ui/ModalShell';
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import { Input } from '@/components/ui/Input';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Spinner } from '@/components/ui/Spinner';
@@ -165,11 +166,11 @@ export function MediaPickerModal({
             <div className="flex flex-col items-center justify-center py-16 text-center max-w-sm mx-auto">
               <span className="text-4xl mb-2">📁</span>
               <p className="text-sm font-bold text-ink mb-1">{t('emptyTitle')}</p>
-              <p className="text-xs text-ink/60 leading-relaxed">
+              <Text className="leading-relaxed">
                 {items.length === 0
                   ? tShared('emptyMedia')
                   : tCommon('noResults')}
-              </p>
+              </Text>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -199,7 +200,7 @@ export function MediaPickerModal({
                   </div>
 
                   <p
-                    className="text-xs font-bold text-ink truncate w-full"
+                    className="text-xs w-full"
                     title={it.filename}
                   >
                     {it.filename}
@@ -218,9 +219,9 @@ export function MediaPickerModal({
         </div>
 
         <div className="flex items-center justify-between border-t-2 border-ink px-5 py-3 bg-surface">
-          <p className="text-xs text-ink/60 font-mono">
+          <Text className="font-mono">
             {t('totalMediaCount', { count: filtered.length })}
-          </p>
+          </Text>
           <Button
             variant="surface"
             size="sm"

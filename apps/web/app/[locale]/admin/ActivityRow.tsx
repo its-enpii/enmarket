@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
+import { MetaLabel } from '@/components/ui';
 import { Card } from '@/components/ui/neobrutal';
 import { formatDateTime } from '@/lib/format';
 import type { ActivityLog } from '@/lib/types';
@@ -48,9 +49,9 @@ export function ActivityRow({ entry }: { entry: ActivityLog }) {
         <div className="flex-1 min-w-0">
           <p className="font-body text-sm text-ink">
             <span className="font-bold">{verb}</span>{' '}
-            <span className="text-ink/60 uppercase font-bold tracking-wide text-micro">
+            <MetaLabel as="span" size="micro" tracking="wide" family="sans" className="font-bold">
               {subject}
-            </span>
+            </MetaLabel>
             {detail && (
               <>
                 {' '}

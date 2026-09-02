@@ -438,16 +438,15 @@ function RelatedNote({
       </div>
       <div className="p-4 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={[
-              'inline-flex items-center px-2 py-0.5 font-label text-micro font-black uppercase tracking-wider border border-ink',
-              tagTone === 'accent'
-                ? 'bg-accent text-ink'
-                : 'bg-primary text-surface',
-            ].join(' ')}
+          <Badge
+            tone={tagTone === 'accent' ? 'accent' : 'primary'}
+            size="sm"
+            shadow={false}
+            thin
+            className="font-label font-black uppercase tracking-wider"
           >
             {tag}
-          </span>
+          </Badge>
           <MetaLabel as="span" size="sm">
             {date}
           </MetaLabel>

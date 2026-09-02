@@ -1,4 +1,5 @@
 import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -87,7 +88,7 @@ export default async function OrdersPage({ searchParams }: Props) {
       render: (o) => (
         <div>
           <p className="font-bold">{o.nama_pembeli}</p>
-          <p className="text-xs text-ink/60">{o.email_pembeli}</p>
+          <Text>{o.email_pembeli}</Text>
         </div>
       ),
     },

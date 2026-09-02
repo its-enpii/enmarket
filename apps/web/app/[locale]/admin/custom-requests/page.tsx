@@ -1,4 +1,5 @@
 import { AdminPageHeader, AdminPageBody, StatTile } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -60,7 +61,7 @@ export default async function CustomRequestsPage({ searchParams }: Props) {
       render: (r) => (
         <div>
           <p className="font-bold text-ink">{r.nama}</p>
-          <p className="text-xs text-ink/60">{r.email} · {r.wa}</p>
+          <Text>{r.email} · {r.wa}</Text>
         </div>
       ),
     },

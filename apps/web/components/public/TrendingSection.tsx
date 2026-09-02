@@ -8,6 +8,7 @@ import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
 import { ImagePlaceholder } from '@/components/ui';
+import { Text } from '@/components/ui';
 
 interface Props {
   trending: Product[]; // biasanya featured
@@ -46,9 +47,9 @@ export function TrendingSection({ trending, latest }: Props) {
               {trendingIsPlaceholder ? t('headingPlaceholder') : t('headingReal')}
             </h2>
             {trendingIsPlaceholder && (
-              <p className="text-xs text-ink/60 mt-1">
+              <Text className="mt-1">
                 {t('placeholderHint')}
-              </p>
+              </Text>
             )}
           </div>
           <NLink

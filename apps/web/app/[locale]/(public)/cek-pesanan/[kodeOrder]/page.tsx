@@ -6,7 +6,7 @@ import { ReviewFormModal } from '@/components/order/ReviewFormModal';
 import { reviewApi } from '@/lib/review-api';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { BackLink } from '@/components/ui/BackLink';
-import { DataItem, MetaLabel } from '@/components/ui';
+import { DataItem, MetaLabel, Text } from '@/components/ui';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
 import { ORDER_TYPE_I18N_KEYS } from '@/lib/constants';
@@ -135,8 +135,8 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
                 <li key={item.id} className="border-b-2 border-dashed border-ink/20 pb-3 last:border-b-0 last:pb-0">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-bold text-ink truncate">{item.nama_produk}</p>
-                      <p className="text-xs text-ink/60">{typeKey ? t(typeKey) : item.tipe_produk}</p>
+                      <Text variant="itemTitle">{item.nama_produk}</Text>
+                      <Text>{typeKey ? t(typeKey) : item.tipe_produk}</Text>
                     </div>
                     <p className="font-bold text-primary shrink-0">{item.harga_saat_beli_formatted}</p>
                   </div>

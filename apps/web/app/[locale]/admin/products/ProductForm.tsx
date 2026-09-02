@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { AlertBanner } from '@/components/ui/AlertBanner';
 import { Button } from '@/components/ui/neobrutal';
 import { FormFooter } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { FormField } from '@/components/admin/FormField';
@@ -437,7 +438,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
       {/* ————— Linked Posts (panduan / warning / catatan) ————— */}
       <section className="space-y-4">
         <FormSection eyebrow={t('sectionLinkedPosts')} title={t('sectionLinkedPostsTitle')} />
-        <p className="text-xs text-ink/60 font-body">{t('sectionLinkedPostsHint')}</p>
+        <Text className="font-body">{t('sectionLinkedPostsHint')}</Text>
 
         {/* Hidden inputs untuk serialize linked_posts ke backend (array of post_id). */}
         {linkedIds.map((id) => (

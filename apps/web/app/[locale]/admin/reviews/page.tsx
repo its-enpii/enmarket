@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/admin/EmptyState';
 import { Pagination } from '@/components/admin/Pagination';
 import { StatusPill } from '@/components/ui/StatusPill';
 import { AdminPageHeader, MetaLabel } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
 import type { PaginatedResponse, Review, ReviewStats, SingleResponse } from '@/lib/types';
@@ -61,7 +62,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
       width: '25%',
       render: (row) => (
         <div>
-          <p className="font-bold text-ink truncate max-w-xs">{row.product?.nama || '-'}</p>
+          <Text variant="itemTitle" className="max-w-xs">{row.product?.nama || '-'}</Text>
           <p className="text-fine font-mono text-ink/60">#{row.order_kode}</p>
         </div>
       ),
@@ -72,7 +73,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
       width: '20%',
       render: (row) => (
         <div>
-          <p className="font-bold text-ink truncate">{row.buyer_name}</p>
+          <Text variant="itemTitle">{row.buyer_name}</Text>
           <p className="text-fine text-ink/60">{row.created_at ? formatDate(row.created_at) : '-'}</p>
         </div>
       ),

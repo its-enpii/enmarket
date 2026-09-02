@@ -22,6 +22,8 @@ export { InfoCard } from './InfoCard';
 export type { InfoCardProps } from './InfoCard';
 export { MetaLabel } from './MetaLabel';
 export type { MetaLabelProps, MetaLabelSize } from './MetaLabel';
+export { Text } from './Text';
+export type { TextProps, TextVariant } from './Text';
 export { ErrorDigest } from './ErrorDigest';
 export type { ErrorDigestProps } from './ErrorDigest';
 export { EmptyState } from './EmptyState';

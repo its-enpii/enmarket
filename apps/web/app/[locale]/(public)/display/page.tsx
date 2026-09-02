@@ -278,10 +278,10 @@ function FeaturedCover({
               {post.excerpt}
             </p>
           )}
-          <span className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-black text-primary mt-2">
+          <MetaLabel as="span" size="sm" color="primary" className="inline-flex items-center gap-2 font-black mt-2">
             {readEntryLabel}
             <span aria-hidden="true" className="text-xl">→</span>
-          </span>
+          </MetaLabel>
         </div>
       </div>
     </Card>
@@ -344,9 +344,9 @@ function PostCardZine({
             </div>
             <h3 className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
             {post.excerpt && <p className="font-body text-body-md text-ink/75 leading-snug">{post.excerpt}</p>}
-            <span className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-primary mt-1">
+            <MetaLabel as="span" size="sm" color="primary" className="inline-flex items-center gap-2 font-bold mt-1">
               {readEntryLabel} <span aria-hidden="true">→</span>
-            </span>
+            </MetaLabel>
           </div>
         </div>
       </Card>
@@ -408,9 +408,9 @@ function PostCardZine({
           </div>
           <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
           {post.excerpt && <p className="font-body text-body-sm text-ink/70 leading-snug line-clamp-3">{post.excerpt}</p>}
-          <span className="inline-flex items-center gap-1 font-label text-label-sm uppercase font-bold text-primary">
+          <MetaLabel as="span" size="sm" color="primary" className="inline-flex items-center gap-1 font-bold">
             {readLabel} <span aria-hidden="true">→</span>
-          </span>
+          </MetaLabel>
         </div>
       </div>
     </Card>

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { AdminPageHeader, AdminPageBody, DataItem, FormSection } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { Badge } from '@/components/ui/Badge';
 import { DataTable, Column } from '@/components/admin/DataTable';
 import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
@@ -69,10 +70,10 @@ export default async function OrderDetailPage({ params }: Props) {
               {item.nama_produk}
             </Button>
             {delivery?.license_key && (
-              <p className="text-xs text-ink/60 mt-1 font-mono">
+              <Text className="mt-1 font-mono">
                 {t('items.licenseKey')}{' '}
                 <span className="bg-ink/10 px-1.5 py-0.5 rounded">{delivery.license_key}</span>
-              </p>
+              </Text>
             )}
           </div>
         );

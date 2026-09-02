@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button, BUTTON_LABEL_CLS } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import { toast } from '@/components/ui/toast-store';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
@@ -162,7 +163,7 @@ export function PreviewImagesManager({ productId, initial, apiUrl }: Props) {
       )}
 
       {pending && (
-        <p className="text-xs text-ink/60">{t('processing')}</p>
+        <Text>{t('processing')}</Text>
       )}
       {error && (
         <p className="text-xs font-bold text-primary">{error}</p>

@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import { formatDate } from '@/lib/format';
 import { ORDER_STATUS_COLORS } from '@/lib/status';
 import type { Order } from '@/lib/types';
@@ -31,9 +32,9 @@ export function OrderHistoryItem({ order }: Props) {
               {statusLabel}
             </span>
           </div>
-          <p className="text-xs text-ink/60 mt-0.5">
+          <Text className="mt-0.5">
             {order.created_at ? formatDate(order.created_at) : '-'}
-          </p>
+          </Text>
         </div>
 
         <div className="text-left sm:text-right">

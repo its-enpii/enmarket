@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
+import { Text } from '@/components/ui';
 import type { AccountProvisioningInfo } from '@/lib/types';
 
 interface Props {
@@ -26,7 +27,7 @@ export function AccountProvisioningBox({ provisioning }: Props) {
             ⏳ {t('statusPending')}
           </Badge>
         </div>
-        <p className="mt-2 text-xs text-ink/70 leading-relaxed">{t('pending')}</p>
+        <Text variant="hint">{t('pending')}</Text>
       </div>
     );
   }

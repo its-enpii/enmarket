@@ -11,6 +11,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
+import { MetaLabel } from '@/components/ui';
 import { formatRupiah } from '@/lib/format';
 import type { CartItem } from '@/lib/types';
 import { Eyebrow } from '@/components/ui/neobrutal';
@@ -94,9 +95,9 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
               {allFree ? t('free') : formatRupiah(displayTotal)}
             </span>
           </Badge>
-          <p className="mt-3 font-label text-micro uppercase tracking-wider text-surface/60">
+          <MetaLabel as="p" size="micro" color="inherit" className="mt-3 text-surface/60">
             {itemCount} {t('itemsSuffix')}
-          </p>
+          </MetaLabel>
         </div>
 
         {allPreorder && (
@@ -115,9 +116,9 @@ export async function SummaryBlock({ subtotal, discount, total, itemCount, items
           {allFree ? t('checkoutFree') : allPreorder ? t('checkoutPreOrder') : t('checkout')}
         </Button>
 
-        <p className="text-center font-label text-micro uppercase tracking-wider text-surface/60">
+        <MetaLabel as="p" size="micro" color="inherit" className="text-center text-surface/60">
           {t('paymentNote')}
-        </p>
+        </MetaLabel>
       </div>
     </Card>
   );

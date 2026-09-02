@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
+import { Badge } from '@/components/ui/Badge';
 import {
   filterMedia,
   type FilterMediaOptions,
@@ -31,6 +32,7 @@ import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerAccent } from '@/components/ui/CornerAccent';
 import { Image } from '@/components/ui/Image';
 import { ImagePlaceholder } from '@/components/ui';
+import { MetaLabel } from '@/components/ui';
 
 interface Props {
   initialItems: MediaItem[];
@@ -113,11 +115,11 @@ export function MediaGallery({ initialItems, initialFilters, pickerMode }: Props
           </div>
 
           <div className="ml-auto self-end">
-            <p className="font-label text-micro uppercase tracking-wider text-ink/60">
+            <MetaLabel as="p" size="micro">
               {filtered.length !== items.length
                 ? t('countWithTotal', { count: filtered.length, total: items.length })
                 : t('count', { count: filtered.length })}
-            </p>
+            </MetaLabel>
           </div>
         </div>
       </Card>
@@ -184,14 +186,14 @@ function MediaCard({
         )}
 
         {/* Source badge */}
-        <span
-          className={
-            'absolute top-2 left-2 px-2 py-0.5 text-micro font-bold uppercase tracking-wider border-2 border-ink ' +
-            (item.source === 'product' ? 'bg-accent text-ink' : 'bg-primary text-surface')
-          }
+        <Badge
+          tone={item.source === 'product' ? 'accent' : 'primary'}
+          size="sm"
+          shadow={false}
+          className="absolute top-2 left-2 font-bold uppercase tracking-wider"
         >
           {item.source === 'product' ? t('sourceBadge.product') : t('sourceBadge.post')}
-        </span>
+        </Badge>
       </div>
 
       {/* Info */}

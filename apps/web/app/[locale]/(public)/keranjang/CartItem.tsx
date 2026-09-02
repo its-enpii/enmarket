@@ -16,6 +16,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card, NLink } from '@/components/ui/neobrutal';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
+import { MetaLabel } from '@/components/ui';
 import { formatRupiah } from '@/lib/format';
 import { ImagePlaceholder } from '@/components/ui';
 
@@ -78,16 +79,16 @@ export async function CartItem({ item }: { item: CartItemData }) {
           </div>
 
           <div className="flex items-baseline gap-2 border-l-2 border-ink/20 pl-3">
-            <span className="font-label text-micro uppercase tracking-wider text-ink/50">
+            <MetaLabel as="span" size="micro" color="inherit" className="text-ink/50">
               {t('subtotal')}
-            </span>
+            </MetaLabel>
             <span className="font-display font-black text-base text-ink">
               {formatRupiah(item.subtotal)}
             </span>
             {item.qty > 1 && (
-              <span className="font-label text-micro uppercase text-ink/50">
+              <MetaLabel as="span" size="micro" color="inherit" tracking="normal" className="text-ink/50">
                 × {item.qty}
-              </span>
+              </MetaLabel>
             )}
           </div>
 

@@ -6,6 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { PageHeader } from '@/components/public/PageHeader';
 import { Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import type { Game } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
 
@@ -64,7 +65,7 @@ export default async function TopupPage() {
                     🎮
                   </div>
                 )}
-                <p className="font-label text-sm font-bold text-ink truncate">{game.nama}</p>
+                <Text variant="itemTitle" className="font-label text-sm">{game.nama}</Text>
                 {game.brand && (
                   <p className="text-xs text-ink/50 mt-1">{game.brand}</p>
                 )}

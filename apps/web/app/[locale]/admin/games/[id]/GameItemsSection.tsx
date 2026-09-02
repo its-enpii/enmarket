@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { formatRupiah } from '@/lib/format';
@@ -89,7 +90,7 @@ export function GameItemsSection({ game }: Props) {
             <div key={item.id} className="flex items-center justify-between border-2 border-ink p-3">
               <div>
                 <p className="font-bold text-sm">{item.nama}</p>
-                <p className="text-xs text-ink/60">{item.digiflazz_sku} · {formatRupiah(item.harga)}</p>
+                <Text>{item.digiflazz_sku} · {formatRupiah(item.harga)}</Text>
               </div>
               <Button
                 type="button"

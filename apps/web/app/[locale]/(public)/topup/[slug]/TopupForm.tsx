@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import { FormError } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
@@ -253,9 +254,9 @@ export function TopupForm({ game }: Props) {
             </span>
           </div>
           {paymentGateway && (
-            <p className="text-xs text-ink/60 mt-2">
+            <Text className="mt-2">
               {t('viaGateway', { gateway: paymentGateway })}
-            </p>
+            </Text>
           )}
         </Card>
       )}

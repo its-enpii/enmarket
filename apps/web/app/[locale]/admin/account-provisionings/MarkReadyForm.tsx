@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 
 import { ModalShell } from '@/components/ui/ModalShell';
-import { Button } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { StatusPill } from '@/components/ui/StatusPill';
@@ -111,7 +111,12 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
 
       {mounted && createPortal(
         <ModalShell open={open} onClose={closeDialog}>
-          <div className="relative bg-surface border-2 border-ink shadow-brutal-6 max-w-lg w-full p-5">
+          <Card
+            variant="surface"
+            thick
+            elevation={8}
+            className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto z-raised animate-scale-in p-5"
+          >
           <h2 className="font-display text-xl font-black uppercase tracking-tight mb-1">
             {t(isRegenerate ? 'regenerateTitle' : 'markReadyTitle')}
           </h2>
@@ -190,7 +195,7 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
               </Button>
             </div>
           </form>
-          </div>
+          </Card>
         </ModalShell>,
         document.body,
       )}

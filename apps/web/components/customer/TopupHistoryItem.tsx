@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui';
 import { formatRupiah, formatDate } from '@/lib/format';
 import type { TopupOrder, TopupStatus } from '@/lib/types';
 
@@ -31,9 +32,9 @@ export function TopupHistoryItem({ order }: Props) {
           <p className="font-bold text-sm text-ink truncate">
             {order.game?.nama ?? 'Game'} — {order.game_item?.nama ?? 'Item'}
           </p>
-          <p className="text-xs text-ink/60 mt-1">
+          <Text className="mt-1">
             {order.kode_order} · {formatDate(order.created_at)}
-          </p>
+          </Text>
           {order.digiflazz_trx_id && (
             <p className="text-xs text-ink/50 mt-1 font-mono">SN: {order.digiflazz_trx_id}</p>
           )}

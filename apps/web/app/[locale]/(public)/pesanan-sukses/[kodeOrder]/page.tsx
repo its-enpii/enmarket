@@ -3,7 +3,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
 import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
-import { MetaLabel } from '@/components/ui';
+import { MetaLabel, Text } from '@/components/ui';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
@@ -107,8 +107,8 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                 <li key={item.id} className="border-b-2 border-dashed border-ink/20 pb-3 last:border-b-0 last:pb-0">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-bold text-ink truncate">{item.nama_produk}</p>
-                      <p className="text-xs text-ink/60">{t('preorderReadyNotice', { date: releaseDate ?? '—' })}</p>
+                      <Text variant="itemTitle">{item.nama_produk}</Text>
+                      <Text>{t('preorderReadyNotice', { date: releaseDate ?? '—' })}</Text>
                     </div>
                     <p className="font-bold text-primary shrink-0">{item.harga_saat_beli_formatted}</p>
                   </div>
@@ -180,8 +180,8 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                 <li key={item.id} className="border-b-2 border-dashed border-ink/20 pb-3 last:border-b-0 last:pb-0">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-bold text-ink truncate">{item.nama_produk}</p>
-                      <p className="text-xs text-ink/60">{typeKey ? t(typeKey) : item.tipe_produk}</p>
+                      <Text variant="itemTitle">{item.nama_produk}</Text>
+                      <Text>{typeKey ? t(typeKey) : item.tipe_produk}</Text>
                     </div>
                     <p className="font-bold text-primary shrink-0">{item.harga_saat_beli_formatted}</p>
                   </div>
@@ -193,7 +193,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                   {hasDownload && expired && <p className="mt-2 text-xs text-ink/60">{t('expiredDownload')}</p>}
                   {hasLicense && (
                     <div className="mt-2 bg-ink text-surface border-2 border-ink p-2.5">
-                      <p className="text-micro font-bold uppercase tracking-wider opacity-70">{t('licenseKey')}</p>
+                      <MetaLabel as="p" size="micro" color="inherit" family="sans" className="font-bold opacity-70">{t('licenseKey')}</MetaLabel>
                       <p className="font-mono font-bold text-sm break-words select-all">{delivery!.license_key}</p>
                     </div>
                   )}
