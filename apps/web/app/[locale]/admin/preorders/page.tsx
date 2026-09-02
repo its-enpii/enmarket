@@ -11,7 +11,7 @@ import { Pagination } from '@/components/admin/Pagination';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { NLink } from '@/components/ui/neobrutal';
 import { ApiRequestError, apiGet } from '@/lib/api';
-import { formatDate } from '@/lib/format';
+import { formatDate, formatRupiah } from '@/lib/format';
 import {
   ORDER_STATUS_LABEL,
   type Order,
@@ -100,7 +100,7 @@ export default async function PreordersPage({ searchParams }: Props) {
       render: (o) => (
         <span className="font-bold">
           {o.preorder_deposit_amount
-            ? `Rp ${Number(o.preorder_deposit_amount).toLocaleString('id-ID')}`
+            ? formatRupiah(o.preorder_deposit_amount)
             : '—'}
         </span>
       ),

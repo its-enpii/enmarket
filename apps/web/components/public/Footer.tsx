@@ -14,6 +14,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Button, Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
+import { MetaLabel } from '@/components/ui/MetaLabel';
 import { Input } from '@/components/ui/Input';
 import { publicApi } from '@/lib/public-api';
 
@@ -77,9 +78,9 @@ export async function Footer() {
           {/* Right col: newsletter + links */}
           <div className="flex flex-col gap-12">
             <Card variant="surface" thick hoverable={false} className="p-8">
-              <p className="font-label text-label-sm font-black mb-4 uppercase">
+              <MetaLabel as="p" tracking="normal" size="sm" weight="black" color="inherit" className="mb-4">
                 {t('subscribeTitle')}
-              </p>
+              </MetaLabel>
               <form
                 action="#"
                 method="post"
@@ -109,9 +110,9 @@ export async function Footer() {
                   Pakai <a> native (bukan NLink) supaya tidak ke-wrap locale prefix
                   dan tidak di-prefetch — sesuai pattern Button external. */}
               <div className="flex flex-col gap-4">
-                <h4 className="font-label text-label-sm font-black uppercase mb-2">
+                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-2">
                   {t('connectTitle')}
-                </h4>
+                </MetaLabel>
                 {socialLinks.length === 0 ? (
                   <p className="font-body text-body-sm text-surface/50">
                     —
@@ -132,9 +133,9 @@ export async function Footer() {
               </div>
 
               <div className="flex flex-col gap-4">
-                <h4 className="font-label text-label-sm font-black uppercase mb-2">
+                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-2">
                   {t('studioTitle')}
-                </h4>
+                </MetaLabel>
                 <NLink href="/katalog" variant="on-dark" underline="none">
                   {t('studioLinks.catalog')}
                 </NLink>

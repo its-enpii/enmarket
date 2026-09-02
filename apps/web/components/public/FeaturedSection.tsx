@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
+import { MetaLabel } from '@/components/ui/MetaLabel';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { SectionTitle } from '@/components/ui';
 

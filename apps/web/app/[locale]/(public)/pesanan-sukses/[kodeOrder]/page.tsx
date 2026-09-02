@@ -8,6 +8,7 @@ import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
 import { ORDER_TYPE_I18N_KEYS } from '@/lib/constants';
+import { formatRupiah } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -91,7 +92,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
             <Info
               label={t('total')}
               value={order.preorder_deposit_amount
-                ? `Rp ${Number(order.preorder_deposit_amount).toLocaleString('id-ID')}`
+                ? formatRupiah(order.preorder_deposit_amount)
                 : order.total_harga_formatted}
             />
             <Info label={t('paidAt')} value={order.paid_at ? format.dateTime(new Date(order.paid_at), { dateStyle: 'medium', timeStyle: 'short' }) : '—'} />
