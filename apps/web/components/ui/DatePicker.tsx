@@ -5,6 +5,7 @@ import { DayPicker } from 'react-day-picker';
 import { useTranslations } from 'next-intl';
 
 import { formatDate as formatShortDate } from '@/lib/format';
+import { LABEL_CLS } from './form-tokens';
 
 interface Props {
   name?: string;
@@ -113,7 +114,7 @@ export function DatePicker({
   return (
     <div ref={wrapperRef} className={`relative ${className}`}>
       {label && (
-        <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1">
+        <label className={LABEL_CLS}>
           {label}
         </label>
       )}

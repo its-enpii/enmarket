@@ -1,8 +1,10 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 
+import { ModalShell } from '@/components/ui/ModalShell';
 import { Button } from '@/components/ui/neobrutal';
 import { FormError } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
@@ -22,23 +24,42 @@ interface Props {
  * maupun regenerate (ganti kredensial). Schema fleksibel: minimal
  * username + password, server/profile/expiry optional.
  *
- * Pakai native HTML5 <dialog> element untuk modal — simple, no external deps.
+ * Modal dirender melalui portal dan ModalShell.
  */
 export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials, initialCatatan }: Props) {
   const t = useTranslations('admin.accountProvisionings');
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape' && open) setOpen(false);
+    }
+    if (open) {
+      document.addEventListener('keydown', onKey);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open]);
 
   function openDialog() {
     setError(null);
     setSuccess(null);
-    dialogRef.current?.showModal();
+    setOpen(true);
   }
 
   function closeDialog() {
-    dialogRef.current?.close();
+    setOpen(false);
   }
 
   async function handleSubmit(formData: FormData) {
@@ -88,11 +109,9 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
         {t(isRegenerate ? 'regenerate' : 'markReady')}
       </Button>
 
-      <dialog
-        ref={dialogRef}
-        className="p-0 border-2 border-ink shadow-brutal-6 bg-surface max-w-lg w-full backdrop:bg-ink/30"
-      >
-        <div className="p-5">
+      {mounted && createPortal(
+        <ModalShell open={open} onClose={closeDialog}>
+          <div className="relative bg-surface border-2 border-ink shadow-brutal-6 max-w-lg w-full p-5">
           <h2 className="font-display text-xl font-black uppercase tracking-tight mb-1">
             {t(isRegenerate ? 'regenerateTitle' : 'markReadyTitle')}
           </h2>
@@ -171,8 +190,10 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
               </Button>
             </div>
           </form>
-        </div>
-      </dialog>
+          </div>
+        </ModalShell>,
+        document.body,
+      )}
     </>
   );
 }

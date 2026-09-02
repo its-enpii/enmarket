@@ -20,6 +20,7 @@
 
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 import { RelatedWorks } from '@/components/public/RelatedWorks';
@@ -41,6 +42,15 @@ export const revalidate = 0;
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
+}
+
+function FactRow({ label, children }: { label: ReactNode; children: ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
+      <MetaLabel as="dt" size="sm">{label}</MetaLabel>
+      <dd className="font-bold text-ink">{children}</dd>
+    </div>
+  );
 }
 
 async function fetchProduct(slug: string): Promise<Product | null> {
@@ -306,17 +316,14 @@ export default async function WorkDetailPage({ params }: PageProps) {
                 {t('quickFacts')}
               </Eyebrow>
               <dl className="space-y-3">
-                <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                  <MetaLabel as="dt" size="sm">{t('type')}</MetaLabel>
-                  <dd className="font-bold text-ink">{tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}</dd>
-                </div>
+                <FactRow label={t('type')}>
+                  {tKatalog(`tipe.${product.tipe}` as 'tipe.download' | 'tipe.license' | 'tipe.bundle' | never)}
+                </FactRow>
                 {product.rating_summary && product.rating_summary.count > 0 && (
                   <RatingChip summary={product.rating_summary} />
                 )}
               {kategori && (
-                  <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <MetaLabel as="dt" size="sm">{t('category')}</MetaLabel>
-                    <dd>
+                  <FactRow label={t('category')}>
                       <NLink
                         href={`/develop?category=${kategori.slug}`}
                         variant="primary"
@@ -324,32 +331,27 @@ export default async function WorkDetailPage({ params }: PageProps) {
                       >
                         {kategori.nama}
                       </NLink>
-                    </dd>
-                  </div>
+                  </FactRow>
                 )}
                 {product.fitur && product.fitur.length > 0 && (
-                  <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <MetaLabel as="dt" size="sm">{t('features')}</MetaLabel>
-                    <dd className="font-bold text-ink">{t('items', { count: product.fitur.length })}</dd>
-                  </div>
+                  <FactRow label={t('features')}>
+                    {t('items', { count: product.fitur.length })}
+                  </FactRow>
                 )}
                 {previewImages.length > 0 && (
-                  <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <MetaLabel as="dt" size="sm">{t('preview')}</MetaLabel>
-                    <dd className="font-bold text-ink">{t('images', { count: previewImages.length })}</dd>
-                  </div>
+                  <FactRow label={t('preview')}>
+                    {t('images', { count: previewImages.length })}
+                  </FactRow>
                 )}
                 {product.has_downloadable_file && product.download_expiry_days && (
-                  <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <MetaLabel as="dt" size="sm">{t('access')}</MetaLabel>
-                    <dd className="font-bold text-ink">{t('days', { count: product.download_expiry_days })}</dd>
-                  </div>
+                  <FactRow label={t('access')}>
+                    {t('days', { count: product.download_expiry_days })}
+                  </FactRow>
                 )}
                 {product.needs_license_key && (
-                  <div className="flex items-baseline justify-between gap-4 border-b-2 border-ink/10 pb-3">
-                    <MetaLabel as="dt" size="sm">{t('license')}</MetaLabel>
-                    <dd className="font-bold text-ink">{t('included')}</dd>
-                  </div>
+                  <FactRow label={t('license')}>
+                    {t('included')}
+                  </FactRow>
                 )}
               </dl>
 

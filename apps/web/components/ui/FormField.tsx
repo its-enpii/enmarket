@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { FormError, FormHint } from './FormMessage';
+import { LABEL_CLS } from './form-tokens';
 
 export interface FormFieldProps {
   label: string;
@@ -25,7 +26,7 @@ export function FormField({
     <div className={className}>
       <label
         htmlFor={htmlFor}
-        className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5"
+        className={LABEL_CLS}
       >
         {label}
         {required && <span className="ml-1 text-primary">*</span>}

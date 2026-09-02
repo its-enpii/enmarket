@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { BUTTON_LINK_BASE_CLS } from '@/components/ui/neobrutal';
+import { LABEL_CLS } from './form-tokens';
 
 interface Option {
   value: string;
@@ -119,7 +120,7 @@ export function SelectSearch({
   return (
     <div className="relative">
       {label && (
-        <label htmlFor={id} className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
+        <label htmlFor={id} className={LABEL_CLS}>
           {label}{required && <span className="ml-1 text-primary">*</span>}
         </label>
       )}
