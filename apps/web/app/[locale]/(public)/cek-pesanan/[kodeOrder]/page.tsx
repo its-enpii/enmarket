@@ -162,7 +162,7 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
                   {(order.status === 'paid' || order.status === 'free') && (
                     <div className="mt-3 pt-2 border-t border-ink/10 flex items-center justify-between gap-2">
                       {reviewedProductIds.includes(item.product_id) ? (
-                        <span className="text-xs font-bold text-[var(--color-success)] flex items-center gap-1">
+                        <span className="text-xs font-bold text-success flex items-center gap-1">
                           ? {t('reviewedBadge') || 'Ulasan Diberikan'}
                         </span>
                       ) : (

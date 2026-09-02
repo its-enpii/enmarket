@@ -133,7 +133,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
             <MetaLabel>{t('stats.published')}</MetaLabel>
-            <p className="text-2xl sm:text-3xl font-black font-mono text-[var(--color-success)] mt-1">{stats.published}</p>
+            <p className="text-2xl sm:text-3xl font-black font-mono text-success mt-1">{stats.published}</p>
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
             <MetaLabel>{t('stats.hidden')}</MetaLabel>

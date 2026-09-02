@@ -50,7 +50,7 @@ export function WishlistHeartButton({
       onClick={handleToggle}
       aria-label={wishlisted ? t('remove') : t('add')}
       className={`w-8 h-8 px-0 py-0 ${
-        wishlisted ? 'text-[var(--color-danger)] hover:text-[var(--color-danger)]' : 'text-ink/70 hover:text-ink hover:bg-accent'
+        wishlisted ? 'text-danger hover:text-danger' : 'text-ink/70 hover:text-ink hover:bg-accent'
       } ${className}`}
     >
       <span className="text-base leading-none select-none">

@@ -172,7 +172,7 @@ export function CheckoutForm({
         </div>
 
         {couponSuccess && (
-          <span className="mt-2 block text-xs font-bold text-[var(--color-success)]">
+          <span className="mt-2 block text-xs font-bold text-success">
             ✓ {couponSuccess}
           </span>
         )}
