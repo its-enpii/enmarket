@@ -7,12 +7,11 @@
 
 import { getTranslations } from 'next-intl/server';
 
-import { Button, Card } from '@/components/ui/neobrutal';
+import { EmptyState } from '@/components/ui';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { SectionBand } from '@/components/ui';
 
 import { CartHeader } from './CartHeader';
-import { Eyebrow } from '@/components/ui/neobrutal';
 
 export async function ErrorState({ message }: { message: string }) {
   const t = await getTranslations('keranjang');
@@ -21,18 +20,15 @@ export async function ErrorState({ message }: { message: string }) {
       <CartHeader />
       <SectionBand>
         <SectionContainer py="xl">
-          <Card variant="surface" thick hoverable={false} className="max-w-2xl mx-auto p-8">
-            <Eyebrow size="md" color="accent" className="mb-3">
-              {t('errorEyebrow')}
-            </Eyebrow>
-            <h2 className="font-display text-3xl md:text-4xl font-black uppercase leading-tight text-ink mb-4">
-              {t('errorTitle')}
-            </h2>
-            <p className="font-body text-body-md text-ink/70 mb-6">{message}</p>
-            <Button variant="primary" size="md" href="/develop" shadowColor="accent">
-              {t('errorAction')}
-            </Button>
-          </Card>
+          <div className="max-w-2xl mx-auto">
+            <EmptyState
+              variant="public"
+              eyebrow={t('errorEyebrow')}
+              title={t('errorTitle')}
+              message={message}
+              cta={{ href: '/develop', label: t('errorAction') }}
+            />
+          </div>
         </SectionContainer>
       </SectionBand>
     </>

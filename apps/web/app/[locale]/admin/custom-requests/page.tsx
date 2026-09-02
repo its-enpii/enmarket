@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, StatTile } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -138,26 +138,11 @@ export default async function CustomRequestsPage({ searchParams }: Props) {
 
         {stats && (
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.total')}</p>
-              <p className="font-display text-3xl font-black text-ink mt-1">{stats.total}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.baru')}</p>
-              <p className="font-display text-3xl font-black text-accent mt-1">{stats.baru}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.diproses')}</p>
-              <p className="font-display text-3xl font-black text-primary mt-1">{stats.diproses}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.selesai')}</p>
-              <p className="font-display text-3xl font-black text-primary mt-1">{stats.selesai}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.dibatalkan')}</p>
-              <p className="font-display text-3xl font-black text-ink/40 mt-1">{stats.dibatalkan}</p>
-            </Card>
+            <StatTile label={t('stats.total')} value={stats.total} variant="surface" valueClassName="text-ink" />
+            <StatTile label={t('stats.baru')} value={stats.baru} variant="surface" valueClassName="text-accent" />
+            <StatTile label={t('stats.diproses')} value={stats.diproses} variant="surface" valueClassName="text-primary" />
+            <StatTile label={t('stats.selesai')} value={stats.selesai} variant="surface" valueClassName="text-primary" />
+            <StatTile label={t('stats.dibatalkan')} value={stats.dibatalkan} variant="surface" valueClassName="text-ink/40" />
           </div>
         )}
 

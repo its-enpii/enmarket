@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, StatTile } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -237,27 +237,6 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
         </div>
       )}
     </AdminPageBody>
-  );
-}
-
-function StatTile({
-  label,
-  value,
-  variant,
-}: {
-  label: string;
-  value: number;
-  variant: 'surface' | 'filled-primary' | 'filled-accent' | 'ink';
-}) {
-  return (
-    <Card
-      variant={variant}
-      hoverable={false}
-      className="p-4"
-    >
-      <p className="text-micro font-bold uppercase tracking-widest opacity-70">{label}</p>
-      <p className="mt-2 font-display text-3xl font-black leading-none">{value}</p>
-    </Card>
   );
 }
 

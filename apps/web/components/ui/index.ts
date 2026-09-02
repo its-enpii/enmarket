@@ -30,6 +30,8 @@ export { CardMessage } from './CardMessage';
 export type { CardMessageProps } from './CardMessage';
 export { DataItem } from './DataItem';
 export type { DataItemProps } from './DataItem';
+export { StatTile } from './StatTile';
+export type { StatTileProps } from './StatTile';
 export { ImagePlaceholder } from './ImagePlaceholder';
 export type { ImagePlaceholderProps } from './ImagePlaceholder';
 export { Spinner } from './Spinner';

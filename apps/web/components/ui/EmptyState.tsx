@@ -18,6 +18,7 @@ interface AdminEmptyStateProps {
 interface PublicEmptyStateProps {
   variant?: 'public';
   compact?: false;
+  eyebrow?: string;
   title: string;
   message?: string;
   cta?: { href: string; label: string };
@@ -104,7 +105,7 @@ export function EmptyState(props: EmptyStateProps) {
       className="flex flex-col items-center gap-4 p-8 sm:p-12 text-center sm:gap-6"
     >
       <p className="text-xs font-bold uppercase tracking-label text-ink/60">
-        {t('title')}
+        {props.eyebrow ?? t('title')}
       </p>
       <h2 className="text-2xl sm:text-3xl font-bold leading-tight text-ink">
         {props.title}

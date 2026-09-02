@@ -59,7 +59,7 @@ export function AccountSidebar() {
                 href={item.href}
             className={`flex items-center gap-3 px-3 py-2.5 text-sm font-bold border-2 transition-all ${
               active
-                ? 'bg-primary text-white border-ink shadow-brutal-2'
+                ? 'bg-primary text-surface border-ink shadow-brutal-2'
                 : 'border-transparent text-ink hover:bg-accent/40 hover:border-ink'
             }`}
               >

@@ -22,6 +22,7 @@ import { useTranslations } from 'next-intl';
 import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { formatRupiah } from '@/lib/format';
+import { getClientApiBase } from '@/lib/client-api';
 import type { PaginationMeta, Product } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
 
@@ -46,7 +47,7 @@ async function fetchPage(
   sp.set('per_page', '9');
 
   try {
-    const res = await fetch(`/api/public/products?${sp.toString()}`, {
+    const res = await fetch(`${getClientApiBase()}/api/public/products?${sp.toString()}`, {
       cache: 'no-store',
     });
     if (!res.ok) return null;

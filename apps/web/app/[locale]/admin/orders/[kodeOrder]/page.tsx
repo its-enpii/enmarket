@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { AdminPageHeader, AdminPageBody, FormSection } from '@/components/ui';
+import { DataTable, Column } from '@/components/admin/DataTable';
 import { Button, Card, Disclosure } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import { ApiRequestError, apiGet } from '@/lib/api';
@@ -48,6 +49,106 @@ export default async function OrderDetailPage({ params }: Props) {
 
   const items = order.items ?? [];
   const itemsWithoutDelivery = items.filter((it) => !it.delivery).length;
+
+  const columns: Column<(typeof items)[number]>[] = [
+    {
+      key: 'product',
+      header: t('items.colProduct'),
+      render: (item) => {
+        const delivery: OrderDeliveryInfo | null = item.delivery ?? null;
+
+        return (
+          <div>
+            <Button
+              href={`/admin/products/${item.product_id}`}
+              variant="primary"
+              size="sm"
+              flat
+            >
+              {item.nama_produk}
+            </Button>
+            {delivery?.license_key && (
+              <p className="text-xs text-ink/60 mt-1 font-mono">
+                {t('items.licenseKey')}{' '}
+                <span className="bg-ink/10 px-1.5 py-0.5 rounded">{delivery.license_key}</span>
+              </p>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      key: 'type',
+      header: t('items.colType'),
+      render: (item) => TIPE_LABEL[item.tipe_produk] ?? item.tipe_produk,
+    },
+    {
+      key: 'price',
+      header: t('items.colPrice'),
+      render: (item) => (
+        <span className="font-bold">{item.harga_saat_beli_formatted}</span>
+      ),
+    },
+    {
+      key: 'delivery',
+      header: t('items.colDelivery'),
+      render: (item) => {
+        const delivery: OrderDeliveryInfo | null = item.delivery ?? null;
+        const tokenValid = !!delivery?.download_url;
+
+        if (!delivery) {
+          return (
+            <span className="text-xs text-ink/50 italic">{t('items.notGenerated')}</span>
+          );
+        }
+
+        return (
+          <div className="space-y-2">
+            {delivery.has_download && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={
+                  'text-xs font-bold px-2 py-0.5 border-2 border-ink ' +
+                  (tokenValid ? 'bg-accent text-ink' : 'bg-ink text-surface')
+                }>
+                  {tokenValid ? t('items.tokenActive') : t('items.tokenExpired')}
+                </span>
+                {delivery.download_token && (
+                  <code className="text-xs bg-ink/5 px-2 py-1 border border-ink/20 font-mono">
+                    {delivery.download_token.substring(0, 16)}…
+                  </code>
+                )}
+                {delivery.token_expired_at && (
+                  <span className="text-xs text-ink/60">
+                    {t('items.until', { date: formatDateTime(delivery.token_expired_at) })}
+                  </span>
+                )}
+              </div>
+            )}
+            {(delivery.email_sent_at || delivery.wa_sent_at) && (
+              <div className="flex flex-wrap gap-2 text-xs">
+                {delivery.email_sent_at && (
+                  <span className="text-ink/60">
+                    {t('items.emailAt', { date: formatDateTime(delivery.email_sent_at) })}
+                  </span>
+                )}
+                {delivery.wa_sent_at && (
+                  <span className="text-ink/60">
+                    {t('items.waAt', { date: formatDateTime(delivery.wa_sent_at) })}
+                  </span>
+                )}
+              </div>
+            )}
+            {order.status === 'paid' && delivery.has_download && (
+              <RegenerateTokenForm
+                kodeOrder={order.kode_order}
+                orderItemId={item.id}
+              />
+            )}
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <AdminPageBody>
@@ -113,7 +214,7 @@ export default async function OrderDetailPage({ params }: Props) {
       )}
 
       {/* Items table */}
-      <Card variant="surface" className="overflow-hidden">
+      <div className="border-2 border-ink bg-primary text-surface shadow-[4px_4px_0_0_var(--color-ink)]">
         <div className="px-6 py-4 border-b-2 border-ink bg-primary text-surface">
           <Eyebrow size="sm" color="accent" className="mb-1">
             {t('items.eyebrow')}
@@ -122,108 +223,13 @@ export default async function OrderDetailPage({ params }: Props) {
             {t('items.title')}
           </h2>
         </div>
-
-        {items.length === 0 ? (
-          <div className="px-6 py-8 text-center text-ink/60">{t('items.empty')}</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-surface/50">
-                  <th className="text-left px-4 py-3 font-bold uppercase tracking-wide text-xs border-b-2 border-ink/30">{t('items.colProduct')}</th>
-                  <th className="text-left px-4 py-3 font-bold uppercase tracking-wide text-xs border-b-2 border-ink/30">{t('items.colType')}</th>
-                  <th className="text-left px-4 py-3 font-bold uppercase tracking-wide text-xs border-b-2 border-ink/30">{t('items.colPrice')}</th>
-                  <th className="text-left px-4 py-3 font-bold uppercase tracking-wide text-xs border-b-2 border-ink/30">{t('items.colDelivery')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item, i) => {
-                  const delivery: OrderDeliveryInfo | null = item.delivery ?? null;
-                  const tokenValid = !!delivery?.download_url;
-
-                  return (
-                    <tr
-                      key={item.id}
-                      className={
-                        'border-b border-ink/20 last:border-b-0 ' +
-                        (i % 2 === 0 ? 'bg-surface' : 'bg-surface/50')
-                      }
-                    >
-                      <td className="px-4 py-3">
-                        <Button
-                          href={`/admin/products/${item.product_id}`}
-                          variant="primary"
-                          size="sm"
-                          flat
-                        >
-                          {item.nama_produk}
-                        </Button>
-                        {delivery?.license_key && (
-                          <p className="text-xs text-ink/60 mt-1 font-mono">
-                            {t('items.licenseKey')} <span className="bg-ink/10 px-1.5 py-0.5 rounded">{delivery.license_key}</span>
-                          </p>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-xs uppercase font-bold tracking-wide">
-                        {TIPE_LABEL[item.tipe_produk] ?? item.tipe_produk}
-                      </td>
-                      <td className="px-4 py-3 font-bold">{item.harga_saat_beli_formatted}</td>
-                      <td className="px-4 py-3">
-                        {delivery ? (
-                          <div className="space-y-2">
-                            {delivery.has_download && (
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className={
-                                  'text-xs font-bold px-2 py-0.5 border-2 border-ink ' +
-                                  (tokenValid ? 'bg-accent text-ink' : 'bg-ink text-surface')
-                                }>
-                                  {tokenValid ? t('items.tokenActive') : t('items.tokenExpired')}
-                                </span>
-                                {delivery.download_token && (
-                                  <code className="text-xs bg-ink/5 px-2 py-1 border border-ink/20 font-mono">
-                                    {delivery.download_token.substring(0, 16)}…
-                                  </code>
-                                )}
-                                {delivery.token_expired_at && (
-                                  <span className="text-xs text-ink/60">
-                                    {t('items.until', { date: formatDateTime(delivery.token_expired_at) })}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                            {(delivery.email_sent_at || delivery.wa_sent_at) && (
-                              <div className="flex flex-wrap gap-2 text-xs">
-                                {delivery.email_sent_at && (
-                                  <span className="text-ink/60">
-                                    {t('items.emailAt', { date: formatDateTime(delivery.email_sent_at) })}
-                                  </span>
-                                )}
-                                {delivery.wa_sent_at && (
-                                  <span className="text-ink/60">
-                                    {t('items.waAt', { date: formatDateTime(delivery.wa_sent_at) })}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                            {order.status === 'paid' && delivery.has_download && (
-                              <RegenerateTokenForm
-                                kodeOrder={order.kode_order}
-                                orderItemId={item.id}
-                              />
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-xs text-ink/50 italic">{t('items.notGenerated')}</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+      </div>
+      <DataTable
+        columns={columns}
+        rows={items}
+        rowKey={(item) => item.id}
+        emptyMessage={t('items.empty')}
+      />
 
       {/* QR info */}
       {order.qr_url && order.status === 'pending' && (

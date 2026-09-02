@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, StatTile } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -158,22 +158,10 @@ export default async function CouponsPage({ searchParams }: Props) {
 
         {stats && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.total')}</p>
-              <p className="font-display text-3xl font-black text-ink mt-1">{stats.total}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.active')}</p>
-              <p className="font-display text-3xl font-black text-primary mt-1">{stats.active}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.inactive')}</p>
-              <p className="font-display text-3xl font-black text-ink/50 mt-1">{stats.inactive}</p>
-            </Card>
-            <Card variant="surface" hoverable={false} className="p-4">
-              <p className="text-xs uppercase font-bold text-ink/60">{t('stats.expired')}</p>
-              <p className="font-display text-3xl font-black text-accent mt-1">{stats.expired}</p>
-            </Card>
+            <StatTile label={t('stats.total')} value={stats.total} variant="surface" valueClassName="text-ink" />
+            <StatTile label={t('stats.active')} value={stats.active} variant="surface" valueClassName="text-primary" />
+            <StatTile label={t('stats.inactive')} value={stats.inactive} variant="surface" valueClassName="text-ink/50" />
+            <StatTile label={t('stats.expired')} value={stats.expired} variant="surface" valueClassName="text-accent" />
           </div>
         )}
 

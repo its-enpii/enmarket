@@ -2,7 +2,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, DataItem } from '@/components/ui';
 import { BackLink } from '@/components/ui/BackLink';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -63,18 +63,9 @@ export default async function CustomRequestDetailPage({ params }: Props) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-xs font-bold text-ink/60 uppercase">{t('fields.projectType')}</p>
-                <p className="font-bold text-ink uppercase mt-0.5">{request.jenis_proyek}</p>
-              </div>
-              <div>
-                <p className="text-xs font-bold text-ink/60 uppercase">{t('fields.budget')}</p>
-                <p className="font-bold text-primary mt-0.5">{request.budget_range}</p>
-              </div>
-              <div>
-                <p className="text-xs font-bold text-ink/60 uppercase">{t('fields.timeline')}</p>
-                <p className="font-bold text-ink mt-0.5">{request.timeline}</p>
-              </div>
+              <DataItem label={t('fields.projectType')} value={request.jenis_proyek} valueClassName="mt-0.5 uppercase" />
+              <DataItem label={t('fields.budget')} value={request.budget_range} valueClassName="mt-0.5 text-primary" />
+              <DataItem label={t('fields.timeline')} value={request.timeline} valueClassName="mt-0.5" />
             </div>
 
             <div className="pt-2">
@@ -90,21 +81,19 @@ export default async function CustomRequestDetailPage({ params }: Props) {
               {t('clientDetail')}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-xs font-bold text-ink/60 uppercase">{t('columns.client')}</p>
-                <p className="font-bold text-ink mt-0.5">{request.nama}</p>
-              </div>
-              <div>
-                <p className="text-xs font-bold text-ink/60 uppercase">Email</p>
-                <p className="font-bold text-ink mt-0.5">
+              <DataItem label={t('columns.client')} value={request.nama} valueClassName="mt-0.5" />
+              <DataItem
+                label="Email"
+                value={
                   <a href={`mailto:${request.email}`} className="text-primary underline">
                     {request.email}
                   </a>
-                </p>
-              </div>
-              <div>
-                <p className="text-xs font-bold text-ink/60 uppercase">WhatsApp</p>
-                <p className="font-bold text-ink mt-0.5">
+                }
+                valueClassName="mt-0.5"
+              />
+              <DataItem
+                label="WhatsApp"
+                value={
                   <a
                     href={`https://wa.me/${request.wa.replace(/\D/g, '')}`}
                     target="_blank"
@@ -113,8 +102,9 @@ export default async function CustomRequestDetailPage({ params }: Props) {
                   >
                     {request.wa} ↗
                   </a>
-                </p>
-              </div>
+                }
+                valueClassName="mt-0.5"
+              />
             </div>
             <p className="text-xs text-ink/50 pt-2 border-t border-ink/10">
               {t('columns.created')}: {formatDate(request.created_at)}
