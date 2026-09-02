@@ -38,7 +38,7 @@ export function EmptyState(props: EmptyStateProps) {
             </div>
             <div
               aria-hidden="true"
-              className="absolute -bottom-5 -right-5 w-16 h-16 md:w-20 md:h-20 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] z-10"
+              className="absolute -bottom-5 -right-5 w-16 h-16 md:w-20 md:h-20 bg-accent border-4 border-ink shadow-[6px_6px_0_0_var(--color-ink)] z-raised"
             />
           </div>
 

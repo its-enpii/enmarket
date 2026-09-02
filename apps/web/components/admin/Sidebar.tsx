@@ -55,7 +55,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
           size="sm"
           aria-label={tSidebar('closeMenu')}
           onClick={onClose}
-          className="lg:hidden fixed inset-0 px-0 py-0 bg-ink/60 z-40 cursor-default"
+          className="lg:hidden fixed inset-0 px-0 py-0 bg-ink/60 z-backdrop cursor-default"
         />
       )}
       {/* Sidebar — fixed position.
@@ -63,7 +63,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
           - lg+:    fixed left, tetap di tempat saat main scroll. */}
       <aside
         className={
-          'fixed inset-y-0 left-0 z-50 w-64 bg-primary border-r-4 border-ink ' +
+          'fixed inset-y-0 left-0 z-nav w-64 bg-primary border-r-4 border-ink ' +
           'flex flex-col transform transition-transform duration-200 ' +
           (open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0')
         }

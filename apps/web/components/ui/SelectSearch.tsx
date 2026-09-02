@@ -170,7 +170,7 @@ export function SelectSearch({
           ref={panelRef}
           role="listbox"
           className={
-            'absolute z-30 left-0 right-0 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] ' +
+            'absolute z-topbar left-0 right-0 bg-surface border-2 border-ink shadow-[4px_4px_0_0_var(--color-ink)] ' +
             (placementRef.current === 'top' ? 'bottom-full mb-1' : 'top-full mt-1')
           }
         >

@@ -47,7 +47,7 @@ export function DataTable<T>({ columns, rows, emptyMessage, emptyState, rowKey }
       {/* Scroll indicator — gradient samar di kanan (mobile only) untuk kasih
           tahu user ada kolom yang off-screen. Pointer-events-none jadi tidak
           block scroll horizontal. Hidden di sm+ karena tabel biasanya fit. */}
-      <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-surface to-transparent pointer-events-none sm:hidden z-10" />
+      <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-surface to-transparent pointer-events-none sm:hidden z-raised" />
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>

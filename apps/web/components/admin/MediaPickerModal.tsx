@@ -89,7 +89,7 @@ export function MediaPickerModal({
       labelledBy="media-picker-title"
       ariaLabel={tCommon('closeDialog')}
     >
-      <Card variant="surface" thick elevation={8} className="relative w-full max-w-4xl max-h-[85vh] flex flex-col z-10 animate-scale-in">
+      <Card variant="surface" thick elevation={8} className="relative w-full max-w-4xl max-h-[85vh] flex flex-col z-raised animate-scale-in">
         <div className="flex items-center justify-between border-b-3 border-ink px-5 py-4 bg-accent/20">
           <div>
             <h2 id="media-picker-title" className="text-lg font-black uppercase text-ink">

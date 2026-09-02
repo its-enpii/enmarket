@@ -110,7 +110,7 @@ export function ReviewFormModal({
       labelledBy="review-modal-title"
       ariaLabel={tCommon('closeDialog')}
     >
-      <Card variant="surface" thick elevation={8} className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto z-10 animate-scale-in p-6">
+      <Card variant="surface" thick elevation={8} className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto z-raised animate-scale-in p-6">
         <div className="flex items-center justify-between border-b-2 border-ink pb-4 mb-5">
           <div>
             <h2 id="review-modal-title" className="text-xl font-black uppercase text-ink">

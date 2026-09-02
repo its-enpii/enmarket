@@ -171,7 +171,7 @@ export function DatePicker({
         <div
           role="dialog"
           aria-label={t('pickDate')}
-          className={`absolute z-50 ${
+          className={`absolute z-nav ${
             placementRef.current === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
           } ${
             align === 'right' ? 'right-0' : 'left-0'

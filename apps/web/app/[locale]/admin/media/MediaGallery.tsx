@@ -218,7 +218,7 @@ function EmptyGallery({ hasItems }: { hasItems: boolean }) {
               ◰
             </span>
           </Card>
-          <CornerAccent size="w-16 h-16" className="absolute -bottom-5 -right-5 z-10" />
+          <CornerAccent size="w-16 h-16" className="absolute -bottom-5 -right-5 z-raised" />
         </div>
         <Eyebrow size="sm" color="accent" className="mb-2">
           {hasItems ? t('eyebrowMatch') : t('eyebrowEmpty')}

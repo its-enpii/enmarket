@@ -50,7 +50,7 @@ export async function EmptyCart() {
                   ✎
                 </span>
               </Card>
-              <CornerAccent size="w-20 h-20" className="absolute -bottom-6 -right-6 z-10" />
+              <CornerAccent size="w-20 h-20" className="absolute -bottom-6 -right-6 z-raised" />
             </div>
 
             <Eyebrow size="md" color="accent">

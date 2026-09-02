@@ -63,7 +63,7 @@ export function TopNav({ children }: Props) {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 bg-surface border-b-4 border-ink shadow-brutal-6 relative">
+    <header className="sticky top-0 z-nav bg-surface border-b-4 border-ink shadow-brutal-6 relative">
       <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
         <NLink
           href="/"

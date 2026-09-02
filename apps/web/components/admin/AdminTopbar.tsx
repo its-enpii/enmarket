@@ -80,7 +80,7 @@ export function AdminTopbar() {
   }
 
   return (
-    <header className="bg-surface border-b-4 border-ink px-4 sm:px-8 py-5 flex items-center justify-between gap-3 sticky top-0 z-30">
+    <header className="bg-surface border-b-4 border-ink px-4 sm:px-8 py-5 flex items-center justify-between gap-3 sticky top-0 z-topbar">
       <div className="flex items-center gap-2 min-w-0">
         {drawer && (
           <Button

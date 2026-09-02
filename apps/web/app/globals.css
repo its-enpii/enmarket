@@ -104,7 +104,11 @@
 
   --animate-marquee: marquee 30s linear infinite;
 
-  /* Urutan layer: nav 50 < lightbox 60 < modal 120 < dialog 130 < toast 140. */
+  /* Urutan layer: raised 10 < topbar 30 < backdrop 40 < nav 50 < lightbox 60
+     < modal 120 < dialog 130 < toast 140. */
+  --z-index-raised: 10;
+  --z-index-topbar: 30;
+  --z-index-backdrop: 40;
   --z-index-nav: 50;
   --z-index-lightbox: 60;
   --z-index-modal: 120;
@@ -126,8 +130,8 @@
 }
 
 :root {
-  --background: #F3F3F3;
-  --foreground: #040303;
+  --background: var(--color-surface);
+  --foreground: var(--color-ink);
   --border-width-neobrutal: 4px;
   --shadow-offset-neobrutal: 6px;
 }
