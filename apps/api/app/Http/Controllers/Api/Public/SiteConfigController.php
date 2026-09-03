@@ -4,16 +4,14 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
+use App\Models\Sponsor;
 use Illuminate\Http\JsonResponse;
 
 /**
  * SiteConfigController — public read-only site config.
  *
  * Return settings yang AMAN di-expose ke public storefront (identity,
- * social, footer). Payment credentials & maintenance secret TIDAK ikut.
- *
- * Catatan: saat ini belum ada consumer. Endpoint di-expose untuk fase
- * berikutnya saat footer/header public baca dari sini.
+ * social, footer, sponsors). Payment credentials & maintenance secret TIDAK ikut.
  */
 class SiteConfigController extends Controller
 {
@@ -37,6 +35,25 @@ class SiteConfigController extends Controller
             fn ($l) => is_array($l) && ! empty($l['label']) && ! empty($l['url']),
         ));
 
+        // Sponsors: top N active sponsors sorted by amount desc, created_at asc
+        $topCountSetting = $raw('sponsors_top_count');
+        $topCount = is_numeric($topCountSetting) ? max((int) $topCountSetting, 1) : 5;
+
+        $sponsors = Sponsor::where('is_active', true)
+            ->orderByDesc('amount')
+            ->orderBy('created_at', 'asc')
+            ->limit($topCount)
+            ->get()
+            ->map(fn (Sponsor $s) => [
+                'id' => $s->id,
+                'name' => $s->name,
+                'url' => $s->url,
+                'logo_url' => $s->logo_url,
+                'description' => ! empty($s->description) ? $s->description : $s->fetched_description,
+            ])
+            ->values()
+            ->all();
+
         return response()->json([
             'data' => [
                 'studio_name' => $raw('studio_name'),
@@ -54,6 +71,7 @@ class SiteConfigController extends Controller
                     }
                     return array_map(fn ($g) => ['enabled' => $g['enabled'] ?? false], $decoded);
                 })(),
+                'sponsors' => $sponsors,
             ],
         ]);
     }

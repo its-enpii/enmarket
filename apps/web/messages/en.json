@@ -134,7 +134,10 @@
     "journalSubtitle": "Brief notes from the workbench.",
     "journalCategory": "Journal",
     "journalEmpty": "No new notes yet.",
-    "viewAllJournal": "View All Notes"
+    "viewAllJournal": "View All Notes",
+    "sponsorsTitle": "Our Sponsors",
+    "sponsorsSubtitle": "Websites & Partners Supporting the Studio",
+    "visitSponsor": "Visit Website"
   },
   "discover": {
     "eyebrow": "Discover",
@@ -597,7 +600,8 @@
       "settings": "Settings",
       "coupons": "Coupons",
       "customRequests": "Custom Requests",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "sponsors": "Sponsors"
     },
     "topbar": {
       "viewSite": "View Site",
@@ -1541,6 +1545,60 @@
       "empty": "No games yet.",
       "addNew": "Add Game",
       "confirmDelete": "Are you sure you want to delete this game?"
+    },
+    "sponsors": {
+      "listTitle": "Manage Sponsors",
+      "listSubtitle": "List of external sponsored websites displayed on homepage.",
+      "listEyebrow": "Sponsors",
+      "newTitle": "Add Sponsor",
+      "newSubtitle": "Add a new website sponsor domain with bid amount.",
+      "editTitle": "Edit Sponsor",
+      "editSubtitle": "Update sponsor domain, name, description, or active status.",
+      "editEyebrow": "Sponsors",
+      "addSponsorBtn": "Add Sponsor",
+      "searchPlaceholder": "Search name, domain, or description...",
+      "filterStatus": "Status",
+      "filterAllStatus": "All Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "columns": {
+        "name": "Sponsor",
+        "domain": "Domain / URL",
+        "amount": "Bid Amount",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": {
+        "noneYet": "No sponsors yet",
+        "noneYetHint": "Add your first website sponsor to display on homepage.",
+        "noResults": "No sponsors found for \"{query}\"",
+        "noResultsHint": "Try searching with different keywords or filters."
+      },
+      "form": {
+        "fieldDomain": "Domain / Website",
+        "fieldDomainHint": "Domain or website URL (e.g. example.com or https://example.com).",
+        "fetchMetaBtn": "Fetch Metadata",
+        "fetchingMeta": "Fetching...",
+        "domainRequiredForFetch": "Please enter a domain first.",
+        "fetchSuccess": "Website metadata fetched successfully.",
+        "fetchError": "Failed to fetch website metadata.",
+        "fieldName": "Sponsor Name",
+        "fieldNameHint": "Display name of the sponsor (automatic from metadata or manual).",
+        "fieldUrl": "Target URL",
+        "fieldUrlHint": "Full target sponsor website URL (e.g. https://example.com).",
+        "fieldLogoUrl": "Logo / Favicon URL",
+        "fieldLogoUrlHint": "Icon or image URL (automatic from metadata or manual).",
+        "fieldAmount": "Bid Amount (Rp)",
+        "fieldAmountHint": "Sponsor bid amount. Higher bids are displayed first.",
+        "fieldDescription": "Description (Manual Override)",
+        "fieldDescriptionHint": "Manual description that overrides fetched website description.",
+        "fieldDescriptionPlaceholder": "Write a short sponsor description...",
+        "fetchedDescriptionLabel": "Fetched Website Description",
+        "fieldIsActive": "Activate this sponsor to display on homepage",
+        "submitCreate": "Save Sponsor",
+        "submitSave": "Save Changes",
+        "submitPending": "Saving..."
+      }
     }
   },
   "trending": {

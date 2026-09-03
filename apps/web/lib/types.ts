@@ -124,6 +124,7 @@ export interface PublicSiteConfig {
   social: SiteSocial;
   footer: SiteFooter;
   payment_gateways: PaymentGatewaysMap;
+  sponsors?: PublicSponsor[];
 }
 
 export interface SiteFooter {
@@ -589,4 +590,27 @@ export interface TopupOrder extends Order {
   payment_gateway: string | null;
   game?: { id: number; nama: string; slug: string; icon_url: string | null } | null;
   game_item?: { id: number; nama: string; harga: string } | null;
+}
+
+export interface PublicSponsor {
+  id: number;
+  name: string;
+  url: string;
+  logo_url: string | null;
+  description: string | null;
+}
+
+export interface Sponsor {
+  id: number;
+  domain: string;
+  name: string;
+  url: string;
+  logo_url: string | null;
+  description: string | null;
+  fetched_description: string | null;
+  amount: string;
+  is_active: boolean;
+  fetched_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
