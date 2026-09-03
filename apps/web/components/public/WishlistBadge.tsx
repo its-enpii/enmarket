@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { wishlistApi, PublicFetchError } from '@/lib/wishlist-api';
 
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui';
 import { Button } from '@/components/ui/neobrutal';
 
 /**
@@ -29,7 +30,7 @@ export async function WishlistBadge() {
       aria-label={t('wishlist')}
     >
       <span className="relative inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="text-danger">♥</span>
+        <Icon name="heart" size={16} className="text-danger" />
         <span className="badge-label">{t('wishlist')}</span>
         {count > 0 && (
           <Badge

@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
-import { Children } from 'react';
 
 interface Props {
   children?: ReactNode;
@@ -94,10 +93,6 @@ export function TopNav({ children }: Props) {
               </NLink>
             );
           })}
-          {/* Wishlist & Cart: icon-only di desktop nav, berlabel di panel mobile */}
-          <span className="flex items-center gap-2 [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
-            {children}
-          </span>
           {hasCustomerToken ? (
             <Button variant="primary" size="md" href="/akun">
               {t('account')}
@@ -116,38 +111,47 @@ export function TopNav({ children }: Props) {
           </NLink>
         </nav>
 
-        {/* Hamburger button (<xl) — pakai Button primitive standar */}
-        <Button
-          type="button"
-          onClick={() => setOpen(!open)}
-          variant="surface"
-          size="sm"
-          className="w-11 h-11 px-0 py-0 text-lg xl:hidden"
-          aria-label={t('menu')}
-          aria-expanded={open}
-        >
-          <Icon name={open ? 'close' : 'menu'} size={18} />
-        </Button>
+        <div className="flex items-center gap-2 [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
+          {children}
+
+          {/* Hamburger button (<xl) — pakai Button primitive standar */}
+          <Button
+            type="button"
+            onClick={() => setOpen(!open)}
+            variant="surface"
+            size="sm"
+            className="w-11 h-11 px-0 py-0 text-lg xl:hidden"
+            aria-label={t('menu')}
+            aria-expanded={open}
+          >
+            <Icon name={open ? 'close' : 'menu'} size={18} />
+          </Button>
+        </div>
       </div>
 
       {/* Mobile menu panel (<xl) */}
       {open && (
         <nav className="xl:hidden border-t-4 border-ink bg-surface">
-          <div className="px-6 py-4 space-y-2">
+          <div className="px-6 py-4 space-y-3">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
               return (
-                <Button
+                <NLink
                   key={item.href}
                   href={item.href}
+                  variant="primary"
+                  underline="none"
                   onClick={() => setOpen(false)}
                   aria-current={active ? 'page' : undefined}
-                  variant={active ? 'primary' : 'surface'}
-                  size="md"
-                  className="block text-center w-full"
+                  className={`flex items-center justify-between gap-2 px-1 py-3 font-label text-label-sm uppercase font-bold border-b-2 last:border-b-0 ${
+                    active
+                      ? 'text-primary border-primary'
+                      : 'text-ink border-ink/10'
+                  }`}
                 >
                   {t(item.key)}
-                </Button>
+                  <Icon name="arrow-right" size={14} className="text-ink/40" />
+                </NLink>
               );
             })}
 
@@ -176,17 +180,10 @@ export function TopNav({ children }: Props) {
             <NLink
               href="/login"
               onClick={() => setOpen(false)}
-              className="block text-center w-full font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
+              className="block w-full py-2 text-center font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
             >
               {t('admin')}
             </NLink>
-
-            {/* Wishlist & Cart badge (server components) — sama dengan desktop nav */}
-            {Children.map(children, (child) =>
-              child ? (
-                <span onClick={() => setOpen(false)}>{child}</span>
-              ) : child,
-            )}
           </div>
         </nav>
       )}

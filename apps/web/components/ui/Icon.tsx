@@ -5,6 +5,7 @@ export type IconName =
   | 'close'
   | 'check'
   | 'arrow-right'
+  | 'heart'
   | 'external'
   | 'star';
 
@@ -12,6 +13,7 @@ type IconProps = Omit<SVGProps<SVGSVGElement>, 'name' | 'strokeWidth'> & {
   name: IconName;
   size?: number | string;
   strokeWidth?: number;
+  filled?: boolean;
   decorative?: boolean;
   label?: string;
 };
@@ -29,6 +31,11 @@ const ICON_PATHS: Record<IconName, { paths: string[]; filled?: boolean }> = {
   'arrow-right': {
     paths: ['M4 12h16', 'M13 5l7 7-7 7'],
   },
+  heart: {
+    paths: [
+      'M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z',
+    ],
+  },
   external: {
     paths: ['M7 17L17 7', 'M8 7h9v9'],
   },
@@ -42,6 +49,7 @@ export function Icon({
   name,
   size = 16,
   strokeWidth = 2,
+  filled: filledOverride,
   decorative = true,
   label,
   className,
@@ -51,7 +59,8 @@ export function Icon({
     throw new Error('Icon requires a label when decorative is false.');
   }
 
-  const { paths, filled } = ICON_PATHS[name];
+  const { paths, filled: filledByDefault } = ICON_PATHS[name];
+  const filled = filledOverride ?? filledByDefault;
 
   return (
     <svg

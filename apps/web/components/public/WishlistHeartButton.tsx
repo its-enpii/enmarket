@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 import { toast } from '@/components/ui/toast-store';
 import { toggleWishlistAction } from '@/app/[locale]/(public)/wishlist/actions';
 
@@ -53,9 +54,12 @@ export function WishlistHeartButton({
         wishlisted ? 'text-danger hover:text-danger' : 'text-ink/70 hover:text-ink hover:bg-accent'
       } ${className}`}
     >
-      <span className="text-base leading-none select-none">
-        {wishlisted ? '♥' : '♡'}
-      </span>
+      <Icon
+        name="heart"
+        size={16}
+        filled={wishlisted}
+        className={wishlisted ? 'fill-current' : ''}
+      />
     </Button>
   );
 }
