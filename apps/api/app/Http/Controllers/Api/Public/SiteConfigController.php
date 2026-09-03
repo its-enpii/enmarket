@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\NavMenu;
 use App\Models\SiteSetting;
 use Illuminate\Http\JsonResponse;
 
@@ -54,6 +55,18 @@ class SiteConfigController extends Controller
                     }
                     return array_map(fn ($g) => ['enabled' => $g['enabled'] ?? false], $decoded);
                 })(),
+                'nav_menus' => NavMenu::query()
+                    ->where('is_enabled', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('key')
+                    ->get()
+                    ->map(fn (NavMenu $menu) => [
+                        'key' => $menu->key,
+                        'label' => $menu->label,
+                        'href' => '/'.$menu->key,
+                    ])
+                    ->values()
+                    ->all(),
             ],
         ]);
     }

@@ -124,6 +124,23 @@ export interface PublicSiteConfig {
   social: SiteSocial;
   footer: SiteFooter;
   payment_gateways: PaymentGatewaysMap;
+  nav_menus: PublicNavMenu[];
+}
+
+export interface PublicNavMenu {
+  key: 'discover' | 'develop' | 'display' | 'layanan' | 'topup';
+  label: string | null;
+  href: string;
+}
+
+export interface NavMenuRecord {
+  id: number;
+  key: PublicNavMenu['key'];
+  label: string | null;
+  is_enabled: boolean;
+  sort_order: number;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface SiteFooter {

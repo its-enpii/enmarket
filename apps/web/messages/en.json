@@ -747,7 +747,8 @@
     "settingsNav": {
       "identity": "Site Identity",
       "payment": "Payment",
-      "maintenance": "Maintenance"
+      "maintenance": "Maintenance",
+      "navigation": "Navigation"
     },
     "topbarTitles": {
       "dashboard": "Home",
@@ -776,7 +777,9 @@
       "coupons": "Discount Coupons",
       "couponsSubtitle": "Manage coupon codes and checkout discount promotions.",
       "customRequests": "Custom Requests",
-      "customRequestsSubtitle": "List of custom build project requests from buyers."
+      "customRequestsSubtitle": "List of custom build project requests from buyers.",
+      "settingsNavigation": "Settings — Navigation",
+      "settingsNavigationSubtitle": "Enable or disable public navbar menu items."
     },
     "categories": {
       "_batch": "3",
@@ -1359,6 +1362,28 @@
         "submitActive": "Enable Maintenance",
         "submitInactive": "Disable Maintenance",
         "submitPending": "Processing…"
+      },
+      "navigation": {
+        "listTitle": "Navigation Menu",
+        "listEyebrow": "Settings / Navigation",
+        "listSubtitle": "Enable or disable public navbar menu items. An empty label uses the default translation.",
+        "backendDownTitle": "⚠ Backend belum merespon",
+        "backendDownHint": "The menu endpoint is unreachable. Check the admin token or API server status.",
+        "sectionMenus": "Menus",
+        "sectionMenusTitle": "Public Navbar",
+        "menu_discover": "Discover",
+        "menu_develop": "Develop",
+        "menu_display": "Display",
+        "menu_layanan": "Services",
+        "menu_topup": "Top Up",
+        "menuEnabledHint": "Show in the public navbar.",
+        "fieldLabelOverride": "Label Override",
+        "fieldLabelOverrideHint": "Optional. Maximum 100 characters; leave empty for the default label.",
+        "submit": "Save Navigation Menu",
+        "submitPending": "Saving…",
+        "success": "Navigation menu saved.",
+        "saveFailed": "Failed to save the navigation menu.",
+        "fieldInvalid": "Invalid label. Maximum 100 characters."
       }
     },
     "coupons": {
