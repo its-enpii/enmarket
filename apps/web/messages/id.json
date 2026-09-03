@@ -134,7 +134,10 @@
     "journalSubtitle": "Catatan singkat dari meja kerja.",
     "journalCategory": "Jurnal",
     "journalEmpty": "Belum ada catatan terbaru.",
-    "viewAllJournal": "Lihat Semua Catatan"
+    "viewAllJournal": "Lihat Semua Catatan",
+    "sponsorsTitle": "Sponsor Kami",
+    "sponsorsSubtitle": "Website & Mitra yang Mendukung Studio",
+    "visitSponsor": "Kunjungi Website"
   },
   "discover": {
     "eyebrow": "Discover",
@@ -597,7 +600,8 @@
       "settings": "Pengaturan",
       "coupons": "Kupon",
       "customRequests": "Permintaan Layanan",
-      "reviews": "Ulasan"
+      "reviews": "Ulasan",
+      "sponsors": "Sponsor"
     },
     "topbar": {
       "viewSite": "Lihat Situs",
@@ -1566,6 +1570,60 @@
       "empty": "Belum ada game.",
       "addNew": "Tambah Game",
       "confirmDelete": "Yakin ingin menghapus game ini?"
+    },
+    "sponsors": {
+      "listTitle": "Kelola Sponsor",
+      "listSubtitle": "Daftar website sponsor eksternal yang tampil di beranda.",
+      "listEyebrow": "Sponsor",
+      "newTitle": "Tambah Sponsor",
+      "newSubtitle": "Tambahkan domain website sponsor baru dengan bid amount.",
+      "editTitle": "Edit Sponsor",
+      "editSubtitle": "Perbarui informasi domain, nama, deskripsi, atau status sponsor.",
+      "editEyebrow": "Sponsor",
+      "addSponsorBtn": "Tambah Sponsor",
+      "searchPlaceholder": "Cari nama, domain, atau deskripsi...",
+      "filterStatus": "Status",
+      "filterAllStatus": "Semua Status",
+      "active": "Aktif",
+      "inactive": "Nonaktif",
+      "columns": {
+        "name": "Sponsor",
+        "domain": "Domain / URL",
+        "amount": "Bid Amount",
+        "status": "Status",
+        "actions": "Aksi"
+      },
+      "empty": {
+        "noneYet": "Belum ada sponsor",
+        "noneYetHint": "Tambahkan sponsor website pertama Anda untuk ditampilkan di beranda.",
+        "noResults": "Tidak ada sponsor ditemukan untuk \"{query}\"",
+        "noResultsHint": "Coba cari dengan kata kunci lain atau ubah filter pencarian."
+      },
+      "form": {
+        "fieldDomain": "Domain / Website",
+        "fieldDomainHint": "Domain atau URL website (mis. example.com atau https://example.com).",
+        "fetchMetaBtn": "Ambil Metadata",
+        "fetchingMeta": "Mengambil...",
+        "domainRequiredForFetch": "Masukkan domain terlebih dahulu.",
+        "fetchSuccess": "Metadata website berhasil diambil.",
+        "fetchError": "Gagal mengambil metadata website.",
+        "fieldName": "Nama Sponsor",
+        "fieldNameHint": "Nama tampilan sponsor (otomatis dari metadata website atau manual).",
+        "fieldUrl": "URL Tujuan",
+        "fieldUrlHint": "URL lengkap website sponsor tujuan (mis. https://example.com).",
+        "fieldLogoUrl": "URL Logo / Favicon",
+        "fieldLogoUrlHint": "URL ikon atau gambar logo (otomatis dari metadata atau manual).",
+        "fieldAmount": "Bid Amount (Rp)",
+        "fieldAmountHint": "Nilai bid sponsor. Semakin tinggi bid, semakin atas urutan tampil.",
+        "fieldDescription": "Deskripsi (Manual Override)",
+        "fieldDescriptionHint": "Deskripsi manual yang akan menimpa deskripsi bawaan dari website.",
+        "fieldDescriptionPlaceholder": "Tuliskan deskripsi singkat sponsor...",
+        "fetchedDescriptionLabel": "Deskripsi Bawaan Website (Fetched)",
+        "fieldIsActive": "Aktifkan sponsor ini agar tampil di beranda",
+        "submitCreate": "Simpan Sponsor",
+        "submitSave": "Simpan Perubahan",
+        "submitPending": "Menyimpan..."
+      }
     }
   },
   "trending": {

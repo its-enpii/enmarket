@@ -14,6 +14,7 @@ const NAV_HREFS = [
   '/admin/coupons',
   '/admin/custom-requests',
   '/admin/reviews',
+  '/admin/sponsors',
   '/admin/posts',
   '/admin/orders',
   '/admin/preorders',
@@ -23,7 +24,7 @@ const NAV_HREFS = [
   '/admin/games',
 ] as const;
 
-const NAV_ICONS = ['▤', '▤', '▤', '▤', '▤', '▤', '▤', '▤', '◷', '▤', '▤', '⚙', '🎮'];
+const NAV_ICONS = ['▤', '▤', '▤', '▤', '▤', '▤', '★', '▤', '▤', '◷', '▤', '▤', '⚙', '🎮'];
 
 interface Props {
   currentPath: string;
@@ -45,7 +46,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
     '',
   ) || '/';
 
-  const navKeys = ['dashboard', 'categories', 'products', 'coupons', 'customRequests', 'reviews', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings', 'games'] as const;
+  const navKeys = ['dashboard', 'categories', 'products', 'coupons', 'customRequests', 'reviews', 'sponsors', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings', 'games'] as const;
 
   return (
     <>

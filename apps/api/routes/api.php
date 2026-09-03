@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\Admin\SettingsController;
+use App\Http\Controllers\Api\Admin\SponsorController as AdminSponsorController;
+
 use App\Http\Controllers\Api\Customer\Auth\LoginController as CustomerLoginController;
 use App\Http\Controllers\Api\Customer\Auth\LogoutController as CustomerLogoutController;
 use App\Http\Controllers\Api\Customer\Auth\MeController as CustomerMeController;
@@ -238,7 +240,11 @@ Route::prefix('admin')->group(function () {
         Route::get('preorders/{order}', [PreorderController::class, 'show']);
         Route::get('preorders', [PreorderController::class, 'index']);
 
-                // Customer Reviews Moderation (stats HARUS sebelum apiResource)
+                // Sponsors management
+        Route::post("sponsors/fetch-metadata", [AdminSponsorController::class, "fetchMetadata"]);
+        Route::apiResource("sponsors", AdminSponsorController::class);
+
+        // Customer Reviews Moderation (stats HARUS sebelum apiResource)
         Route::get('reviews/stats', [AdminReviewController::class, 'stats']);
         Route::apiResource('reviews', AdminReviewController::class)->only(['index', 'update', 'destroy']);
 

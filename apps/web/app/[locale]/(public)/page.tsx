@@ -5,31 +5,10 @@ import { FeaturedSection } from '@/components/public/FeaturedSection';
 import { JournalSection } from '@/components/public/JournalSection';
 import { Hero } from '@/components/public/Hero';
 import { PillarsSection } from '@/components/public/PillarsSection';
+import { SponsorsSection } from '@/components/public/SponsorsSection';
 import type { Post } from '@/lib/types';
+import { buildMetadata } from '@/lib/seo';
 
-/*
- * Homepage — Neobrutalism enpiistudio.
- *
- * Sesuai rebrand & mockup:
- *   - Hero (monolitik, "DISCOVER, DEVELOP, DISPLAY")
- *   - Pillars (Discover / Develop / Display 2+1 layout)
- *   - Featured Developments (zig-zag 4-item)
- *   - Latest / Display (journal 2-entry alternating)
- *
- * Komponen lama yang sudah digantikan & tidak dipanggil lagi dari homepage
- * (tetap ada di disk untuk reuse admin/display lain):
- *   - MarqueeStrip, StatsBar, CategoryRail, TrendingSection, TrustSection,
- *     NewsletterCTA, PromoBanner.
- *
- * Build container tidak punya akses ke service `api` (compose DNS runtime
- * only), jadi tetap `dynamic = 'force-dynamic'`. ISR via webhook revalidate.
- *
- * Layout structure:
- *   - <main> di PublicLayout → max-w-container-max sudah di-handle parent
- *     (TopNav, Footer). Sections di sini dibuat full-width dengan
- *     px-6/md:px-12 padding KONSISTEN — sehingga column edges sejajar
- *     dengan TopNav/Footer di semua breakpoint.
- */
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -65,9 +44,23 @@ async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
 }
 
 export default async function HomePage() {
-  const [homepageResp, latestPostsResp] = await Promise.all([
+  const [homepageResp, latestPostsResp, siteConfigResp] = await Promise.all([
     safe(() => publicApi.homepageProducts(6), { data: [] }),
     safe(() => publicApi.latestPosts(2), { data: [] }),
+    safe(() => publicApi.siteConfig(), {
+      data: {
+        studio_name: null,
+        tagline: null,
+        logo_url: null,
+        social: [],
+        footer: { text: null },
+        payment_gateways: {
+          tripay: { enabled: true },
+          duitku: { enabled: false },
+        },
+        sponsors: [],
+      },
+    }),
   ]);
 
   // Server sudah dedup (featured-first ordering, max 6 row).
@@ -75,13 +68,15 @@ export default async function HomePage() {
 
   const recentPosts: Post[] = latestPostsResp.data ?? [];
 
+  const sponsors = siteConfigResp.data?.sponsors ?? [];
+
   return (
     <>
       <Hero />
       <PillarsSection />
       <FeaturedSection products={productsForFeatured} />
+      <SponsorsSection sponsors={sponsors} />
       <JournalSection posts={recentPosts} />
     </>
   );
 }
-import { buildMetadata } from '@/lib/seo';
