@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
+import { CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';
 import { Children } from 'react';
 
 interface Props {
@@ -147,11 +148,16 @@ export function TopNav({ children }: Props) {
                   href={item.href}
                   onClick={() => setOpen(false)}
                   aria-current={active ? 'page' : undefined}
-                  variant={active ? 'primary' : 'surface'}
+                  variant={active ? 'ink' : 'surface'}
                   size="md"
-                  className="block text-center w-full"
+                  className={`relative flex items-center justify-between w-full ${
+                    active ? 'pl-4 pr-3' : ''
+                  }`}
                 >
-                  {t(item.key)}
+                  <span>{t(item.key)}</span>
+                  {active ? (
+                    <Icon name="arrow-right" size={16} className="shrink-0" />
+                  ) : null}
                 </Button>
               );
             })}
@@ -195,4 +201,3 @@ export function TopNav({ children }: Props) {
     </header>
   );
 }
-import { CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';
