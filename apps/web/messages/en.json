@@ -78,7 +78,7 @@
     "layanan": "Services",
     "wishlist": "Wishlist",
     "wishlistCount": "Wishlist items",
-    "login": "Login",
+    "login": "Sign in / Register",
     "account": "Account",
     "topup": "Top Up"
   },
@@ -1692,7 +1692,8 @@
       },
       "success": "Successfully logged in.",
       "welcomeBack": "Welcome back!",
-      "changePhone": "Change"
+      "changePhone": "Change",
+      "autoRegisterHint": "No account yet? Just sign in — your account is created automatically after WhatsApp verification."
     }
   },
   "account": {

@@ -62,7 +62,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
         <Eyebrow size="label-sm" color="ink-muted">{t(expired ? 'expiredLabel' : 'failedLabel')}</Eyebrow>
         <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-ink">{t(expired ? 'expiredTitle' : 'failedTitle')}</h1>
         <p className="mt-4 text-base text-ink/70">{t(expired ? 'expiredBody' : 'failedBody')}</p>
-        <Button href="/katalog" variant="primary" size="lg" className="mt-8">
+        <Button href="/develop" variant="primary" size="lg" className="mt-8">
           {t('shopAgain')}
         </Button>
       </div>
@@ -131,7 +131,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
           <Button href={`/cek-pesanan?kode_order=${encodeURIComponent(order.kode_order)}`} variant="primary" size="lg">
             {t('checkAgain')}
           </Button>
-          <Button href="/katalog" variant="surface" size="lg">
+          <Button href="/develop" variant="surface" size="lg">
             {t('shopAgain')}
           </Button>
         </div>
@@ -221,7 +221,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
         <Button href={`/cek-pesanan?kode_order=${encodeURIComponent(order.kode_order)}`} variant="primary" size="lg">
           {t('checkAgain')}
         </Button>
-        <Button href="/katalog" variant="surface" size="lg">
+        <Button href="/develop" variant="surface" size="lg">
           {t('shopAgain')}
         </Button>
       </div>

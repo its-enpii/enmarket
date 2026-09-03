@@ -17,7 +17,7 @@
  * Arrow: trailing "→" glyph (optional).
  *
  * @example
- *   <NLink href="/katalog" variant="primary" arrow>Katalog</NLink>
+ *   <NLink href="/develop" variant="primary" arrow>Develop</NLink>
  *   <NLink href="/display" variant="default" underline="hover">Catatan</NLink>
  */
 

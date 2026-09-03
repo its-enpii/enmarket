@@ -12,9 +12,8 @@ interface Props {
 }
 
 /**
- * Rail kategori untuk homepage — chip horizontal scrollable.
- * Beda dari CategoryFilter (sidebar katalog): versi ini ringkas, fokus
- * pada discovery cepat.
+ * Rail kategori untuk homepage — chip horizontal scrollable,
+ * fokus pada discovery cepat.
  */
 export function CategoryRail({ categories }: Props) {
   const t = useTranslations('categoryRail');
@@ -42,7 +41,7 @@ export function CategoryRail({ categories }: Props) {
           {t('heading')}
         </h2>
         <NLink
-          href="/katalog"
+          href="/develop"
           variant="primary"
           underline="static"
           arrow
@@ -56,7 +55,7 @@ export function CategoryRail({ categories }: Props) {
           {displayCategories.map((cat) => (
             <li key={cat.id} className="shrink-0">
               <Button
-                href={`/katalog?category=${cat.slug}`}
+                href={`/develop?category=${cat.slug}`}
                 variant="surface"
                 size="sm"
                 className="hover:bg-accent"

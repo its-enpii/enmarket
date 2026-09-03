@@ -107,9 +107,12 @@ export function TopNav({ children }: Props) {
             </Button>
           )}
 
-          <Button variant="surface" size="md" href="/login">
+          <NLink
+            href="/login"
+            className="font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
+          >
             {t('admin')}
-          </Button>
+          </NLink>
         </nav>
 
         {/* Hamburger button (<xl) — pakai Button primitive standar */}
@@ -169,15 +172,13 @@ export function TopNav({ children }: Props) {
               </Button>
             )}
 
-            <Button
+            <NLink
               href="/login"
-              variant="surface"
-              size="md"
               onClick={() => setOpen(false)}
-              className="block text-center w-full"
+              className="block text-center w-full font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
             >
               {t('admin')}
-            </Button>
+            </NLink>
 
             {/* Wishlist & Cart badge (server components) — sama dengan desktop nav */}
             {Children.map(children, (child) =>

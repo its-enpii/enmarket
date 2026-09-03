@@ -137,7 +137,7 @@ export async function Footer() {
                 <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-2">
                   {t('studioTitle')}
                 </MetaLabel>
-                <NLink href="/katalog" variant="on-dark" underline="none">
+                <NLink href="/develop" variant="on-dark" underline="none">
                   {t('studioLinks.catalog')}
                 </NLink>
                 <NLink href="/display" variant="on-dark" underline="none">

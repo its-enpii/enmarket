@@ -45,7 +45,7 @@ export function NewsletterCTA() {
           {t('body')}
         </p>
         <div className="mt-5 sm:mt-6 flex flex-wrap gap-3">
-          <Button variant="accent" size="md" href="/katalog">
+          <Button variant="accent" size="md" href="/develop">
             {t('ctaCatalog')}
           </Button>
           <Button variant="outline" size="md" href="/cek-pesanan" className="border-surface text-surface hover:bg-surface hover:text-ink">

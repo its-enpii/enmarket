@@ -25,7 +25,7 @@ export default function PublicError({ error, reset }: Props) {
           <Button variant="accent" size="md" onClick={reset} className="min-h-touch">
             {t('retry')}
           </Button>
-          <Button variant="surface" size="md" href="/katalog" className="min-h-touch">
+          <Button variant="surface" size="md" href="/develop" className="min-h-touch">
             {t('viewCatalog').replace('← ', '')}
           </Button>
         </div>

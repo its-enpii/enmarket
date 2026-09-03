@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/Input';
  * Search bar — submit GET form ke basePath?q=...
  * Preserve filter params existing (category/tipe) saat ada.
  *
- * Default basePath: `/katalog` (backward compat dengan halaman legacy).
+ * Default basePath: `/develop`.
  * Untuk Develop page → set basePath="/develop".
  *
  * Variant:
@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/Input';
 interface Props {
   defaultValue?: string;
   variant?: 'default' | 'compact';
-  /** Path tujuan submit. Default '/katalog'. */
+  /** Path tujuan submit. Default '/develop'. */
   basePath?: string;
   /** Placeholder input. Default 'Cari produk…'. */
   placeholder?: string;
@@ -33,7 +33,7 @@ interface Props {
 export function SearchBar({
   defaultValue = '',
   variant = 'default',
-  basePath = '/katalog',
+  basePath = '/develop',
   placeholder = 'Cari produk…',
   submitLabel = 'Cari',
   showIcon = true,

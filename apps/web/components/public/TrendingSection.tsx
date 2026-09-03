@@ -53,7 +53,7 @@ export function TrendingSection({ trending, latest }: Props) {
             )}
           </div>
           <NLink
-            href="/katalog"
+            href="/develop"
             variant="primary"
             underline="static"
             arrow
@@ -79,7 +79,7 @@ export function TrendingSection({ trending, latest }: Props) {
                   </p>
                 </div>
                 <Button
-                  href="/katalog?tipe=bundle"
+                  href="/develop?tipe=bundle"
                   variant="ink"
                   size="sm"
                   className="mt-3 self-start"
@@ -122,7 +122,7 @@ export function TrendingSection({ trending, latest }: Props) {
             {latestData.map((p) => (
               <li key={p.id} className="shrink-0 w-56 sm:w-64">
                 <Card
-                  href={latestIsPlaceholder ? '/katalog' : `/develop/${p.slug}`}
+                  href={latestIsPlaceholder ? '/develop' : `/develop/${p.slug}`}
                   hoverElevation={6}
                   activeElevation={1}
                 >
@@ -365,7 +365,7 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
   const thumb = product.preview_images?.[0];
   return (
     <Card
-      href={isPlaceholder ? '/katalog' : `/develop/${product.slug}`}
+      href={isPlaceholder ? '/develop' : `/develop/${product.slug}`}
       variant="filled-primary"
       hoverElevation={8}
       activeElevation={3}
@@ -425,7 +425,7 @@ function TrendingSideCard({ product, isPlaceholder }: { product: Product; isPlac
   const thumb = product.preview_images?.[0];
   return (
     <Card
-      href={isPlaceholder ? '/katalog' : `/develop/${product.slug}`}
+      href={isPlaceholder ? '/develop' : `/develop/${product.slug}`}
       hoverElevation={6}
       activeElevation={2}
     >

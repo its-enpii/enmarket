@@ -16,10 +16,9 @@ export const revalidate = 0;
 
 const STATIC_PATHS = [
   { path: '', priority: 1, changeFrequency: 'daily' as const },
-  { path: 'katalog', priority: 0.9, changeFrequency: 'daily' as const },
   { path: 'display', priority: 0.7, changeFrequency: 'weekly' as const },
   { path: 'discover', priority: 0.6, changeFrequency: 'monthly' as const },
-  { path: 'develop', priority: 0.7, changeFrequency: 'weekly' as const },
+  { path: 'develop', priority: 0.9, changeFrequency: 'daily' as const },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

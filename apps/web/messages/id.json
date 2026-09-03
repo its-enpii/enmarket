@@ -78,7 +78,7 @@
     "layanan": "Layanan",
     "wishlist": "Wishlist",
     "wishlistCount": "Item di wishlist",
-    "login": "Masuk",
+    "login": "Masuk / Daftar",
     "account": "Akun",
     "topup": "Top Up"
   },
@@ -1692,7 +1692,8 @@
       },
       "success": "Berhasil masuk ke akun.",
       "welcomeBack": "Selamat datang kembali!",
-      "changePhone": "Ubah"
+      "changePhone": "Ubah",
+      "autoRegisterHint": "Belum punya akun? Tetap masuk — akun dibuat otomatis setelah verifikasi WhatsApp."
     }
   },
   "account": {

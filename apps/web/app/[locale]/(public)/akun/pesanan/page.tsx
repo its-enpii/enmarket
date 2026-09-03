@@ -55,7 +55,7 @@ export default function AkunPesananPage() {
           size="lg"
           title={t('empty')}
           hint={t('emptyHint')}
-          cta={{ href: '/katalog', label: t('startShopping') }}
+          cta={{ href: '/develop', label: t('startShopping') }}
         />
       ) : (
         <div className="space-y-4">

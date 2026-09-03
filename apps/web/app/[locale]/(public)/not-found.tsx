@@ -16,7 +16,7 @@ export default async function NotFound() {
       description={t('body404')}
       actions={
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Button variant="primary" size="md" href="/katalog">
+          <Button variant="primary" size="md" href="/develop">
             {t('viewCatalog')}
           </Button>
           <Button variant="surface" size="md" href="/">

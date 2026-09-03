@@ -63,7 +63,7 @@ export default async function WishlistPage() {
         <EmptyState
           title={t('empty')}
           message={t('empty')}
-          cta={{ href: '/katalog', label: `${t('cta')} →` }}
+          cta={{ href: '/develop', label: `${t('cta')} →` }}
         />
       ) : (
         <ProductGrid products={products} />

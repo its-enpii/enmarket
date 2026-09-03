@@ -53,7 +53,7 @@ export default function AkunWishlistPage() {
           size="lg"
           title={t('emptyTitle')}
           hint={t('emptyHint')}
-          cta={{ href: '/katalog', label: t('exploreCatalog') }}
+          cta={{ href: '/develop', label: t('exploreCatalog') }}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -64,7 +64,7 @@ export default function AkunWishlistPage() {
                   {item.product?.category?.nama || t('defaultCategory')}
                 </MetaLabel>
                 <h3 className="font-bold text-base text-ink mt-1">
-                  <NLink href={`/katalog/${item.product?.slug}`}>
+                  <NLink href={`/develop/${item.product?.slug}`}>
                     {item.product?.nama}
                   </NLink>
                 </h3>
@@ -77,7 +77,7 @@ export default function AkunWishlistPage() {
                 <Button
                   variant="primary"
                   size="sm"
-                  href={`/katalog/${item.product?.slug}`}
+                  href={`/develop/${item.product?.slug}`}
                 >
                   {t('viewProduct')}
                 </Button>

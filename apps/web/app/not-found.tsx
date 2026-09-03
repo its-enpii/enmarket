@@ -17,7 +17,7 @@ export default function GlobalNotFound() {
       description="Mungkin URL-nya salah ketik atau halaman sudah dihapus."
       actions={
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button variant="primary" size="md" href="/katalog">
+          <Button variant="primary" size="md" href="/develop">
             ← Lihat Katalog
           </Button>
           <Button variant="surface" size="md" href="/">

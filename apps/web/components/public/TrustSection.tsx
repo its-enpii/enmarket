@@ -61,7 +61,7 @@ export function TrustSection() {
       <Text className="text-center pt-2">
         {t('footerText')}{' '}
         <NLink
-          href="/katalog"
+          href="/develop"
           variant="primary"
           underline="static"
         >

@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import { Card, Eyebrow } from '@/components/ui/neobrutal';
+import { Text } from '@/components/ui/Text';
 import { BackLink } from '@/components/ui/BackLink';
 import { MasukForm } from './MasukForm';
 import { redirect } from '@/i18n/navigation';
@@ -48,6 +49,9 @@ export default async function MasukPage({ params, searchParams }: PageProps) {
           </p>
 
           <MasukForm locale={locale} />
+          <Text variant="muted" className="mt-4 text-center">
+            {t('autoRegisterHint')}
+          </Text>
         </Card>
 
         <p className="mt-6 text-center text-sm">

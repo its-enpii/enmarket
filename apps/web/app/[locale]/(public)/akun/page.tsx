@@ -129,7 +129,7 @@ export default function AkunDashboardPage() {
             compact
             size="sm"
             title={tOrders('empty')}
-            cta={{ href: '/katalog', label: t('exploreCatalog') }}
+            cta={{ href: '/develop', label: t('exploreCatalog') }}
           />
         ) : (
           <div className="space-y-3">

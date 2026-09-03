@@ -9,7 +9,7 @@
  *
  * @example
  *   <Button variant="primary" onClick={...}>Click me</Button>
- *   <Button variant="accent" size="lg" href="/katalog">Mulai Belanja</Button>
+ *   <Button variant="accent" size="lg" href="/develop">Mulai Belanja</Button>
  */
 
 import { Link } from '@/i18n/navigation';

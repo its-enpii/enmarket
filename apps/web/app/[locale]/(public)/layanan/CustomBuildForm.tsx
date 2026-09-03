@@ -30,7 +30,7 @@ export function CustomBuildForm() {
         <p className="text-sm text-surface/90 max-w-md mx-auto leading-relaxed">
           {t('successBody')}
         </p>
-        <Button variant="surface" size="md" href="/katalog" className="mt-4">
+        <Button variant="surface" size="md" href="/develop" className="mt-4">
           {t('viewCatalog')}
         </Button>
       </Card>

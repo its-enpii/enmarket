@@ -193,7 +193,7 @@ export default async function DiscoverPage({
             <Button
               variant="primary"
               size="lg"
-              href="/katalog"
+              href="/develop"
               className="font-label text-label-sm font-black uppercase"
             >
               {t('ctaViewDevelop')}
