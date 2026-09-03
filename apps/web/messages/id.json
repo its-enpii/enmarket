@@ -137,7 +137,8 @@
     "viewAllJournal": "Lihat Semua Catatan",
     "sponsorsTitle": "Sponsor Kami",
     "sponsorsSubtitle": "Website & Mitra yang Mendukung Studio",
-    "visitSponsor": "Kunjungi Website"
+    "visitSponsor": "Kunjungi Website",
+    "becomeSponsor": "Jadi Sponsor"
   },
   "discover": {
     "eyebrow": "Discover",
@@ -1963,6 +1964,50 @@
     "gateways": {
       "duitku": "Duitku",
       "tripay": "Tripay (QRIS)"
+    }
+  },
+  "sponsor": {
+    "eyebrow": "Sponsor",
+    "title": "Jadi Sponsor",
+    "subtitle": "Ajukan penempatan sponsor publik, bayar sesuai bid, dan tampil sesuai ranking bid tertinggi.",
+    "rankingTitle": "Cara Ranking Bekerja",
+    "rankingBody": "Sponsor aktif diurutkan dari bid tertinggi ke terendah. Bid sama memakai urutan pembayaran lebih awal.",
+    "activationTitle": "Setelah Pembayaran",
+    "steps": {
+      "submit": "Kirim domain, deskripsi opsional, kontak, dan bid Anda.",
+      "pay": "Selesaikan pembayaran QRIS melalui gateway yang tersedia.",
+      "activate": "Sponsor otomatis aktif dan langsung masuk homepage setelah pembayaran lunas."
+    },
+    "form": {
+      "title": "Formulir Bid Sponsor",
+      "domain": "Domain",
+      "name": "Nama Sponsor (opsional)",
+      "namePlaceholder": "Biarkan kosong untuk memakai judul situs",
+      "description": "Deskripsi Singkat (opsional)",
+      "descriptionPlaceholder": "Deskripsi khusus untuk sponsor Anda, maksimal 500 karakter.",
+      "contactName": "Nama Kontak",
+      "amount": "Bid Sponsor",
+      "email": "Email",
+      "whatsapp": "Nomor WhatsApp",
+      "paymentGateway": "Gateway Pembayaran",
+      "total": "Total Pembayaran",
+      "submit": "Kirim Bid & Bayar",
+      "processing": "Memproses..."
+    },
+    "preview": {
+      "title": "Preview Domain",
+      "loading": "Mengambil metadata situs..."
+    },
+    "previewFailed": "Gagal mengambil metadata domain.",
+    "gateways": {
+      "duitku": "Duitku",
+      "tripay": "Tripay (QRIS)"
+    },
+    "errors": {
+      "requiredFields": "Domain, nama kontak, dan satu kontak email/WA wajib diisi.",
+      "amountTooLow": "Bid minimal {min}.",
+      "paymentGatewayRequired": "Pilih gateway pembayaran terlebih dahulu.",
+      "checkoutFailed": "Bid gagal dibuat. Silakan coba lagi."
     }
   }
 }

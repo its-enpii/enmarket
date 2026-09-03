@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -33,6 +34,9 @@ class Order extends Model
         'qr_expired_at',
         'paid_at',
         'is_topup_order',
+        'is_sponsor_bid',
+        'sponsor_domain',
+        'sponsor_amount',
         'game_id',
         'game_item_id',
         'game_user_id',
@@ -57,6 +61,8 @@ class Order extends Model
         'qr_expired_at' => 'datetime',
         'paid_at' => 'datetime',
         'is_topup_order' => 'boolean',
+        'is_sponsor_bid' => 'boolean',
+        'sponsor_amount' => 'decimal:2',
         'digiflazz_response' => 'array',
     ];
 
@@ -78,6 +84,11 @@ class Order extends Model
     public function gameItem(): BelongsTo
     {
         return $this->belongsTo(GameItem::class);
+    }
+
+    public function sponsorBid(): HasOne
+    {
+        return $this->hasOne(SponsorBid::class);
     }
 
     /**

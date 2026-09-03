@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\Public\PostController as PublicPostController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
 use App\Http\Controllers\Api\Public\ReviewController as PublicReviewController;
 use App\Http\Controllers\Api\Public\SiteConfigController;
+use App\Http\Controllers\Api\Public\SponsorBidController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
 use App\Http\Controllers\Api\Public\DuitkuCallbackController;
@@ -89,6 +90,9 @@ Route::prefix('public')->group(function () {
     Route::get('topup/games/{slug}', [TopupController::class, 'show']);
     Route::post('topup/preview', [TopupController::class, 'preview'])->middleware('throttle:cart');
     Route::post('topup/checkout', [TopupController::class, 'checkout'])->middleware('throttle:checkout');
+    Route::get('sponsors/bid/config', [SponsorBidController::class, 'config']);
+    Route::post('sponsors/bid/preview', [SponsorBidController::class, 'preview'])->middleware('throttle:cart');
+    Route::post('sponsors/bid', [SponsorBidController::class, 'store'])->middleware('throttle:checkout');
 });
 
 // ───── Customer Auth & Account ─────

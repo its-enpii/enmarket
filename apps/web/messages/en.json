@@ -137,7 +137,8 @@
     "viewAllJournal": "View All Notes",
     "sponsorsTitle": "Our Sponsors",
     "sponsorsSubtitle": "Websites & Partners Supporting the Studio",
-    "visitSponsor": "Visit Website"
+    "visitSponsor": "Visit Website",
+    "becomeSponsor": "Become a Sponsor"
   },
   "discover": {
     "eyebrow": "Discover",
@@ -1963,6 +1964,50 @@
     "gateways": {
       "duitku": "Duitku",
       "tripay": "Tripay (QRIS)"
+    }
+  },
+  "sponsor": {
+    "eyebrow": "Sponsor",
+    "title": "Become a Sponsor",
+    "subtitle": "Submit a public sponsorship placement, pay your bid, and appear in the highest-bid ranking.",
+    "rankingTitle": "How Ranking Works",
+    "rankingBody": "Active sponsors are ordered from highest to lowest bid. Equal bids keep the earlier paid placement.",
+    "activationTitle": "After Payment",
+    "steps": {
+      "submit": "Submit your domain, optional description, contact, and bid.",
+      "pay": "Complete the available QRIS payment gateway transaction.",
+      "activate": "Your sponsor activates automatically and enters the homepage after payment is settled."
+    },
+    "form": {
+      "title": "Sponsor Bid Form",
+      "domain": "Domain",
+      "name": "Sponsor Name (optional)",
+      "namePlaceholder": "Leave empty to use the site title",
+      "description": "Short Description (optional)",
+      "descriptionPlaceholder": "Your custom sponsor description, up to 500 characters.",
+      "contactName": "Contact Name",
+      "amount": "Sponsor Bid",
+      "email": "Email",
+      "whatsapp": "WhatsApp Number",
+      "paymentGateway": "Payment Gateway",
+      "total": "Payment Total",
+      "submit": "Submit Bid & Pay",
+      "processing": "Processing..."
+    },
+    "preview": {
+      "title": "Domain Preview",
+      "loading": "Fetching site metadata..."
+    },
+    "previewFailed": "Failed to fetch domain metadata.",
+    "gateways": {
+      "duitku": "Duitku",
+      "tripay": "Tripay (QRIS)"
+    },
+    "errors": {
+      "requiredFields": "Domain, contact name, and one email/WhatsApp contact are required.",
+      "amountTooLow": "Minimum bid is {min}.",
+      "paymentGatewayRequired": "Please select a payment gateway first.",
+      "checkoutFailed": "Failed to create the bid. Please try again."
     }
   }
 }
