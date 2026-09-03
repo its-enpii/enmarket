@@ -116,18 +116,23 @@ export function TopNav({ children }: Props) {
           </NLink>
         </nav>
 
-        {/* Hamburger button (<xl) — pakai Button primitive standar */}
-        <Button
-          type="button"
-          onClick={() => setOpen(!open)}
-          variant="surface"
-          size="sm"
-          className="w-11 h-11 px-0 py-0 text-lg xl:hidden"
-          aria-label={t('menu')}
-          aria-expanded={open}
-        >
-          <Icon name={open ? 'close' : 'menu'} size={18} />
-        </Button>
+        {/* Right group (<xl): badges icon-only + hamburger */}
+        <div className="flex items-center gap-2 xl:hidden [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
+          {children}
+
+          {/* Hamburger button (<xl) — pakai Button primitive standar */}
+          <Button
+            type="button"
+            onClick={() => setOpen(!open)}
+            variant="surface"
+            size="sm"
+            className="w-11 h-11 px-0 py-0 text-lg"
+            aria-label={t('menu')}
+            aria-expanded={open}
+          >
+            <Icon name={open ? 'close' : 'menu'} size={18} />
+          </Button>
+        </div>
       </div>
 
       {/* Mobile menu panel (<xl) */}
@@ -181,12 +186,9 @@ export function TopNav({ children }: Props) {
               {t('admin')}
             </NLink>
 
-            {/* Wishlist & Cart badge (server components) — sama dengan desktop nav */}
-            {Children.map(children, (child) =>
-              child ? (
-                <span onClick={() => setOpen(false)}>{child}</span>
-              ) : child,
-            )}
+            <p className="font-label text-micro uppercase tracking-wider text-ink/40">
+              {t('quickMenu')}
+            </p>
           </div>
         </nav>
       )}
