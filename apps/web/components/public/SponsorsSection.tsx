@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { SectionTitle } from '@/components/ui';
-import { Card } from '@/components/ui/neobrutal';
+import { Button, Card } from '@/components/ui/neobrutal';
 import { Image } from '@/components/ui/Image';
 import type { PublicSponsor } from '@/lib/types';
 
@@ -30,8 +30,13 @@ export async function SponsorsSection({ sponsors }: Props) {
               {t('sponsorsTitle')}
             </SectionTitle>
           </div>
-          <div className="font-label text-label-sm uppercase tracking-widest text-ink/70">
-            {t('sponsorsSubtitle')}
+          <div className="flex flex-col md:items-end gap-4">
+            <div className="font-label text-label-sm uppercase tracking-widest text-ink/70">
+              {t('sponsorsSubtitle')}
+            </div>
+            <Button href="/sponsor" variant="surface" size="sm">
+              {t('becomeSponsor')}
+            </Button>
           </div>
         </div>
 

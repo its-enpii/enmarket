@@ -4,6 +4,9 @@ namespace App\Services\Payment;
 
 use App\Models\Order;
 use App\Models\PreorderReleaseQueue;
+use App\Models\Sponsor;
+use App\Models\SponsorBid;
+use App\Services\Sponsor\MetadataFetcher;
 use App\Services\Delivery\OrderDeliveryService;
 use Illuminate\Support\Facades\Log;
 
@@ -21,6 +24,7 @@ class OrderPaidHandler
 {
     public function __construct(
         private readonly OrderDeliveryService $deliveryService,
+        private readonly MetadataFetcher $metadataFetcher,
     ) {}
 
     public function handle(Order $order, ?string $paymentChannel = null): void
@@ -76,6 +80,7 @@ class OrderPaidHandler
         }
 
         $this->dispatchTopupIfApplicable($order);
+        $this->activateSponsorBidIfApplicable($order);
     }
 
     private function dispatchTopupIfApplicable(Order $order): void
@@ -99,6 +104,64 @@ class OrderPaidHandler
         } catch (\Throwable $e) {
             Log::error("OrderPaidHandler: failed to dispatch topup job for order {$order->kode_order}", [
                 'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    private function activateSponsorBidIfApplicable(Order $order): void
+    {
+        if (! $order->is_sponsor_bid) {
+            return;
+        }
+
+        $bid = SponsorBid::where('order_id', $order->id)->first();
+
+        if (! $bid) {
+            Log::error("OrderPaidHandler: sponsor bid not found for order {$order->kode_order}");
+
+            return;
+        }
+
+        if ($bid->status === 'paid') {
+            Log::info("OrderPaidHandler: sponsor bid for order {$order->kode_order} already paid, skipping");
+
+            return;
+        }
+
+        try {
+            if (Sponsor::where('domain', $bid->domain)->where('is_active', true)->exists()) {
+                $bid->update(['status' => 'expired']);
+                Log::warning("OrderPaidHandler: active sponsor already exists for domain {$bid->domain}, order {$order->kode_order}");
+
+                return;
+            }
+
+            $metadata = $this->metadataFetcher->fetch($bid->domain);
+
+            Sponsor::updateOrCreate(
+                ['domain' => $bid->domain],
+                [
+                    'name' => $bid->name ?: $metadata['name'],
+                    'url' => $metadata['url'],
+                    'logo_url' => $metadata['logo_url'] ?? null,
+                    'description' => $bid->description,
+                    'fetched_description' => $metadata['fetched_description'] ?? null,
+                    'amount' => $order->sponsor_amount,
+                    'is_active' => true,
+                    'fetched_at' => $metadata['fetched_at'] ?? now(),
+                ],
+            );
+
+            $bid->update([
+                'status' => 'paid',
+                'paid_at' => now(),
+            ]);
+
+            Log::info("OrderPaidHandler: activated sponsor {$bid->domain} from order {$order->kode_order}");
+        } catch (\Throwable $e) {
+            Log::error("OrderPaidHandler: failed activating sponsor bid for order {$order->kode_order}", [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
