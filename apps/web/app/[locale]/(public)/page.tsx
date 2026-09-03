@@ -58,6 +58,7 @@ export default async function HomePage() {
           tripay: { enabled: true },
           duitku: { enabled: false },
         },
+        nav_menus: [],
         sponsors: [],
       },
     }),
