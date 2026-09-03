@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FormFooter } from '@/components/ui';
 import { FormField } from '@/components/admin/FormField';
-import { Select } from '@/components/ui/Select';
+import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
 import type { CustomRequest } from '@/lib/types';
 
@@ -27,13 +27,18 @@ export function CustomRequestEditForm({ customRequest }: Props) {
 
   return (
     <form action={formAction} className="space-y-5">
-      <FormField label={t('fields.status')} htmlFor="status" required>
-        <Select id="status" name="status" defaultValue={customRequest.status}>
-          <option value="baru">{t('status.baru')}</option>
-          <option value="diproses">{t('status.diproses')}</option>
-          <option value="selesai">{t('status.selesai')}</option>
-          <option value="dibatalkan">{t('status.dibatalkan')}</option>
-        </Select>
+      <FormField label={t('fields.status')} required>
+        <SelectSearch
+          name="status"
+          defaultValue={customRequest.status}
+          required
+          options={[
+            { value: 'baru', label: t('status.baru') },
+            { value: 'diproses', label: t('status.diproses') },
+            { value: 'selesai', label: t('status.selesai') },
+            { value: 'dibatalkan', label: t('status.dibatalkan') },
+          ]}
+        />
       </FormField>
 
       <FormField label={t('fields.notes')} htmlFor="notes" hint={t('fields.notesHint')}>

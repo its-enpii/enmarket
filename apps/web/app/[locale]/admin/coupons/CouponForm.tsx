@@ -8,7 +8,7 @@ import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FormFooter } from '@/components/ui';
 import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Checkbox } from '@/components/ui/Checkbox';
 import type { Coupon } from '@/lib/types';
 
@@ -50,11 +50,16 @@ export function CouponForm({ initial }: Props) {
           />
         </FormField>
 
-        <FormField label={t('fieldType')} htmlFor="type" required error={fieldErr('type')}>
-          <Select id="type" name="type" defaultValue={initial?.type ?? 'percent'}>
-            <option value="percent">{t('typePercent')}</option>
-            <option value="fixed">{t('typeFixed')}</option>
-          </Select>
+        <FormField label={t('fieldType')} required error={fieldErr('type')}>
+          <SelectSearch
+            name="type"
+            defaultValue={initial?.type ?? 'percent'}
+            required
+            options={[
+              { value: 'percent', label: t('typePercent') },
+              { value: 'fixed', label: t('typeFixed') },
+            ]}
+          />
         </FormField>
       </div>
 
