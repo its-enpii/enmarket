@@ -37,7 +37,7 @@ export async function CartBadge() {
             shadow={false}
             height="28"
             fontSize="xs"
-            className="absolute -top-2 -right-3 sm:right-auto sm:-right-6 min-w-[1.75rem] px-1.5 font-bold normal-case tracking-normal"
+            className="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 text-[10px] leading-none font-bold normal-case tracking-normal flex items-center justify-center pointer-events-none"
           >
             {count > 99 ? '99+' : count}
           </Badge>

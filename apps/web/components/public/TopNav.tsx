@@ -64,55 +64,61 @@ export function TopNav({ children }: Props) {
 
   return (
     <header className="sticky top-0 z-nav bg-surface border-b-4 border-ink shadow-brutal-6 relative">
-      <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
-        <NLink
-          href="/"
-          variant="primary"
-          underline="none"
-          className="font-display text-2xl md:text-3xl xl:text-2xl 2xl:text-headline-md font-black uppercase tracking-tighter min-h-touch inline-flex items-center"
-        >
-          {siteName}
-        </NLink>
-
-        {/* Desktop nav (≥xl) */}
-        <nav className="hidden xl:flex items-center gap-6 2xl:gap-8">
-          {navItems.map((item) => {
-            const active = isActive(pathname, item.href);
-            return (
-              <NLink
-                key={item.href}
-                href={item.href}
-                variant="primary"
-                underline={active ? 'static' : 'hover'}
-                aria-current={active ? 'page' : undefined}
-                className={`font-label text-label-sm uppercase font-bold min-h-touch inline-flex items-center pb-1 ${
-                  active ? 'border-b-4 border-primary' : ''
-                }`}
-              >
-                {t(item.key)}
-              </NLink>
-            );
-          })}
-          {hasCustomerToken ? (
-            <Button variant="primary" size="md" href="/akun">
-              {t('account')}
-            </Button>
-          ) : (
-            <Button variant="primary" size="md" href="/masuk">
-              {t('login')}
-            </Button>
-          )}
-
+      <div className="flex items-center justify-between gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
+        <div className="flex items-center gap-8 2xl:gap-12">
           <NLink
-            href="/login"
-            className="font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
+            href="/"
+            variant="primary"
+            underline="none"
+            className="font-display text-2xl md:text-3xl xl:text-2xl 2xl:text-headline-md font-black uppercase tracking-tighter min-h-touch inline-flex items-center"
           >
-            {t('admin')}
+            {siteName}
           </NLink>
-        </nav>
 
-        <div className="flex items-center gap-2 [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
-          {children}
+          <nav className="hidden xl:flex items-center gap-6 2xl:gap-8">
+            {navItems.map((item) => {
+              const active = isActive(pathname, item.href);
+              return (
+                <NLink
+                  key={item.href}
+                  href={item.href}
+                  variant="primary"
+                  underline={active ? 'static' : 'hover'}
+                  aria-current={active ? 'page' : undefined}
+                  className={`font-label text-label-sm uppercase font-bold min-h-touch inline-flex items-center pb-1 ${
+                    active ? 'border-b-4 border-primary' : ''
+                  }`}
+                >
+                  {t(item.key)}
+                </NLink>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden xl:flex items-center gap-3">
+            {hasCustomerToken ? (
+              <Button variant="primary" size="md" href="/akun">
+                {t('account')}
+              </Button>
+            ) : (
+              <Button variant="primary" size="md" href="/masuk">
+                {t('login')}
+              </Button>
+            )}
+
+            <NLink
+              href="/login"
+              className="font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline px-1"
+            >
+              {t('admin')}
+            </NLink>
+          </div>
+
+          <div className="flex items-center gap-2 [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
+            {children}
+          </div>
 
           {/* Hamburger button (<xl) — pakai Button primitive standar */}
           <Button
