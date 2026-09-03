@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { toast } from '@/components/ui/toast-store';
 import { FormActions, FormSection } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
+import { Icon } from '@/components/ui';
 import type {
   SiteFooter,
   SiteIdentity,
@@ -203,7 +204,7 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
                   disabled={links.length === 1}
                   aria-label={t('linkRemoveAria')}
                 >
-                  ✕
+                  <Icon name="close" size={14} />
                 </Button>
               </div>
             </Card>

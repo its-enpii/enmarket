@@ -100,7 +100,7 @@ export function GameItemsSection({ game }: Props) {
                 onClick={() => handleDelete(item.id)}
                 className="text-xs"
               >
-                ✕
+                <Icon name="close" size={14} />
               </Button>
             </div>
           ))}
@@ -109,3 +109,4 @@ export function GameItemsSection({ game }: Props) {
     </Card>
   );
 }
+import { Icon } from '@/components/ui';

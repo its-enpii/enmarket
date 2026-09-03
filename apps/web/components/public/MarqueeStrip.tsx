@@ -30,7 +30,7 @@ export function MarqueeStrip() {
       >
         {seq.map((it, i) => (
           <span key={i} className="px-6 inline-flex items-center gap-2">
-            <span aria-hidden="true">★</span>
+            <Icon name="star" size={14} />
             {it}
             <span aria-hidden="true" className="text-ink/30">·</span>
           </span>
@@ -39,3 +39,4 @@ export function MarqueeStrip() {
     </div>
   );
 }
+import { Icon } from '@/components/ui';

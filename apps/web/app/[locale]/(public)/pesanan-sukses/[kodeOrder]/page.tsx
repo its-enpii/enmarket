@@ -3,7 +3,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { AccountProvisioningBox } from '@/components/order/AccountProvisioningBox';
 import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
-import { MetaLabel, Text } from '@/components/ui';
+import { Icon, MetaLabel, Text } from '@/components/ui';
 import { Link } from '@/i18n/navigation';
 import { orderApi } from '@/lib/order-api';
 import { PublicFetchError } from '@/lib/public-api';
@@ -76,7 +76,10 @@ export default async function PesananSuksesPage({ params }: PageProps) {
     return (
       <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
         <Card variant="filled-accent" thick hoverable={false} className="p-8 text-center mb-8">
-          <p className="text-sm font-bold uppercase tracking-label text-ink/80">✓ {t('preorderDepositLabel')}</p>
+          <p className="text-sm font-bold uppercase tracking-label text-ink/80 flex items-center justify-center gap-1.5">
+            <Icon name="check" size={14} className="shrink-0" />
+            {t('preorderDepositLabel')}
+          </p>
           <h1 className="mt-2 text-3xl sm:text-4xl font-bold leading-tight text-ink">
             {t('preorderDepositTitle')}
           </h1>
@@ -143,9 +146,12 @@ export default async function PesananSuksesPage({ params }: PageProps) {
     <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
       <Card variant="filled-primary" thick hoverable={false} className="p-8 text-center mb-8">
         <p className="text-sm font-bold uppercase tracking-label text-accent">
-          ✓ {order.is_preorder && order.preorder_release_processed_at
+          <span className="inline-flex items-center justify-center gap-1.5">
+            <Icon name="check" size={14} className="shrink-0" />
+            {order.is_preorder && order.preorder_release_processed_at
             ? t('preorderReadyNow')
             : t('paymentReceived')}
+          </span>
         </p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-bold leading-tight">{t('thankYou', { name: order.nama_pembeli })}</h1>
         <p className="mt-3 text-base sm:text-lg text-surface/90">{t('processing')}</p>

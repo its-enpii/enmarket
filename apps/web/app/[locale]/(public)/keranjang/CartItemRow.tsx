@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 
 import { removeCartItemAction, updateCartItemAction } from './actions';
 
@@ -80,7 +81,7 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
         disabled={disabled || pending}
         className="min-h-touch inline-flex items-center gap-1.5"
       >
-        <span aria-hidden="true">✕</span>
+        <Icon name="close" size={14} />
         {t('remove')}
       </Button>
     </div>

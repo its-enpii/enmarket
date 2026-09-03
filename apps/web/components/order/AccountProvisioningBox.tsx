@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
 import { Text } from '@/components/ui';
+import { Icon } from '@/components/ui';
 import type { AccountProvisioningInfo } from '@/lib/types';
 
 interface Props {
@@ -47,7 +48,8 @@ export function AccountProvisioningBox({ provisioning }: Props) {
       <div className="mt-2 bg-ink text-surface border-2 border-ink p-3">
         <div className="flex items-center justify-between mb-2">
           <p className="text-micro font-bold uppercase tracking-wider opacity-70">
-            ✓ {t('statusReady')}
+            <Icon name="check" size={14} className="mr-1" />
+            {t('statusReady')}
           </p>
         </div>
         <div className="space-y-1.5">

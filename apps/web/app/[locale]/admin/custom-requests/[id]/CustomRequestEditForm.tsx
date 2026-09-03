@@ -8,6 +8,7 @@ import { FormFooter } from '@/components/ui';
 import { FormField } from '@/components/admin/FormField';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
+import { Icon } from '@/components/ui';
 import type { CustomRequest } from '@/lib/types';
 
 import { updateCustomRequestAction, UpdateCustomRequestResult } from '../actions';
@@ -53,7 +54,8 @@ export function CustomRequestEditForm({ customRequest }: Props) {
 
       {state.success && (
         <AlertBanner variant="success">
-          ✓ {t('updateSuccess')}
+          <Icon name="check" size={14} className="mr-1" />
+          {t('updateSuccess')}
         </AlertBanner>
       )}
 

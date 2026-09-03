@@ -29,7 +29,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
-import { MetaLabel, PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
+import { Icon, MetaLabel, PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
 
@@ -361,7 +361,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   className="inline-flex items-center gap-2 font-label text-label-sm uppercase font-bold text-primary hover:text-ink transition-colors"
                 >
                   {t('readProcess')}
-                  <span aria-hidden="true">→</span>
+                  <Icon name="arrow-right" className="shrink-0" />
                 </Link>
               </div>
             </div>
@@ -386,7 +386,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
                   className="p-4"
                 >
                   <Eyebrow size="label-sm" color="ink-muted" className="mb-2">
-                    → {spec.label}
+                    <Icon name="arrow-right" className="inline mr-1" />
+                    {spec.label}
                   </Eyebrow>
                   <p className="font-display text-xl font-black uppercase text-ink leading-tight">
                     {spec.value}
@@ -409,7 +410,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
                           aria-hidden="true"
                           className="inline-flex shrink-0 items-center justify-center w-6 h-6 bg-accent border-2 border-ink text-ink font-bold text-xs"
                         >
-                          ✓
+                          <Icon name="check" size={14} />
                         </span>
                         <span className="font-body text-body-sm text-ink leading-snug">
                           {f}
@@ -469,7 +470,8 @@ export default async function WorkDetailPage({ params }: PageProps) {
                     className="block border-4 border-ink bg-surface p-5 neo-btn neo-btn-ink h-full"
                   >
                     <Eyebrow size="sm" color="accent" className="mb-2">
-                      → {t('linkedPostsRead')}
+                    <Icon name="arrow-right" className="inline mr-1" />
+                    {t('linkedPostsRead')}
                     </Eyebrow>
                     <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink leading-tight mb-2">
                       {p.title}

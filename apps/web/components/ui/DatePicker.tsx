@@ -158,7 +158,7 @@ export function DatePicker({
               aria-label={t('clear')}
               className="p-1 hover:bg-ink/10 text-ink/70 hover:text-primary transition-colors text-xs font-bold"
             >
-              ✕
+              <Icon name="close" size={14} />
             </span>
           )}
           <span aria-hidden="true" className="text-xs text-ink/70">
@@ -190,3 +190,4 @@ export function DatePicker({
     </div>
   );
 }
+import { Icon } from '@/components/ui';

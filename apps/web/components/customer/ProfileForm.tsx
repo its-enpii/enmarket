@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
+import { Icon } from '@/components/ui';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { AlertBanner } from '@/components/ui/AlertBanner';
@@ -44,7 +45,8 @@ export function ProfileForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       {success && (
         <AlertBanner variant="success" className="p-3">
-          ✓ {t('profileUpdated')}
+          <Icon name="check" size={14} className="mr-1" />
+          {t('profileUpdated')}
         </AlertBanner>
       )}
 

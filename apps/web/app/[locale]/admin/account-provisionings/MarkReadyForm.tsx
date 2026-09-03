@@ -11,6 +11,7 @@ import { FormField } from '@/components/ui/FormField';
 import { StatusPill } from '@/components/ui/StatusPill';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
+import { Icon } from '@/components/ui';
 
 interface Props {
   provisioningId: number;
@@ -182,7 +183,8 @@ export function MarkReadyForm({ provisioningId, isRegenerate, initialCredentials
             )}
             {success && (
               <StatusPill tone="success" className="text-xs">
-                ✓ {success}
+                <Icon name="check" size={14} className="mr-1" />
+                {success}
               </StatusPill>
             )}
 

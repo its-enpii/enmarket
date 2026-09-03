@@ -10,6 +10,7 @@ import { FormError } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
+import { Icon } from '@/components/ui';
 import { toast } from '@/components/ui/toast-store';
 
 interface Props {
@@ -128,7 +129,7 @@ export function ReviewFormModal({
             aria-label={tCommon('dismiss')}
             className="w-8 h-8 px-0 py-0"
           >
-            ✕
+            <Icon name="close" size={14} />
           </Button>
         </div>
 
@@ -158,7 +159,7 @@ export function ReviewFormModal({
                       aria-label={`${star} ${t('stars')}`}
                     >
                       <span className={active ? 'text-accent drop-shadow-[2px_2px_0_var(--color-ink)]' : 'text-ink/20'}>
-                        ★
+                        <Icon name="star" size={26} />
                       </span>
                     </Button>
                   );
@@ -239,7 +240,8 @@ export function ReviewFormModal({
         size="sm"
         onClick={() => setOpen(true)}
       >
-        ★ {triggerLabel ?? t('writeReview')}
+        <Icon name="star" size={14} className="mr-1" />
+        {triggerLabel ?? t('writeReview')}
       </Button>
       {mounted && typeof document !== 'undefined'
         ? createPortal(modal, document.body)

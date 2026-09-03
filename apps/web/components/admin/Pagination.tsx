@@ -88,9 +88,11 @@ export function Pagination({ currentPage, lastPage, basePath, queryParams }: Pro
       )}
       {currentPage < lastPage && (
         <Button href={pageHref(currentPage + 1)} variant="ghost" size="sm">
-          Next →
+          Next
+          <Icon name="arrow-right" size={14} />
         </Button>
       )}
     </div>
   );
 }
+import { Icon } from '@/components/ui';

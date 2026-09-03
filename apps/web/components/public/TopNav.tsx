@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 import { Children } from 'react';
 
 interface Props {
@@ -125,7 +126,7 @@ export function TopNav({ children }: Props) {
           aria-label={t('menu')}
           aria-expanded={open}
         >
-          {open ? '✕' : '☰'}
+          <Icon name={open ? 'close' : 'menu'} size={18} />
         </Button>
       </div>
 

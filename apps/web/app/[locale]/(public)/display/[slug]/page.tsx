@@ -21,6 +21,7 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, NLink } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { PostContent } from '@/components/public/PostContent';
 import { ReactionStrip } from '@/components/public/ReactionStrip';
@@ -296,7 +297,10 @@ export default async function DisplayDetailPage({ params }: PageProps) {
                 underline="static"
                 className="font-label text-label-sm uppercase font-bold hover:text-ink"
               >
-                {t('allEntries')}
+                <span className="inline-flex items-center gap-2">
+                  {t('allEntries')}
+                  <Icon name="arrow-right" size={14} />
+                </span>
               </NLink>
             </div>
 
@@ -339,7 +343,10 @@ export default async function DisplayDetailPage({ params }: PageProps) {
               href="/develop"
               className="inline-flex items-center gap-2 border-surface text-surface hover:bg-surface hover:text-ink"
             >
-              {t('viewDevelop')}
+              <span className="inline-flex items-center gap-2">
+                {t('viewDevelop')}
+                <Icon name="arrow-right" />
+              </span>
             </Button>
           </div>
         </SectionContainer>

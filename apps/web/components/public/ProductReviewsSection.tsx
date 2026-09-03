@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { SectionContainer } from './SectionContainer';
-import { SectionBand } from '@/components/ui';
+import { Icon, SectionBand } from '@/components/ui';
 import { reviewApi, ProductReviewsResponse } from '@/lib/review-api';
 import { formatDate } from '@/lib/format';
 import type { Review, ProductRatingSummary } from '@/lib/types';
@@ -99,7 +99,7 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                         : 'text-ink/20'
                     }
                   >
-                    ★
+                    <Icon name="star" size={20} />
                   </span>
                 ))}
               </div>
@@ -130,7 +130,8 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                     }`}
                   >
                     <span className="w-12 font-mono shrink-0 flex items-center gap-0.5">
-                      {stars} <span className="text-accent">★</span>
+                      {stars}
+                      <Icon name="star" size={14} className="text-accent" />
                     </span>
                     <div className="flex-1 h-3 bg-ink/10 border border-ink overflow-hidden">
                       <div
@@ -170,7 +171,9 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                 setPage(1);
               }}
             >
-              {stars} ★ ({summary.distribution[String(stars) as keyof typeof summary.distribution] || 0})
+              {stars}
+              <Icon name="star" size={14} />
+              ({summary.distribution[String(stars) as keyof typeof summary.distribution] || 0})
             </Button>
           ))}
         </div>
@@ -197,7 +200,8 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-sm text-ink">{rev.buyer_name}</p>
                       <StatusPill tone="success">
-                        ✓ {t('verifiedBuyer')}
+                        <Icon name="check" size={14} className="mr-1" />
+                        {t('verifiedBuyer')}
                       </StatusPill>
                     </div>
                     <p className="text-fine text-ink/50 mt-0.5">
@@ -214,7 +218,7 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                             : 'text-ink/20'
                         }
                       >
-                        ★
+                        <Icon name="star" size={18} />
                       </span>
                     ))}
                   </div>
@@ -247,7 +251,10 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
                   disabled={page >= lastPage}
                   onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
                 >
-                  {t('next')} →
+                  <span className="inline-flex items-center gap-1.5">
+                    {t('next')}
+                    <Icon name="arrow-right" />
+                  </span>
                 </Button>
               </div>
             )}

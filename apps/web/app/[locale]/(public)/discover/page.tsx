@@ -9,7 +9,7 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { Card, Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
+import { Icon, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { Badge } from '@/components/ui/Badge';
 
 export async function generateMetadata({
@@ -196,7 +196,10 @@ export default async function DiscoverPage({
               href="/develop"
               className="font-label text-label-sm font-black uppercase"
             >
-              {t('ctaViewDevelop')}
+              <span className="inline-flex items-center gap-2">
+                {t('ctaViewDevelop')}
+                <Icon name="arrow-right" />
+              </span>
             </Button>
             <NLink
               href="/display"

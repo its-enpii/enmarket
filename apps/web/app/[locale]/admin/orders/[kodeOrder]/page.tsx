@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader, AdminPageBody, DataItem, FormSection } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, DataItem, FormSection, Icon } from '@/components/ui';
 import { Text } from '@/components/ui';
 import { Badge } from '@/components/ui/Badge';
 import { DataTable, Column } from '@/components/admin/DataTable';
@@ -114,7 +114,10 @@ export default async function OrderDetailPage({ params }: Props) {
                   shadow={false}
                   className="px-2 py-0.5 text-xs font-bold normal-case tracking-normal"
                 >
-                  {tokenValid ? t('items.tokenActive') : t('items.tokenExpired')}
+                  <span className="inline-flex items-center gap-1.5">
+                    {tokenValid && <Icon name="check" size={14} />}
+                    {tokenValid ? t('items.tokenActive') : t('items.tokenExpired')}
+                  </span>
                 </Badge>
                 {delivery.download_token && (
                   <code className="text-xs bg-ink/5 px-2 py-1 border border-ink/20 font-mono">

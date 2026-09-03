@@ -46,7 +46,10 @@ export function NewsletterCTA() {
         </p>
         <div className="mt-5 sm:mt-6 flex flex-wrap gap-3">
           <Button variant="accent" size="md" href="/develop">
-            {t('ctaCatalog')}
+            <span className="inline-flex items-center gap-2">
+              {t('ctaCatalog')}
+              <Icon name="arrow-right" />
+            </span>
           </Button>
           <Button variant="outline" size="md" href="/cek-pesanan" className="border-surface text-surface hover:bg-surface hover:text-ink">
             {t('ctaOrders')}
@@ -56,3 +59,4 @@ export function NewsletterCTA() {
     </Card>
   );
 }
+import { Icon } from '@/components/ui';

@@ -21,6 +21,7 @@ import { useState } from 'react';
 
 import { ModalShell } from '@/components/ui/ModalShell';
 import { Card, Button } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 interface Props {
   images: string[];
@@ -132,7 +133,8 @@ export function WorkGallery({ images, alt, title }: Props) {
             className="max-w-full max-h-full border-4 border-surface shadow-[12px_12px_0_0_var(--color-accent)]"
           />
           <span className="absolute top-6 right-6 text-surface font-label text-label-sm uppercase font-bold tracking-wider border-2 border-surface px-4 py-2">
-            ✕ {t('galleryClose')}
+            <Icon name="close" size={14} className="mr-1" />
+            {t('galleryClose')}
           </span>
           <span className="absolute bottom-6 left-6 text-surface font-label text-label-sm uppercase font-bold tracking-wider">
             {activeIdx + 1} / {images.length}

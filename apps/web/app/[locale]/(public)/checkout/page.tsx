@@ -42,7 +42,7 @@ export default async function CheckoutPage() {
           <EmptyState
             title={t('errorLoad')}
             message={err.message}
-            cta={{ href: '/develop', label: `${tCommon('viewAll')} →` }}
+            cta={{ href: '/develop', label: tCommon('viewAll') }}
           />
         </div>
       );
@@ -56,7 +56,7 @@ export default async function CheckoutPage() {
         <EmptyState
           title={tKeranjang('empty')}
           message={tKeranjang('continueShopping')}
-          cta={{ href: '/develop', label: `${tCommon('viewAll')} →` }}
+          cta={{ href: '/develop', label: tCommon('viewAll') }}
         />
       </div>
     );

@@ -14,6 +14,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { SectionTitle } from '@/components/ui';
+import { Icon } from '@/components/ui';
 
 interface Pillar {
   icon: string;
@@ -88,7 +89,10 @@ export function PillarsSection() {
             </SectionTitle>
             <p className="font-body text-body-lg text-ink/70 max-w-md">{t(p.bodyKey)}</p>
             <span className="font-label text-label-sm uppercase font-bold text-ink mt-2 group-hover:underline underline-offset-4">
-              {t('pillarExplore', { title: t(p.titleKey) })}
+              <span className="inline-flex items-center gap-1.5">
+                {t('pillarExplore', { title: t(p.titleKey) })}
+                <Icon name="arrow-right" size={14} />
+              </span>
             </span>
           </article>
         </Link>
@@ -113,7 +117,10 @@ export function PillarsSection() {
             {t('pillarDisplayBody')}
           </p>
           <span className="font-label text-label-sm uppercase font-bold text-ink mt-2 group-hover:underline underline-offset-4">
-            {t('pillarExplore', { title: t('pillarDisplay') })}
+            <span className="inline-flex items-center gap-1.5">
+              {t('pillarExplore', { title: t('pillarDisplay') })}
+              <Icon name="arrow-right" size={14} />
+            </span>
           </span>
         </article>
       </Link>

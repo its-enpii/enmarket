@@ -17,6 +17,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
 import { MetaLabel } from '@/components/ui/MetaLabel';
 import { Input } from '@/components/ui/Input';
+import { Icon } from '@/components/ui';
 import { publicApi } from '@/lib/public-api';
 
 export async function Footer() {
@@ -101,7 +102,7 @@ export async function Footer() {
                   aria-label={t('subscribeAria')}
                   className="h-auto px-6 py-4 border-l-4 border-ink rounded-none"
                 >
-                  <span aria-hidden="true">→</span>
+                  <Icon name="arrow-right" />
                 </Button>
               </form>
             </Card>

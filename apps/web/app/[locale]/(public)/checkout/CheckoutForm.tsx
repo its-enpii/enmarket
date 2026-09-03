@@ -7,6 +7,7 @@ import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
+import { Icon } from '@/components/ui';
 import { PaymentMethodSelector } from '@/components/checkout/PaymentMethodSelector';
 import { formatRupiah } from '@/lib/format';
 import type { PaymentGateway } from '@/lib/types';
@@ -156,7 +157,7 @@ export function CheckoutForm({
               size="md"
               onClick={handleRemoveCoupon}
             >
-              ✕
+              <Icon name="close" size={14} />
             </Button>
           ) : (
             <Button
@@ -173,7 +174,8 @@ export function CheckoutForm({
 
         {couponSuccess && (
           <span className="mt-2 block text-xs font-bold text-success">
-            ✓ {couponSuccess}
+            <Icon name="check" size={14} className="inline mr-1" />
+            {couponSuccess}
           </span>
         )}
         {couponError && (
@@ -207,7 +209,12 @@ export function CheckoutForm({
         disabled={pending}
         className="w-full"
       >
-        {pending ? `${t('placeOrder')}…` : `${t('placeOrder')} →`}
+        {pending ? `${t('placeOrder')}…` : (
+          <span className="inline-flex items-center gap-2">
+            {t('placeOrder')}
+            <Icon name="arrow-right" className="inline" />
+          </span>
+        )}
       </Button>
 
       <p className="text-xs text-ink/50 text-center border-t-2 border-ink/10 pt-3">

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
+import { Icon } from '@/components/ui';
 
 import { checkOrderAction } from './actions';
 
@@ -68,7 +69,12 @@ export function CekPesananForm({ defaultKode = '' }: Props) {
         disabled={pending}
         className="w-full"
       >
-        {pending ? `${t('submit')}…` : `${t('submit')} →`}
+        {pending ? `${t('submit')}…` : (
+          <span className="inline-flex items-center gap-2">
+            {t('submit')}
+            <Icon name="arrow-right" />
+          </span>
+        )}
       </Button>
     </form>
   );

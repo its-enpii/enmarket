@@ -108,7 +108,7 @@ export function MediaPickerModal({
             aria-label={tCommon('dismiss')}
             className="w-8 h-8 px-0 py-0"
           >
-            ✕
+            <Icon name="close" size={14} />
           </Button>
         </div>
 
@@ -252,3 +252,4 @@ export function MediaPickerModal({
     </>
   );
 }
+import { Icon } from '@/components/ui';

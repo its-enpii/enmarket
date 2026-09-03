@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import { toast } from '@/components/ui/toast-store';
+import { Icon } from '@/components/ui';
 
 import { releasePreorderNow } from './actions';
 
@@ -25,7 +26,7 @@ export function ReleaseNowForm({ kodeOrder }: Props) {
     const ok = await confirmDialog({
       title: t('releaseConfirmTitle'),
       message: t('releaseConfirmMessage', { kode: kodeOrder }),
-      confirmLabel: t('actionReleaseNow').replace('↗ ', ''),
+      confirmLabel: t('actionReleaseNow'),
     });
     if (!ok) return;
     startTransition(async () => {
@@ -46,7 +47,12 @@ export function ReleaseNowForm({ kodeOrder }: Props) {
       disabled={pending}
       onClick={submit}
     >
-      {pending ? '…' : t('actionReleaseNow')}
+      {pending ? '…' : (
+        <span className="inline-flex items-center gap-1.5">
+          {t('actionReleaseNow')}
+          <Icon name="external" size={14} />
+        </span>
+      )}
     </Button>
   );
 }

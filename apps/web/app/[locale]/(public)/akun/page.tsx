@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { StatusPill } from '@/components/ui/StatusPill';
-import { CardMessage, EmptyState, MetaLabel } from '@/components/ui';
+import { CardMessage, EmptyState, Icon, MetaLabel } from '@/components/ui';
 import { useAuth } from '@/components/customer/AuthProvider';
 import { OrderHistoryItem } from '@/components/customer/OrderHistoryItem';
 import { authApi } from '@/lib/auth-api';
@@ -100,7 +100,8 @@ export default function AkunDashboardPage() {
           <MetaLabel>{t('verificationStatus')}</MetaLabel>
           <div className="mt-2">
             <StatusPill tone="success" className="text-xs">
-            <span>✓</span> {t('verifiedWA')}
+            <Icon name="check" className="shrink-0" />
+            {t('verifiedWA')}
             </StatusPill>
           </div>
           <p className="text-xs font-mono text-ink/60 mt-2 truncate">

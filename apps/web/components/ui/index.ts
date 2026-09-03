@@ -38,3 +38,5 @@ export { ImagePlaceholder } from './ImagePlaceholder';
 export type { ImagePlaceholderProps } from './ImagePlaceholder';
 export { Spinner } from './Spinner';
 export type { SpinnerProps } from './Spinner';
+export { Icon } from './Icon';
+export type { IconName } from './Icon';

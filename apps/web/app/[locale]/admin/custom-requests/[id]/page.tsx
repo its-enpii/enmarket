@@ -2,7 +2,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
-import { AdminPageHeader, AdminPageBody, DataItem, MetaLabel } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, DataItem, Icon, MetaLabel } from '@/components/ui';
 import { BackLink } from '@/components/ui/BackLink';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { StatusBadge } from '@/components/admin/StatusBadge';
@@ -100,7 +100,8 @@ export default async function CustomRequestDetailPage({ params }: Props) {
                     rel="noreferrer"
                     className="text-primary underline"
                   >
-                    {request.wa} ↗
+                    {request.wa}
+                    <Icon name="external" className="inline ml-1" />
                   </a>
                 }
                 valueClassName="mt-0.5"

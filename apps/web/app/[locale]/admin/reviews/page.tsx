@@ -9,7 +9,7 @@ import { DataTableArea } from '@/components/admin/DataTableArea';
 import { EmptyState } from '@/components/admin/EmptyState';
 import { Pagination } from '@/components/admin/Pagination';
 import { StatusPill } from '@/components/ui/StatusPill';
-import { AdminPageHeader, MetaLabel } from '@/components/ui';
+import { AdminPageHeader, Icon, MetaLabel } from '@/components/ui';
 import { Text } from '@/components/ui';
 import { apiGet } from '@/lib/api';
 import { formatDate } from '@/lib/format';
@@ -84,7 +84,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
       width: '15%',
       render: (row) => (
         <div className="flex items-center gap-1 font-mono font-bold text-sm">
-          <span className="text-accent text-base">★</span>
+          <Icon name="star" size={14} className="text-accent" />
           <span>{row.rating} / 5</span>
         </div>
       ),
@@ -129,7 +129,8 @@ export default async function ReviewsPage({ searchParams }: Props) {
           <Card variant="surface" hoverable={false} className="p-4">
             <MetaLabel>{t('stats.avgRating')}</MetaLabel>
             <p className="text-2xl sm:text-3xl font-black font-mono text-accent mt-1">
-              ★ {stats.average_rating.toFixed(1)}
+              <Icon name="star" size={14} className="mr-1" />
+              {stats.average_rating.toFixed(1)}
             </p>
           </Card>
           <Card variant="surface" hoverable={false} className="p-4">
@@ -165,11 +166,11 @@ export default async function ReviewsPage({ searchParams }: Props) {
                 label: t('filterRating'),
                 options: [
                   { label: t('filterAllRating'), value: '' },
-                  { label: '5 ★', value: '5' },
-                  { label: '4 ★', value: '4' },
-                  { label: '3 ★', value: '3' },
-                  { label: '2 ★', value: '2' },
-                  { label: '1 ★', value: '1' },
+                  { label: '5', value: '5' },
+                  { label: '4', value: '4' },
+                  { label: '3', value: '3' },
+                  { label: '2', value: '2' },
+                  { label: '1', value: '1' },
                 ],
               },
             ]}

@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui';
 import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { toast } from '@/components/ui/toast-store';
 
@@ -133,7 +134,7 @@ export function ReactionStrip({ postSlug }: Props) {
         <div className="flex flex-wrap items-center gap-3 shrink-0">
           <ReactionButton
             label={t('helpful')}
-            icon="✓"
+            icon="check"
             tone="accent"
             active={choice === 'helpful'}
             count={mounted ? helpful : 0}
@@ -141,7 +142,7 @@ export function ReactionStrip({ postSlug }: Props) {
           />
           <ReactionButton
             label={t('notReally')}
-            icon="✕"
+            icon="close"
             tone="primary"
             active={choice === 'not-really'}
             count={mounted ? notReally : 0}
@@ -157,7 +158,7 @@ export function ReactionStrip({ postSlug }: Props) {
 
 interface BtnProps {
   label: string;
-  icon: string;
+  icon: 'check' | 'close';
   tone: 'accent' | 'primary';
   active: boolean;
   count: number;
@@ -197,7 +198,7 @@ function ReactionButton({ label, icon, tone, active, count, onClick }: BtnProps)
         aria-hidden="true"
         className="inline-flex items-center justify-center w-6 h-6 border-2 border-current font-bold text-base leading-none"
       >
-        {icon}
+        <Icon name={icon} size={14} />
       </span>
       <span>{label}</span>
       {count > 0 && (

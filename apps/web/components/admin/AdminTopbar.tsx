@@ -91,7 +91,7 @@ export function AdminTopbar() {
             aria-label={tSidebar('openMenu')}
             className="lg:hidden w-11 h-11 px-0 py-0"
           >
-            ☰
+            <Icon name="menu" size={18} />
           </Button>
         )}
         <div className="min-w-0">
@@ -136,3 +136,4 @@ export function TopbarSkeleton() {
     </header>
   );
 }
+import { Icon } from '@/components/ui';

@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 
 type EmptyStateVariant = 'admin' | 'public';
 
@@ -46,7 +47,7 @@ export function EmptyState(props: EmptyStateProps) {
         <Card className="p-8 text-center">
           <p className="text-sm font-semibold text-ink/70 mb-4">{props.title}</p>
           <Button variant="primary" size="md" href={props.cta.href}>
-            {props.cta.label}
+            <span className="inline-flex items-center gap-1.5">{props.cta.label}</span>
           </Button>
         </Card>
       );
@@ -57,7 +58,7 @@ export function EmptyState(props: EmptyStateProps) {
         <p className="text-base font-bold text-ink mb-2">{props.title}</p>
         {props.hint && <p className="text-xs text-ink/70 mb-6">{props.hint}</p>}
         <Button variant="primary" size="md" href={props.cta.href}>
-          {props.cta.label}
+          <span className="inline-flex items-center gap-1.5">{props.cta.label}</span>
         </Button>
       </Card>
     );
@@ -117,7 +118,7 @@ export function EmptyState(props: EmptyStateProps) {
       )}
       {props.cta && (
         <Button href={props.cta.href} variant="primary" size="md" className="mt-2">
-          {props.cta.label}
+          <span className="inline-flex items-center gap-1.5">{props.cta.label}</span>
         </Button>
       )}
     </Card>

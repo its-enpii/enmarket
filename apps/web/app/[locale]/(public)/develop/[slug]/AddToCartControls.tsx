@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useTransition } from 'react';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 import { toast } from '@/components/ui/toast-store';
 
 import { addToCartAction, addToCartAndGoAction } from './actions';
@@ -59,11 +60,17 @@ export function AddToCartControls({ productId, isPreOrder = false, isFree = fals
       : isPreOrder
         ? t('addToCartPreOrder', { percent: dpLabel })
         : t('addToCart');
-  const buyNowLabel = isFree
+  const buyNowTranslation = isFree
     ? t('freeBuyNow')
     : isPreOrder
       ? t('buyNowPreOrder')
       : t('buyNow');
+  const buyNowLabel = (
+    <span className="inline-flex items-center gap-2">
+      {buyNowTranslation}
+      <Icon name="arrow-right" />
+    </span>
+  );
 
   return (
     <div className="flex flex-col gap-3">

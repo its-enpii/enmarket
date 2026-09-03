@@ -22,7 +22,7 @@ import { PageHeader } from '@/components/public/PageHeader';
 import { SearchBar } from '@/components/public/SearchBar';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
-import { SectionBand, SectionIntro } from '@/components/ui';
+import { Icon, SectionBand, SectionIntro } from '@/components/ui';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import type { PaginatedResponse, Product } from '@/lib/types';
@@ -124,7 +124,10 @@ export default async function DevelopPage({ searchParams }: PageProps) {
           {/* Filter pills */}
           <div className="flex flex-wrap items-center gap-3">
             <Eyebrow as="span" size="label-sm" color="ink-muted" className="mr-2">
-              {t('filterLabel')}
+              <span className="inline-flex items-center gap-1.5">
+                {t('filterLabel')}
+                <Icon name="arrow-right" size={14} />
+              </span>
             </Eyebrow>
             {FILTER_PILLS.map((pill) => {
               const isActive = pill.value === activeTipe;

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
-import { ImagePlaceholder } from '@/components/ui';
+import { Icon, ImagePlaceholder } from '@/components/ui';
 import { Text } from '@/components/ui';
 
 interface Props {
@@ -84,7 +84,10 @@ export function TrendingSection({ trending, latest }: Props) {
                   size="sm"
                   className="mt-3 self-start"
                 >
-                  {t('bundleCta')}
+                  <span className="inline-flex items-center gap-2">
+                    {t('bundleCta')}
+                    <Icon name="arrow-right" size={14} />
+                  </span>
                 </Button>
               </Card>
             )}
@@ -98,7 +101,10 @@ export function TrendingSection({ trending, latest }: Props) {
                   underline="static"
                   className="mt-2 self-center text-xs"
                 >
-                  {t('emptyLogin')}
+                  <span className="inline-flex items-center gap-2">
+                    {t('emptyLogin')}
+                    <Icon name="arrow-right" size={14} />
+                  </span>
                 </NLink>
               </div>
             )}
@@ -386,7 +392,10 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
         )}
         {product.is_featured && (
           <Badge tone="accent" size="sm" className="absolute top-3 left-3 px-2.5 py-1 font-bold">
-            {t('featured')}
+            <span className="inline-flex items-center gap-1.5">
+              <Icon name="star" size={14} />
+              {t('featured')}
+            </span>
           </Badge>
         )}
         <Badge tone="ink" size="sm" className="absolute top-3 right-3 px-2.5 py-1 font-bold">
@@ -411,7 +420,10 @@ function TrendingHeroCard({ product, isPlaceholder }: { product: Product; isPlac
             </p>
           </div>
           <Badge tone="accent" size="sm" className="gap-1 px-3 py-2 text-xs font-bold shadow-brutal-3 group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-brutal-4 transition-all">
-            {t('viewCta')}
+            <span className="inline-flex items-center gap-1.5">
+              {t('viewCta')}
+              <Icon name="arrow-right" size={14} />
+            </span>
           </Badge>
         </div>
       </div>

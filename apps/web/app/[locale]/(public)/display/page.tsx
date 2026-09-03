@@ -7,6 +7,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui';
 
 import { SearchBar } from '@/components/public/SearchBar';
 import { PageHeader } from '@/components/public/PageHeader';
@@ -100,7 +101,10 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
         <SectionContainer py="sm" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3">
             <Eyebrow as="span" size="label-sm" color="ink-muted" className="mr-2">
-              {t('tagsLabel')}
+              <span className="inline-flex items-center gap-1.5">
+                {t('tagsLabel')}
+                <Icon name="arrow-right" size={14} />
+              </span>
             </Eyebrow>
             {TAG_KEYS.map((tag) => {
               const tone = tag === 'devLog' || tag === 'process' ? 'primary' : 'accent';
@@ -280,7 +284,7 @@ function FeaturedCover({
           )}
           <MetaLabel as="span" size="sm" color="primary" className="inline-flex items-center gap-2 font-black mt-2">
             {readEntryLabel}
-            <span aria-hidden="true" className="text-xl">→</span>
+            <Icon name="arrow-right" className="shrink-0" />
           </MetaLabel>
         </div>
       </div>
@@ -345,7 +349,8 @@ function PostCardZine({
             <h3 className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
             {post.excerpt && <p className="font-body text-body-md text-ink/75 leading-snug">{post.excerpt}</p>}
             <MetaLabel as="span" size="sm" color="primary" className="inline-flex items-center gap-2 font-bold mt-1">
-              {readEntryLabel} <span aria-hidden="true">→</span>
+              {readEntryLabel}
+              <Icon name="arrow-right" className="shrink-0" />
             </MetaLabel>
           </div>
         </div>
@@ -409,7 +414,8 @@ function PostCardZine({
           <h3 className="font-display text-2xl md:text-3xl font-black uppercase tracking-tight text-ink leading-[0.95] group-hover:text-primary transition-colors">{post.title}</h3>
           {post.excerpt && <p className="font-body text-body-sm text-ink/70 leading-snug line-clamp-3">{post.excerpt}</p>}
           <MetaLabel as="span" size="sm" color="primary" className="inline-flex items-center gap-1 font-bold">
-            {readLabel} <span aria-hidden="true">→</span>
+            {readLabel}
+            <Icon name="arrow-right" className="shrink-0" />
           </MetaLabel>
         </div>
       </div>

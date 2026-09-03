@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui';
 import { getTranslations } from 'next-intl/server';
 
 import { formatRupiah } from '@/lib/format';
@@ -46,7 +47,10 @@ export async function ProductCard({ product }: Props) {
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-raised">
           {product.is_featured && (
             <Badge tone="accent" size="sm" className="font-bold">
-              {t('featured')}
+              <span className="inline-flex items-center gap-1.5">
+                <Icon name="star" size={14} />
+                {t('featured')}
+              </span>
             </Badge>
           )}
           {product.is_pre_order && (

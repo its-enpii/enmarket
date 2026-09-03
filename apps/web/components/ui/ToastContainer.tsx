@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { toast, toastStore, type Toast } from './toast-store';
+import { Icon, type IconName } from '@/components/ui';
 
 /**
  * Toast container — render semua active toasts fixed di top-right.
@@ -36,10 +37,10 @@ const VARIANT_BG: Record<Toast['variant'], string> = {
   info: 'bg-ink text-surface',
 };
 
-const VARIANT_ICON: Record<Toast['variant'], string> = {
-  success: '✓',
-  error: '✕',
-  info: 'ℹ',
+const VARIANT_ICON_NAMES: Record<Toast['variant'], IconName> = {
+  success: 'check',
+  error: 'close',
+  info: 'arrow-right',
 };
 
 function ToastItem({ toast: t }: { toast: Toast }) {
@@ -75,7 +76,7 @@ function ToastItem({ toast: t }: { toast: Toast }) {
       }
     >
       <span aria-hidden="true" className="font-bold text-lg shrink-0">
-        {VARIANT_ICON[t.variant]}
+        <Icon name={VARIANT_ICON_NAMES[t.variant]} size={18} />
       </span>
       <p className="flex-1 text-sm font-bold leading-snug break-words">
         {t.message}
@@ -89,7 +90,7 @@ function ToastItem({ toast: t }: { toast: Toast }) {
         aria-label="Dismiss"
         className="shrink-0 min-w-[44px] min-h-touch w-11 h-11 inline-flex items-center justify-center font-bold opacity-80 hover:opacity-100"
       >
-        ✕
+        <Icon name="close" size={14} />
       </button>
     </div>
   );

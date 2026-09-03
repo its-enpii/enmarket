@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { routing } from '@/i18n/routing';
 
+import { Icon } from '@/components/ui';
+
 const NAV_HREFS = [
   '/admin',
   '/admin/categories',
@@ -21,7 +23,7 @@ const NAV_HREFS = [
   '/admin/games',
 ] as const;
 
-const NAV_ICONS = ['◆', '◧', '▤', '✂', '✉', '★', '✎', '◊', '◷', '⚷', '◰', '⚙', '🎮'];
+const NAV_ICONS = ['▤', '▤', '▤', '▤', '▤', '▤', '▤', '▤', '◷', '▤', '▤', '⚙', '🎮'];
 
 interface Props {
   currentPath: string;
@@ -90,7 +92,7 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             className="lg:hidden"
             srLabel={tSidebar('closeMenu')}
           >
-            ✕
+            <Icon name="close" size={14} />
           </Button>
         </div>
 
@@ -154,7 +156,7 @@ export function SidebarToggle({ onClick }: { onClick: () => void }) {
       aria-label={tSidebar('openMenu')}
       className="lg:hidden w-11 h-11 px-0 py-0 mr-2"
     >
-      ☰
+      <Icon name="menu" size={18} />
     </Button>
   );
 }

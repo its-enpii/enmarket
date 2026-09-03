@@ -66,8 +66,9 @@ export function ReviewRowActions({ review }: Props) {
         onClick={handleDelete}
         className="text-danger hover:bg-accent/40 hover:border-danger"
       >
-        ✕
+        <Icon name="close" size={14} />
       </Button>
     </div>
   );
 }
+import { Icon } from '@/components/ui';

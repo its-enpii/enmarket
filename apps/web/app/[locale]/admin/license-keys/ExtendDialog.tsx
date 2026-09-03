@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { confirmDialog } from '@/components/ui/dialog-store';
 import { Input } from '@/components/ui/Input';
+import { Icon } from '@/components/ui';
 import { toast } from '@/components/ui/toast-store';
 
 import { extendLicenseKey } from './actions';
@@ -78,7 +79,7 @@ export function ExtendDialog({ id }: Props) {
         {pending ? '…' : t('okButton')}
       </Button>
       <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
-        ✕
+        <Icon name="close" size={14} />
       </Button>
     </form>
   );

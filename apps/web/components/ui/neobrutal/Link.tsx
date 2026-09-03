@@ -27,6 +27,7 @@ import type {
   ReactNode,
 } from 'react';
 
+import { Icon } from '@/components/ui';
 import { LINK_VARIANT_CLS, type LinkVariant } from './styles';
 
 type CommonProps = {
@@ -70,9 +71,7 @@ export function NLink({
     <>
       {children}
       {arrow ? (
-        <span aria-hidden="true" className="text-current">
-          →
-        </span>
+        <Icon name="arrow-right" className="shrink-0" />
       ) : null}
     </>
   );

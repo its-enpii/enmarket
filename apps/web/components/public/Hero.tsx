@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/neobrutal';
+import { Icon } from '@/components/ui';
 import { SectionContainer } from './SectionContainer';
 
 export function Hero() {
@@ -30,7 +31,10 @@ export function Hero() {
             href="/develop"
             className="font-label text-label-sm font-black uppercase"
           >
-            {t('heroCta')}
+            <span className="inline-flex items-center gap-2">
+              {t('heroCta')}
+              <Icon name="arrow-right" />
+            </span>
           </Button>
         </div>
       </SectionContainer>

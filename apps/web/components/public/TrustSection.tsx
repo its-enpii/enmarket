@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Card, NLink } from '@/components/ui/neobrutal';
-import { Text } from '@/components/ui';
+import { Icon, Text } from '@/components/ui';
 
 interface Benefit {
   icon: string;
@@ -27,7 +27,7 @@ export function TrustSection() {
   return (
     <section aria-label={t('ariaLabel')} className="space-y-4">
       <div className="flex items-baseline gap-3">
-        <span className="text-3xl sm:text-4xl font-bold text-primary font-mono">★</span>
+        <Icon name="star" size={28} className="font-bold text-primary sm:w-9 sm:h-9" />
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold text-ink leading-tight">
             {t('heading')}
