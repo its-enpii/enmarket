@@ -111,7 +111,7 @@ export default async function OrdersPage({ searchParams }: Props) {
       header: t('columns.date'),
       width: '140px',
       render: (o) => (
-        <span className="text-ink/60 text-xs">{formatDateTime(o.created_at)}</span>
+        <Text as="span" variant="muted">{formatDateTime(o.created_at)}</Text>
       ),
     },
     {

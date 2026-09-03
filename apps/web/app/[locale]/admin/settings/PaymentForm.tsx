@@ -32,7 +32,7 @@ import {
   updatePaymentGateways,
   type SettingsActionResult,
 } from './actions';
-import { FormActions, FormSection } from '@/components/ui';
+import { FormActions, FormSection, Text } from '@/components/ui';
 import { Eyebrow } from '@/components/ui/neobrutal';
 
 interface Props {
@@ -263,7 +263,7 @@ function ToggleRow({
         <p className="font-display font-black uppercase text-sm text-ink">
           {label}
         </p>
-        <p className="font-body text-xs text-ink/60 mt-0.5">{description}</p>
+        <Text as="p" variant="muted" className="font-body mt-0.5">{description}</Text>
       </div>
     </Card>
   );

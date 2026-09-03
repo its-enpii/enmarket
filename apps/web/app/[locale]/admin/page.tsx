@@ -2,7 +2,7 @@ import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
 import { Badge } from '@/components/ui/Badge';
-import { AdminPageHeader, AdminPageBody, StatTile } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, StatTile, Text } from '@/components/ui';
 import { Button, Eyebrow } from '@/components/ui/neobrutal';
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
@@ -235,9 +235,9 @@ export default async function AdminHomePage() {
                         </Badge>
                         <p className="font-bold text-sm truncate text-ink">{productName}</p>
                         {order && (
-                          <p className="font-mono text-xs text-ink/60 mt-0.5 truncate">
+                          <Text as="p" variant="muted" className="font-mono mt-0.5 truncate">
                             {order.kode_order} · {order.nama_pembeli}
-                          </p>
+                          </Text>
                         )}
                       </div>
                       <div className="text-right shrink-0">

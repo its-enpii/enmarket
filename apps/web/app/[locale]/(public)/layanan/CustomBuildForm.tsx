@@ -7,7 +7,7 @@ import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { FormError, FormHint } from '@/components/ui/FormMessage';
 import { FormField } from '@/components/ui/FormField';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Textarea } from '@/components/ui/Textarea';
 
 import { CustomBuildFormState, submitCustomRequestAction } from './actions';
@@ -62,35 +62,50 @@ export function CustomBuildForm() {
           <Input id="wa" name="wa" type="tel" required placeholder="08123456789" />
         </FormField>
 
-        <FormField label={t('fields.jenisProyek.label')} htmlFor="jenis_proyek" required error={fieldErr('jenis_proyek')}>
-          <Select id="jenis_proyek" name="jenis_proyek" required defaultValue="website">
-            <option value="website">{t('fields.jenisProyek.website')}</option>
-            <option value="webapp">{t('fields.jenisProyek.webapp')}</option>
-            <option value="mobile-app">{t('fields.jenisProyek.mobileApp')}</option>
-            <option value="automation">{t('fields.jenisProyek.automation')}</option>
-            <option value="other">{t('fields.jenisProyek.other')}</option>
-          </Select>
+        <FormField label={t('fields.jenisProyek.label')} required error={fieldErr('jenis_proyek')}>
+          <SelectSearch
+            name="jenis_proyek"
+            required
+            defaultValue="website"
+            options={[
+              { value: 'website', label: t('fields.jenisProyek.website') },
+              { value: 'webapp', label: t('fields.jenisProyek.webapp') },
+              { value: 'mobile-app', label: t('fields.jenisProyek.mobileApp') },
+              { value: 'automation', label: t('fields.jenisProyek.automation') },
+              { value: 'other', label: t('fields.jenisProyek.other') },
+            ]}
+          />
         </FormField>
 
-        <FormField label={t('fields.budgetRange.label')} htmlFor="budget_range" required error={fieldErr('budget_range')}>
-          <Select id="budget_range" name="budget_range" required defaultValue="5-15jt">
-            <option value="<5jt">{t('fields.budgetRange.under5m')}</option>
-            <option value="5-15jt">{t('fields.budgetRange.5to15m')}</option>
-            <option value="15-50jt">{t('fields.budgetRange.15to50m')}</option>
-            <option value="50jt+">{t('fields.budgetRange.above50m')}</option>
-            <option value="discuss">{t('fields.budgetRange.discuss')}</option>
-          </Select>
+        <FormField label={t('fields.budgetRange.label')} required error={fieldErr('budget_range')}>
+          <SelectSearch
+            name="budget_range"
+            required
+            defaultValue="5-15jt"
+            options={[
+              { value: '<5jt', label: t('fields.budgetRange.under5m') },
+              { value: '5-15jt', label: t('fields.budgetRange.5to15m') },
+              { value: '15-50jt', label: t('fields.budgetRange.15to50m') },
+              { value: '50jt+', label: t('fields.budgetRange.above50m') },
+              { value: 'discuss', label: t('fields.budgetRange.discuss') },
+            ]}
+          />
         </FormField>
       </div>
 
-      <FormField label={t('fields.timeline.label')} htmlFor="timeline" required error={fieldErr('timeline')}>
-        <Select id="timeline" name="timeline" required defaultValue="1-3bulan">
-          <option value="<2minggu">{t('fields.timeline.under2w')}</option>
-          <option value="2-4minggu">{t('fields.timeline.2to4w')}</option>
-          <option value="1-3bulan">{t('fields.timeline.1to3m')}</option>
-          <option value="3-6bulan">{t('fields.timeline.3to6m')}</option>
-          <option value="flexible">{t('fields.timeline.flexible')}</option>
-        </Select>
+      <FormField label={t('fields.timeline.label')} required error={fieldErr('timeline')}>
+        <SelectSearch
+          name="timeline"
+          required
+          defaultValue="1-3bulan"
+          options={[
+            { value: '<2minggu', label: t('fields.timeline.under2w') },
+            { value: '2-4minggu', label: t('fields.timeline.2to4w') },
+            { value: '1-3bulan', label: t('fields.timeline.1to3m') },
+            { value: '3-6bulan', label: t('fields.timeline.3to6m') },
+            { value: 'flexible', label: t('fields.timeline.flexible') },
+          ]}
+        />
       </FormField>
 
       <FormField label={t('fields.deskripsi')} htmlFor="deskripsi" required error={fieldErr('deskripsi')}>

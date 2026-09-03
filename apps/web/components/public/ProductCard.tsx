@@ -6,7 +6,7 @@ import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { WishlistHeartButton } from '@/components/public/WishlistHeartButton';
 import { Image } from '@/components/ui/Image';
-import { ImagePlaceholder } from '@/components/ui';
+import { ImagePlaceholder, Text } from '@/components/ui';
 
 interface Props {
   product: Product;
@@ -68,7 +68,7 @@ export async function ProductCard({ product }: Props) {
         <h3 className="font-bold text-base sm:text-lg leading-tight line-clamp-2 text-ink">
           {product.nama}
         </h3>
-        <p className="mt-1 text-xs text-ink/60">{kategoriNama}</p>
+        <Text as="p" variant="muted" className="mt-1">{kategoriNama}</Text>
         <p className="mt-3 font-bold text-primary text-lg sm:text-xl">
           {product.is_free ? t('priceFree') : formatRupiah(product.harga)}
         </p>

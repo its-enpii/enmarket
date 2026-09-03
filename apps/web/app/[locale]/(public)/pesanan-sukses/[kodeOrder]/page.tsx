@@ -190,7 +190,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                       ↓ {t('download')}
                     </Button>
                   )}
-                  {hasDownload && expired && <p className="mt-2 text-xs text-ink/60">{t('expiredDownload')}</p>}
+                  {hasDownload && expired && <Text as="p" variant="muted" className="mt-2">{t('expiredDownload')}</Text>}
                   {hasLicense && (
                     <div className="mt-2 bg-ink text-surface border-2 border-ink p-2.5">
                       <MetaLabel as="p" size="micro" color="inherit" family="sans" className="font-bold opacity-70">{t('licenseKey')}</MetaLabel>
@@ -199,7 +199,7 @@ export default async function PesananSuksesPage({ params }: PageProps) {
                   )}
                   {provisioning && <AccountProvisioningBox provisioning={provisioning} />}
                   {!hasDownload && !hasLicense && !provisioning && (
-                    <p className="mt-2 text-xs text-ink/60 italic">{t('noDelivery')}</p>
+                    <Text as="p" variant="muted" className="mt-2 italic">{t('noDelivery')}</Text>
                   )}
                 </li>
               );

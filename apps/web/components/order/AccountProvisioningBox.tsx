@@ -76,7 +76,7 @@ export function AccountProvisioningBox({ provisioning }: Props) {
       <Badge tone={tone} size="sm" shadow={false}>
         {t(`status${provisioning.status.charAt(0).toUpperCase() + provisioning.status.slice(1)}` as 'statusGagal' | 'statusDibatalkan')}
       </Badge>
-      <p className="mt-1 text-xs text-ink/60 italic">{t('noDelivery')}</p>
+      <Text as="p" variant="muted" className="mt-1 italic">{t('noDelivery')}</Text>
     </div>
   );
 }

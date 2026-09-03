@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody, MetaLabel, StatTile } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, MetaLabel, StatTile, Text } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -153,9 +153,9 @@ export default async function AccountProvisioningsPage({ searchParams }: Props) 
                       <BadgeStatus status={row.status} tone={STATUS_BADGE_TONE[row.status]} />
                     </div>
                     {order && (
-                      <p className="font-mono text-xs text-ink/60 truncate">
+                      <Text as="p" variant="muted" className="font-mono truncate">
                         {order.kode_order} · {order.nama_pembeli}
-                      </p>
+                      </Text>
                     )}
                     <p className="text-fine text-ink/50 mt-0.5">
                       {t('created')} {formatDateTime(row.created_at)}

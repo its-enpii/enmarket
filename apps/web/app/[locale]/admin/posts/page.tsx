@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, Text } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -89,14 +89,14 @@ export default async function PostsPage({ searchParams }: Props) {
       header: t('columns.published'),
       width: '120px',
       render: (p) => (
-        <span className="text-ink/60 text-xs">{formatDate(p.published_at)}</span>
+        <Text as="span" variant="muted">{formatDate(p.published_at)}</Text>
       ),
     },
     {
       key: 'updated',
       header: t('columns.updated'),
       width: '120px',
-      render: (p) => <span className="text-ink/60 text-xs">{formatDate(p.updated_at)}</span>,
+      render: (p) => <Text as="span" variant="muted">{formatDate(p.updated_at)}</Text>,
     },
     {
       key: 'aksi',

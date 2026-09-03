@@ -153,7 +153,7 @@ export default async function CekPesananDetailPage({ params }: PageProps) {
                       ↓ {t('downloadFile')}
                     </Button>
                   )}
-                  {showDelivery && hasDownload && expired && <p className="mt-2 text-xs text-ink/60">{t('expiredDownload')}</p>}
+                  {showDelivery && hasDownload && expired && <Text as="p" variant="muted" className="mt-2">{t('expiredDownload')}</Text>}
                   {showDelivery && hasLicense && (
                     <p className="mt-2 text-xs font-mono bg-ink text-surface px-2 py-1 inline-block break-words">{delivery!.license_key}</p>
                   )}

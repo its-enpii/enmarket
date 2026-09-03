@@ -122,9 +122,9 @@ export default async function OrderDetailPage({ params }: Props) {
                   </code>
                 )}
                 {delivery.token_expired_at && (
-                  <span className="text-xs text-ink/60">
+                  <Text as="span" variant="muted">
                     {t('items.until', { date: formatDateTime(delivery.token_expired_at) })}
-                  </span>
+                  </Text>
                 )}
               </div>
             )}

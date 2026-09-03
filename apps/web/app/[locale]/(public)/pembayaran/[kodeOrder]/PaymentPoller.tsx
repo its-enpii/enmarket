@@ -9,7 +9,7 @@ import type { OrderStatus, OrderStatusSummary } from '@/lib/types';
 import { getClientApiBase } from '@/lib/client-api';
 import { BackLink } from '@/components/ui/BackLink';
 import { Image } from '@/components/ui/Image';
-import { MetaLabel } from '@/components/ui';
+import { MetaLabel, Text } from '@/components/ui';
 
 interface Props {
   kodeOrder: string;
@@ -237,9 +237,9 @@ export function PaymentPoller({
               </div>
             )}
           </div>
-          <p className="mt-3 text-xs text-ink/60 text-center">
+          <Text as="p" variant="muted" className="mt-3 text-center">
             {t('scanHint')}
-          </p>
+          </Text>
         </Card>
 
         {/* Order info + manual check */}

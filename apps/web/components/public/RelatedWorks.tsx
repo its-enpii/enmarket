@@ -18,7 +18,7 @@ import { getTranslations } from 'next-intl/server';
 import { formatRupiah } from '@/lib/format';
 import { publicApi } from '@/lib/public-api';
 import type { Product } from '@/lib/types';
-import { SectionIntro, SectionTitle } from '@/components/ui';
+import { SectionIntro, SectionTitle, Text } from '@/components/ui';
 import { Image } from '@/components/ui/Image';
 
 interface Props {
@@ -120,9 +120,9 @@ function RelatedCard({
           <h3 className="font-display text-xl font-black uppercase tracking-tight text-ink leading-tight line-clamp-2">
             {title}
           </h3>
-          <p className="mt-1 text-xs text-ink/60 line-clamp-2">
+          <Text as="p" variant="muted" className="mt-1 line-clamp-2">
             {product.deskripsi?.slice(0, 80) ?? fallbackDescription}
-          </p>
+          </Text>
         </div>
         <Badge tone="accent" size="md" className="self-start">
           {priceLabel}

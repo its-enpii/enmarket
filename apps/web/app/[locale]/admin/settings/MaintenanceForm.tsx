@@ -24,7 +24,7 @@ import type { MaintenanceStatus } from '@/lib/types';
 import { EMPTY_ACTION_RESULT } from '@/lib/action-result';
 
 import { setMaintenance, type SettingsActionResult } from './actions';
-import { FormActions, FormSection } from '@/components/ui';
+import { FormActions, FormSection, Text } from '@/components/ui';
 
 interface Props {
   status: MaintenanceStatus;
@@ -79,9 +79,9 @@ export function MaintenanceForm({ status }: Props) {
             <p className="font-display font-black uppercase text-lg text-ink">
               {enabled ? t('statusActive') : t('statusInactive')}
             </p>
-            <p className="mt-1 font-body text-xs text-ink/60">
+            <Text as="p" variant="muted" className="mt-1 font-body">
               {enabled ? t('statusActiveHint') : t('statusInactiveHint')}
-            </p>
+            </Text>
           </div>
           <span
             className={

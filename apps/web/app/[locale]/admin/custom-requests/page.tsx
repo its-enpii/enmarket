@@ -114,7 +114,7 @@ export default async function CustomRequestsPage({ searchParams }: Props) {
       key: 'created_at',
       header: t('columns.created'),
       width: '130px',
-      render: (r) => <span className="text-xs text-ink/60">{formatDate(r.created_at)}</span>,
+      render: (r) => <Text as="span" variant="muted">{formatDate(r.created_at)}</Text>,
     },
     {
       key: 'aksi',

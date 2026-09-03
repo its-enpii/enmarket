@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, Text } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -119,7 +119,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
       header: t('columns.activated'),
       width: '110px',
       render: (k) => (
-        <span className="text-xs text-ink/60">{formatDate(k.activated_at)}</span>
+        <Text as="span" variant="muted">{formatDate(k.activated_at)}</Text>
       ),
     },
     {
@@ -127,7 +127,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
       header: t('columns.expired'),
       width: '110px',
       render: (k) => (
-        <span className="text-xs text-ink/60">{formatDate(k.expired_at)}</span>
+        <Text as="span" variant="muted">{formatDate(k.expired_at)}</Text>
       ),
     },
     {
@@ -135,7 +135,7 @@ export default async function LicenseKeysPage({ searchParams }: Props) {
       header: t('columns.created'),
       width: '110px',
       render: (k) => (
-        <span className="text-xs text-ink/60">{formatDate(k.created_at)}</span>
+        <Text as="span" variant="muted">{formatDate(k.created_at)}</Text>
       ),
     },
     {

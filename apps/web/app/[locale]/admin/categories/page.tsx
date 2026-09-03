@@ -1,4 +1,4 @@
-import { AdminPageHeader, AdminPageBody } from '@/components/ui';
+import { AdminPageHeader, AdminPageBody, Text } from '@/components/ui';
 import { buildMetadata } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 
@@ -63,7 +63,7 @@ export default async function CategoriesPage({ searchParams }: Props) {
       key: 'dibuat',
       header: t('columns.created'),
       width: '140px',
-      render: (c) => <span className="text-ink/60 text-xs">{formatDate(c.created_at)}</span>,
+      render: (c) => <Text as="span" variant="muted">{formatDate(c.created_at)}</Text>,
     },
     {
       key: 'aksi',
