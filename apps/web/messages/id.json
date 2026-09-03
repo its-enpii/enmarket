@@ -747,7 +747,8 @@
     "settingsNav": {
       "identity": "Site Identity",
       "payment": "Payment",
-      "maintenance": "Maintenance"
+      "maintenance": "Maintenance",
+      "navigation": "Menu Navigasi"
     },
     "topbarTitles": {
       "dashboard": "Beranda",
@@ -776,7 +777,9 @@
       "coupons": "Kupon Diskon",
       "couponsSubtitle": "Kelola kode kupon dan diskon potongan harga.",
       "customRequests": "Permintaan Layanan",
-      "customRequestsSubtitle": "Daftar permintaan custom build dari pembeli."
+      "customRequestsSubtitle": "Daftar permintaan custom build dari pembeli.",
+      "settingsNavigation": "Settings — Menu Navigasi",
+      "settingsNavigationSubtitle": "Aktifkan atau nonaktifkan item menu navbar publik."
     },
     "categories": {
       "_batch": "3",
@@ -1359,6 +1362,28 @@
         "submitActive": "Aktifkan Maintenance",
         "submitInactive": "Matikan Maintenance",
         "submitPending": "Memproses…"
+      },
+      "navigation": {
+        "listTitle": "Menu Navigasi",
+        "listEyebrow": "Settings / Navigation",
+        "listSubtitle": "Aktifkan atau nonaktifkan item menu navbar publik. Label kosong memakai terjemahan default.",
+        "backendDownTitle": "⚠ Backend belum merespon",
+        "backendDownHint": "Menu endpoint tidak bisa diakses. Cek token admin atau status API server.",
+        "sectionMenus": "Menus",
+        "sectionMenusTitle": "Navbar Publik",
+        "menu_discover": "Discover",
+        "menu_develop": "Develop",
+        "menu_display": "Display",
+        "menu_layanan": "Layanan",
+        "menu_topup": "Top Up",
+        "menuEnabledHint": "Tampilkan di navbar publik.",
+        "fieldLabelOverride": "Label Override",
+        "fieldLabelOverrideHint": "Opsional. Maksimal 100 karakter; kosongkan untuk label default.",
+        "submit": "Simpan Menu Navigasi",
+        "submitPending": "Menyimpan…",
+        "success": "Menu navigasi tersimpan.",
+        "saveFailed": "Gagal menyimpan menu navigasi.",
+        "fieldInvalid": "Label tidak valid. Maksimal 100 karakter."
       }
     },
     "coupons": {

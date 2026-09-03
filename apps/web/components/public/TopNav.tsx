@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
 import { CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';
+import { DEFAULT_NAV_ITEMS, normalizeNavMenus } from '@/lib/nav-menus';
+import type { NavMenuItem } from '@/lib/nav-menus';
 import { Children } from 'react';
 
 interface Props {
@@ -33,6 +35,9 @@ function isActive(pathname: string | null, href: string): boolean {
 export function TopNav({ children }: Props) {
   const [open, setOpen] = useState(false);
   const [hasCustomerToken, setHasCustomerToken] = useState(false);
+  const [navItems, setNavItems] = useState<NavMenuItem[]>(
+    DEFAULT_NAV_ITEMS.map((item) => ({ ...item, label: null })),
+  );
   const pathname = usePathname();
   const t = useTranslations('nav');
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
@@ -56,13 +61,29 @@ export function TopNav({ children }: Props) {
     };
   }, [open]);
 
-  const navItems = [
-    { key: 'discover', href: '/discover' },
-    { key: 'develop', href: '/develop' },
-    { key: 'display', href: '/display' },
-    { key: 'layanan', href: '/layanan' },
-    { key: 'topup', href: '/topup' },
-  ] as const;
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/public/site-config')
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json() as Promise<{ data?: { nav_menus?: unknown } }>;
+      })
+      .then((payload) => {
+        if (cancelled) return;
+        const menus = normalizeNavMenus(payload.data?.nav_menus);
+        setNavItems(menus.length > 0 ? menus : DEFAULT_NAV_ITEMS.map((item) => ({ ...item, label: null })));
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setNavItems(DEFAULT_NAV_ITEMS.map((item) => ({ ...item, label: null })));
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-nav bg-surface border-b-4 border-ink shadow-brutal-6 relative">
@@ -91,7 +112,7 @@ export function TopNav({ children }: Props) {
                   active ? 'border-b-4 border-primary' : ''
                 }`}
               >
-                {t(item.key)}
+                {item.label ?? t(item.key)}
               </NLink>
             );
           })}
@@ -154,7 +175,7 @@ export function TopNav({ children }: Props) {
                     active ? 'pl-4 pr-3' : ''
                   }`}
                 >
-                  <span>{t(item.key)}</span>
+                  <span>{item.label ?? t(item.key)}</span>
                   {active ? (
                     <Icon name="arrow-right" size={16} className="shrink-0" />
                   ) : null}

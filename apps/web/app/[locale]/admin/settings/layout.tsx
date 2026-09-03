@@ -1,5 +1,5 @@
 /**
- * Settings layout — sub-nav untuk 3 halaman settings:
+ * Settings layout — sub-nav untuk 4 halaman settings:
  *   - /admin/settings         → Site Identity
  *   - /admin/settings/payment → Payment & Gateway
  *   - /admin/settings/maintenance → Maintenance
@@ -19,13 +19,14 @@ import { Button } from '@/components/ui/neobrutal';
 
 interface NavItem {
   href: string;
-  labelKey: 'identity' | 'payment' | 'maintenance';
+  labelKey: 'identity' | 'payment' | 'navigation' | 'maintenance';
   icon: string;
 }
 
 const SUB_NAV: NavItem[] = [
   { href: '/admin/settings', labelKey: 'identity', icon: '✎' },
   { href: '/admin/settings/payment', labelKey: 'payment', icon: '◊' },
+  { href: '/admin/settings/navigation', labelKey: 'navigation', icon: '☰' },
   { href: '/admin/settings/maintenance', labelKey: 'maintenance', icon: '⚠' },
 ];
 

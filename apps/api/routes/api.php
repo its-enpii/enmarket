@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\CouponController;
 use App\Http\Controllers\Api\Admin\CustomRequestController as AdminCustomRequestController;
 use App\Http\Controllers\Api\Admin\LicenseKeyController;
 use App\Http\Controllers\Api\Admin\MaintenanceController;
+use App\Http\Controllers\Api\Admin\NavMenuController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\OrderResendController;
 use App\Http\Controllers\Api\Admin\PostController as AdminPostController;
@@ -173,6 +174,7 @@ Route::prefix('admin')->group(function () {
         Route::get('products/stats', [ProductController::class, 'stats']);
 
         Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('nav-menus', NavMenuController::class)->only(['index', 'update']);
         Route::apiResource('products', ProductController::class);
 
         // Preview image sub-resource (append/remove)

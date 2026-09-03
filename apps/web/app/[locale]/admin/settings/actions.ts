@@ -16,9 +16,9 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { ApiRequestError, apiPatch, apiPost, apiPostForm } from '@/lib/api';
+import { ApiRequestError, apiPatch, apiPost, apiPostForm, apiPut } from '@/lib/api';
 import type { ActionResult } from '@/lib/action-result';
-import type { SiteSettings } from '@/lib/types';
+import type { NavMenuRecord, SiteSettings } from '@/lib/types';
 
 export interface SettingsActionResult extends ActionResult {
   data?: SiteSettings;
@@ -266,5 +266,43 @@ export async function setMaintenance(
     return { ok: true, message: res.message, data: res.data as unknown as SiteSettings };
   } catch (err) {
     return { error: errorMessage(err, 'Gagal mengubah maintenance mode.') };
+  }
+}
+
+// ───── Public navbar menus ─────
+
+export async function updateNavMenus(
+  _prev: SettingsActionResult,
+  formData: FormData,
+): Promise<SettingsActionResult> {
+  const ids = formData
+    .getAll('nav_menu_ids')
+    .map((value) => String(value))
+    .filter((value) => value.length > 0);
+
+  try {
+    const updates = await Promise.all(ids.map(async (id) => {
+      const response = await apiPut<{ data: NavMenuRecord; message: string }>(
+        `/api/admin/nav-menus/${id}`,
+        {
+          is_enabled: formData.get(`enabled_${id}`) === 'on',
+          label: String(formData.get(`label_${id}`) ?? '').trim(),
+          sort_order: Number(formData.get(`sort_order_${id}`) ?? 0),
+        },
+      );
+      return response;
+    }));
+
+    revalidatePath('/admin/settings/navigation');
+    revalidatePath('/');
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof ApiRequestError) {
+      return {
+        error: errorMessage(err, 'save_failed'),
+        fieldErrors: pickFieldError(err),
+      };
+    }
+    return { error: 'save_failed' };
   }
 }

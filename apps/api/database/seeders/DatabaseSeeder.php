@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
         // Seed default site settings (idempotent — safe re-run).
         $this->call(SiteSettingsSeeder::class);
 
+        // Seed default public navbar menus (idempotent — safe re-run).
+        $this->call(NavMenuSeeder::class);
+
         // Real-case demo fixtures untuk buyer-flow + admin provisioning e2e.
         $this->call(DemoSeeder::class);
     }
