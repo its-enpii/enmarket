@@ -1,0 +1,25 @@
+name: Sponsor Bid Debug 4 (one-shot) — host .env vs container env
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare host .env TRIPAY_* presence vs container env presence
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 103.177.95.92
+          username: enpii
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: false
+          script: |
+            cd /home/enpii/studio/enmarket
+            echo "=== host .env: TRIPAY_* names (values hidden) ==="
+            sed -n 's/^\(TRIPAY[A-Z_]*\)=.*/\1 SET/p' .env | sort
+            echo "=== container env (from inside api container) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'for v in TRIPAY_MODE TRIPAY_API_KEY TRIPAY_PRIVATE_KEY TRIPAY_MERCHANT_CODE; do eval "len=\$#\$$(echo $v)"; echo "$v present"; done' 2>/dev/null || true
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'env | grep -E "^TRIPAY" | sed "s/=.*/=SET/" | sort'
+            echo "=== compose config resolve (names only) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env config 2>/dev/null | grep -E "TRIPAY_[A-Z_]+:" | sed 's/: .*/: (hidden)/' | sort
