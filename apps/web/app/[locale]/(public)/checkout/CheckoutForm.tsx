@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useTransition } from 'react';
+import { useActionState, useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/Input';
 import { Icon } from '@/components/ui';
 import { PaymentMethodSelector } from '@/components/checkout/PaymentMethodSelector';
 import { formatRupiah } from '@/lib/format';
-import type { PaymentGateway } from '@/lib/types';
+import type { DuitkuChannelCode, PaymentGateway } from '@/lib/types';
 
 import { applyCouponAction, checkoutAction } from './actions';
 
@@ -34,7 +34,7 @@ export function CheckoutForm({
   const [selectedGateway, setSelectedGateway] = useState<PaymentGateway>(
     enabledGateways[0]?.key ?? 'tripay',
   );
-  const [paymentMethod, setPaymentMethod] = useState('VC');
+  const [paymentMethod, setPaymentMethod] = useState<DuitkuChannelCode>('QR');
   const [couponCodeInput, setCouponCodeInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
@@ -82,14 +82,22 @@ export function CheckoutForm({
         email: (formData.get('email') as string) ?? '',
         wa: (formData.get('wa') as string) ?? '',
         coupon_code: appliedCoupon?.code || (formData.get('coupon_code') as string) || undefined,
-        payment_gateway: (formData.get('payment_gateway') as PaymentGateway) || selectedGateway,
-        payment_method: (formData.get('payment_method') as string) || (selectedGateway === 'duitku' ? paymentMethod : undefined),
+        payment_gateway: selectedGateway,
+        payment_method: selectedGateway === 'duitku'
+          ? (formData.get('payment_method') as string) || paymentMethod
+          : undefined,
       }).catch((err) => {
         if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
         return { error: t('errorGeneric') };
       }),
     {} as State,
   );
+
+  useEffect(() => {
+    const firstEnabledGateway = enabledGateways[0]?.key ?? 'tripay';
+    setSelectedGateway(firstEnabledGateway);
+    setPaymentMethod('QR');
+  }, [enabledGateways]);
 
   return (
     <form action={formAction} className="space-y-6">

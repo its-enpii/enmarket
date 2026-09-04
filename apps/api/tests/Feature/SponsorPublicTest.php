@@ -4,12 +4,57 @@ namespace Tests\Feature;
 
 use App\Models\SiteSetting;
 use App\Models\Sponsor;
+use App\Models\SponsorBid;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class SponsorPublicTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_sponsor_leaderboard_returns_paid_bids_ranked_by_amount_then_paid_time(): void
+    {
+        SponsorBid::factory()->create([
+            'domain' => 'bronze.test',
+            'name' => 'Bronze Sponsor',
+            'bid_amount' => 100000,
+            'status' => 'paid',
+            'paid_at' => now()->subDays(3),
+            'contact_name' => 'Hidden Contact',
+        ]);
+        SponsorBid::factory()->create([
+            'domain' => 'gold.test',
+            'name' => 'Gold Sponsor',
+            'bid_amount' => 300000,
+            'status' => 'paid',
+            'paid_at' => now()->subDay(),
+            'contact_name' => 'Hidden Contact',
+        ]);
+        SponsorBid::factory()->create([
+            'domain' => 'silver.test',
+            'name' => 'Silver Sponsor',
+            'bid_amount' => 200000,
+            'status' => 'paid',
+            'paid_at' => now()->subDays(2),
+            'contact_name' => 'Hidden Contact',
+        ]);
+        SponsorBid::factory()->create([
+            'domain' => 'pending.test',
+            'name' => 'Pending Sponsor',
+            'bid_amount' => 999999,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->getJson('/api/public/sponsors/leaderboard');
+
+        $response->assertOk();
+        $response->assertJsonCount(3, 'data');
+        $response->assertJsonPath('data.0.rank', 1);
+        $response->assertJsonPath('data.0.domain', 'gold.test');
+        $response->assertJsonPath('data.1.domain', 'silver.test');
+        $response->assertJsonPath('data.2.domain', 'bronze.test');
+        $response->assertJsonMissing(['contact_name' => 'Hidden Contact']);
+    }
 
     public function test_public_site_config_returns_top_sponsors_ordered_by_amount_desc(): void
     {

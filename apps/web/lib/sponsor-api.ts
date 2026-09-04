@@ -12,6 +12,14 @@ export interface SponsorBidPreview {
   fetched_description: string | null;
 }
 
+export interface SponsorLeaderboardEntry {
+  rank: number;
+  name: string;
+  domain: string;
+  bid_amount: number;
+  paid_at: string;
+}
+
 export interface SponsorBidCheckoutResult {
   kode_order: string;
   gateway: string;
@@ -22,6 +30,18 @@ export interface SponsorBidCheckoutResult {
 }
 
 const API_URL = getApiBase();
+
+async function fetchLeaderboard(): Promise<SponsorLeaderboardEntry[]> {
+  const res = await fetch(`${API_URL}/api/public/sponsors/leaderboard`, {
+    cache: 'no-store',
+    headers: { Accept: 'application/json' },
+  });
+  if (!res.ok) {
+    throw new Error(`Fetch sponsor leaderboard failed: HTTP ${res.status}`);
+  }
+  const json = (await res.json()) as { data: SponsorLeaderboardEntry[] };
+  return json.data;
+}
 
 async function fetchConfig(): Promise<SponsorBidConfig> {
   const res = await fetch(`${API_URL}/api/public/sponsors/bid/config`, {
@@ -45,20 +65,31 @@ async function preview(domain: string): Promise<SponsorBidPreview> {
 
 export const sponsorBidApi = {
   fetchConfig,
+  fetchLeaderboard,
   preview,
   checkout: (payload: {
     domain: string;
     name?: string;
     description?: string;
-    contact_name: string;
+    contact_name?: string;
     email?: string;
     wa?: string;
     amount: number;
     payment_gateway: string;
     payment_method?: string;
-  }) =>
-    fetchWithAuth<{ data: SponsorBidCheckoutResult }>('/api/public/sponsors/bid', {
+  }) => {
+    if (!payload.payment_gateway) {
+      return fetchConfig().then((config) =>
+        fetchWithAuth<{ data: SponsorBidCheckoutResult }>('/api/public/sponsors/bid', {
+          method: 'POST',
+          body: JSON.stringify({ ...payload, payment_gateway: config.gateways[0] }),
+        }),
+      );
+    }
+
+    return fetchWithAuth<{ data: SponsorBidCheckoutResult }>('/api/public/sponsors/bid', {
       method: 'POST',
       body: JSON.stringify(payload),
-    }),
+    });
+  },
 };

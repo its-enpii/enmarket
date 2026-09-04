@@ -428,7 +428,7 @@
     "notes": "Catatan (opsional)",
     "required": "Wajib diisi",
     "placeOrder": "Buat Pesanan",
-    "submitHint": "Setelah mengeklik tombol ini, kamu akan diarahkan ke halaman pembayaran QRIS Tripay.",
+    "submitHint": "Setelah mengeklik tombol ini, kamu akan diarahkan ke halaman pembayaran.",
     "backToCart": "← Kembali ke Keranjang",
     "errorRequired": "Wajib diisi",
     "errorEmail": "Format email tidak valid",
@@ -437,7 +437,7 @@
     "buyerInfo": "Data Pembeli",
     "orderSummary": "Ringkasan Pesanan",
     "total": "Total",
-    "paymentMethod": "Metode pembayaran: QRIS melalui Tripay",
+    "paymentMethod": "Metode pembayaran",
     "errorLoad": "Gagal memuat keranjang",
     "phonePlaceholder": "08123456789",
     "couponLabel": "Kode Kupon / Diskon",
@@ -445,7 +445,8 @@
     "couponApplied": "Kupon berhasil diterapkan.",
     "couponInvalid": "Kode kupon tidak valid atau tidak dapat digunakan.",
     "discount": "Diskon Kupon",
-    "paymentMethodPlaceholder": "Pilih metode pembayaran…"
+    "paymentMethodPlaceholder": "Pilih metode pembayaran…",
+    "paymentChannel": "Channel pembayaran"
   },
   "payment": {
     "title": "Pembayaran",
@@ -472,12 +473,7 @@
     "viewOrder": "Lihat detail pesanan",
     "autoRefresh": "Status diperbarui otomatis setiap 4 detik.",
     "method": "Metode Pembayaran",
-    "methodHint": "Pilih metode pembayaran yang tersedia.",
-    "gateway": "Payment Gateway",
-    "gateways": {
-      "tripay": "Tripay",
-      "duitku": "Duitku"
-    }
+    "methodHint": "Pilih metode pembayaran yang tersedia."
   },
   "orderSuccess": {
     "title": "Pesanan Berhasil Dibuat",
@@ -1971,43 +1967,44 @@
     "eyebrow": "Sponsor",
     "title": "Jadi Sponsor",
     "subtitle": "Ajukan penempatan sponsor publik, bayar sesuai bid, dan tampil sesuai ranking bid tertinggi.",
-    "rankingTitle": "Cara Ranking Bekerja",
-    "rankingBody": "Sponsor aktif diurutkan dari bid tertinggi ke terendah. Bid sama memakai urutan pembayaran lebih awal.",
     "activationTitle": "Setelah Pembayaran",
     "steps": {
-      "submit": "Kirim domain, deskripsi opsional, kontak, dan bid Anda.",
-      "pay": "Selesaikan pembayaran QRIS melalui gateway yang tersedia.",
+      "submit": "Kirim domain dan bid Anda.",
+      "pay": "Selesaikan pembayaran lewat channel yang tersedia.",
       "activate": "Sponsor otomatis aktif dan langsung masuk homepage setelah pembayaran lunas."
     },
     "form": {
-      "title": "Formulir Bid Sponsor",
+      "title": "Bid Ringkas",
       "domain": "Domain",
-      "name": "Nama Sponsor (opsional)",
-      "namePlaceholder": "Biarkan kosong untuk memakai judul situs",
-      "description": "Deskripsi Singkat (opsional)",
-      "descriptionPlaceholder": "Deskripsi khusus untuk sponsor Anda, maksimal 500 karakter.",
-      "contactName": "Nama Kontak",
-      "amount": "Bid Sponsor",
-      "email": "Email",
-      "whatsapp": "Nomor WhatsApp",
-      "paymentGateway": "Gateway Pembayaran",
-      "total": "Total Pembayaran",
-      "submit": "Kirim Bid & Bayar",
+      "name": "Nama Sponsor",
+      "namePlaceholder": "Pakai judul situs",
+      "description": "Deskripsi",
+      "descriptionPlaceholder": "Pakai deskripsi situs",
+      "contact": "WhatsApp / Email (opsional)",
+      "contactHint": "Isi salah satu kalau kamu ingin menerima konfirmasi pembayaran.",
+      "amount": "Nominal Bid",
+      "minBid": "Minimal bid {min}.",
+      "editDetail": "Edit detail",
+      "hideDetailEditor": "Tutup detail",
+      "cta": "Bid",
       "processing": "Memproses..."
     },
+    "leaderboard": {
+      "title": "Leaderboard Sponsor",
+      "body": "20 bid terbayar tertinggi tampil di sini. Bid yang sama diperingkatkan berdasarkan waktu pembayaran lebih awal.",
+      "loading": "Memuat leaderboard...",
+      "error": "Gagal memuat leaderboard sponsor.",
+      "empty": "Belum ada sponsor terbayar",
+      "emptyBody": "Posisi pertama masih kosong.",
+      "challenge": "Rebut posisi"
+    },
     "preview": {
-      "title": "Preview Domain",
       "loading": "Mengambil metadata situs..."
     },
     "previewFailed": "Gagal mengambil metadata domain.",
-    "gateways": {
-      "duitku": "Duitku",
-      "tripay": "Tripay (QRIS)"
-    },
     "errors": {
-      "requiredFields": "Domain, nama kontak, dan satu kontak email/WA wajib diisi.",
+      "domainRequired": "Domain wajib diisi.",
       "amountTooLow": "Bid minimal {min}.",
-      "paymentGatewayRequired": "Pilih gateway pembayaran terlebih dahulu.",
       "checkoutFailed": "Bid gagal dibuat. Silakan coba lagi."
     }
   }

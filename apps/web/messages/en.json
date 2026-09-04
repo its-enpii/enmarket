@@ -428,7 +428,7 @@
     "notes": "Notes (optional)",
     "required": "Required",
     "placeOrder": "Place Order",
-    "submitHint": "After clicking this button, you’ll be taken to the QRIS payment page powered by Tripay.",
+    "submitHint": "After clicking this button, you’ll be taken to the payment page.",
     "backToCart": "← Back to Cart",
     "errorRequired": "Required",
     "errorEmail": "Invalid email format",
@@ -437,7 +437,7 @@
     "buyerInfo": "Buyer Information",
     "orderSummary": "Order Summary",
     "total": "Total",
-    "paymentMethod": "Payment method: QRIS via Tripay",
+    "paymentMethod": "Payment method",
     "errorLoad": "Failed to load your cart",
     "phonePlaceholder": "08123456789",
     "couponLabel": "Coupon / Discount Code",
@@ -445,7 +445,8 @@
     "couponApplied": "Coupon successfully applied.",
     "couponInvalid": "Coupon code is invalid or not applicable.",
     "discount": "Coupon Discount",
-    "paymentMethodPlaceholder": "Choose a payment method…"
+    "paymentMethodPlaceholder": "Choose a payment method…",
+    "paymentChannel": "Payment channel"
   },
   "payment": {
     "title": "Payment",
@@ -472,12 +473,7 @@
     "viewOrder": "View order details",
     "autoRefresh": "The status refreshes automatically every 4 seconds.",
     "method": "Payment Method",
-    "methodHint": "Choose an available payment method.",
-    "gateway": "Payment Gateway",
-    "gateways": {
-      "tripay": "Tripay",
-      "duitku": "Duitku"
-    }
+    "methodHint": "Choose an available payment method."
   },
   "orderSuccess": {
     "title": "Order Created",
@@ -1971,43 +1967,44 @@
     "eyebrow": "Sponsor",
     "title": "Become a Sponsor",
     "subtitle": "Submit a public sponsorship placement, pay your bid, and appear in the highest-bid ranking.",
-    "rankingTitle": "How Ranking Works",
-    "rankingBody": "Active sponsors are ordered from highest to lowest bid. Equal bids keep the earlier paid placement.",
     "activationTitle": "After Payment",
     "steps": {
-      "submit": "Submit your domain, optional description, contact, and bid.",
-      "pay": "Complete the available QRIS payment gateway transaction.",
+      "submit": "Submit your domain and bid.",
+      "pay": "Complete payment with an available channel.",
       "activate": "Your sponsor activates automatically and enters the homepage after payment is settled."
     },
     "form": {
-      "title": "Sponsor Bid Form",
+      "title": "Quick Bid",
       "domain": "Domain",
-      "name": "Sponsor Name (optional)",
-      "namePlaceholder": "Leave empty to use the site title",
-      "description": "Short Description (optional)",
-      "descriptionPlaceholder": "Your custom sponsor description, up to 500 characters.",
-      "contactName": "Contact Name",
-      "amount": "Sponsor Bid",
-      "email": "Email",
-      "whatsapp": "WhatsApp Number",
-      "paymentGateway": "Payment Gateway",
-      "total": "Payment Total",
-      "submit": "Submit Bid & Pay",
+      "name": "Sponsor Name",
+      "namePlaceholder": "Use the site title",
+      "description": "Description",
+      "descriptionPlaceholder": "Use the site description",
+      "contact": "WhatsApp / Email (optional)",
+      "contactHint": "Add one if you want payment confirmation.",
+      "amount": "Bid Amount",
+      "minBid": "Minimum bid is {min}.",
+      "editDetail": "Edit details",
+      "hideDetailEditor": "Close details",
+      "cta": "Bid",
       "processing": "Processing..."
     },
+    "leaderboard": {
+      "title": "Sponsor Leaderboard",
+      "body": "The top 20 paid bids appear here. Equal bids are ranked by earlier payment time.",
+      "loading": "Loading leaderboard...",
+      "error": "Failed to load the sponsor leaderboard.",
+      "empty": "No paid sponsors yet",
+      "emptyBody": "The first spot is still open.",
+      "challenge": "Take the spot"
+    },
     "preview": {
-      "title": "Domain Preview",
       "loading": "Fetching site metadata..."
     },
     "previewFailed": "Failed to fetch domain metadata.",
-    "gateways": {
-      "duitku": "Duitku",
-      "tripay": "Tripay (QRIS)"
-    },
     "errors": {
-      "requiredFields": "Domain, contact name, and one email/WhatsApp contact are required.",
+      "domainRequired": "Domain is required.",
       "amountTooLow": "Minimum bid is {min}.",
-      "paymentGatewayRequired": "Please select a payment gateway first.",
       "checkoutFailed": "Failed to create the bid. Please try again."
     }
   }
