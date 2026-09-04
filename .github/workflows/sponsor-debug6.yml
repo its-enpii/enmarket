@@ -1,0 +1,22 @@
+name: Sponsor Bid Debug 6 (one-shot) — Duitku keys check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Duitku + gateway keys (names & lengths only)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 103.177.95.92
+          username: enpii
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: false
+          script: |
+            cd /home/enpii/studio/enmarket
+            echo "=== host .env payment-related (masked) ==="
+            grep -E "^(TRIPAY|DUITKU|DIGIFLAZZ|XENDIT|MIDTRANS)" .env | sed -E "s/=(..)?$/=(EMPTY)/; s/=(..).*/=\1***/"
+            echo "=== artisan config resolve all gateways ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'php artisan tinker --execute="echo \"tripay.key=\" . strlen((string) config(\"services.tripay.api_key\")) . \" duitku.key=\" . strlen((string) config(\"services.duitku.api_key\")) . \" duitku.merchant=\" . strlen((string) config(\"services.duitku.merchant_code\")) . \" digiflazz.user=\" . strlen((string) config(\"services.digiflazz.username\", \"\")) . PHP_EOL;"'
