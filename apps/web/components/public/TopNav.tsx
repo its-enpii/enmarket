@@ -109,7 +109,7 @@ export function TopNav({ children }: Props) {
                 underline={active ? 'static' : 'hover'}
                 aria-current={active ? 'page' : undefined}
                 className={`font-label text-label-sm uppercase font-bold min-h-touch inline-flex items-center pb-1 ${
-                  active ? 'border-b-4 border-primary' : ''
+                  active ? 'border-b-4 border-accent bg-accent/20 text-ink' : ''
                 }`}
               >
                 {item.label ?? t(item.key)}
@@ -169,10 +169,10 @@ export function TopNav({ children }: Props) {
                   href={item.href}
                   onClick={() => setOpen(false)}
                   aria-current={active ? 'page' : undefined}
-                  variant={active ? 'ink' : 'surface'}
+                  variant="surface"
                   size="md"
                   className={`relative flex items-center justify-between w-full ${
-                    active ? 'pl-4 pr-3' : ''
+                    active ? 'border-l-4 border-accent bg-accent/20 text-ink pl-4 pr-3' : ''
                   }`}
                 >
                   <span>{item.label ?? t(item.key)}</span>
