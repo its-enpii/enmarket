@@ -1,0 +1,24 @@
+name: Sponsor Bid Debug 3 (one-shot) — env key check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check TRIPAY env presence (names + lengths only, no values)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 103.177.95.92
+          username: enpii
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: false
+          script: |
+            cd /home/enpii/studio/enmarket
+            echo "=== env var names present in .env (values hidden) ==="
+            grep -oE "^(TRIPAY|DUITKU|DIGIFLAZZ)[A-Z_]*" .env | sort
+            echo "=== config resolve inside api container ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api php artisan tinker --execute='echo "tripay.api_key.len=" . strlen((string) config("services.tripay.api_key")) . PHP_EOL; echo "tripay.private.len=" . strlen((string) config("services.tripay.private_key")) . PHP_EOL; echo "tripay.merchant.len=" . strlen((string) config("services.tripay.merchant_code")) . PHP_EOL; echo "tripay.base=" . config("services.tripay.base_url") . PHP_EOL;'
+            echo "=== container env names ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'env | grep -oE "^(TRIPAY|DUITKU)[A-Z_]*" | sort'
