@@ -168,6 +168,31 @@ class SponsorBidCheckoutTest extends TestCase
         $this->assertEquals('pending', $bid->status);
     }
 
+    public function test_checkout_without_contact_name_falls_back_to_wa(): void
+    {
+        // Form baru: kontak opsional — bid dengan WA saja (tanpa contact_name)
+        // tidak boleh error "Undefined array key contact_name".
+        $response = $this->postJson('/api/public/sponsors/bid', [
+            'domain' => 'nowa-example.com',
+            'amount' => 125000,
+            'payment_gateway' => 'tripay',
+            'wa' => '081234567890',
+        ]);
+
+        $response->assertCreated();
+        $kodeOrder = $response->json('data.kode_order');
+
+        $order = Order::where('kode_order', $kodeOrder)->first();
+        $this->assertNotNull($order);
+        $this->assertEquals('081234567890', $order->nama_pembeli);
+        $this->assertEquals('081234567890', $order->wa_pembeli);
+
+        $bid = $order->sponsorBid;
+        $this->assertNotNull($bid);
+        $this->assertNull($bid->contact_name);
+        $this->assertEquals('pending', $bid->status);
+    }
+
     public function test_checkout_creates_duitku_order_and_bid(): void
     {
         Http::fake([

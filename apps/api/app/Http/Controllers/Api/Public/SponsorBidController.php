@@ -152,7 +152,7 @@ class SponsorBidController extends Controller
             $order = DB::transaction(function () use ($kodeOrder, $domain, $amount, $validated, $email, $wa, $gateway, $paymentMethod) {
                 $order = Order::create([
                     'kode_order' => $kodeOrder,
-                    'nama_pembeli' => $validated['contact_name'],
+                    'nama_pembeli' => $validated['contact_name'] ?? $validated['wa'] ?? $validated['email'] ?? $domain,
                     'email_pembeli' => $email,
                     'wa_pembeli' => $wa,
                     'total_harga' => $amount,
