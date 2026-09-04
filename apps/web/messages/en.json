@@ -138,7 +138,8 @@
     "sponsorsTitle": "Our Sponsors",
     "sponsorsSubtitle": "Websites & Partners Supporting the Studio",
     "visitSponsor": "Visit Website",
-    "becomeSponsor": "Become a Sponsor"
+    "becomeSponsor": "Become a Sponsor",
+    "sponsorsEmptyCta": "No sponsors yet — be the first!"
   },
   "discover": {
     "eyebrow": "Discover",
