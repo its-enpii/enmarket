@@ -1,0 +1,30 @@
+name: Sponsor Bid Debug (one-shot)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect sponsor bid 502 on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 103.177.95.92
+          username: enpii
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: false
+          script: |
+            cd /home/enpii/studio/enmarket
+            echo "=== compose ps ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env ps
+            echo "=== api: sponsor-bid log lines (last 80) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env logs --tail 400 api 2>&1 | grep -iE "sponsor|ERROR|502|timeout" | tail -80
+            echo "=== web log (last 20) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env logs --tail 20 web 2>&1 | tail -20
+            echo "=== curl dari dalam server → api container (bypass CF) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api curl -s -X POST "http://localhost:8000/api/public/sponsors/bid" -H "Accept: application/json" -H "Content-Type: application/json" -d '{"domain":"example.com","amount":50000,"payment_gateway":"tripay","wa":"081234567890","email":"a@b.com"}' -w "\nHTTP:%{http_code} t:%{time_total}s\n" | tail -5
+            echo "=== tripay config (mode saja, tanpa secret) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api php -r 'echo "mode=" . (getenv("TRIPAY_MODE") ?: "?") . PHP_EOL;'
+            echo "=== api worker timeout env ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'env | grep -iE "timeout|octane|php_" | head -10'
