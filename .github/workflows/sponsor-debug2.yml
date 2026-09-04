@@ -1,0 +1,26 @@
+name: Sponsor Bid Debug 2 (one-shot)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get real exception from Laravel log + entrypoint php-fpm
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 103.177.95.92
+          username: enpii
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: false
+          script: |
+            cd /home/enpii/studio/enmarket
+            echo "=== laravel.log tail (sponsor/error) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'tail -100 storage/logs/laravel*.log 2>/dev/null | grep -A6 -iE "sponsor|ERROR" | tail -60' || echo "no log"
+            echo "=== curl -v POST (headers + body) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'curl -s -X POST "http://127.0.0.1:8000/api/public/sponsors/bid" -H "Accept: application/json" -H "Content-Type: application/json" -d "{\"domain\":\"example.com\",\"amount\":50000,\"payment_gateway\":\"tripay\",\"wa\":\"081234567890\",\"email\":\"a@b.com\"}" | head -c 500; echo'
+            echo "=== who serves 8000 inside container ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'ps aux | head -20'
+            echo "=== last 30 lines api container stdout ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env logs --tail 30 api 2>&1 | tail -30
