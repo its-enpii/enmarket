@@ -138,7 +138,8 @@
     "sponsorsTitle": "Sponsor Kami",
     "sponsorsSubtitle": "Website & Mitra yang Mendukung Studio",
     "visitSponsor": "Kunjungi Website",
-    "becomeSponsor": "Jadi Sponsor"
+    "becomeSponsor": "Jadi Sponsor",
+    "sponsorsEmptyCta": "Belum ada sponsor — jadilah yang pertama!"
   },
   "discover": {
     "eyebrow": "Discover",
