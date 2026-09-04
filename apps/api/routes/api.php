@@ -91,6 +91,7 @@ Route::prefix('public')->group(function () {
     Route::post('topup/preview', [TopupController::class, 'preview'])->middleware('throttle:cart');
     Route::post('topup/checkout', [TopupController::class, 'checkout'])->middleware('throttle:checkout');
     Route::get('sponsors/bid/config', [SponsorBidController::class, 'config']);
+    Route::get('sponsors/leaderboard', [SponsorBidController::class, 'leaderboard']);
     Route::post('sponsors/bid/preview', [SponsorBidController::class, 'preview'])->middleware('throttle:cart');
     Route::post('sponsors/bid', [SponsorBidController::class, 'store'])->middleware('throttle:checkout');
 });

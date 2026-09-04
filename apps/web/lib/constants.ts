@@ -26,6 +26,17 @@ export const ORDER_TYPE_I18N_KEYS = {
 
 export const DEFAULT_GATEWAY = 'tripay' as const;
 
+export const DUITKU_CHANNELS = [
+  { code: 'QR', label: 'QRIS' },
+  { code: 'B2', label: 'BCA VA' },
+  { code: 'B3', label: 'BNI VA' },
+  { code: 'B4', label: 'BRI VA' },
+  { code: 'B6', label: 'Mandiri VA' },
+  { code: 'B7', label: 'Permata VA' },
+  { code: 'OV', label: 'OVO' },
+  { code: 'SP', label: 'ShopeePay' },
+] as const;
+
 /** z-index layers terpusat — modal dialog harus di atas TopNav/Sidebar (z-50). */
 export const Z_INDEX = {
   nav: 50,

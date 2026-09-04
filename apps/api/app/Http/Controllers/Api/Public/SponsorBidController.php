@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\SiteSetting;
 use App\Models\Sponsor;
 use App\Models\SponsorBid;
+use App\Http\Resources\SponsorBidLeaderboardResource;
 use App\Services\Duitku\CreateTransactionDto as DuitkuTransactionDto;
 use App\Services\Duitku\DuitkuClient;
 use App\Services\Duitku\DuitkuException;
@@ -37,6 +38,23 @@ class SponsorBidController extends Controller
                 'min_bid' => (int) ($raw['sponsors_min_bid'] ?? 50000),
                 'gateways' => $this->enabledPaymentGateways(),
             ],
+        ]);
+    }
+
+    public function leaderboard(): JsonResponse
+    {
+        $leaderboard = SponsorBid::query()
+            ->where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->orderByDesc('bid_amount')
+            ->orderBy('paid_at')
+            ->limit(20)
+            ->get();
+
+        $leaderboard->each(fn (SponsorBid $bid, int $index) => $bid->rank = $index + 1);
+
+        return response()->json([
+            'data' => SponsorBidLeaderboardResource::collection($leaderboard)->resolve(),
         ]);
     }
 
@@ -74,7 +92,7 @@ class SponsorBidController extends Controller
             'domain' => ['required', 'string', 'max:255'],
             'name' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string', 'max:500'],
-            'contact_name' => ['required', 'string', 'max:100'],
+            'contact_name' => ['nullable', 'string', 'max:100'],
             'email' => ['nullable', 'email', 'max:255'],
             'wa' => ['nullable', 'string', 'max:32'],
             'amount' => ['required', 'integer', 'min:'.$minBid],
@@ -152,7 +170,7 @@ class SponsorBidController extends Controller
                     'bid_amount' => $amount,
                     'name' => $validated['name'] ?? null,
                     'description' => $validated['description'] ?? null,
-                    'contact_name' => $validated['contact_name'],
+                    'contact_name' => $validated['contact_name'] ?? null,
                     'status' => 'pending',
                 ]);
 
@@ -177,7 +195,13 @@ class SponsorBidController extends Controller
                 ], 201);
             }
 
-            $res = $this->createTripayTransaction($order, $amount, $validated['contact_name'], $email, $wa);
+            $res = $this->createTripayTransaction(
+                $order,
+                $amount,
+                $validated['contact_name'] ?? $validated['wa'] ?? $validated['email'] ?? $domain,
+                $email,
+                $wa,
+            );
 
             return response()->json([
                 'data' => [

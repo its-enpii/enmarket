@@ -7,7 +7,8 @@ export type IconName =
   | 'arrow-right'
   | 'heart'
   | 'external'
-  | 'star';
+  | 'star'
+  | 'crown';
 
 type IconProps = Omit<SVGProps<SVGSVGElement>, 'name' | 'strokeWidth'> & {
   name: IconName;
@@ -41,6 +42,10 @@ const ICON_PATHS: Record<IconName, { paths: string[]; filled?: boolean }> = {
   },
   star: {
     paths: ['M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9L12 2.5z'],
+    filled: true,
+  },
+  crown: {
+    paths: ['M4 8.5l4 3 4-6 4 6 4-3-1.5 9.5h-13L4 8.5Z'],
     filled: true,
   },
 };

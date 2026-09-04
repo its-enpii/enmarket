@@ -1,17 +1,16 @@
 import { useTranslations } from 'next-intl';
 
-import { Card } from '@/components/ui/neobrutal';
 import { FormField } from '@/components/ui/FormField';
-import { Input } from '@/components/ui/Input';
-import { Radio } from '@/components/ui/Radio';
-import type { PaymentGateway } from '@/lib/types';
+import { Select } from '@/components/ui/Select';
+import { DUITKU_CHANNELS } from '@/lib/constants';
+import type { DuitkuChannelCode, PaymentGateway } from '@/lib/types';
 
 interface Props {
   enabledGateways: Array<{ key: PaymentGateway }>;
   selectedGateway: PaymentGateway;
   onSelectGateway: (gateway: PaymentGateway) => void;
-  paymentMethod: string;
-  onChangePaymentMethod: (method: string) => void;
+  paymentMethod: DuitkuChannelCode;
+  onChangePaymentMethod: (method: DuitkuChannelCode) => void;
 }
 
 export function PaymentMethodSelector({
@@ -21,63 +20,31 @@ export function PaymentMethodSelector({
   paymentMethod,
   onChangePaymentMethod,
 }: Props) {
-  const t = useTranslations('payment');
-  const tCheckout = useTranslations('checkout');
+  const t = useTranslations('checkout');
 
-  if (enabledGateways.length <= 1 && enabledGateways[0]?.key === 'tripay') {
-    return (
-      <input type="hidden" name="payment_gateway" value={selectedGateway} />
-    );
+const firstEnabledGateway = enabledGateways[0]?.key ?? 'tripay';
+
+if (firstEnabledGateway !== 'duitku') {
+    return <input type="hidden" name="payment_gateway" value={firstEnabledGateway} />;
   }
 
   return (
     <div className="space-y-4 border-t-2 border-ink/10 pt-4">
-      <div>
-        <p className="block text-xs font-bold uppercase tracking-wide text-ink mb-1.5">
-          {t('gateway')}
-        </p>
-        <div className="grid grid-cols-2 gap-3">
-          {enabledGateways.map(({ key }) => {
-            const isSelected = selectedGateway === key;
-            return (
-              <Card
-                key={key}
-                as="label"
-                variant={isSelected ? 'filled-accent' : 'surface'}
-                hoverable={false}
-                elevation={2}
-                className="flex items-center gap-3 p-3 cursor-pointer border-2 border-ink transition-colors"
-              >
-                <Radio
-                  name="payment_gateway"
-                  value={key}
-                  checked={isSelected}
-                  onChange={() => onSelectGateway(key)}
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="font-display font-black uppercase text-sm text-ink">
-                    {t(`gateways.${key}` as any)}
-                  </p>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
-      {selectedGateway === 'duitku' && (
-        <FormField label={tCheckout('paymentMethod')} htmlFor="payment_method">
-          <Input
-            id="payment_method"
-            name="payment_method"
-            type="text"
-            value={paymentMethod}
-            onChange={(e) => onChangePaymentMethod(e.target.value)}
-            placeholder="VC, QR, OVO, etc."
-            className="font-bold uppercase tracking-wide"
-          />
-        </FormField>
-      )}
+      <input type="hidden" name="payment_gateway" value={firstEnabledGateway} />
+      <FormField label={t('paymentChannel')} htmlFor="payment_method">
+        <Select
+          id="payment_method"
+          name="payment_method"
+          value={paymentMethod}
+          onChange={(event) => onChangePaymentMethod(event.target.value as DuitkuChannelCode)}
+        >
+          {DUITKU_CHANNELS.map((channel) => (
+            <option key={channel.code} value={channel.code}>
+              {channel.label}
+            </option>
+          ))}
+        </Select>
+      </FormField>
     </div>
   );
 }

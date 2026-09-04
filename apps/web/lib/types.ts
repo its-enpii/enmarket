@@ -7,6 +7,8 @@ export type StatusProduct = 'aktif' | 'draft' | 'tidak_dijual';
 
 export type PaymentGateway = 'tripay' | 'duitku';
 
+export type DuitkuChannelCode = 'QR' | 'B2' | 'B3' | 'B4' | 'B6' | 'B7' | 'OV' | 'SP';
+
 export interface PaymentGatewayConfig {
   enabled: boolean;
 }
