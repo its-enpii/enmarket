@@ -1,0 +1,24 @@
+name: Sponsor Bid Debug 5 (one-shot) — container .env content check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check container .env TRIPAY_* (names + value lengths only)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 103.177.95.92
+          username: enpii
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: false
+          script: |
+            cd /home/enpii/studio/enmarket
+            echo "=== container /var/www/html/.env TRIPAY lines (masked) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'grep -E "^TRIPAY" .env | sed -E "s/=(..).*/=\1***/" '
+            echo "=== config-cache files? ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'ls -la bootstrap/cache/ | head -8'
+            echo "=== resolve again via artisan (fresh) ==="
+            docker compose -f infra/docker-compose.prod.yml --env-file .env exec -T api sh -c 'php artisan config:clear >/dev/null 2>&1; php artisan tinker --execute="echo \"api_key.len=\" . strlen((string) config(\"services.tripay.api_key\")) . PHP_EOL;"'
