@@ -150,6 +150,16 @@ export async function Footer() {
                 <NLink href="/login" variant="on-dark" underline="none">
                   {tNav('admin')}
                 </NLink>
+                <span className="mt-2 h-px bg-surface/15" aria-hidden />
+                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-1">
+                  {t('legalTitle')}
+                </MetaLabel>
+                <NLink href="/terms" variant="on-dark" underline="none">
+                  {t('legalLinks.terms')}
+                </NLink>
+                <NLink href="/privacy" variant="on-dark" underline="none">
+                  {t('legalLinks.privacy')}
+                </NLink>
               </div>
             </div>
           </div>

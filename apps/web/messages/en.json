@@ -103,7 +103,12 @@
       "orders": "Track Order",
       "admin": "Admin"
     },
-    "copyright": "© {year} enpiistudio. Every work here is made on purpose."
+    "copyright": "© {year} enpiistudio. Every work here is made on purpose.",
+    "legalTitle": "Legal",
+    "legalLinks": {
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy"
+    }
   },
   "cart": {
     "badge": {
@@ -2007,5 +2012,139 @@
       "amountTooLow": "Minimum bid is {min}.",
       "checkoutFailed": "Failed to create the bid. Please try again."
     }
+  },
+  "terms": {
+    "metaTitle": "Terms & Conditions — enpiistudio",
+    "metaDescription": "Rules for using the enpiistudio storefront, digital products, and related services.",
+    "eyebrow": "Legal",
+    "title": "Terms & Conditions",
+    "subtitle": "Rules for using the storefront, catalog, checkout, and digital works at enpiistudio.",
+    "updated": "Last updated: {date}",
+    "tocLabel": "Table of contents",
+    "backLabel": "Back to home",
+    "backLinkText": "← Home",
+    "sections": [
+      {
+        "heading": "General",
+        "paragraphs": [
+          "These terms govern your use of enpiistudio, including the public storefront, catalog, checkout, and related services (the Service). By accessing or using the Service you agree to these terms. If you do not agree, do not use the Service."
+        ]
+      },
+      {
+        "heading": "Accounts and access",
+        "paragraphs": [
+          "Some features require a customer account or a one-time session. You are responsible for keeping your credentials and contact details accurate and for all activity under your account."
+        ]
+      },
+      {
+        "heading": "Products, pricing, and payments",
+        "paragraphs": [
+          "All prices are shown in Indonesian Rupiah (IDR) unless stated otherwise. Prices may change without prior notice. Digital products and top-ups are delivered after payment is confirmed. Order status follows the payment gateway response."
+        ]
+      },
+      {
+        "heading": "Digital products and delivery",
+        "paragraphs": [
+          "After your order is marked paid, download links and license keys (where applicable) become available. You agree to use them for lawful purposes and in accordance with the license stated on the product page."
+        ]
+      },
+      {
+        "heading": "Licenses",
+        "paragraphs": [
+          "Each product's license terms are displayed at the point of purchase. Unless stated otherwise, the license is non-transferable and does not allow resale or redistribution of source files."
+        ]
+      },
+      {
+        "heading": "Pre-orders",
+        "paragraphs": [
+          "Some works are offered as pre-orders. The product page will disclose availability, the deposit amount, and the expected delivery schedule. Deposits on pre-orders are subject to that product's stated policy."
+        ]
+      },
+      {
+        "heading": "Refunds and cancellations",
+        "paragraphs": [
+          "Delivered digital goods and issued license keys are generally non-refundable, except where required by applicable law or explicitly stated on the product page. Please contact us first before requesting a refund so we can help."
+        ]
+      },
+      {
+        "heading": "Acceptable use",
+        "paragraphs": [
+          "You agree not to abuse, copy, reverse-engineer, or interfere with the Service in a way that harms the studio's operations or other users."
+        ]
+      },
+      {
+        "heading": "Service changes and disclaimers",
+        "paragraphs": [
+          "The Service is provided \"as is\" without warranties of any kind. The studio may modify, suspend, or discontinue parts of the Service at any time. To the extent permitted by law, liability is limited to the amount you paid for the relevant order."
+        ]
+      },
+      {
+        "heading": "Governing law and contact",
+        "paragraphs": [
+          "These terms are governed by the laws of the Republic of Indonesia. If you have questions about these terms, use the contact information on the storefront or the link in your order confirmation."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "metaTitle": "Privacy Policy — enpiistudio",
+    "metaDescription": "How enpiistudio collects, uses, and stores your personal information.",
+    "eyebrow": "Legal",
+    "title": "Privacy Policy",
+    "subtitle": "How enpiistudio collects, uses, and protects your personal information.",
+    "updated": "Last updated: {date}",
+    "tocLabel": "Table of contents",
+    "backLabel": "Back to home",
+    "backLinkText": "← Home",
+    "sections": [
+      {
+        "heading": "Information we collect",
+        "paragraphs": [
+          "We collect information you provide at checkout, when creating an account, or when submitting forms (such as name, email, WhatsApp number, and order notes). Technical data such as request logs and session cookies is also recorded for security and operations."
+        ]
+      },
+      {
+        "heading": "How we use it",
+        "paragraphs": [
+          "Information is used to process orders, deliver download links/license keys, send order-status notifications, prevent fraud, and improve the shopping experience. We do not sell your personal data."
+        ]
+      },
+      {
+        "heading": "Payment gateways and third parties",
+        "paragraphs": [
+          "Payments are processed via payment gateways (e.g. Tripay/Duitku) and related providers such as Digiflazz for top-ups. Some transaction data is shared with those providers to complete the payment. Their processing is governed by their own policies."
+        ]
+      },
+      {
+        "heading": "WhatsApp OTP & notifications",
+        "paragraphs": [
+          "Customer login uses WhatsApp OTP. Your WhatsApp number is used for account verification and order notifications. OTPs are stored temporarily and expire automatically per the configured time limit."
+        ]
+      },
+      {
+        "heading": "Cookies & sessions",
+        "paragraphs": [
+          "We use session cookies for cart, wishlist, and account sessions. You can manage cookies through your browser settings; disabling essential session cookies may break checkout."
+        ]
+      },
+      {
+        "heading": "Storage & security",
+        "paragraphs": [
+          "Data is retained as long as necessary for operations and compliance, then deleted or anonymized. We apply reasonable safeguards including input validation, admin access controls, and audit logging."
+        ]
+      },
+      {
+        "heading": "Your rights",
+        "paragraphs": [
+          "You may request access, correction, or deletion of your personal data by contacting the address shown on the storefront. Requests are handled in accordance with applicable law."
+        ]
+      },
+      {
+        "heading": "Contact",
+        "paragraphs": [
+          "If you have privacy questions, contact us via the official contact details in the storefront footer or on your order confirmation. This policy may be updated from time to time; material changes will be reflected in the updated date above."
+        ]
+      }
+    ]
   }
 }

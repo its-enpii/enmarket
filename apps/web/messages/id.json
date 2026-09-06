@@ -103,7 +103,12 @@
       "orders": "Cek Pesanan",
       "admin": "Admin"
     },
-    "copyright": "© {year} enpiistudio. Tiap karya di sini dibuat dengan sengaja."
+    "copyright": "© {year} enpiistudio. Tiap karya di sini dibuat dengan sengaja.",
+    "legalTitle": "Legal",
+    "legalLinks": {
+      "terms": "Syarat & Ketentuan",
+      "privacy": "Kebijakan Privasi"
+    }
   },
   "cart": {
     "badge": {
@@ -2007,5 +2012,139 @@
       "amountTooLow": "Bid minimal {min}.",
       "checkoutFailed": "Bid gagal dibuat. Silakan coba lagi."
     }
+  },
+  "terms": {
+    "metaTitle": "Syarat & Ketentuan — enpiistudio",
+    "metaDescription": "Syarat penggunaan storefront enpiistudio, produk digital, dan layanan terkait.",
+    "eyebrow": "Legal",
+    "title": "Syarat & Ketentuan",
+    "subtitle": "Aturan penggunaan storefront, katalog, checkout, dan karya digital di enpiistudio.",
+    "updated": "Terakhir diperbarui: {date}",
+    "tocLabel": "Daftar isi",
+    "backLabel": "Kembali ke beranda",
+    "backLinkText": "← Beranda",
+    "sections": [
+      {
+        "heading": "Ketentuan umum",
+        "paragraphs": [
+          "Syarat ini mengatur penggunaan enpiistudio termasuk storefront publik, katalog, checkout, dan layanan terkait (Layanan). Dengan mengakses atau menggunakan Layanan, Anda menyetujui syarat ini. Jika tidak setuju, mohon tidak menggunakan Layanan."
+        ]
+      },
+      {
+        "heading": "Akun dan akses",
+        "paragraphs": [
+          "Beberapa fitur membutuhkan akun pelanggan atau sesi satu kali. Anda bertanggung jawab menjaga kredensial dan data kontak tetap akurat serta atas seluruh aktivitas pada akun Anda."
+        ]
+      },
+      {
+        "heading": "Produk, harga, dan pembayaran",
+        "paragraphs": [
+          "Semua harga ditampilkan dalam Rupiah (IDR) kecuali dinyatakan lain. Harga dapat berubah sewaktu-waktu tanpa pemberitahuan. Produk digital dan top-up dikirim setelah pembayaran terkonfirmasi. Status pesanan mengikuti respons payment gateway."
+        ]
+      },
+      {
+        "heading": "Produk digital dan pengiriman",
+        "paragraphs": [
+          "Setelah pesanan dinyatakan lunas, tautan unduh dan kunci lisensi (jika ada) akan tersedia. Anda setuju menggunakannya untuk tujuan yang sah dan sesuai lisensi yang tercantum di halaman produk."
+        ]
+      },
+      {
+        "heading": "Lisensi",
+        "paragraphs": [
+          "Ketentuan lisensi setiap produk tercantum saat pembelian. Kecuali dinyatakan lain, lisensi bersifat non-transferable dan tidak memperbolehkan penjualan kembali atau redistribusi source tanpa izin."
+        ]
+      },
+      {
+        "heading": "Pre-order",
+        "paragraphs": [
+          "Beberapa karya ditawarkan sebagai pre-order. Halaman produk akan menjelaskan ketersediaan, besaran DP, dan jadwal pengiriman. Dana DP yang dibayar tunduk pada kebijakan halaman produk tersebut."
+        ]
+      },
+      {
+        "heading": "Pengembalian dana dan pembatalan",
+        "paragraphs": [
+          "Barang digital yang sudah dikirim dan kunci lisensi yang sudah diterbitkan umumnya bersifat non-refundable, kecuali diwajibkan peraturan yang berlaku atau dinyatakan eksplisit di halaman produk. Hubungi kami dulu sebelum mengajukan refund agar dapat dibantu."
+        ]
+      },
+      {
+        "heading": "Penggunaan yang wajar",
+        "paragraphs": [
+          "Anda setuju untuk tidak menyalahgunakan, menyalin, melakukan reverse engineering, atau mengganggu Layanan dengan cara yang merugikan operasional studio maupun pengguna lain."
+        ]
+      },
+      {
+        "heading": "Perubahan layanan dan batasan tanggung jawab",
+        "paragraphs": [
+          "Layanan disediakan “apa adanya” tanpa jaminan bentuk apa pun. Studio dapat mengubah, menangguhkan, atau menghentikan bagian Layanan sewaktu-waktu. Sepanjang diizinkan hukum, tanggung jawab studio terbatas pada nilai yang Anda bayarkan untuk pesanan terkait."
+        ]
+      },
+      {
+        "heading": "Hukum yang berlaku dan kontak",
+        "paragraphs": [
+          "Syarat ini tunduk pada hukum Republik Indonesia. Jika ada pertanyaan tentang syarat ini, gunakan kontak yang tercantum di storefront atau tautan pada konfirmasi pesanan Anda."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "metaTitle": "Kebijakan Privasi — enpiistudio",
+    "metaDescription": "Penjelasan pengumpulan, penggunaan, dan penyimpanan data pribadi di enpiistudio.",
+    "eyebrow": "Legal",
+    "title": "Kebijakan Privasi",
+    "subtitle": "Bagaimana enpiistudio mengumpulkan, menggunakan, dan menjaga data pribadi Anda.",
+    "updated": "Terakhir diperbarui: {date}",
+    "tocLabel": "Daftar isi",
+    "backLabel": "Kembali ke beranda",
+    "backLinkText": "← Beranda",
+    "sections": [
+      {
+        "heading": "Data yang kami kumpulkan",
+        "paragraphs": [
+          "Kami mengumpulkan data yang Anda berikan saat checkout, pembuatan akun, atau pengisian formulir (misalnya nama, email, nomor WhatsApp, catatan pesanan). Data teknis seperti log permintaan dan cookie sesi juga dicatat untuk keamanan dan operasional."
+        ]
+      },
+      {
+        "heading": "Tujuan penggunaan",
+        "paragraphs": [
+          "Data digunakan untuk memproses pesanan, mengirim tautan unduhan/kunci lisensi, notifikasi status pesanan, pencegahan fraud, serta perbaikan pengalaman berbelanja. Kami tidak menjual data pribadi Anda."
+        ]
+      },
+      {
+        "heading": "Payment gateway dan pihak ketiga",
+        "paragraphs": [
+          "Pembayaran diproses melalui penyedia payment gateway (misalnya Tripay/Duitku) dan penyedia terkait seperti Digiflazz untuk top-up. Sebagian data transaksi diteruskan ke penyedia tersebut untuk menyelesaikan pembayaran. Perilaku pemrosesan mereka mengikuti kebijakan masing-masing penyedia."
+        ]
+      },
+      {
+        "heading": "WhatsApp OTP & notifikasi",
+        "paragraphs": [
+          "Login pelanggan menggunakan OTP via WhatsApp. Nomor WhatsApp digunakan untuk verifikasi akun dan notifikasi pesanan. OTP disimpan sementara dan otomatis kedaluwarsa sesuai batas waktu yang ditetapkan."
+        ]
+      },
+      {
+        "heading": "Cookie & sesi",
+        "paragraphs": [
+          "Kami memakai cookie sesi untuk keranjang, wishlist, dan sesi akun. Anda dapat mengelola cookie melalui pengaturan browser; menonaktifkan sesi esensial dapat mengganggu checkout."
+        ]
+      },
+      {
+        "heading": "Penyimpanan & keamanan",
+        "paragraphs": [
+          "Data disimpan selama diperlukan untuk tujuan operasional dan kepatuhan, lalu dihapus atau dianonimkan. Kami menerapkan langkah keamanan yang wajar termasuk validasi input, kontrol akses admin, dan audit log."
+        ]
+      },
+      {
+        "heading": "Hak Anda",
+        "paragraphs": [
+          "Anda dapat meminta akses, koreksi, atau penghapusan data pribadi dengan menghubungi kontak yang tercantum di storefront. Permintaan akan diproses sesuai peraturan yang berlaku."
+        ]
+      },
+      {
+        "heading": "Kontak",
+        "paragraphs": [
+          "Jika ada pertanyaan terkait privasi, hubungi kontak resmi yang tercantum di footer storefront atau pada konfirmasi pesanan Anda. Kebijakan ini dapat diperbarui sewaktu-waktu; perubahan material akan tercermin pada tanggal pembaruan di atas."
+        ]
+      }
+    ]
   }
 }
