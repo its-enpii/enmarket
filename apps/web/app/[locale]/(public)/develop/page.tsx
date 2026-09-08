@@ -23,6 +23,8 @@ import { SearchBar } from '@/components/public/SearchBar';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Icon, SectionBand, SectionIntro } from '@/components/ui';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import type { PaginatedResponse, Product } from '@/lib/types';
@@ -46,7 +48,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: `${t('title')} — enpiistudio`,
       description: t('listSubtitle'),
     }),
-    alternates: { canonical: `/${locale}/develop` },
+    alternates: localeAlternates(locale, 'develop'),
   };
 }
 
@@ -79,7 +81,8 @@ async function fetchCatalog(
 
 // ───── Component ─────
 
-export default async function DevelopPage({ searchParams }: PageProps) {
+export default async function DevelopPage({ params, searchParams }: PageProps) {
+  const { locale } = await params;
   const t = await getTranslations('develop');
   const sp = await searchParams;
   const activeTipe: 'all' | Tipe =
@@ -108,9 +111,30 @@ export default async function DevelopPage({ searchParams }: PageProps) {
   if (activeTipe !== 'all') filterKeyParams.set('tipe', activeTipe);
   if (q) filterKeyParams.set('q', q);
   const filterKey = filterKeyParams.toString();
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: `${baseUrl}/${locale}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Develop',
+              item: `${baseUrl}/${locale}/develop`,
+            },
+          ],
+        }}
+      />
       {/* ───── 1. HEADER ───── */}
       <PageHeader
         eyebrow={t('eyebrow')}
@@ -229,4 +253,3 @@ export default async function DevelopPage({ searchParams }: PageProps) {
     </>
   );
 }
-import { buildMetadata } from '@/lib/seo';

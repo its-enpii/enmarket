@@ -6,6 +6,7 @@ import { BackLink } from '@/components/ui/BackLink';
 import { MasukForm } from './MasukForm';
 import { redirect } from '@/i18n/navigation';
 import { CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';
+import { buildMetadata, noIndexMetadata } from '@/lib/seo';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -15,10 +16,13 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'customer.login' });
-  return buildMetadata({
-    title: `${t('title')} — enpiistudio`,
-    description: t('subtitle'),
-  });
+  return {
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('subtitle'),
+    }),
+    ...noIndexMetadata(),
+  };
 }
 
 export default async function MasukPage({ params, searchParams }: PageProps) {
@@ -61,4 +65,3 @@ export default async function MasukPage({ params, searchParams }: PageProps) {
     </section>
   );
 }
-import { buildMetadata } from '@/lib/seo';

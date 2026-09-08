@@ -1,5 +1,8 @@
 import type { MetadataRoute } from 'next';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 /**
  * robots.txt — allow all bots, point ke sitemap.
  * Base URL: pakai NEXT_PUBLIC_SITE_URL kalau di-set, fallback localhost dev.

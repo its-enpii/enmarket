@@ -25,7 +25,7 @@ import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, noIndexMetadata } from '@/lib/seo';
 
 import { CartHeader } from './CartHeader';
 import { CartItem } from './CartItem';
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: `${t('title')} — enpiistudio`,
       description: t('subtitle'),
     }),
-    alternates: { canonical: `/${locale}/keranjang` },
+    ...noIndexMetadata(),
   };
 }
 

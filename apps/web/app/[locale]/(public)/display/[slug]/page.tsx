@@ -28,9 +28,10 @@ import { ReactionStrip } from '@/components/public/ReactionStrip';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { MetaLabel, PageTitle, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateLong, formatDateShort } from '@/lib/format';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import type { Post } from '@/lib/types';
 
 import { CornerAccent } from '@/components/ui/CornerAccent';
@@ -83,12 +84,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
     }),
     keywords: post.excerpt ? [post.title, post.excerpt] : [post.title],
-    alternates: { canonical: `/display/${post.slug}` },
+    alternates: localeAlternates(locale, `display/${post.slug}`),
     openGraph: {
       title: post.title,
       description,
       type: 'article',
-      url: `/display/${post.slug}`,
+      url: `/${locale}/display/${post.slug}`,
       ...(ogImage ? { images: [{ url: ogImage, alt: post.title }] } : {}),
     },
     twitter: {
@@ -125,9 +126,48 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
   // Fetch related — fallback to latest, exclude current
   const related = await fetchRelated(slug);
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  const postUrl = `${baseUrl}/${locale}/display/${post.slug}`;
+  const description = post.excerpt ?? post.title;
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description,
+    ...(post.thumbnail ? { image: post.thumbnail } : {}),
+    ...(post.published_at ? { datePublished: post.published_at } : {}),
+    ...(post.updated_at ? { dateModified: post.updated_at } : {}),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `${baseUrl}/${locale}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Display',
+        item: `${baseUrl}/${locale}/display`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
+  };
 
   return (
     <>
+      <JsonLd data={[articleSchema, breadcrumbSchema]} />
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="relative z-0 bg-surface border-b-2 border-ink/20">
         <SectionContainer py="sm">

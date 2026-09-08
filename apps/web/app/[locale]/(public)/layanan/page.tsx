@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card } from '@/components/ui/neobrutal';
 import { PageTitle, SectionIntro } from '@/components/ui';
 import { Text } from '@/components/ui';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import { CustomBuildForm } from './CustomBuildForm';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${t('title')} — enpiistudio`,
       description: t('subtitle'),
     }),
-    alternates: { canonical: `/${locale}/layanan` },
+    alternates: localeAlternates(locale, 'layanan'),
   };
 }
 
@@ -78,5 +79,4 @@ export default async function LayananPage() {
     </div>
   );
 }
-import { buildMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';

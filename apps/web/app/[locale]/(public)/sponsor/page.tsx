@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 
 import { SponsorWorkspace } from './SponsorWorkspace';
 
@@ -12,7 +12,10 @@ export const revalidate = 0;
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'sponsor' });
-  return buildMetadata({ title: t('title') });
+  return {
+    ...buildMetadata({ title: t('title'), description: t('metaDescription') }),
+    alternates: localeAlternates(locale, 'sponsor'),
+  };
 }
 
 export default async function SponsorPage() {

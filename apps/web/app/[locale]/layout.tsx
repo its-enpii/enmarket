@@ -12,12 +12,57 @@
  */
 
 import { NextIntlClientProvider } from 'next-intl';
+import type { Metadata } from 'next';
+import { Anybody, Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { getMessages, unstable_setRequestLocale } from 'next-intl/server';
 
 import { ToastContainer } from '@/components/ui/ToastContainer';
 import { DialogContainer } from '@/components/ui/DialogContainer';
 import { LocaleSync } from '@/components/LocaleSync';
 import { routing } from '@/i18n/routing';
+import '../globals.css';
+
+const anybody = Anybody({
+  variable: '--font-anybody',
+  subsets: ['latin'],
+  weight: ['700', '800', '900'],
+  display: 'swap',
+});
+
+const hankenGrotesk = Hanken_Grotesk({
+  variable: '--font-hanken-grotesk',
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  weight: ['700'],
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: 'enpiistudio — Discover, develop, display',
+    template: '%s',
+  },
+  description:
+    'Marketplace karya digital dari studio enpii — apa pun yang bisa diunduh, dipakai, atau dinikmati.',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  ),
+  openGraph: {
+    siteName: 'enpiistudio',
+    type: 'website',
+    locale: 'id_ID',
+    alternateLocale: ['en_US'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -33,14 +78,19 @@ export default async function LocaleLayout({
   const { locale } = await params;
   unstable_setRequestLocale(locale);
   const messages = await getMessages();
+  const fontClass = `${anybody.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable}`;
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <LocaleSync />
-      {children}
-      {/* Global UI containers — client components, mount sekali di locale segment */}
-      <ToastContainer />
-      <DialogContainer />
-    </NextIntlClientProvider>
+    <html lang={locale} className={`${fontClass} h-full antialiased`}>
+      <body className="min-h-full flex flex-col">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <LocaleSync />
+          {children}
+          {/* Global UI containers — client components, mount sekali di locale segment */}
+          <ToastContainer />
+          <DialogContainer />
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

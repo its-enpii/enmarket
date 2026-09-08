@@ -14,12 +14,13 @@ import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateShort } from '@/lib/format';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import type { PaginatedResponse, Post } from '@/lib/types';
 
 import { HoverImage } from '@/components/ui/HoverImage';
 import { MetaLabel, SectionBand, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: t('title'),
       description: t('subtitle'),
     }),
-    alternates: { canonical: `/${locale}/display` },
+    alternates: localeAlternates(locale, 'display'),
   };
 }
 
@@ -86,9 +87,30 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
 
   const featured = posts[0] ?? null;
   const rest = posts.slice(1);
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: `${baseUrl}/${locale}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: t('title'),
+              item: `${baseUrl}/${locale}/display`,
+            },
+          ],
+        }}
+      />
       {/* HEADER */}
       <PageHeader
         eyebrow={t('eyebrow')}

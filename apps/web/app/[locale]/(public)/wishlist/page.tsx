@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { EmptyState } from '@/components/public/EmptyState';
 import { ProductGrid } from '@/components/public/ProductGrid';
 import { wishlistApi, PublicFetchError } from '@/lib/wishlist-api';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, noIndexMetadata } from '@/lib/seo';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { Icon, PageTitle, SectionIntro } from '@/components/ui';
 
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${t('title')} — enpiistudio`,
       description: t('title'),
     }),
-    alternates: { canonical: `/${locale}/wishlist` },
+    ...noIndexMetadata(),
   };
 }
 

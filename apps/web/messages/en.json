@@ -1971,6 +1971,7 @@
   "sponsor": {
     "eyebrow": "Sponsor",
     "title": "Become a Sponsor",
+    "metaDescription": "Submit a public sponsorship placement, pay your bid, and appear on the highest-bid leaderboard.",
     "subtitle": "Submit a public sponsorship placement, pay your bid, and appear in the highest-bid ranking.",
     "activationTitle": "After Payment",
     "steps": {

@@ -11,6 +11,8 @@ import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { Icon, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { Badge } from '@/components/ui/Badge';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 
 export async function generateMetadata({
   params,
@@ -24,7 +26,7 @@ export async function generateMetadata({
       title: t('title'),
       description: t('subtitle'),
     }),
-    alternates: { canonical: `/${locale}/discover` },
+    alternates: localeAlternates(locale, 'discover'),
   };
 }
 
@@ -47,6 +49,7 @@ export default async function DiscoverPage({
   const { locale } = await params;
   unstable_setRequestLocale(locale);
   const t = await getTranslations('discover');
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
   // Pillars content — translated per locale via namespace.
   const PILLARS = [
@@ -75,6 +78,26 @@ export default async function DiscoverPage({
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: `${baseUrl}/${locale}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: t('title'),
+              item: `${baseUrl}/${locale}/discover`,
+            },
+          ],
+        }}
+      />
       {/* ───── 1. HERO ───── */}
       <PageHeader
         eyebrow={t('eyebrow')}
@@ -216,4 +239,3 @@ export default async function DiscoverPage({
     </>
   );
 }
-import { buildMetadata } from '@/lib/seo';

@@ -1,4 +1,4 @@
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getApiBase } from '@/lib/api-base';
@@ -35,9 +35,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     return buildMetadata({ title: 'Not Found' });
   }
   const t = await getTranslations({ locale, namespace: 'topup' });
-  return buildMetadata({
-    title: `${t('title')} — ${game.nama}`,
-  });
+  return {
+    ...buildMetadata({
+      title: `${t('title')} — ${game.nama}`,
+    }),
+    alternates: localeAlternates(locale, `topup/${game.slug}`),
+  };
 }
 
 export default async function TopupGamePage({ params }: { params: Promise<{ slug: string }> }) {

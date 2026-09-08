@@ -28,20 +28,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let dynamicPaths: Array<{ path: string; priority: number; changeFrequency: 'weekly' | 'monthly' }> = [];
 
   try {
-    const [products, categories, posts] = await Promise.all([
+    const [products, posts] = await Promise.all([
       publicApi.productSlugs(),
-      publicApi.categorySlugs(),
       publicApi.postSlugs(),
     ]);
     dynamicPaths = [
       ...((products.data ?? []).map((slug) => ({
         path: `develop/${slug}`,
         priority: 0.8,
-        changeFrequency: 'weekly' as const,
-      }))),
-      ...((categories.data ?? []).map((slug) => ({
-        path: `c/${slug}`,
-        priority: 0.6,
         changeFrequency: 'weekly' as const,
       }))),
       ...((posts.data ?? []).map((slug) => ({

@@ -6,8 +6,9 @@ import { JournalSection } from '@/components/public/JournalSection';
 import { Hero } from '@/components/public/Hero';
 import { PillarsSection } from '@/components/public/PillarsSection';
 import { SponsorsSection } from '@/components/public/SponsorsSection';
+import { JsonLd } from '@/components/seo/JsonLd';
 import type { Post } from '@/lib/types';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: t('title'),
       description: t('description'),
     }),
-    alternates: { canonical: `/${locale}` },
+    alternates: localeAlternates(locale, ''),
   };
 }
 
@@ -43,7 +44,9 @@ async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   }
 }
 
-export default async function HomePage() {
+export default async function HomePage({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'common.site' });
   const [homepageResp, latestPostsResp, siteConfigResp] = await Promise.all([
     safe(() => publicApi.homepageProducts(6), { data: [] }),
     safe(() => publicApi.latestPosts(2), { data: [] }),
@@ -70,9 +73,27 @@ export default async function HomePage() {
   const recentPosts: Post[] = latestPostsResp.data ?? [];
 
   const sponsors = siteConfigResp.data?.sponsors ?? [];
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  const organizationName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
 
   return (
     <>
+      <JsonLd
+        data={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: t('title'),
+            url: `${baseUrl}/${locale}`,
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: organizationName,
+            url: baseUrl,
+          },
+        ]}
+      />
       <Hero />
       <PillarsSection />
       <FeaturedSection products={productsForFeatured} />

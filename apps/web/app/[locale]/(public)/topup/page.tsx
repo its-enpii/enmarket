@@ -1,4 +1,4 @@
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import { getApiBase } from '@/lib/api-base';
 import { getTranslations } from 'next-intl/server';
 
@@ -30,9 +30,10 @@ async function loadGames(): Promise<Game[]> {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'topup' });
-  return buildMetadata({
-    title: t('title'),
-  });
+  return {
+    ...buildMetadata({ title: t('title') }),
+    alternates: localeAlternates(locale, 'topup'),
+  };
 }
 
 export default async function TopupPage() {

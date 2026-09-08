@@ -25,6 +25,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { RelatedWorks } from '@/components/public/RelatedWorks';
 import { ProductReviewsSection } from '@/components/public/ProductReviewsSection';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { WorkGallery } from '@/components/public/WorkGallery';
 import { Badge } from '@/components/ui/Badge';
@@ -34,6 +35,7 @@ import { AddToCartControls } from './AddToCartControls';
 import { Link } from '@/i18n/navigation';
 
 import { formatRupiah, TIPE_LABEL } from '@/lib/format';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { Product, ProductRatingSummary } from '@/lib/types';
 
@@ -105,12 +107,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
     }),
     keywords: [product.nama, product.category?.nama ?? '', TIPE_LABEL[product.tipe] ?? product.tipe].filter(Boolean),
-    alternates: { canonical: `/develop/${product.slug}` },
+    alternates: localeAlternates(locale, `develop/${product.slug}`),
     openGraph: {
       title: product.nama,
       description,
       type: 'website',
-      url: `/develop/${product.slug}`,
+      url: `/${locale}/develop/${product.slug}`,
       ...(ogImage ? { images: [{ url: ogImage, alt: product.nama }] } : {}),
     },
     twitter: {
@@ -123,7 +125,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function WorkDetailPage({ params }: PageProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const product = await fetchProduct(slug);
   if (!product) notFound();
 
@@ -140,6 +142,57 @@ export default async function WorkDetailPage({ params }: PageProps) {
     ? product.preview_images.filter((img): img is string => typeof img === 'string' && img.trim() !== '')
     : [];
   const pullQuoteIdx = paragraphs.length >= 2 ? 1 : -1;
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  const productUrl = `${baseUrl}/${locale}/develop/${product.slug}`;
+  const description = product.deskripsi || oneLineDesc || product.nama;
+
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.nama,
+    description,
+    ...(previewImages[0] ? { image: previewImages } : {}),
+    offers: {
+      '@type': 'Offer',
+      price: product.harga,
+      priceCurrency: 'IDR',
+      availability: 'https://schema.org/InStock',
+    },
+    ...(product.rating_summary && product.rating_summary.count > 0
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: product.rating_summary.average,
+            reviewCount: product.rating_summary.count,
+          },
+        }
+      : {}),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `${baseUrl}/${locale}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Develop',
+        item: `${baseUrl}/${locale}/develop`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.nama,
+        item: productUrl,
+      },
+    ],
+  };
 
   // Specs
   const specs: Array<{ label: string; value: string }> = [];
@@ -161,6 +214,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
 
   return (
     <>
+      <JsonLd data={[productSchema, breadcrumbSchema]} />
       {/* ───── 1. BREADCRUMB ───── */}
       <div className="relative z-0 bg-surface border-b-2 border-ink/20">
         <SectionContainer py="sm">
@@ -517,6 +571,5 @@ export default async function WorkDetailPage({ params }: PageProps) {
     </>
   );
 }
-import { buildMetadata } from '@/lib/seo';
 import { CornerAccent } from '@/components/ui/CornerAccent';
 import { Image } from '@/components/ui/Image';

@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Card } from '@/components/ui/neobrutal';
 import { Text } from '@/components/ui';
+import { buildMetadata, localeAlternates } from '@/lib/seo';
 
 import { CekPesananForm } from './CekPesananForm';
 import { getLastOrderCode } from './actions';
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: `${t('title')} — enpiistudio`,
       description: t('subtitle'),
     }),
-    alternates: { canonical: `/${locale}/cek-pesanan` },
+    alternates: localeAlternates(locale, 'cek-pesanan'),
   };
 }
 
@@ -51,4 +52,3 @@ export default async function CekPesananPage() {
     </div>
   );
 }
-import { buildMetadata } from '@/lib/seo';

@@ -2,6 +2,9 @@ import React from 'react';
 import { AuthProvider } from '@/components/customer/AuthProvider';
 import { AccountSidebar } from '@/components/customer/AccountSidebar';
 import { SectionContainer } from '@/components/public/SectionContainer';
+import { noIndexMetadata } from '@/lib/seo';
+
+export const metadata = noIndexMetadata();
 
 export default function AkunLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -1971,6 +1971,7 @@
   "sponsor": {
     "eyebrow": "Sponsor",
     "title": "Jadi Sponsor",
+    "metaDescription": "Ajukan penempatan sponsor publik, bayar sesuai bid, dan tampil di leaderboard bid tertinggi.",
     "subtitle": "Ajukan penempatan sponsor publik, bayar sesuai bid, dan tampil sesuai ranking bid tertinggi.",
     "activationTitle": "Setelah Pembayaran",
     "steps": {

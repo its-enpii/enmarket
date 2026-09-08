@@ -5,7 +5,7 @@ import { Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { cartApi, PublicFetchError } from '@/lib/cart-api';
 import { readCartSession } from '@/lib/cart-session';
 import { getEnabledGateways } from '@/lib/payment-api';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, noIndexMetadata } from '@/lib/seo';
 
 import { CheckoutForm } from './CheckoutForm';
 import { PageTitle } from '@/components/ui';
@@ -20,10 +20,13 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'checkout' });
-  return buildMetadata({
-    title: `${t('title')} — enpiistudio`,
-    description: t('subtitle'),
-  });
+  return {
+    ...buildMetadata({
+      title: `${t('title')} — enpiistudio`,
+      description: t('subtitle'),
+    }),
+    ...noIndexMetadata(),
+  };
 }
 
 export default async function CheckoutPage() {
