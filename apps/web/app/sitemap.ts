@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { publicApi, PublicFetchError } from '@/lib/public-api';
+import { publicApi } from '@/lib/public-api';
 import { routing } from '@/i18n/routing';
 
 export const dynamic = 'force-dynamic';
@@ -45,8 +45,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }))),
     ];
   } catch (err) {
-    if (!(err instanceof PublicFetchError)) throw err;
-    console.warn('sitemap: gagal fetch slugs', err.message);
+    // API down/unreachable: jangan 500 — serve static paths saja.
+    console.warn('sitemap: gagal fetch slugs', err instanceof Error ? err.message : String(err));
   }
 
   // Untuk SETIAP path, emit satu entry per locale, dengan alternates.
