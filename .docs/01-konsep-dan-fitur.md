@@ -1,7 +1,7 @@
 # 01 — Konsep & Fitur
-# enpiistudio Store
+# EnStudio
 
-> Toko digital personal milik enpiistudio untuk menjual produk-produk digital hasil pengembangan sendiri: source code, lisensi, assets, dan sejenisnya. Bukan platform multi-tenant — satu toko, satu pemilik, full control.
+> Personal showcase studio & layanan custom milik **Enpii** — tagline publik: *"Studio solo · Showcase karya digital, riset, dan layanan custom."* Studio ini memperlihatkan **cara** Enpii bekerja (riset dan jurnal proses) sekaligus membagikan **hasilnya** sebagai artefak digital yang bisa dibeli dan sebagai jasa custom build. Bukan platform multi-tenant — satu studio, satu pemilik, full control.
 
 ---
 
@@ -9,15 +9,21 @@
 
 | Aspek | Keputusan |
 |---|---|
-| Tipe platform | Toko digital personal (bukan marketplace multi-tenant) |
-| Pemilik | enpiistudio (Enpii) — satu-satunya seller |
-| Jenis produk | Produk digital: source code, lisensi, assets, dll |
-| Pembayaran | Payment gateway otomatis via Tripay |
+| Tipe platform | Personal showcase studio + layanan custom — bukan marketplace multi-tenant, dan bukan sekadar toko |
+| Pemilik | Enpii — solo studio, satu-satunya kreator & seller |
+| Brand publik | **EnStudio** (navbar, footer, metadata SEO). Ditulis `enpiistudio` hanya sebagai identitas teknis internal — lihat catatan di bawah |
+| Tiga pilar | **Discover** (riset & eksplorasi, `/discover`) · **Develop** (artefak digital siap dipakai, `/develop` + `/katalog`) · **Display** (jurnal proses, `/display`) |
+| Jenis produk | Artefak digital hasil pengembangan sendiri: source code, lisensi, assets, bundle, dan akun manual (`account_manual`) |
+| Layanan custom | Form **Custom Build** di `/layanan`: konsultasi, desain arsitektur, dan pembuatan software end-to-end (website, SaaS, mobile, otomasi). Masuk sebagai *custom request* yang dikelola admin |
+| Pembayaran | Payment gateway otomatis via **Tripay** dan **Duitku** — admin mengaktifkan per gateway lewat *site settings*, pembeli memilih channel (QRIS / VA / e-wallet / convenience store) |
 | Pengiriman produk | Otomatis via email dan/atau WhatsApp setelah pembayaran terkonfirmasi |
-| Integrasi pengiriman | Laravel Mail + WhatsApp webhook agent enpiistudio (langsung dari backend, tanpa n8n) |
-| Branding | enpiistudio |
+| Integrasi pengiriman | Laravel Mail + WhatsApp webhook agent Enpii (langsung dari backend, tanpa n8n) |
+| Sponsor | Band sponsor di homepage + halaman `/sponsor` dengan pengajuan bid publik & leaderboard; otomatis aktif setelah pembayaran lunas |
+| Yang bukan | Bukan agency dengan tim, bukan marketplace seller lain, bukan portofolio klien — karya di sini milik studio sendiri |
 
-**Referensi konsep serupa**: Gumroad, Lemon Squeezy, Creative Market — tapi versi self-hosted dan personal, tanpa platform pihak ketiga.
+**Identitas teknis vs brand publik.** `enpiistudio` masih hidup di level infrastruktur: domain `store.enpiistudio.com`, seeder `studio_name`, dan pemancar email `noreply@enpiistudio.com`. Brand yang dilihat pengunjung tetap **EnStudio**; saat mengubah `studio_name` di admin, yang berubah hanya tampilan publik, bukan hostname atau alamat email.
+
+**Referensi konsep serupa**: Gumroad / Lemon Squeezy untuk sisi *Develop*, personal site & digital garden untuk sisi *Discover* dan *Display* — tapi versi self-hosted dan personal, tanpa platform pihak ketiga.
 
 ---
 

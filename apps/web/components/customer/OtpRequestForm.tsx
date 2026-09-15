@@ -74,7 +74,8 @@ export function OtpRequestForm({ initialPhone = '', onSuccess, locale }: Props) 
       <FormField label={t('phoneLabel')} htmlFor="customer-phone" hint={t('phoneHint')}>
         <Input
           id="customer-phone"
-          type="tel"
+          type="text"
+          inputMode="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder={t('phonePlaceholder')}

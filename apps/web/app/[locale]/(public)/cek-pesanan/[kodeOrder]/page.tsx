@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'checkOrder' });
   return {
     ...buildMetadata({
-      title: `${t('detailTitle')} ${kodeOrder} — enpiistudio`,
+      title: `${t('detailTitle')} ${kodeOrder} — EnStudio`,
       description: t('subtitle'),
     }),
     robots: { index: false },

@@ -1,8 +1,8 @@
 {
   "common": {
     "site": {
-      "title": "enpiistudio — Discover, develop, display",
-      "description": "Solo studio · Digital works and process notes."
+      "title": "EnStudio — Discover, Develop, Display",
+      "description": "Solo studio · Showcase of digital creations, research, and custom services."
     },
     "buttons": {
       "back": "← Back",
@@ -80,11 +80,10 @@
     "wishlistCount": "Wishlist items",
     "login": "Sign in / Register",
     "account": "Account",
-    "topup": "Top Up",
     "quickMenu": "Quick menu"
   },
   "footer": {
-    "brandTitle": "enpiistudio",
+    "brandTitle": "EnStudio",
     "tagline": "Solo studio · Digital works & process notes",
     "subscribeTitle": "Follow Latest Notes",
     "emailPlaceholder": "email@domain.com",
@@ -103,7 +102,7 @@
       "orders": "Track Order",
       "admin": "Admin"
     },
-    "copyright": "© {year} enpiistudio. Every work here is made on purpose.",
+    "copyright": "© {year} EnStudio. Every work here is made on purpose.",
     "legalTitle": "Legal",
     "legalLinks": {
       "terms": "Terms & Conditions",
@@ -117,9 +116,9 @@
     }
   },
   "home": {
-    "heroEyebrow": "Studio Enpii",
+    "heroEyebrow": "EnStudio",
     "heroTitle": "Discover, develop, display.",
-    "heroSubtitle": "Three words, one workflow. A digital works marketplace from a solo studio.",
+    "heroSubtitle": "Showcase of digital creations, tech research, and personal products by Enpii.",
     "heroCta": "View Develop Works",
     "pillarsTitle": "Three Pillars",
     "pillarsSubtitle": "How we think, make, and share.",
@@ -132,7 +131,7 @@
     "pillarExplore": "Explore {title}",
     "featuredTitle": "Featured Developments",
     "featuredSubtitle": "Latest picks from Develop, finished and ready to use.",
-    "featuredFallback": "A digital artifact from enpii studio, ready to use and build upon.",
+    "featuredFallback": "A digital artifact from EnStudio, ready to use and build upon.",
     "featuredEmpty": "No featured works yet. Check back soon.",
     "viewAllDevelop": "View All Develop",
     "journalTitle": "Latest / Display",
@@ -151,7 +150,7 @@
     "title": "Discover",
     "subtitle": "Work that starts from curiosity, not a client brief.",
     "storyTitle": "\"Code is a material, not a delivery mechanism.\"",
-    "storyBody1": "enpiistudio began as a private space. A place to keep experiments too specific for a client portfolio, too honest to hide behind false polish.",
+    "storyBody1": "EnStudio began as a private space. A place to keep experiments too specific for a client portfolio, too honest to hide behind false polish.",
     "storyBody2": "I believe programming and design are the same habit: choosing on purpose, rejecting defaults, reading documentation to the last line.",
     "storyBody3": "The work here is a snapshot of that process. Not a finished product, but artifacts that still show how they were made.",
     "signature": "— e° / solo studio",
@@ -202,7 +201,7 @@
     "divider1": "Made with intent, not just on request.",
     "divider2": "Price is only a number; value lies in the work behind it.",
     "divider3": "Some pieces here are still being explored.",
-    "fallbackDescription": "A digital artifact from enpii studio.",
+    "fallbackDescription": "A digital artifact from EnStudio.",
     "view": "View"
   },
   "developDetail": {
@@ -214,8 +213,8 @@
     "share": "Share",
     "relatedTitle": "More Works.",
     "back": "← Back to Develop",
-    "notFound": "Work not found · enpiistudio",
-    "fallbackDescription": "{name}, a work from enpii studio.",
+    "notFound": "Work not found · EnStudio",
+    "fallbackDescription": "{name}, a work from EnStudio.",
     "studioPick": "Studio Pick",
     "studioPickLabel": "Studio Pick",
     "status": "Status",
@@ -244,7 +243,7 @@
     "backFinal": "← Back to Develop",
     "relatedEyebrow": "More from studio",
     "relatedAll": "View All on Develop",
-    "relatedFallback": "A work from enpii studio.",
+    "relatedFallback": "A work from EnStudio.",
     "galleryOpen": "View {name} full size",
     "galleryOpenNumber": "View image {number} full size",
     "linkedPostsEyebrow": "Before you buy",
@@ -312,7 +311,7 @@
     "share": "Share",
     "readEntry": "Read this entry",
     "readShort": "Read",
-    "notFound": "Note not found · enpiistudio",
+    "notFound": "Note not found · EnStudio",
     "fallbackEyebrow": "Studio notes",
     "fallbackCover": "No cover image. The content speaks for itself.",
     "minutes": "{count} min read",
@@ -624,7 +623,7 @@
     },
     "dashboard": {
       "title": "Home",
-      "subtitle": "enpiistudio digital store overview. Realtime numbers.",
+      "subtitle": "EnStudio digital store overview. Realtime numbers.",
       "eyebrow": "Dashboard",
       "sectionStats": "Statistics",
       "sectionQuick": "Quick action",
@@ -695,7 +694,7 @@
     },
     "sidebar": {
       "viewStore": "← View Store",
-      "brandTitle": "enpiistudio",
+      "brandTitle": "EnStudio",
       "brandSubtitle": "Admin",
       "openMenu": "Open menu",
       "closeMenu": "Close menu",
@@ -704,7 +703,7 @@
     },
     "footer": {
       "brand": "Admin Panel",
-      "store": "— enpiistudio Store",
+      "store": "— EnStudio Store",
       "viewStore": "← View Store"
     },
     "shared": {
@@ -1382,7 +1381,6 @@
         "menu_develop": "Develop",
         "menu_display": "Display",
         "menu_layanan": "Services",
-        "menu_topup": "Top Up",
         "menuEnabledHint": "Show in the public navbar.",
         "fieldLabelOverride": "Label Override",
         "fieldLabelOverrideHint": "Optional. Maximum 100 characters; leave empty for the default label.",
@@ -1688,7 +1686,7 @@
     "freeSample": "FREE SAMPLE",
     "waSupport": "WA SUPPORT",
     "freeUpdates": "FREE UPDATES",
-    "studioWorks": "ENPII STUDIO WORKS"
+    "studioWorks": "ENSTUDIO WORKS"
   },
   "wishlist": {
     "add": "Added to wishlist",
@@ -1790,8 +1788,7 @@
       "wishlist": "Wishlist",
       "profile": "Profile Settings",
       "logout": "Logout",
-      "customerAccount": "Customer Account",
-      "topups": "Top-up History"
+      "customerAccount": "Customer Account"
     },
     "dashboard": {
       "title": "Account Dashboard",
@@ -1821,7 +1818,7 @@
         "expired": "Expired",
         "refunded": "Refunded"
       },
-      "subtitle": "History of all your digital orders and licenses at enpiistudio.",
+      "subtitle": "History of all your digital orders and licenses at EnStudio.",
       "emptyHint": "You have not placed any orders with this account yet.",
       "startShopping": "Start Shopping",
       "pageInfo": "Page {page} of {lastPage}",
@@ -1866,17 +1863,6 @@
       "emptyHint": "Explore our products and click the heart icon to save your favorites.",
       "exploreCatalog": "Explore Catalog",
       "defaultCategory": "Digital"
-    },
-    "topups": {
-      "title": "Top-up History",
-      "empty": "No top-up history yet.",
-      "viewDetail": "View Detail",
-      "status": {
-        "pending": "Pending",
-        "processing": "Processing",
-        "success": "Success",
-        "failed": "Failed"
-      }
     },
     "sidebar": {
       "title": "Customer Account",
@@ -1928,46 +1914,6 @@
     "submitSuccess": "Your review has been submitted and published!",
     "submitError": "Failed to submit review. Please check your inputs."
   },
-  "topup": {
-    "title": "Game Top Up",
-    "subtitle": "Top up your favorite game credits easily and quickly.",
-    "pickGame": "Pick a Game",
-    "pickItem": "Pick Nominal",
-    "userId": "User ID",
-    "userIdHint": "Enter your in-game User ID",
-    "serverId": "Server ID",
-    "serverIdHint": "Enter Server ID (if required)",
-    "contactLabel": "Contact for Notification",
-    "contactPhone": "WhatsApp Number",
-    "contactEmail": "Email Address",
-    "payNow": "Pay Now",
-    "processing": "Processing...",
-    "successTitle": "Top-up In Progress",
-    "successMessage": "Top-up is being processed. Notification will be sent to {contact}.",
-    "failedTitle": "Payment Failed",
-    "failedMessage": "Payment failed. Please try again.",
-    "previewTitle": "Top-up Summary",
-    "total": "Total Payment",
-    "confirm": "Confirm & Pay",
-    "paymentMethod": "Payment Method",
-    "noGames": "No games available yet.",
-    "noItems": "No nominals available yet.",
-    "backToGames": "← Back to Game List",
-    "errors": {
-      "userIdRequired": "User ID is required.",
-      "serverIdRequired": "Server ID is required for this game.",
-      "contactRequired": "Phone number or email is required.",
-      "gameNotFound": "Game not found.",
-      "itemRequired": "Please pick a nominal first.",
-      "paymentGatewayRequired": "Please select a payment method first.",
-      "checkoutFailed": "Checkout failed. Please try again."
-    },
-    "viaGateway": "via {gateway}",
-    "gateways": {
-      "duitku": "Duitku",
-      "tripay": "Tripay (QRIS)"
-    }
-  },
   "sponsor": {
     "eyebrow": "Sponsor",
     "title": "Become a Sponsor",
@@ -2015,11 +1961,11 @@
     }
   },
   "terms": {
-    "metaTitle": "Terms & Conditions — enpiistudio",
-    "metaDescription": "Rules for using the enpiistudio storefront, digital products, and related services.",
+    "metaTitle": "Terms & Conditions — EnStudio",
+    "metaDescription": "Rules for using the EnStudio storefront, digital products, and related services.",
     "eyebrow": "Legal",
     "title": "Terms & Conditions",
-    "subtitle": "Rules for using the storefront, catalog, checkout, and digital works at enpiistudio.",
+    "subtitle": "Rules for using the storefront, catalog, checkout, and digital works at EnStudio.",
     "updated": "Last updated: {date}",
     "tocLabel": "Table of contents",
     "backLabel": "Back to home",
@@ -2028,7 +1974,7 @@
       {
         "heading": "General",
         "paragraphs": [
-          "These terms govern your use of enpiistudio, including the public storefront, catalog, checkout, and related services (the Service). By accessing or using the Service you agree to these terms. If you do not agree, do not use the Service."
+          "These terms govern your use of EnStudio, including the public storefront, catalog, checkout, and related services (the Service). By accessing or using the Service you agree to these terms. If you do not agree, do not use the Service."
         ]
       },
       {
@@ -2088,11 +2034,11 @@
     ]
   },
   "privacy": {
-    "metaTitle": "Privacy Policy — enpiistudio",
-    "metaDescription": "How enpiistudio collects, uses, and stores your personal information.",
+    "metaTitle": "Privacy Policy — EnStudio",
+    "metaDescription": "How EnStudio collects, uses, and stores your personal information.",
     "eyebrow": "Legal",
     "title": "Privacy Policy",
-    "subtitle": "How enpiistudio collects, uses, and protects your personal information.",
+    "subtitle": "How EnStudio collects, uses, and protects your personal information.",
     "updated": "Last updated: {date}",
     "tocLabel": "Table of contents",
     "backLabel": "Back to home",
@@ -2147,5 +2093,51 @@
         ]
       }
     ]
+  },
+  "postBlocks": {
+    "editorEyebrow": "Content blocks",
+    "editorTitle": "Compose Note",
+    "blockCount": "{count, plural, one {# block} other {# blocks}}",
+    "legacyNotice": "This note still uses the legacy format (one full HTML document). Blocks you edit are saved in the block format — no content is lost.",
+    "emptyBlock": "This block is empty and is not rendered.",
+    "emptyContentError": "Content is still empty. Add at least one block before saving.",
+    "typeRichText": "Text",
+    "typeCode": "Code",
+    "typeImage": "Image",
+    "typeVideo": "Video",
+    "typeCallout": "Callout",
+    "addRichText": "Add Text",
+    "addCode": "Add Code",
+    "addImage": "Add Image",
+    "addVideo": "Add Video",
+    "addCallout": "Add Callout",
+    "richTextPlaceholder": "Start writing… (bold, italic, H2/H3, lists, links, images, code)",
+    "code": "Code",
+    "language": "Language",
+    "filename": "Filename",
+    "imageUrl": "Image URL",
+    "videoUrl": "Video URL",
+    "videoUrlHint": "YouTube, Vimeo, or a direct file (.mp4 / .webm / .mov).",
+    "embedUrl": "Embed URL",
+    "embedUrlHint": "Optional. For images: the destination URL when the image is clicked.",
+    "embedPreview": "Embed preview:",
+    "pickFromLibrary": "Pick from Library",
+    "caption": "Caption",
+    "alt": "Alternative Text",
+    "altHint": "For screen readers and when the image fails to load.",
+    "calloutTone": "Callout Type",
+    "calloutPlaceholder": "Write a short note: an assumption, warning, or tip.",
+    "toneInfo": "Info",
+    "toneTip": "Tip",
+    "toneWarning": "Warning",
+    "copyCode": "Copy",
+    "copied": "Copied!",
+    "copyFailed": "Copy failed",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "deleteBlock": "Delete Block",
+    "emptyImage": "Image not filled in yet",
+    "emptyVideo": "Video not filled in yet",
+    "emptyContent": "This note has no content yet."
   }
 }

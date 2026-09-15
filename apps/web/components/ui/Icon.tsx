@@ -5,6 +5,17 @@ export type IconName =
   | 'close'
   | 'check'
   | 'arrow-right'
+  | 'arrow-up'
+  | 'arrow-down'
+  | 'copy'
+  | 'text-block'
+  | 'code'
+  | 'image'
+  | 'play'
+  | 'quote'
+  | 'info'
+  | 'tip'
+  | 'warning'
   | 'heart'
   | 'external'
   | 'star'
@@ -31,6 +42,46 @@ const ICON_PATHS: Record<IconName, { paths: string[]; filled?: boolean }> = {
   },
   'arrow-right': {
     paths: ['M4 12h16', 'M13 5l7 7-7 7'],
+  },
+  'arrow-up': {
+    paths: ['M12 20V5', 'M5 12l7-7 7 7'],
+  },
+  'arrow-down': {
+    paths: ['M12 4v15', 'M19 12l-7 7-7-7'],
+  },
+  copy: {
+    paths: ['M9 9h11v11H9z', 'M15 5H4v11'],
+  },
+  'text-block': {
+    paths: ['M4 6h16', 'M4 10.5h16', 'M4 15h11', 'M4 19.5h7'],
+  },
+  code: {
+    paths: ['M9 8.5 5 12l4 3.5', 'M15 8.5 19 12l-4 3.5'],
+  },
+  image: {
+    paths: ['M4 5h16v14H4z', 'M4 16l4.5-4.5 4 4 3-3L20 16', 'M15.5 8.5h.01'],
+  },
+  play: {
+    paths: ['M8 5.5l10 6.5-10 6.5z'],
+  },
+  quote: {
+    paths: [
+      'M9.5 6.5C7 8 5.5 10.5 5.5 13.5v4h5v-5H7.8c.2-1.7 1-3 2.4-4z',
+      'M18.5 6.5C16 8 14.5 10.5 14.5 13.5v4h5v-5h-2.7c.2-1.7 1-3 2.4-4z',
+    ],
+  },
+  info: {
+    paths: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z', 'M12 11v5.5', 'M12 7.5h.01'],
+  },
+  tip: {
+    paths: [
+      'M9.5 17.5h5',
+      'M10.5 20.5h3',
+      'M12 3a6 6 0 0 0-3.5 10.9v3.6h7v-3.6A6 6 0 0 0 12 3Z',
+    ],
+  },
+  warning: {
+    paths: ['M12 3.5 21 19.5H3L12 3.5Z', 'M12 9.5v4', 'M12 16.5h.01'],
   },
   heart: {
     paths: [

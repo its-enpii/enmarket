@@ -8,6 +8,7 @@ import { AlertBanner } from '@/components/ui/AlertBanner';
 import { FormFooter } from '@/components/ui';
 import { FormField } from '@/components/admin/FormField';
 import { Input } from '@/components/ui/Input';
+import { INPUT_BASE_CLS } from '@/components/ui/form-tokens';
 import { SelectSearch } from '@/components/ui/SelectSearch';
 import { Checkbox } from '@/components/ui/Checkbox';
 import type { Coupon } from '@/lib/types';
@@ -101,20 +102,22 @@ export function CouponForm({ initial }: Props) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <FormField label={t('fieldValidFrom')} htmlFor="valid_from" error={fieldErr('valid_from')}>
-          <Input
+          <input
             id="valid_from"
             name="valid_from"
             type="datetime-local"
             defaultValue={initial?.valid_from ? initial.valid_from.substring(0, 16) : ''}
+            className={INPUT_BASE_CLS}
           />
         </FormField>
 
         <FormField label={t('fieldValidUntil')} htmlFor="valid_until" error={fieldErr('valid_until')}>
-          <Input
+          <input
             id="valid_until"
             name="valid_until"
             type="datetime-local"
             defaultValue={initial?.valid_until ? initial.valid_until.substring(0, 16) : ''}
+            className={INPUT_BASE_CLS}
           />
         </FormField>
       </div>

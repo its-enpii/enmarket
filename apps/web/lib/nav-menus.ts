@@ -3,17 +3,15 @@ export const DEFAULT_NAV_ITEMS = [
   { key: 'develop', href: '/develop' },
   { key: 'display', href: '/display' },
   { key: 'layanan', href: '/layanan' },
-  { key: 'topup', href: '/topup' },
 ] as const;
 
-export type DefaultNavKey = 'discover' | 'develop' | 'display' | 'layanan' | 'topup';
+export type DefaultNavKey = 'discover' | 'develop' | 'display' | 'layanan';
 
 const NAV_HREFS: Record<DefaultNavKey, string> = {
   discover: '/discover',
   develop: '/develop',
   display: '/display',
   layanan: '/layanan',
-  topup: '/topup',
 };
 
 export interface NavMenuItem {

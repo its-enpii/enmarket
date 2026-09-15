@@ -12,7 +12,7 @@ export function Hero() {
     <section className="min-h-[60vh] sm:min-h-[80vh] flex flex-col items-center justify-center text-center border-b-4 border-ink">
       <SectionContainer py="xl">
         <h1 className="font-display text-4xl sm:text-6xl md:text-headline-xl text-primary leading-none mb-10 uppercase break-words">
-          ENPIISTUDIO — <br />
+          ENSTUDIO — <br />
           <span className="inline-block bg-ink text-accent px-6 py-2 transform -rotate-1">
             DISCOVER,
           </span>

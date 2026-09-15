@@ -7,17 +7,15 @@ import { useEffect, useState } from 'react';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
-import { CUSTOMER_TOKEN_COOKIE } from '@/lib/constants';
 import { DEFAULT_NAV_ITEMS, normalizeNavMenus } from '@/lib/nav-menus';
 import type { NavMenuItem } from '@/lib/nav-menus';
-import { Children } from 'react';
 
 interface Props {
   children?: ReactNode;
 }
 
 /**
- * TopNav publik — Neobrutalism enpiistudio.
+ * TopNav publik — Neobrutalism EnStudio.
  * Locale-aware: pakai next-intl `useTranslations` + `usePathname` (path TANPA prefix).
  */
 
@@ -34,22 +32,12 @@ function isActive(pathname: string | null, href: string): boolean {
 
 export function TopNav({ children }: Props) {
   const [open, setOpen] = useState(false);
-  const [hasCustomerToken, setHasCustomerToken] = useState(false);
   const [navItems, setNavItems] = useState<NavMenuItem[]>(
     DEFAULT_NAV_ITEMS.map((item) => ({ ...item, label: null })),
   );
   const pathname = usePathname();
   const t = useTranslations('nav');
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
-
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const hasToken =
-        new RegExp(`(^| )${CUSTOMER_TOKEN_COOKIE}=([^;]+)`).test(document.cookie) ||
-        !!localStorage.getItem(CUSTOMER_TOKEN_COOKIE);
-      setHasCustomerToken(hasToken);
-    }
-  }, [pathname]);
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'EnStudio';
 
   // Lock body scroll saat mobile menu open (iOS Safari friendly).
   useEffect(() => {
@@ -109,7 +97,7 @@ export function TopNav({ children }: Props) {
                 underline={active ? 'static' : 'hover'}
                 aria-current={active ? 'page' : undefined}
                 className={`font-label text-label-sm uppercase font-bold min-h-touch inline-flex items-center pb-1 ${
-                  active ? 'border-b-4 border-accent bg-accent/20 text-ink' : ''
+                  active ? 'border-b-4 border-ink text-ink font-black' : ''
                 }`}
               >
                 {item.label ?? t(item.key)}
@@ -120,16 +108,6 @@ export function TopNav({ children }: Props) {
           <span className="flex items-center gap-2 [&_a]:w-11 [&_a]:h-11 [&_a]:justify-center [&_a]:px-0 [&_a]:py-0 [&_.badge-label]:hidden">
             {children}
           </span>
-          {hasCustomerToken ? (
-            <Button variant="primary" size="md" href="/akun">
-              {t('account')}
-            </Button>
-          ) : (
-            <Button variant="primary" size="md" href="/masuk">
-              {t('login')}
-            </Button>
-          )}
-
           <NLink
             href="/login"
             className="font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
@@ -172,7 +150,9 @@ export function TopNav({ children }: Props) {
                   variant="surface"
                   size="md"
                   className={`relative flex items-center justify-between w-full ${
-                    active ? 'border-l-4 border-accent bg-accent/20 text-ink pl-4 pr-3' : ''
+                    active
+                      ? 'border-l-4 border-primary bg-surface font-bold text-ink pl-4 pr-3 shadow-brutal-2'
+                      : ''
                   }`}
                 >
                   <span>{item.label ?? t(item.key)}</span>
@@ -182,28 +162,6 @@ export function TopNav({ children }: Props) {
                 </Button>
               );
             })}
-
-            {hasCustomerToken ? (
-              <Button
-                href="/akun"
-                variant="primary"
-                size="md"
-                onClick={() => setOpen(false)}
-                className="block text-center w-full"
-              >
-                {t('account')}
-              </Button>
-            ) : (
-              <Button
-                href="/masuk"
-                variant="primary"
-                size="md"
-                onClick={() => setOpen(false)}
-                className="block text-center w-full"
-              >
-                {t('login')}
-              </Button>
-            )}
 
             <NLink
               href="/login"

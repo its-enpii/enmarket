@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'payment' });
   return {
     ...buildMetadata({
-      title: `${t('title')} ${kodeOrder} — enpiistudio`,
+      title: `${t('title')} ${kodeOrder} — EnStudio`,
       description: t('instruction', { minutes: 30 }),
     }),
     robots: { index: false },

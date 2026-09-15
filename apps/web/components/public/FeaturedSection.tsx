@@ -17,7 +17,7 @@ interface Props {
 }
 
 /**
- * Featured Developments — Neobrutalism enpiistudio.
+ * Featured Developments — Neobrutalism EnStudio.
  *
  * Translated via next-intl 'home' namespace.
  *

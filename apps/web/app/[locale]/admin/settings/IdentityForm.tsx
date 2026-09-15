@@ -65,7 +65,7 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
   // Controlled state — React 19 + Next 15 me-reset uncontrolled <input>
   // setelah form action selesai. Pakai useState supaya isian tidak hilang
   // saat validasi gagal.
-  const [studioName, setStudioName] = useState(initial.studio_name ?? 'enpiistudio');
+  const [studioName, setStudioName] = useState(initial.studio_name ?? 'EnStudio');
   const [tagline, setTagline] = useState(initial.tagline ?? '');
 
   return (
@@ -82,7 +82,7 @@ function IdentitySection({ initial }: { initial: SiteIdentity }) {
             type="text"
             value={studioName}
             onChange={(e) => setStudioName(e.target.value)}
-            placeholder="enpiistudio"
+            placeholder="EnStudio"
           />
         </FormField>
 
@@ -189,7 +189,8 @@ function SocialSection({ initial }: { initial: SiteSocial }) {
                   aria-label={t('linkLabelAria')}
                 />
                 <Input
-                  type="url"
+                  type="text"
+                  inputMode="url"
                   value={link.url}
                   placeholder={t('linkUrlPlaceholder')}
                   onChange={(e) => updateLink(idx, { url: e.target.value })}

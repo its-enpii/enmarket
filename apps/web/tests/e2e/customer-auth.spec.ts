@@ -246,36 +246,18 @@ test.describe('Customer auth — protected /akun/* routes', () => {
   });
 });
 
-test.describe('Customer auth — TopNav state', () => {
-  test('TopNav tampilkan link "Masuk" saat belum login', async ({ page }) => {
+test.describe('EnStudio TopNav — guest-first navbar', () => {
+  test('brand EnStudio + link Admin tampil tanpa tombol akun', async ({ page }) => {
     test.slow();
     await page.goto('/id/katalog', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('h1').first()).toBeVisible({ timeout: 60_000 });
 
-    const masukLink = page.locator('header a[href*="/masuk"], header button:has-text("Masuk")').first();
-    await expect(masukLink).toBeVisible();
-  });
+    const header = page.locator('header').first();
+    await expect(header.getByRole('link', { name: 'EnStudio' })).toBeVisible();
+    await expect(header.getByRole('link', { name: /admin/i })).toBeVisible();
 
-  test('TopNav tampilkan link "Akun" saat sudah login', async ({ page, context }) => {
-    test.slow();
-    await context.addCookies([{
-      name: 'customer_token',
-      value: 'fake-token-for-topnav-test',
-      domain: 'localhost',
-      path: '/',
-      httpOnly: false,
-      secure: false,
-      sameSite: 'Lax',
-    }]);
-
-    await page.goto('/id/katalog', { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('h1').first()).toBeVisible({ timeout: 60_000 });
-
-    await page.evaluate(() => localStorage.setItem('customer_token', 'fake-token-for-topnav-test'));
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await expect(page.locator('h1').first()).toBeVisible({ timeout: 60_000 });
-
-    const akunLink = page.locator('header a[href*="/akun"], header button:has-text("Akun")').first();
-    await expect(akunLink).toBeVisible({ timeout: 10_000 });
+    // Akun member ditiadakan: tidak ada tombol Masuk/Akun di navbar, dan jalur topup hilang.
+    await expect(header.locator('a[href*="/akun"], button:has-text("Akun"), a[href*="/masuk"], button:has-text("Masuk")')).toHaveCount(0);
+    await expect(header.locator('a[href*="topup"]')).toHaveCount(0);
   });
 });

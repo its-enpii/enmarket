@@ -78,7 +78,7 @@ services:
       dockerfile: ../../infra/docker/web/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:8000}
-        NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-enpiistudio}
+        NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-EnStudio}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     container_name: enmarket-web
     restart: unless-stopped
@@ -91,7 +91,7 @@ services:
       # Biarkan kosong supaya Next.js auto-set ke 'development'.
       NODE_ENV: ${WEB_NODE_ENV:-development}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:8000}
-      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-enpiistudio}
+      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-EnStudio}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
       # Server-side: Next.js (container web) → Laravel (container api).
       # Pakai hostname internal Docker, BUKAN localhost (browser harus pakai

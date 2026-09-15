@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = await getTranslations({ locale, namespace: 'wishlist' });
   return {
     ...buildMetadata({
-      title: `${t('title')} — enpiistudio`,
+      title: `${t('title')} — EnStudio`,
       description: t('title'),
     }),
     ...noIndexMetadata(),

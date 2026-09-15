@@ -131,7 +131,7 @@ export interface PublicSiteConfig {
 }
 
 export interface PublicNavMenu {
-  key: 'discover' | 'develop' | 'display' | 'layanan' | 'topup';
+  key: 'discover' | 'develop' | 'display' | 'layanan';
   label: string | null;
   href: string;
 }
@@ -580,35 +580,6 @@ export interface GameItem {
   active: boolean;
   created_at: string | null;
   updated_at: string | null;
-}
-
-export interface TopupPreview {
-  game: string;
-  item: string;
-  harga: string;
-  harga_formatted: string;
-  total: number;
-  contact_type: string;
-  contact_value: string;
-  payment_gateways: string[];
-}
-
-export type TopupStatus = 'pending' | 'processing' | 'success' | 'failed';
-
-export interface TopupOrder extends Order {
-  id: number;
-  is_topup_order: boolean;
-  game_id: number | null;
-  game_item_id: number | null;
-  game_user_id: string | null;
-  game_server_id: string | null;
-  contact_type: string | null;
-  contact_value: string | null;
-  topup_status: TopupStatus | null;
-  digiflazz_trx_id: string | null;
-  payment_gateway: string | null;
-  game?: { id: number; nama: string; slug: string; icon_url: string | null } | null;
-  game_item?: { id: number; nama: string; harga: string } | null;
 }
 
 export interface PublicSponsor {

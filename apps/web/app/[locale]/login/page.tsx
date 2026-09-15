@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'login' });
   return buildMetadata({
-    title: `${t('title')} — enpiistudio`,
+    title: `${t('title')} — EnStudio`,
   });
 }
 
@@ -48,7 +48,7 @@ export default async function LoginPage() {
       <div className="w-full max-w-md">
         <Card variant="surface" hoverable={false} thick raised className="p-8">
           <Eyebrow size="md" color="primary" className="mb-2 text-xs tracking-label">
-            enpiistudio Admin
+            EnStudio Admin
           </Eyebrow>
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-ink">
             {t('title')}

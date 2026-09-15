@@ -1,5 +1,5 @@
 /**
- * Three-pillar block — Neobrutalism enpiistudio.
+ * Three-pillar block — Neobrutalism EnStudio.
  *
  * Layout mockup (2+1 grid):
  *   - Discover  | Develop          (atas, 2 kolom, primary bg-ish untuk konten)

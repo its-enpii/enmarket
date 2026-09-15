@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'checkOrder' });
   return {
     ...buildMetadata({
-      title: `${t('title')} — enpiistudio`,
+      title: `${t('title')} — EnStudio`,
       description: t('subtitle'),
     }),
     alternates: localeAlternates(locale, 'cek-pesanan'),

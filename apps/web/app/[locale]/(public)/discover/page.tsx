@@ -1,5 +1,5 @@
 /**
- * Discover — enpiistudio about / manifesto page.
+ * Discover — EnStudio about / manifesto page.
  *
  * Server component; ambil strings via getTranslations({ locale, namespace }).
  */

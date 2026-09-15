@@ -1,5 +1,5 @@
 /**
- * Display — editorial journal / zine of studio writing (enpiistudio).
+ * Display — editorial journal / zine of studio writing (EnStudio).
  * Translated via next-intl 'display' / 'displayList' namespaces.
  */
 

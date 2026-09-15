@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * ───── enmarket design system — NeoBrutalism enpii ─────
+ * ───── enmarket design system — NeoBrutalism EnStudio ─────
  *
  * Palette 4 warna brand:
  *   primary  #3D348B  — deep indigo  (primary buttons, links, accents)
@@ -349,7 +349,7 @@ body {
 
 /*
  * Prose styling untuk konten blog post (render dari Tiptap HTML).
- * Override default Tailwind typography ke NeoBrutalism enpii.
+ * Override default Tailwind typography ke NeoBrutalism EnStudio.
  */
 .prose-content {
   color: var(--color-ink);

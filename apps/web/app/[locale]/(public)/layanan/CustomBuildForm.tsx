@@ -59,7 +59,7 @@ export function CustomBuildForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <FormField label={t('fields.wa')} htmlFor="wa" required hint={t('fields.waHint')} error={fieldErr('wa')}>
-          <Input id="wa" name="wa" type="tel" required placeholder="08123456789" />
+          <Input id="wa" name="wa" type="text" inputMode="tel" required placeholder="08123456789" />
         </FormField>
 
         <FormField label={t('fields.jenisProyek.label')} required error={fieldErr('jenis_proyek')}>

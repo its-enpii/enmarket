@@ -100,7 +100,7 @@ services:
         # Browser fetch /api relatif (same-origin, diproxy NPM ke api:8000).
         # client-api.ts: NEXT_PUBLIC_API_URL kosong/'http://api…' → base ''.
         NEXT_PUBLIC_API_URL: ""
-        NEXT_PUBLIC_SITE_NAME: enpiistudio
+        NEXT_PUBLIC_SITE_NAME: EnStudio
         NEXT_PUBLIC_SITE_URL: https://enmarket.enpiistudio.com
     container_name: enmarket-web
     restart: unless-stopped

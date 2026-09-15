@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = await getTranslations({ locale, namespace: 'customBuild' });
   return {
     ...buildMetadata({
-      title: `${t('title')} — enpiistudio`,
+      title: `${t('title')} — EnStudio`,
       description: t('subtitle'),
     }),
     alternates: localeAlternates(locale, 'layanan'),

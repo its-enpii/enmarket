@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * Latest / Display — Neobrutalism enpiistudio.
+ * Latest / Display — Neobrutalism EnStudio.
  */
 export async function JournalSection({ posts }: Props) {
   const [t, tPost, format] = await Promise.all([

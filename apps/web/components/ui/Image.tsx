@@ -15,7 +15,7 @@ export function Image({ contain = false, className = '', loading = 'lazy', ...re
   const fit = contain ? 'object-contain' : 'object-cover';
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <Image
+    <img
       loading={loading}
       className={`${fit} ${className}`}
       {...rest}

@@ -22,12 +22,23 @@ import { Button } from '@/components/ui/neobrutal';
 import { useTranslations } from 'next-intl';
 
 interface Props {
-  name: string;
+  /**
+   * Nama field form. Kalau diisi, editor merender hidden input bernama sama
+   * supaya HTML ikut ter-submit. Untuk pemakaian terkontrol (mis. per-blok di
+   * block editor), prop ini dihilangkan dan caller membaca lewat `onChange`.
+   */
+  name?: string;
   defaultValue?: string;
   placeholder?: string;
+  onChange?: (html: string) => void;
 }
 
-export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
+export function TiptapEditor({
+  name,
+  defaultValue = '',
+  placeholder,
+  onChange,
+}: Props) {
   const t = useTranslations('admin.shared');
   const [html, setHtml] = useState(defaultValue);
 
@@ -55,12 +66,15 @@ export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
       },
     },
     onUpdate: ({ editor }) => {
-      setHtml(editor.getHTML());
+      const next = editor.getHTML();
+      setHtml(next);
+      onChange?.(next);
     },
   });
 
   // Sync hidden input setiap render — React 19 uncontrolled form pattern
   useEffect(() => {
+    if (!name) return;
     // Update DOM langsung sebagai fallback kalau state sync telat
     const hidden = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
     if (hidden) hidden.value = html;
@@ -76,7 +90,7 @@ export function TiptapEditor({ name, defaultValue = '', placeholder }: Props) {
 
   return (
     <div className="space-y-2">
-      <input type="hidden" name={name} value={html} />
+      {name ? <input type="hidden" name={name} value={html} /> : null}
 
       <Toolbar editor={editor} />
 

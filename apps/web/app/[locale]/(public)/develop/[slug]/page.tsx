@@ -1,5 +1,5 @@
 /**
- * Work Detail — portfolio case study page (enpiistudio).
+ * Work Detail — portfolio case study page (EnStudio).
  *
  * Brief: halaman ini BUKAN e-commerce product page. Rasanya seperti flipping
  * through a designer's case study book.
@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     ...buildMetadata({
-      title: `${product.nama} — enpiistudio`,
+      title: `${product.nama} — EnStudio`,
       description,
     }),
     keywords: [product.nama, product.category?.nama ?? '', TIPE_LABEL[product.tipe] ?? product.tipe].filter(Boolean),

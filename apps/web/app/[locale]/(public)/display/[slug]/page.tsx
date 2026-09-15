@@ -33,6 +33,11 @@ import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateLong, formatDateShort } from '@/lib/format';
 import { buildMetadata, localeAlternates } from '@/lib/seo';
 import type { Post } from '@/lib/types';
+import {
+  contentHasBlockquote,
+  estimateReadingMinutes,
+  parsePostContent,
+} from '@/lib/post-blocks';
 
 import { CornerAccent } from '@/components/ui/CornerAccent';
 import { HoverImage } from '@/components/ui/HoverImage';
@@ -80,7 +85,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     ...buildMetadata({
-      title: `${post.title} — Display enpiistudio`,
+      title: `${post.title} — Display EnStudio`,
       description,
     }),
     keywords: post.excerpt ? [post.title, post.excerpt] : [post.title],
@@ -126,6 +131,13 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
   // Fetch related — fallback to latest, exclude current
   const related = await fetchRelated(slug);
+  // Estimasi baca dari blocks: untuk format baru, angka backend (strip_tags atas
+  // JSON) ikut menghitung sintaks, jadi dihitung ulang di sini.
+  const readingMinutes =
+    estimateReadingMinutes(parsePostContent(post.content)) ||
+    post.reading_time_minutes ||
+    0;
+
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
   const postUrl = `${baseUrl}/${locale}/display/${post.slug}`;
   const description = post.excerpt ?? post.title;
@@ -244,11 +256,11 @@ export default async function DisplayDetailPage({ params }: PageProps) {
             <span className="font-label text-label-sm uppercase tracking-wider text-ink">
               {date}
             </span>
-            {post.reading_time_minutes ? (
+            {readingMinutes ? (
               <>
                 <span aria-hidden="true" className="font-bold text-ink/30">·</span>
                 <span className="font-label text-label-sm uppercase tracking-wider text-ink">
-                  {t('minutes', { count: post.reading_time_minutes })}
+                  {t('minutes', { count: readingMinutes })}
                 </span>
               </>
             ) : null}
@@ -264,12 +276,15 @@ export default async function DisplayDetailPage({ params }: PageProps) {
       <SectionBand>
         <SectionContainer py="lg">
           <div className="max-w-3xl mx-auto">
-            <article className="prose-content">
+            {/* PostContent memberi class .prose-content per blok rich_text —
+                jangan wrap <article> juga, kalau tidak style pre/code blok
+                kode & callout ikut ter-override. */}
+            <article>
               <PostContent content={post.content ?? ''} />
             </article>
 
             {/* Pull-quote callout jika tidak ada blockquote di content */}
-            {!post.content?.includes('<blockquote') && post.excerpt && (
+            {!contentHasBlockquote(post.content) && post.excerpt && (
               <aside className="mt-12 border-l-8 border-accent pl-6 py-4">
                 <p className="font-display text-2xl md:text-3xl font-black uppercase leading-tight text-ink">
                   &ldquo;{post.excerpt}&rdquo;

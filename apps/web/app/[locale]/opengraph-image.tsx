@@ -5,7 +5,7 @@ export const size = {
   height: 630,
 };
 
-export const alt = 'enpiistudio — Discover · Develop · Display';
+export const alt = 'EnStudio — Discover · Develop · Display';
 
 export default function OpenGraphImage() {
   return new ImageResponse(
@@ -43,7 +43,7 @@ export default function OpenGraphImage() {
               textTransform: 'uppercase',
             }}
           >
-            enpiistudio
+            EnStudio
           </div>
           <div
             style={{

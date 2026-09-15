@@ -61,7 +61,7 @@ export function SearchBar({
   return (
     <form onSubmit={onSubmit} className={isCompact ? 'flex flex-col gap-2' : 'flex gap-2'}>
       <Input
-        type="search"
+        type="text"
         name="q"
         value={q}
         onChange={(e) => setQ(e.target.value)}

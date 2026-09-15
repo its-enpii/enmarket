@@ -74,7 +74,7 @@ export default async function HomePage({ params }: PageProps) {
 
   const sponsors = siteConfigResp.data?.sponsors ?? [];
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
-  const organizationName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'enpiistudio';
+  const organizationName = process.env.NEXT_PUBLIC_SITE_NAME ?? 'EnStudio';
 
   return (
     <>

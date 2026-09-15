@@ -1,8 +1,8 @@
 {
   "common": {
     "site": {
-      "title": "enpiistudio — Discover, develop, display",
-      "description": "Studio solo · Karya digital dan catatan proses."
+      "title": "EnStudio — Discover, Develop, Display",
+      "description": "Studio solo · Showcase karya digital, riset, dan layanan custom."
     },
     "buttons": {
       "back": "← Kembali",
@@ -80,11 +80,10 @@
     "wishlistCount": "Item di wishlist",
     "login": "Masuk / Daftar",
     "account": "Akun",
-    "topup": "Top Up",
     "quickMenu": "Menu cepat"
   },
   "footer": {
-    "brandTitle": "enpiistudio",
+    "brandTitle": "EnStudio",
     "tagline": "Studio solo · Karya digital & catatan proses",
     "subscribeTitle": "Ikuti Catatan Terbaru",
     "emailPlaceholder": "email@domain.com",
@@ -103,7 +102,7 @@
       "orders": "Cek Pesanan",
       "admin": "Admin"
     },
-    "copyright": "© {year} enpiistudio. Tiap karya di sini dibuat dengan sengaja.",
+    "copyright": "© {year} EnStudio. Tiap karya di sini dibuat dengan sengaja.",
     "legalTitle": "Legal",
     "legalLinks": {
       "terms": "Syarat & Ketentuan",
@@ -117,9 +116,9 @@
     }
   },
   "home": {
-    "heroEyebrow": "Studio Enpii",
+    "heroEyebrow": "EnStudio",
     "heroTitle": "Discover, develop, display.",
-    "heroSubtitle": "Tiga kata, satu alur kerja. Marketplace karya digital dari studio solo.",
+    "heroSubtitle": "Showcase karya digital, riset teknologi, dan produk personal oleh Enpii.",
     "heroCta": "Lihat Karya Develop",
     "pillarsTitle": "Tiga Pilar",
     "pillarsSubtitle": "Cara kami berpikir, membuat, dan berbagi.",
@@ -132,7 +131,7 @@
     "pillarExplore": "Explore {title}",
     "featuredTitle": "Featured Developments",
     "featuredSubtitle": "Pilihan terbaru dari Develop, sudah jadi dan siap dipakai.",
-    "featuredFallback": "Artefak digital dari studio enpii, siap digunakan dan dikembangkan.",
+    "featuredFallback": "Artefak digital dari EnStudio, siap digunakan dan dikembangkan.",
     "featuredEmpty": "Belum ada karya di-feature. Cek lagi nanti.",
     "viewAllDevelop": "Lihat Semua Develop",
     "journalTitle": "Latest / Display",
@@ -151,7 +150,7 @@
     "title": "Discover",
     "subtitle": "Kerja yang dimulai dari rasa penasaran, bukan brief klien.",
     "storyTitle": "“Code is a material, not a delivery mechanism.”",
-    "storyBody1": "enpiistudio dimulai sebagai ruang pribadi. Tempat menyimpan eksperimen yang terlalu spesifik untuk portofolio klien, terlalu jujur untuk disembunyikan di balik tampilan yang dipoles.",
+    "storyBody1": "EnStudio dimulai sebagai ruang pribadi. Tempat menyimpan eksperimen yang terlalu spesifik untuk portofolio klien, terlalu jujur untuk disembunyikan di balik tampilan yang dipoles.",
     "storyBody2": "Saya percaya programming dan design itu kebiasaan yang sama: memilih dengan sengaja, menolak default, dan baca dokumentasi sampai baris terakhir.",
     "storyBody3": "Karya di sini adalah snapshot dari proses itu. Bukan produk akhir, tapi artefak yang masih kelihatan cara bikinnya.",
     "signature": "— e° / solo studio",
@@ -202,7 +201,7 @@
     "divider1": "Dibuat dengan niat, bukan sekadar permintaan.",
     "divider2": "Harga hanyalah angka; nilainya ada pada karya di baliknya.",
     "divider3": "Sebagian karya di sini masih dalam tahap eksplorasi.",
-    "fallbackDescription": "Artefak digital dari studio enpii.",
+    "fallbackDescription": "Artefak digital dari EnStudio.",
     "view": "Lihat"
   },
   "developDetail": {
@@ -214,8 +213,8 @@
     "share": "Bagikan",
     "relatedTitle": "Karya lainnya.",
     "back": "← Kembali ke Develop",
-    "notFound": "Karya tidak ditemukan · enpiistudio",
-    "fallbackDescription": "{name}, karya dari studio enpii.",
+    "notFound": "Karya tidak ditemukan · EnStudio",
+    "fallbackDescription": "{name}, karya dari EnStudio.",
     "studioPick": "Pilihan Studio",
     "studioPickLabel": "Pilihan Studio",
     "status": "Status",
@@ -248,7 +247,7 @@
     "linkedPostsTitle": "Panduan & catatan terkait.",
     "linkedPostsHint": "Baca dulu sebelum checkout, biar nggak ada yang ketipu.",
     "linkedPostsRead": "Baca catatan",
-    "relatedFallback": "Karya dari studio enpii.",
+    "relatedFallback": "Karya dari EnStudio.",
     "galleryOpen": "Lihat {name} dalam ukuran penuh",
     "galleryOpenNumber": "Lihat gambar {number} dalam ukuran penuh",
     "galleryDialog": "Pratinjau gambar",
@@ -312,7 +311,7 @@
     "share": "Bagikan",
     "readEntry": "Baca catatan ini",
     "readShort": "Baca",
-    "notFound": "Catatan tidak ditemukan · enpiistudio",
+    "notFound": "Catatan tidak ditemukan · EnStudio",
     "fallbackEyebrow": "Catatan studio",
     "fallbackCover": "Tanpa gambar sampul. Isinya berbicara sendiri.",
     "minutes": "{count} menit baca",
@@ -624,7 +623,7 @@
     },
     "dashboard": {
       "title": "Beranda",
-      "subtitle": "Ringkasan toko digital enpiistudio. Angka realtime.",
+      "subtitle": "Ringkasan toko digital EnStudio. Angka realtime.",
       "eyebrow": "Dashboard",
       "sectionStats": "Statistik",
       "sectionQuick": "Quick action",
@@ -695,7 +694,7 @@
     },
     "sidebar": {
       "viewStore": "← Lihat Toko",
-      "brandTitle": "enpiistudio",
+      "brandTitle": "EnStudio",
       "brandSubtitle": "Admin",
       "openMenu": "Buka menu",
       "closeMenu": "Tutup menu",
@@ -704,7 +703,7 @@
     },
     "footer": {
       "brand": "Admin Panel",
-      "store": "— enpiistudio Store",
+      "store": "— EnStudio Store",
       "viewStore": "← Lihat Toko"
     },
     "shared": {
@@ -759,7 +758,7 @@
     },
     "topbarTitles": {
       "dashboard": "Beranda",
-      "dashboardSubtitle": "Ringkasan toko digital enpiistudio.",
+      "dashboardSubtitle": "Ringkasan toko digital EnStudio.",
       "products": "Produk",
       "productsSubtitle": "Kelola semua produk di katalog.",
       "categories": "Kategori",
@@ -1382,7 +1381,6 @@
         "menu_develop": "Develop",
         "menu_display": "Display",
         "menu_layanan": "Layanan",
-        "menu_topup": "Top Up",
         "menuEnabledHint": "Tampilkan di navbar publik.",
         "fieldLabelOverride": "Label Override",
         "fieldLabelOverrideHint": "Opsional. Maksimal 100 karakter; kosongkan untuk label default.",
@@ -1688,7 +1686,7 @@
     "freeSample": "SAMPLE GRATIS",
     "waSupport": "BANTUAN WA",
     "freeUpdates": "UPDATE GRATIS",
-    "studioWorks": "KARYA STUDIO ENPII"
+    "studioWorks": "KARYA ENSTUDIO"
   },
   "wishlist": {
     "add": "Ditambahkan ke wishlist",
@@ -1790,8 +1788,7 @@
       "wishlist": "Wishlist",
       "profile": "Pengaturan Profil",
       "logout": "Keluar",
-      "customerAccount": "Akun Pelanggan",
-      "topups": "Riwayat Top-up"
+      "customerAccount": "Akun Pelanggan"
     },
     "dashboard": {
       "title": "Dasbor Akun",
@@ -1821,7 +1818,7 @@
         "expired": "Kedaluwarsa",
         "refunded": "Dikembalikan"
       },
-      "subtitle": "Daftar riwayat semua pesanan digital dan lisensi Anda di enpiistudio.",
+      "subtitle": "Daftar riwayat semua pesanan digital dan lisensi Anda di EnStudio.",
       "emptyHint": "Anda belum pernah membuat pesanan dengan akun ini.",
       "startShopping": "Mulai Belanja",
       "pageInfo": "Halaman {page} dari {lastPage}",
@@ -1866,17 +1863,6 @@
       "emptyHint": "Jelajahi produk kami dan klik ikon hati untuk menyimpan produk favorit Anda.",
       "exploreCatalog": "Jelajahi Katalog",
       "defaultCategory": "Digital"
-    },
-    "topups": {
-      "title": "Riwayat Top-up",
-      "empty": "Belum ada riwayat top-up.",
-      "viewDetail": "Lihat Detail",
-      "status": {
-        "pending": "Menunggu",
-        "processing": "Diproses",
-        "success": "Berhasil",
-        "failed": "Gagal"
-      }
     },
     "sidebar": {
       "title": "Akun Pelanggan",
@@ -1928,46 +1914,6 @@
     "submitSuccess": "Ulasan Anda berhasil dikirim dan dipublikasikan!",
     "submitError": "Gagal mengirimkan ulasan. Silakan periksa kembali isian Anda."
   },
-  "topup": {
-    "title": "Top Up Game",
-    "subtitle": "Isi saldo game favoritmu dengan mudah dan cepat.",
-    "pickGame": "Pilih Game",
-    "pickItem": "Pilih Nominal",
-    "userId": "User ID",
-    "userIdHint": "Masukkan User ID game kamu",
-    "serverId": "Server ID",
-    "serverIdHint": "Masukkan Server ID (jika diperlukan)",
-    "contactLabel": "Kontak untuk Notifikasi",
-    "contactPhone": "Nomor WhatsApp",
-    "contactEmail": "Alamat Email",
-    "payNow": "Bayar Sekarang",
-    "processing": "Memproses...",
-    "successTitle": "Top-up Sedang Diproses",
-    "successMessage": "Top-up sedang diproses. Notifikasi akan dikirim ke {contact}.",
-    "failedTitle": "Pembayaran Gagal",
-    "failedMessage": "Pembayaran gagal. Silakan coba lagi.",
-    "previewTitle": "Ringkasan Top-up",
-    "total": "Total Pembayaran",
-    "confirm": "Konfirmasi & Bayar",
-    "paymentMethod": "Metode Pembayaran",
-    "noGames": "Belum ada game tersedia.",
-    "noItems": "Belum ada nominal tersedia.",
-    "backToGames": "← Kembali ke Daftar Game",
-    "errors": {
-      "userIdRequired": "User ID wajib diisi.",
-      "serverIdRequired": "Server ID wajib diisi untuk game ini.",
-      "contactRequired": "Nomor telepon atau email wajib diisi.",
-      "gameNotFound": "Game tidak ditemukan.",
-      "itemRequired": "Pilih nominal terlebih dahulu.",
-      "paymentGatewayRequired": "Pilih metode pembayaran terlebih dahulu.",
-      "checkoutFailed": "Checkout gagal. Silakan coba lagi."
-    },
-    "viaGateway": "via {gateway}",
-    "gateways": {
-      "duitku": "Duitku",
-      "tripay": "Tripay (QRIS)"
-    }
-  },
   "sponsor": {
     "eyebrow": "Sponsor",
     "title": "Jadi Sponsor",
@@ -2015,11 +1961,11 @@
     }
   },
   "terms": {
-    "metaTitle": "Syarat & Ketentuan — enpiistudio",
-    "metaDescription": "Syarat penggunaan storefront enpiistudio, produk digital, dan layanan terkait.",
+    "metaTitle": "Syarat & Ketentuan — EnStudio",
+    "metaDescription": "Syarat penggunaan storefront EnStudio, produk digital, dan layanan terkait.",
     "eyebrow": "Legal",
     "title": "Syarat & Ketentuan",
-    "subtitle": "Aturan penggunaan storefront, katalog, checkout, dan karya digital di enpiistudio.",
+    "subtitle": "Aturan penggunaan storefront, katalog, checkout, dan karya digital di EnStudio.",
     "updated": "Terakhir diperbarui: {date}",
     "tocLabel": "Daftar isi",
     "backLabel": "Kembali ke beranda",
@@ -2028,7 +1974,7 @@
       {
         "heading": "Ketentuan umum",
         "paragraphs": [
-          "Syarat ini mengatur penggunaan enpiistudio termasuk storefront publik, katalog, checkout, dan layanan terkait (Layanan). Dengan mengakses atau menggunakan Layanan, Anda menyetujui syarat ini. Jika tidak setuju, mohon tidak menggunakan Layanan."
+          "Syarat ini mengatur penggunaan EnStudio termasuk storefront publik, katalog, checkout, dan layanan terkait (Layanan). Dengan mengakses atau menggunakan Layanan, Anda menyetujui syarat ini. Jika tidak setuju, mohon tidak menggunakan Layanan."
         ]
       },
       {
@@ -2088,11 +2034,11 @@
     ]
   },
   "privacy": {
-    "metaTitle": "Kebijakan Privasi — enpiistudio",
-    "metaDescription": "Penjelasan pengumpulan, penggunaan, dan penyimpanan data pribadi di enpiistudio.",
+    "metaTitle": "Kebijakan Privasi — EnStudio",
+    "metaDescription": "Penjelasan pengumpulan, penggunaan, dan penyimpanan data pribadi di EnStudio.",
     "eyebrow": "Legal",
     "title": "Kebijakan Privasi",
-    "subtitle": "Bagaimana enpiistudio mengumpulkan, menggunakan, dan menjaga data pribadi Anda.",
+    "subtitle": "Bagaimana EnStudio mengumpulkan, menggunakan, dan menjaga data pribadi Anda.",
     "updated": "Terakhir diperbarui: {date}",
     "tocLabel": "Daftar isi",
     "backLabel": "Kembali ke beranda",
@@ -2147,5 +2093,51 @@
         ]
       }
     ]
+  },
+  "postBlocks": {
+    "editorEyebrow": "Blok Konten",
+    "editorTitle": "Susun Catatan",
+    "blockCount": "{count} blok",
+    "legacyNotice": "Catatan ini masih memakai format lama (HTML utuh). Setiap blok yang diedit akan disimpan sebagai format blok — tidak ada konten yang hilang.",
+    "emptyBlock": "Blok ini kosong dan tidak ditampilkan.",
+    "emptyContentError": "Konten belum diisi. Tambahkan minimal satu blok sebelum menyimpan.",
+    "typeRichText": "Teks",
+    "typeCode": "Kode",
+    "typeImage": "Gambar",
+    "typeVideo": "Video",
+    "typeCallout": "Callout",
+    "addRichText": "Tambah Teks",
+    "addCode": "Tambah Kode",
+    "addImage": "Tambah Gambar",
+    "addVideo": "Tambah Video",
+    "addCallout": "Tambah Callout",
+    "richTextPlaceholder": "Mulai menulis… (bold, italic, H2/H3, list, link, image, code)",
+    "code": "Kode",
+    "language": "Bahasa",
+    "filename": "Nama File",
+    "imageUrl": "URL Gambar",
+    "videoUrl": "URL Video",
+    "videoUrlHint": "YouTube, Vimeo, atau file langsung (.mp4 / .webm / .mov).",
+    "embedUrl": "URL Embed",
+    "embedUrlHint": "Opsional. Untuk gambar: URL tujuan saat gambar diklik.",
+    "embedPreview": "Pratautan embed:",
+    "pickFromLibrary": "Pilih dari Library",
+    "caption": "Keterangan",
+    "alt": "Teks Alternatif",
+    "altHint": "Untuk pembaca layar dan saat gambar gagal dimuat.",
+    "calloutTone": "Jenis Callout",
+    "calloutPlaceholder": "Tulis catatan singkat: asumsi, peringatan, atau tip.",
+    "toneInfo": "Info",
+    "toneTip": "Tip",
+    "toneWarning": "Peringatan",
+    "copyCode": "Salin",
+    "copied": "Tersalin!",
+    "copyFailed": "Gagal menyalin",
+    "moveUp": "Pindah Atas",
+    "moveDown": "Pindah Bawah",
+    "deleteBlock": "Hapus Blok",
+    "emptyImage": "Gambar belum diisi",
+    "emptyVideo": "Video belum diisi",
+    "emptyContent": "Catatan ini belum punya isi."
   }
 }

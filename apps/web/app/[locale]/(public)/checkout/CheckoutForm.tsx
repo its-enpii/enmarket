@@ -138,7 +138,8 @@ export function CheckoutForm({
         <Input
           id="wa"
           name="wa"
-          type="tel"
+          type="text"
+          inputMode="tel"
           required
           autoComplete="tel"
           placeholder="08123456789"

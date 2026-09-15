@@ -1,5 +1,5 @@
 /**
- * Develop — curated catalog of studio works (enpiistudio).
+ * Develop — curated catalog of studio works (EnStudio).
  *
  * Brief: halaman ini BUKAN e-commerce grid. Rasanya seperti flipping through
  * designer's curated collection — harga secondary, vibe primary.
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'develop' });
   return {
     ...buildMetadata({
-      title: `${t('title')} — enpiistudio`,
+      title: `${t('title')} — EnStudio`,
       description: t('listSubtitle'),
     }),
     alternates: localeAlternates(locale, 'develop'),

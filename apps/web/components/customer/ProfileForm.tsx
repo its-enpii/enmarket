@@ -68,7 +68,8 @@ export function ProfileForm() {
       <FormField label={t('phoneLabel')} htmlFor="phone" hint={t('phoneHint')}>
         <Input
           id="phone"
-          type="tel"
+          type="text"
+          inputMode="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="08123456789"

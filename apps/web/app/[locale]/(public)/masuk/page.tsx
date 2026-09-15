@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'customer.login' });
   return {
     ...buildMetadata({
-      title: `${t('title')} — enpiistudio`,
+      title: `${t('title')} — EnStudio`,
       description: t('subtitle'),
     }),
     ...noIndexMetadata(),
@@ -43,7 +43,7 @@ export default async function MasukPage({ params, searchParams }: PageProps) {
       <div className="w-full max-w-md">
         <Card variant="surface" hoverable={false} thick raised className="p-6 sm:p-8">
           <Eyebrow size="md" color="primary" className="mb-2 text-xs tracking-label">
-            enpiistudio Akun
+            EnStudio Akun
           </Eyebrow>
           <h1 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight text-ink">
             {t('title')}

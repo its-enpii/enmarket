@@ -1,5 +1,5 @@
 /**
- * Footer — Neobrutalism enpiistudio.
+ * Footer — Neobrutalism EnStudio.
  *
  * Server component; ambil strings via getTranslations + dynamic social links
  * dari /api/public/site-config. Order paid order_id saat admin update
@@ -7,7 +7,7 @@
  * ditrack via webhook / settings update path).
  *
  * ponytail: kalau storefront butuh logo dinamis, render `<img>` dari
- * config.logo_url di sini menggantikan teks "ENPII STUDIO" — saat ini
+ * config.logo_url di sini menggantikan teks "ENSTUDIO" — saat ini
  * hardcoded brand wordmark dipertahankan untuk konsistensi tipografi.
  */
 
@@ -46,7 +46,7 @@ export async function Footer() {
           {/* Left col: brand */}
           <div className="flex flex-col gap-8">
             <h3 className="font-display text-headline-xl font-black uppercase leading-none">
-              ENPII
+              EN
               <br />
               STUDIO
             </h3>
