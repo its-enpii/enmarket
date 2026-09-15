@@ -85,7 +85,6 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
             variant="outline"
             size="sm"
             flat
-            size-icon
             borderColor="surface"
             textColor="surface"
             onClick={onClose}
