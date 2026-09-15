@@ -103,6 +103,8 @@
   --aspect-43: 4 / 3;
 
   --animate-marquee: marquee 30s linear infinite;
+  /* Popover/dropdown neobrutal — muncul cepat dari atas dengan sedikit scale. */
+  --animate-pop-in: pop-in 160ms ease-out both;
 
   /* Urutan layer: raised 10 < topbar 30 < backdrop 40 < nav 50 < lightbox 60
      < modal 120 < dialog 130 < toast 140. */
@@ -122,6 +124,17 @@
   }
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

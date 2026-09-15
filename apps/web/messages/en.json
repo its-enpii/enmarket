@@ -2136,6 +2136,13 @@
     "moveUp": "Move Up",
     "moveDown": "Move Down",
     "deleteBlock": "Delete Block",
+    "addBlockButton": "+ Add Block",
+    "addMenuHint": "Pick a block type to append to the note.",
+    "dragHandle": "Drag to reorder",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "collapseAll": "Collapse All",
+    "expandAll": "Expand All",
     "emptyImage": "Image not filled in yet",
     "emptyVideo": "Video not filled in yet",
     "emptyContent": "This note has no content yet."

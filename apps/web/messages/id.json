@@ -2136,6 +2136,13 @@
     "moveUp": "Pindah Atas",
     "moveDown": "Pindah Bawah",
     "deleteBlock": "Hapus Blok",
+    "addBlockButton": "+ Tambah Blok",
+    "addMenuHint": "Pilih tipe blok untuk menambah di akhir catatan.",
+    "dragHandle": "Tarik untuk mengatur urutan",
+    "collapse": "Ciutkan",
+    "expand": "Bentangkan",
+    "collapseAll": "Ciutkan Semua",
+    "expandAll": "Bentangkan Semua",
     "emptyImage": "Gambar belum diisi",
     "emptyVideo": "Video belum diisi",
     "emptyContent": "Catatan ini belum punya isi."

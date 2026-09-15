@@ -6,11 +6,23 @@
  * input bernama `content`. Backend tidak berubah — kolom `posts.content` adalah
  * `longText` yang menyimpan JSON itu secara native, dan `PostContent` di sisi
  * publik tetap merender HTML lama (lihat lib/post-blocks.ts).
+ *
+ * Tiap blok dirender sebagai Accordion Shell: grip drag-and-drop di kiri untuk
+ * reordering (HTML5 DnD API), header tengah untuk expand/collapse, dan kontrol
+ * naik/turun/hapus di kanan. Toolbar tambah blok berupa satu tombol yang
+ * membuka popover horizontal berisi lima tipe blok.
  */
 
 'use client';
 
-import { useActionState, useEffect, useMemo, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useActionState,
+  type DragEvent,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -37,6 +49,7 @@ import {
   formatVideoEmbedUrl,
   parsePostContent,
   serializePostBlocks,
+  blocksToPlainText,
   type BlockType,
   type CalloutTone,
   type PostBlock,
@@ -58,6 +71,15 @@ const ADD_BUTTONS: { type: BlockType; key: string; icon: IconName }[] = [
   { type: 'video', key: 'addVideo', icon: 'play' },
   { type: 'callout', key: 'addCallout', icon: 'quote' },
 ];
+
+/** Label badge per tipe blok — dipakai accordion header dan isi popover. */
+const BLOCK_LABEL_KEYS: Record<BlockType, string> = {
+  rich_text: 'typeRichText',
+  code: 'typeCode',
+  image: 'typeImage',
+  video: 'typeVideo',
+  callout: 'typeCallout',
+};
 
 const CALLOUT_TONES: CalloutTone[] = ['info', 'tip', 'warning'];
 
@@ -82,6 +104,24 @@ export function PostForm({ initial }: Props) {
   const [slug, setSlug] = useState(initial?.slug ?? '');
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '');
   const [status, setStatus] = useState<PostStatus>(initial?.status ?? 'draft');
+
+  /**
+   * Accordion state. `true` = blok ciut. Default semua bentang supaya blok
+   * hasil parse langsung bisa diedit tanpa satu kali klik tambahan.
+   */
+  const [collapsedBlocks, setCollapsedBlocks] = useState<Record<string, boolean>>({});
+  const [draggedBlockId, setDraggedBlockId] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [showAddMenu, setShowAddMenu] = useState(false);
+
+  const addMenuRef = useRef<HTMLDivElement>(null);
+  const addButtonRef = useRef<HTMLDivElement>(null);
+  /**
+   * Cerminan `draggedBlockId` untuk logika drop. State React baru terbaca di
+   * render berikutnya, sedangkan `dragover`/`drop` bisa fires sebelum itu —
+   * ref menjamin index sumber tetap diketahui sepanjang seri drag.
+   */
+  const draggedIdRef = useRef<string | null>(null);
 
   // Id blok awal dibuat literal: id acak dari createBlock() berbeda antara
   // render server dan client, yang memicu mismatch hydration.
@@ -131,12 +171,19 @@ export function PostForm({ initial }: Props) {
 
   function addBlock(type: BlockType) {
     setBlocks((prev) => [...prev, createBlock(type)]);
+    setShowAddMenu(false);
   }
 
   function removeBlock(id: string) {
     setBlocks((prev) =>
       prev.length <= 1 ? prev : prev.filter((block) => block.id !== id),
     );
+    setCollapsedBlocks((prev) => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   }
 
   function moveBlock(index: number, direction: -1 | 1) {
@@ -149,6 +196,58 @@ export function PostForm({ initial }: Props) {
     });
   }
 
+  function toggleCollapse(id: string) {
+    setCollapsedBlocks((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  /** collapseAll = true → semua ciut; false → semua bentang. */
+  function setAllCollapsed(collapsed: boolean) {
+    setCollapsedBlocks(
+      Object.fromEntries(blocks.map((block) => [block.id, collapsed])),
+    );
+  }
+
+  // ───── Drag and drop reordering (HTML5 DnD API) ─────
+
+  function handleDragStart(e: DragEvent<HTMLElement>, id: string) {
+    setDraggedBlockId(id);
+    draggedIdRef.current = id;
+    e.dataTransfer.effectAllowed = 'move';
+    // Firefox butuh data agar seri drag aktif.
+    e.dataTransfer.setData('text/plain', id);
+  }
+
+  function handleDragOver(e: DragEvent<HTMLElement>, index: number) {
+    if (!draggedIdRef.current) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex((prev) => (prev === index ? prev : index));
+  }
+
+  function handleDrop(e: DragEvent<HTMLElement>, targetIndex: number) {
+    e.preventDefault();
+    const sourceId = draggedIdRef.current || e.dataTransfer.getData('text/plain');
+    draggedIdRef.current = null;
+    setDraggedBlockId(null);
+    setDragOverIndex(null);
+    if (!sourceId) return;
+
+    setBlocks((prev) => {
+      const fromIndex = prev.findIndex((block) => block.id === sourceId);
+      if (fromIndex === -1 || fromIndex === targetIndex) return prev;
+      const next = [...prev];
+      const [removed] = next.splice(fromIndex, 1);
+      next.splice(targetIndex, 0, removed);
+      return next;
+    });
+  }
+
+  function handleDragEnd() {
+    draggedIdRef.current = null;
+    setDraggedBlockId(null);
+    setDragOverIndex(null);
+  }
+
   function patchData<T extends PostBlock>(block: T, patch: Partial<T['data']>) {
     setBlocks((prev) =>
       prev.map((item) =>
@@ -158,6 +257,35 @@ export function PostForm({ initial }: Props) {
       ),
     );
   }
+
+  // Popover tutup saat klik di luar atau Escape — pola sama seperti SelectSearch.
+  useEffect(() => {
+    if (!showAddMenu) return;
+
+    function onPointerDown(e: MouseEvent) {
+      if (
+        addMenuRef.current?.contains(e.target as Node) ||
+        addButtonRef.current?.contains(e.target as Node)
+      ) {
+        return;
+      }
+      setShowAddMenu(false);
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'Escape') return;
+      setShowAddMenu(false);
+    }
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [showAddMenu]);
+
+  const allCollapsed = blocks.length > 0 && blocks.every((block) => collapsedBlocks[block.id]);
 
   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
 
@@ -248,28 +376,77 @@ export function PostForm({ initial }: Props) {
                 block={block}
                 index={index}
                 total={blocks.length}
+                collapsed={!!collapsedBlocks[block.id]}
+                dragging={draggedBlockId === block.id}
+                dragOver={dragOverIndex === index && draggedBlockId !== block.id}
                 onPatch={patchData}
                 onMove={moveBlock}
                 onRemove={removeBlock}
+                onToggleCollapse={toggleCollapse}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
               />
             ))}
           </div>
 
-          {/* ————— Toolbar tambah blok ————— */}
-          <div className="mt-5 flex flex-wrap gap-2 border-4 border-ink bg-surface p-3 shadow-brutal-4">
-            {ADD_BUTTONS.map((item) => (
+          {/* ————— Toolbar: 1 tombol + popover horizontal ————— */}
+          <div ref={addButtonRef} className="relative mt-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <Button
-                key={item.key}
+                type="button"
+                variant="primary"
+                size="md"
+                onClick={() => setShowAddMenu((prev) => !prev)}
+                aria-expanded={showAddMenu}
+                aria-controls="block-add-popover"
+                className="inline-flex items-center gap-2 font-label text-label-sm uppercase tracking-label"
+              >
+                <span aria-hidden="true" className="text-base leading-none">
+                  +
+                </span>
+                {tb('addBlockButton')}
+                <Icon name="chevron-down" size={14} className={showAddMenu ? 'rotate-180' : ''} />
+              </Button>
+
+              <Button
                 type="button"
                 variant="surface"
                 size="sm"
-                onClick={() => addBlock(item.type)}
-                className="inline-flex items-center gap-2 font-label text-label-sm uppercase tracking-wider"
+                onClick={() => setAllCollapsed(!allCollapsed)}
+                className="font-label text-label-sm uppercase tracking-label"
               >
-                <Icon name={item.icon} size={14} />
-                {tb(item.key)}
+                {allCollapsed ? tb('expandAll') : tb('collapseAll')}
               </Button>
-            ))}
+            </div>
+
+            {showAddMenu ? (
+              <div
+                ref={addMenuRef}
+                id="block-add-popover"
+                role="group"
+                aria-label={tb('addBlockButton')}
+                className="absolute left-0 z-topbar mt-2 flex w-full flex-wrap items-center gap-2 border-4 border-ink bg-surface p-3 shadow-brutal-4 animate-pop-in"
+              >
+                {ADD_BUTTONS.map((item) => (
+                  <Button
+                    key={item.key}
+                    type="button"
+                    variant="surface"
+                    size="sm"
+                    onClick={() => addBlock(item.type)}
+                    className="inline-flex items-center gap-2 font-label text-label-sm uppercase tracking-label"
+                  >
+                    <Icon name={item.icon} size={14} />
+                    {tb(item.key)}
+                  </Button>
+                ))}
+                <Eyebrow size="label-sm" color="ink-subtle" className="ml-auto hidden lg:block">
+                  {tb('addMenuHint')}
+                </Eyebrow>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>
@@ -361,32 +538,93 @@ interface BlockCardProps {
   block: PostBlock;
   index: number;
   total: number;
+  /** true = accordion ciut (hanya header yang tampil). */
+  collapsed: boolean;
+  /** true = blok ini sedang ditarik (source of drag). */
+  dragging: boolean;
+  /** true = kursor drag berada di atas blok ini (target drop). */
+  dragOver: boolean;
   onPatch: <T extends PostBlock>(block: T, patch: Partial<T['data']>) => void;
   onMove: (index: number, direction: -1 | 1) => void;
   onRemove: (id: string) => void;
+  onToggleCollapse: (id: string) => void;
+  onDragStart: (e: DragEvent<HTMLElement>, id: string) => void;
+  onDragEnd: () => void;
+  onDragOver: (e: DragEvent<HTMLElement>, index: number) => void;
+  onDrop: (e: DragEvent<HTMLElement>, index: number) => void;
 }
 
-function BlockCard({ block, index, total, onPatch, onMove, onRemove }: BlockCardProps) {
+function BlockCard({
+  block,
+  index,
+  total,
+  collapsed,
+  dragging,
+  dragOver,
+  onPatch,
+  onMove,
+  onRemove,
+  onToggleCollapse,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDrop,
+}: BlockCardProps) {
   const tb = useTranslations('postBlocks');
-  const labelKey: Record<BlockType, string> = {
-    rich_text: 'typeRichText',
-    code: 'typeCode',
-    image: 'typeImage',
-    video: 'typeVideo',
-    callout: 'typeCallout',
-  };
+  const headerId = `${block.id}-accordion-header`;
+  const bodyId = `${block.id}-accordion-body`;
+  const emptyLabel =
+    block.type === 'image'
+      ? tb('emptyImage')
+      : block.type === 'video'
+        ? tb('emptyVideo')
+        : '';
+  const preview = blockPreview(block, emptyLabel);
 
   return (
-    <Card variant="surface" hoverable={false} thick elevation={4} className="p-0">
-      <div className="flex flex-wrap items-center gap-2 border-b-4 border-ink bg-ink px-3 py-2">
-        <span className="font-label text-micro uppercase tracking-label text-surface/60">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-        <Eyebrow size="label-sm" color="surface">
-          {tb(labelKey[block.type])}
-        </Eyebrow>
+    <Card
+      variant="surface"
+      hoverable={false}
+      thick
+      elevation={4}
+      className={
+        'p-0 transition-all ' +
+        (dragging ? 'opacity-50 border-dashed ' : '') +
+        (dragOver ? 'ring-4 ring-primary ' : '')
+      }
+      onDragOver={(e) => onDragOver(e, index)}
+      onDrop={(e) => onDrop(e, index)}
+    >
+      {/* ————— Accordion shell: grip | header | controls ————— */}
+      <div className="flex flex-wrap items-center gap-2 border-b-4 border-ink bg-ink px-2 py-2 md:px-3">
+        <DragHandle
+          label={tb('dragHandle')}
+          onDragStart={(e) => onDragStart(e, block.id)}
+          onDragEnd={onDragEnd}
+        />
 
-        <div className="ml-auto flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => onToggleCollapse(block.id)}
+          aria-expanded={!collapsed}
+          aria-controls={bodyId}
+          id={headerId}
+          className="flex min-w-0 grow cursor-pointer items-center gap-2 text-left hover:opacity-90"
+        >
+          <Eyebrow as="span" size="label-sm" color="surface-soft" className="shrink-0">
+            {String(index + 1).padStart(2, '0')}
+          </Eyebrow>
+          <Eyebrow as="span" size="label-sm" color="surface" className="shrink-0">
+            {tb(BLOCK_LABEL_KEYS[block.type])}
+          </Eyebrow>
+          {collapsed && preview ? (
+            <Eyebrow as="span" size="label-sm" color="surface-soft" className="truncate font-mono normal-case">
+              — {preview}
+            </Eyebrow>
+          ) : null}
+        </button>
+
+        <div className="flex shrink-0 items-center gap-1.5">
           <IconButton
             icon="arrow-up"
             label={tb('moveUp')}
@@ -406,14 +644,60 @@ function BlockCard({ block, index, total, onPatch, onMove, onRemove }: BlockCard
             tone="danger"
             onClick={() => onRemove(block.id)}
           />
+          <IconButton
+            icon="chevron-down"
+            label={collapsed ? tb('expand') : tb('collapse')}
+            onClick={() => onToggleCollapse(block.id)}
+            rotateWhenOpen={!collapsed}
+          />
         </div>
       </div>
 
-      <div className="p-3 md:p-4">
-        <BlockEditor block={block} onPatch={onPatch} />
-      </div>
+      {/* ————— Accordion body ————— */}
+      {collapsed ? null : (
+        <div id={bodyId} role="region" aria-labelledby={headerId} className="p-3 md:p-4">
+          <BlockEditor block={block} onPatch={onPatch} />
+        </div>
+      )}
     </Card>
   );
+}
+
+/** Grip kiri — satu-satunya area `draggable` supaya teks di header tetap bisa diblok. */
+function DragHandle({
+  label,
+  onDragStart,
+  onDragEnd,
+}: {
+  label: string;
+  onDragStart: (e: DragEvent<HTMLElement>) => void;
+  onDragEnd: () => void;
+}) {
+  return (
+    <span
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      title={label}
+      aria-label={label}
+      className="inline-flex shrink-0 cursor-grab touch-none items-center justify-center border-2 border-transparent p-1 text-surface/70 transition-all hover:border-surface/40 hover:text-surface active:cursor-grabbing"
+    >
+      <Icon name="grip" size={18} />
+    </span>
+  );
+}
+
+/**
+ * Preview singkat untuk accordion header yang ciut. TiptapEditor menyimpan isi
+ * di state internal, jadi rich_text yang ciut tetap punya ringkasan. Untuk blok
+ * tanpa teks, `emptyLabel` dipakai supaya header tidak tampak kosong.
+ */
+function blockPreview(block: PostBlock, emptyLabel = ''): string {
+  const text = blocksToPlainText([block]);
+  const fallback =
+    block.type === 'image' || block.type === 'video' ? block.data.url : '';
+  const preview = text || fallback || emptyLabel;
+  return preview.length > 60 ? `${preview.slice(0, 60)}…` : preview;
 }
 
 function IconButton({
@@ -422,12 +706,15 @@ function IconButton({
   onClick,
   disabled = false,
   tone,
+  rotateWhenOpen = false,
 }: {
-  icon: 'arrow-up' | 'arrow-down' | 'close';
+  icon: 'arrow-up' | 'arrow-down' | 'close' | 'chevron-down';
   label: string;
   onClick: () => void;
   disabled?: boolean;
   tone?: 'danger';
+  /** Chevron berputar 180° saat accordion terbuka. */
+  rotateWhenOpen?: boolean;
 }) {
   return (
     <Button
@@ -444,7 +731,11 @@ function IconButton({
         (tone === 'danger' ? 'hover:bg-danger hover:text-surface' : '')
       }
     >
-      <Icon name={icon} size={14} />
+      <Icon
+        name={icon}
+        size={14}
+        className={rotateWhenOpen ? 'rotate-180 transition-transform' : ''}
+      />
     </Button>
   );
 }

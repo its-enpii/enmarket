@@ -7,6 +7,8 @@ export type IconName =
   | 'arrow-right'
   | 'arrow-up'
   | 'arrow-down'
+  | 'chevron-down'
+  | 'grip'
   | 'copy'
   | 'text-block'
   | 'code'
@@ -33,6 +35,20 @@ type IconProps = Omit<SVGProps<SVGSVGElement>, 'name' | 'strokeWidth'> & {
 const ICON_PATHS: Record<IconName, { paths: string[]; filled?: boolean }> = {
   menu: {
     paths: ['M4 6h16', 'M4 12h16', 'M4 18h16'],
+  },
+  grip: {
+    paths: [
+      'M9 3.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 1 0 0-3.2Z',
+      'M9 10.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 1 0 0-3.2Z',
+      'M9 17.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 1 0 0-3.2Z',
+      'M15 3.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 1 0 0-3.2Z',
+      'M15 10.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 1 0 0-3.2Z',
+      'M15 17.4a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 1 0 0-3.2Z',
+    ],
+    filled: true,
+  },
+  'chevron-down': {
+    paths: ['M6 9.5l6 6 6-6'],
   },
   close: {
     paths: ['M6 6l12 12', 'M18 6L6 18'],
