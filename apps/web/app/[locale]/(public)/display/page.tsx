@@ -259,7 +259,7 @@ function FeaturedCover({
   tagLabels: TagLabels;
 }) {
   const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
-  const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
+  const tag = post.category ?? (post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note);
 
   return (
     <Card
@@ -340,7 +340,7 @@ function PostCardZine({
   tagLabels: TagLabels;
 }) {
   const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
-  const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
+  const tag = post.category ?? (post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note);
   const tagTone: 'accent' | 'primary' = post.id % 2 === 0 ? 'accent' : 'primary';
   const href = `/display/${post.slug}`;
 

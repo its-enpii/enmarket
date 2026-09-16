@@ -245,6 +245,22 @@ class PublicCatalogTest extends TestCase
         $this->assertCount(1, $r2->json('data'));
     }
 
+    public function test_posts_index_filters_by_category(): void
+    {
+        $this->makePost(['title' => 'Design One', 'category' => 'Design', 'status' => 'published', 'published_at' => now()->subDay()]);
+        $this->makePost(['title' => 'Design Two', 'category' => 'Design', 'status' => 'published', 'published_at' => now()->subDay()]);
+        $this->makePost(['title' => 'DevLog One', 'category' => 'DevLog', 'status' => 'published', 'published_at' => now()->subDay()]);
+        $this->makePost(['title' => 'Uncategorised', 'status' => 'published', 'published_at' => now()->subDay()]);
+
+        $r1 = $this->getJson('/api/public/posts?category=Design');
+        $this->assertCount(2, $r1->json('data'));
+        $this->assertEquals('Design', $r1->json('data.0.category'));
+
+        // tanpa param category -> semua post published tetap ikut
+        $r2 = $this->getJson('/api/public/posts');
+        $this->assertCount(4, $r2->json('data'));
+    }
+
     public function test_posts_latest_caps_at_max_12(): void
     {
         for ($i = 0; $i < 15; $i++) {

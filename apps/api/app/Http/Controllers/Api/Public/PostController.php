@@ -19,7 +19,7 @@ class PostController extends Controller
 {
     /**
      * GET /api/public/posts
-     * Query: ?page=1&per_page=12&q=search
+     * Query: ?page=1&per_page=12&q=search&category=Design
      * Return: paginated list post published, diurutkan published_at desc.
      */
     public function index(Request $request): JsonResponse
@@ -27,6 +27,12 @@ class PostController extends Controller
         $perPage = min(max((int) $request->input('per_page', 12), 1), 60);
 
         $query = Post::query()->published();
+
+        // Filter kategori editorial — nilai teks bebas dari admin, dicocokkan
+        // persis (collation DB sudah case-insensitive untuk ASCII).
+        if ($request->has('category')) {
+            $query->where('category', $request->input('category'));
+        }
 
         if ($q = trim((string) $request->input('q', ''))) {
             $query->where(function ($sub) use ($q) {

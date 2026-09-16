@@ -75,6 +75,11 @@ export function PostCard({ post, compact = false }: Props) {
           </p>
         )}
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-fine font-bold text-ink/60 uppercase tracking-wide">
+          {post.category && (
+            <Badge tone="ink" size="sm" shadow={false}>
+              {post.category}
+            </Badge>
+          )}
           {post.published_at && <span>{formatDate(post.published_at)}</span>}
           {post.reading_time_minutes && (
             <>

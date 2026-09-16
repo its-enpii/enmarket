@@ -121,7 +121,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
   };
 
   const date = post.published_at ? formatDateLong(post.published_at, locale) : '';
-  const primaryTag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
+  const primaryTag = post.category ?? (post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note);
   const tags = deriveTags(post, primaryTag, {
     studioNotes: t('tagStudioNotes'),
     tools: t('tagTools'),
@@ -476,7 +476,7 @@ function RelatedNote({
   tagLabels: TagLabels;
 }) {
   const date = post.published_at ? formatDateShort(post.published_at, locale) : '';
-  const tag = post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note;
+  const tag = post.category ?? (post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note);
   const tagTone: 'accent' | 'primary' = post.id % 2 === 0 ? 'accent' : 'primary';
 
   return (

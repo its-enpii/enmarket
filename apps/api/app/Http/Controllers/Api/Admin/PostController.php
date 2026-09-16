@@ -217,6 +217,7 @@ class PostController extends Controller
             'title' => ['required', 'string', 'max:200'],
             'slug' => ['nullable', 'string', 'max:220', 'regex:/^[a-z0-9-]+$/', $uniqueSlugRule],
             'excerpt' => ['nullable', 'string', 'max:500'],
+            'category' => ['nullable', 'string', 'max:100'],
             'content' => ['required', 'string'],
             'status' => ['required', 'in:draft,published,archived'],
             'published_at' => ['nullable', 'date'],

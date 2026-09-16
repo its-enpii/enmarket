@@ -395,6 +395,8 @@ export interface Post {
   title: string;
   slug: string;
   excerpt: string | null;
+  /** Label editorial bebas (Design, DevLog, Research, Process, Notes). Opsional. */
+  category?: string | null;
   /** HTML dari Tiptap editor. Disertakan admin-only via flag, publik dapat via `post(slug)`. */
   content?: string;
   thumbnail: string | null;

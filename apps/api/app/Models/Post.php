@@ -24,6 +24,7 @@ class Post extends Model
         'title',
         'slug',
         'excerpt',
+        'category',
         'content',
         'thumbnail',
         'status',

@@ -120,11 +120,12 @@ export const publicApi = {
   // ───── Blog post (Catatan) ─────
 
   /** List post published, paginated. Untuk /display. */
-  posts: (params?: { q?: string; page?: number; per_page?: number }) =>
+  posts: (params?: { q?: string; page?: number; per_page?: number; category?: string }) =>
     publicFetch<PaginatedResponse<Post>>('/api/public/posts', {
       q: params?.q,
       page: params?.page,
       per_page: params?.per_page,
+      category: params?.category,
     }),
 
   /** Post published terbaru, tanpa pagination. Untuk homepage Discover. */

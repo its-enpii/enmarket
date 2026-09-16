@@ -699,7 +699,12 @@
       "openMenu": "Buka menu",
       "closeMenu": "Tutup menu",
       "reviews": "Ulasan Pembeli",
-      "games": "Game Top-up"
+      "games": "Game Top-up",
+      "groupMain": "Utama",
+      "groupCatalog": "Produk & Layanan",
+      "groupDisplay": "Display & Jurnal",
+      "groupSales": "Penjualan & Relasi",
+      "groupSystem": "Sistem"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -1006,6 +1011,9 @@
         "fieldTitle": "Judul",
         "fieldSlug": "Slug",
         "fieldSlugHint": "URL-friendly identifier. Huruf kecil, angka, strip.",
+        "fieldCategory": "Kategori Catatan",
+        "fieldCategoryHint": "Contoh: Design, DevLog, Research, Process, atau Notes.",
+        "categoryPlaceholder": "Pilih atau tulis kategori…",
         "fieldExcerpt": "Ringkasan",
         "fieldExcerptHint": "Tampil di card list & meta description. Maks 500 karakter.",
         "fieldContent": "Konten",

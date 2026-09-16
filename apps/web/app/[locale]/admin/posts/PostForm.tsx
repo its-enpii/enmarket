@@ -83,6 +83,12 @@ const BLOCK_LABEL_KEYS: Record<BlockType, string> = {
 
 const CALLOUT_TONES: CalloutTone[] = ['info', 'tip', 'warning'];
 
+/**
+ * Preset kategori editorial — saran untuk input kategori (bukan enum keras:
+ * kolom `posts.category` teks bebas, admin boleh menulis nilai lain).
+ */
+const CATEGORY_PRESETS = ['Design', 'DevLog', 'Research', 'Process', 'Notes'] as const;
+
 /** Blok default untuk post baru — id statis, aman untuk SSR + hydration. */
 const INITIAL_EMPTY_BLOCK: RichTextBlock = {
   id: 'initial-rich-text',
@@ -102,6 +108,7 @@ export function PostForm({ initial }: Props) {
   // useState + value supaya isian admin tidak hilang saat validasi gagal.
   const [title, setTitle] = useState(initial?.title ?? '');
   const [slug, setSlug] = useState(initial?.slug ?? '');
+  const [category, setCategory] = useState(initial?.category ?? '');
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '');
   const [status, setStatus] = useState<PostStatus>(initial?.status ?? 'draft');
 
@@ -321,6 +328,30 @@ export function PostForm({ initial }: Props) {
               pattern="[a-z0-9-]+"
               className="font-mono"
             />
+          </FormField>
+
+          <FormField
+            label={t('fieldCategory')}
+            htmlFor="category"
+            hint={t('fieldCategoryHint')}
+            error={fieldErr('category')}
+          >
+            <Input
+              id="category"
+              name="category"
+              maxLength={100}
+              list="post-category-presets"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder={t('categoryPlaceholder')}
+            />
+            {/* Preset sebagai saran, bukan paksaan — admin tetap bisa menulis
+                kategori baru (kolom teks bebas di backend). */}
+            <datalist id="post-category-presets">
+              {CATEGORY_PRESETS.map((preset) => (
+                <option key={preset} value={preset} />
+              ))}
+            </datalist>
           </FormField>
         </div>
       </section>

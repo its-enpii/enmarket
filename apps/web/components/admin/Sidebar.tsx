@@ -7,23 +7,63 @@ import { routing } from '@/i18n/routing';
 
 import { Icon } from '@/components/ui';
 
-const NAV_HREFS = [
-  '/admin',
-  '/admin/categories',
-  '/admin/products',
-  '/admin/coupons',
-  '/admin/custom-requests',
-  '/admin/reviews',
-  '/admin/sponsors',
-  '/admin/posts',
-  '/admin/orders',
-  '/admin/preorders',
-  '/admin/license-keys',
-  '/admin/media',
-  '/admin/settings',
-] as const;
+interface NavItem {
+  /** Key di `admin.nav.*` untuk label link. */
+  key: string;
+  href: string;
+  icon: string;
+}
 
-const NAV_ICONS = ['▤', '▤', '▤', '▤', '▤', '▤', '★', '▤', '▤', '◷', '▤', '▤', '⚙'];
+interface NavGroup {
+  /** Key di `admin.sidebar.*` untuk header kelompok. */
+  labelKey: string;
+  items: NavItem[];
+}
+
+/**
+ * Kelompok navigasi admin — urutan = urutan render di sidebar.
+ * Satu kelompok per domain kerja supaya 13 menu tidak jadi satu list panjang.
+ */
+const NAV_GROUPS: NavGroup[] = [
+  {
+    labelKey: 'groupMain',
+    items: [
+      { key: 'dashboard', href: '/admin', icon: '▤' },
+    ],
+  },
+  {
+    labelKey: 'groupCatalog',
+    items: [
+      { key: 'products', href: '/admin/products', icon: '📦' },
+      { key: 'categories', href: '/admin/categories', icon: '📂' },
+      { key: 'preorders', href: '/admin/preorders', icon: '◷' },
+      { key: 'customRequests', href: '/admin/custom-requests', icon: '🛠' },
+      { key: 'licenseKeys', href: '/admin/license-keys', icon: '🔑' },
+    ],
+  },
+  {
+    labelKey: 'groupDisplay',
+    items: [
+      { key: 'posts', href: '/admin/posts', icon: '📝' },
+    ],
+  },
+  {
+    labelKey: 'groupSales',
+    items: [
+      { key: 'orders', href: '/admin/orders', icon: '💳' },
+      { key: 'coupons', href: '/admin/coupons', icon: '🏷' },
+      { key: 'reviews', href: '/admin/reviews', icon: '★' },
+      { key: 'sponsors', href: '/admin/sponsors', icon: '✨' },
+    ],
+  },
+  {
+    labelKey: 'groupSystem',
+    items: [
+      { key: 'media', href: '/admin/media', icon: '🖼' },
+      { key: 'settings', href: '/admin/settings', icon: '⚙' },
+    ],
+  },
+];
 
 interface Props {
   currentPath: string;
@@ -34,6 +74,9 @@ interface Props {
 /**
  * Sidebar admin — fixed di lg+, drawer overlay di mobile.
  * State controlled dari parent (AdminShell).
+ *
+ * Menu dikelompokkan per domain kerja (lihat NAV_GROUPS); tiap kelompok dibuka
+ * dengan header `Eyebrow` sebagai pemisah visual.
  */
 export function Sidebar({ currentPath, open, onClose }: Props) {
   const t = useTranslations('admin');
@@ -44,8 +87,6 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
     new RegExp(`^/(${routing.locales.join('|')})`),
     '',
   ) || '/';
-
-  const navKeys = ['dashboard', 'categories', 'products', 'coupons', 'customRequests', 'reviews', 'sponsors', 'posts', 'orders', 'preorders', 'licenseKeys', 'media', 'settings'] as const;
 
   return (
     <>
@@ -96,34 +137,51 @@ export function Sidebar({ currentPath, open, onClose }: Props) {
         </div>
 
         <nav className="flex-1 p-3 overflow-y-auto">
-          <ul className="flex flex-col gap-1">
-          {NAV_HREFS.map((href, idx) => {
-            const active =
-              href === '/admin'
-                ? path === '/admin'
-                : path.startsWith(href);
+          <div className="flex flex-col gap-5">
+          {NAV_GROUPS.map((group) => (
+            <section key={group.labelKey} className="flex flex-col gap-1">
+              <Eyebrow
+                as="h2"
+                size="micro"
+                color="surface-soft"
+                className="px-4 pt-1 pb-2"
+              >
+                {tSidebar(group.labelKey)}
+              </Eyebrow>
+              <ul className="flex flex-col gap-1">
+                {group.items.map((item) => {
+                  const active =
+                    item.href === '/admin'
+                      ? path === '/admin'
+                      : path.startsWith(item.href);
 
-            return (
-              <li key={href}>
-                <NLink
-                  href={href}
-                  variant="default"
-                  underline="none"
-                  onClick={onClose}
-                  className={
-                    'flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all min-h-touch w-full ' +
-                    (active
-                      ? 'bg-accent text-ink border-ink !shadow-brutal-4 translate-x-[-1px] translate-y-[-1px]'
-                      : 'bg-transparent text-surface border-transparent hover:border-ink hover:bg-accent hover:text-ink')
-                  }
-                >
-                  <span className="text-lg">{NAV_ICONS[idx]}</span>
-                  {t(`nav.${navKeys[idx]}`)}
-                </NLink>
-              </li>
-            );
-          })}
-          </ul>
+                  return (
+                    <li key={item.key}>
+                      <NLink
+                        href={item.href}
+                        variant="default"
+                        underline="none"
+                        onClick={onClose}
+                        aria-current={active ? 'page' : undefined}
+                        className={
+                          'flex items-center gap-3 px-4 py-3 text-sm font-bold border-2 transition-all min-h-touch w-full ' +
+                          (active
+                            ? 'bg-accent text-ink border-ink !shadow-brutal-4 translate-x-[-1px] translate-y-[-1px]'
+                            : 'bg-transparent text-surface border-transparent hover:border-ink hover:bg-accent hover:text-ink')
+                        }
+                      >
+                        <span className="text-lg" aria-hidden="true">
+                          {item.icon}
+                        </span>
+                        {t(`nav.${item.key}`)}
+                      </NLink>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+          </div>
         </nav>
 
         <div className="p-4 border-t-2 border-ink">

@@ -699,7 +699,12 @@
       "openMenu": "Open menu",
       "closeMenu": "Close menu",
       "reviews": "Customer Reviews",
-      "games": "Game Top-up"
+      "games": "Game Top-up",
+      "groupMain": "Overview",
+      "groupCatalog": "Products & Services",
+      "groupDisplay": "Display & Journal",
+      "groupSales": "Sales & Community",
+      "groupSystem": "System"
     },
     "footer": {
       "brand": "Admin Panel",
@@ -1006,6 +1011,9 @@
         "fieldTitle": "Title",
         "fieldSlug": "Slug",
         "fieldSlugHint": "URL-friendly identifier. Lowercase, numbers, dashes.",
+        "fieldCategory": "Post Category",
+        "fieldCategoryHint": "E.g. Design, DevLog, Research, Process, or Notes.",
+        "categoryPlaceholder": "Select or enter category…",
         "fieldExcerpt": "Excerpt",
         "fieldExcerptHint": "Shows on list cards & meta description. Max 500 characters.",
         "fieldContent": "Content",

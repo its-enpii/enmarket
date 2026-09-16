@@ -155,6 +155,64 @@ class PostAdminTest extends TestCase
         $this->assertStringStartsWith('enstorage/posts/thumbnails/', $post->thumbnail);
     }
 
+    public function test_store_persists_category_and_exposes_it(): void
+    {
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Ber kategori',
+            'content' => '<p>x</p>',
+            'status' => 'draft',
+            'category' => 'DevLog',
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $response->assertJsonPath('data.category', 'DevLog');
+        $this->assertEquals('DevLog', Post::find($response->json('data.id'))->category);
+    }
+
+    public function test_store_allows_missing_category(): void
+    {
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Tanpa kategori',
+            'content' => '<p>x</p>',
+            'status' => 'draft',
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $this->assertNull(Post::find($response->json('data.id'))->category);
+    }
+
+    public function test_store_validates_category_max_length(): void
+    {
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Keb-spanjang',
+            'content' => '<p>x</p>',
+            'status' => 'draft',
+            'category' => str_repeat('a', 101),
+        ], $this->authHeaders());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['category']);
+    }
+
+    public function test_update_can_clear_category(): void
+    {
+        $post = Post::create([
+            'title' => 'Kategori dibersihkan', 'slug' => 'clear-'.uniqid(), 'content' => 'x',
+            'status' => 'draft', 'category' => 'Design',
+        ]);
+
+        $response = $this->putJson('/api/admin/posts/'.$post->id, [
+            'title' => 'Kategori dibersihkan',
+            'content' => 'x',
+            'status' => 'draft',
+            'category' => '',
+        ], $this->authHeaders());
+
+        $response->assertOk();
+        $response->assertJsonPath('data.category', null);
+        $this->assertNull($post->fresh()->category);
+    }
+
     public function test_update_with_remove_thumbnail_deletes(): void
     {
         $post = Post::create([
