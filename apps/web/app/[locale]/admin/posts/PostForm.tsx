@@ -84,15 +84,17 @@ const BLOCK_LABEL_KEYS: Record<BlockType, string> = {
 const CALLOUT_TONES: CalloutTone[] = ['info', 'tip', 'warning'];
 
 /**
- * Preset kategori editorial — chip 1-klik di samping input teks. Bukan enum
- * keras: kolom `posts.category` teks bebas, admin boleh menulis nilai lain.
+ * Preset kategori editorial untuk combobox Kategori Catatan. Bukan enum keras:
+ * kolom `posts.category` teks bebas di backend, jadi combobox ini `creatable`
+ * dan admin boleh menulis kategori baru di luar daftar.
  */
-const CATEGORY_PRESETS = ['Design', 'DevLog', 'Research', 'Process', 'Notes'] as const;
-
-/** Cocokkan nilai input dengan preset tanpa peduli kapitalisasi/spasi. */
-function isSelectedPreset(value: string, preset: string) {
-  return value.trim().toLowerCase() === preset.toLowerCase();
-}
+const CATEGORY_OPTIONS = [
+  { value: 'Design', label: 'Design' },
+  { value: 'DevLog', label: 'DevLog' },
+  { value: 'Research', label: 'Research' },
+  { value: 'Process', label: 'Process' },
+  { value: 'Notes', label: 'Notes' },
+];
 
 /** Blok default untuk post baru — id statis, aman untuk SSR + hydration. */
 const INITIAL_EMPTY_BLOCK: RichTextBlock = {
@@ -341,63 +343,17 @@ export function PostForm({ initial }: Props) {
             hint={t('fieldCategoryHint')}
             error={fieldErr('category')}
           >
-            <div className="space-y-3">
-              {/* Kontrol "tulis bebas" — tetap satu-satunya sumber nilai yang
-                  dikirim ke server lewat input bernama `category`. */}
-              <div className="relative flex items-center">
-                <Input
-                  id="category"
-                  name="category"
-                  maxLength={100}
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder={t('categoryPlaceholder')}
-                  className={category ? 'pr-10' : undefined}
-                />
-                {category ? (
-                  <button
-                    type="button"
-                    onClick={() => setCategory('')}
-                    title={t('categoryClear')}
-                    aria-label={t('categoryClear')}
-                    className="absolute right-2 flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-ink/50 transition-colors hover:text-primary"
-                  >
-                    <Icon name="close" size={14} />
-                  </button>
-                ) : null}
-              </div>
-
-              {/* Preset 1-klik: klik sekali memakai, klik lagi melepas. Bukan
-                  paksaan — kolom `posts.category` teks bebas di backend. */}
-              <div className="flex flex-wrap items-center gap-2">
-                <Eyebrow as="span" size="sm" className="shrink-0">
-                  {t('categoryPresetsLabel')}
-                </Eyebrow>
-                {CATEGORY_PRESETS.map((preset) => {
-                  const isSelected = isSelectedPreset(category, preset);
-                  return (
-                    <Button
-                      key={preset}
-                      type="button"
-                      variant={isSelected ? 'primary' : 'surface'}
-                      size="sm"
-                      flat
-                      aria-pressed={isSelected}
-                      onClick={() => setCategory(isSelected ? '' : preset)}
-                      className={
-                        'border-2 border-ink shadow-brutal-2 font-label text-micro uppercase tracking-wider ' +
-                        (isSelected ? '' : 'hover:bg-accent')
-                      }
-                    >
-                      <span aria-hidden="true" className="mr-1">
-                        {isSelected ? '✓' : '+'}
-                      </span>
-                      {preset}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
+            <SelectSearch
+              id="category"
+              name="category"
+              options={CATEGORY_OPTIONS}
+              value={category}
+              onChange={(val) => setCategory(val)}
+              placeholder={t('categoryPlaceholder')}
+              creatable
+              clearable
+              maxLength={100}
+            />
           </FormField>
         </div>
       </section>

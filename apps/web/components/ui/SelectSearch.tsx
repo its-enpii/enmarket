@@ -13,6 +13,8 @@ interface Option {
 
 interface Props {
   name: string;
+  /** id DOM untuk trigger button — pakai saat label hidup di luar komponen. */
+  id?: string;
   options: Option[];
   value?: string;
   defaultValue?: string;
@@ -24,6 +26,10 @@ interface Props {
   clearable?: boolean;
   showAllOption?: Option;
   error?: string;
+  /** Jika true, user bisa mengetik nilai baru dan memilih "+ Gunakan [query]". */
+  creatable?: boolean;
+  /** Batas panjang karakter input pencarian (selaras rule validasi backend). */
+  maxLength?: number;
 }
 
 /**
@@ -31,6 +37,7 @@ interface Props {
  */
 export function SelectSearch({
   name,
+  id: idProp,
   options,
   value: controlledValue,
   defaultValue,
@@ -42,8 +49,11 @@ export function SelectSearch({
   clearable = true,
   showAllOption,
   error,
+  creatable = false,
+  maxLength,
 }: Props) {
-  const id = useId();
+  const autoId = useId();
+  const id = idProp ?? autoId;
   const [open, setOpen] = useState(false);
   const placementRef = useRef<'bottom' | 'top'>('bottom');
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
@@ -55,13 +65,31 @@ export function SelectSearch({
   const searchRef = useRef<HTMLInputElement>(null);
 
   const allOptions = showAllOption ? [showAllOption, ...options] : options;
-  const selected = allOptions.find((o) => o.value === value);
+
+  /* Nilai bebas (kustom) tidak selalu ada di list preset. Sisipkan di depan
+     supaya label terpilih tetap tampil di trigger button dan di list. Pemakaian
+     exact match: `design` yang tersimpan di DB bukan opsi `Design`. */
+  const trimmed = value.trim();
+  const hasValueOption =
+    trimmed === '' || allOptions.some((o) => o.value === trimmed);
+  const displayOptions =
+    creatable && trimmed && !hasValueOption
+      ? [{ value: trimmed, label: trimmed }, ...allOptions]
+      : allOptions;
+
+  const selected = displayOptions.find((o) => o.value === value);
   const filtered = query
-    ? allOptions.filter((o) =>
+    ? displayOptions.filter((o) =>
         o.label.toLowerCase().includes(query.toLowerCase()) ||
         o.hint?.toLowerCase().includes(query.toLowerCase()),
       )
-    : allOptions;
+    : displayOptions;
+
+  const createValue = query.trim();
+  const canCreate =
+    creatable &&
+    createValue !== '' &&
+    !displayOptions.some((o) => o.value.toLowerCase() === createValue.toLowerCase());
 
   function toggleOpen() {
     if (!open && triggerRef.current) {
@@ -181,13 +209,33 @@ export function SelectSearch({
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== 'Enter' || !canCreate) return;
+                /* Cegah submit form implisit — Enter memakai nilai kustom. */
+                e.preventDefault();
+                selectOption(createValue);
+              }}
+              maxLength={maxLength}
               placeholder={placeholder}
               className="w-full bg-surface border-2 border-ink px-2 py-1.5 text-sm focus:outline-none focus:shadow-[2px_2px_0_0_var(--color-ink)] transition-all"
             />
           </div>
           <div className="max-h-64 overflow-y-auto">
+            {canCreate ? (
+              <button
+                type="button"
+                role="option"
+                aria-selected={false}
+                onClick={() => selectOption(createValue)}
+                className="flex w-full min-h-touch text-left px-3 py-2.5 text-sm border-l-4 border-accent bg-accent/20 hover:bg-accent hover:text-ink font-bold transition-all"
+              >
+                <span className="flex-1">+ Gunakan &ldquo;{createValue}&rdquo;</span>
+              </button>
+            ) : null}
             {filtered.length === 0 ? (
-              <p className="px-3 py-3 text-sm text-ink/60">Tidak ada hasil.</p>
+              canCreate ? null : (
+                <p className="px-3 py-3 text-sm text-ink/60">Tidak ada hasil.</p>
+              )
             ) : (
               filtered.map((o) => {
                 const active = o.value === value;
