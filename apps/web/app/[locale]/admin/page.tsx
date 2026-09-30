@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'admin.dashboard' });
   return buildMetadata({
-    title: `${t('title')} — Admin`,
+    title: `${t('title')} · Admin`,
   });
 }
 

@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'login' });
   return buildMetadata({
-    title: `${t('title')} — EnStudio`,
+    title: `${t('title')} · EnStudio`,
   });
 }
 

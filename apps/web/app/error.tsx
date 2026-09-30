@@ -18,7 +18,7 @@ export default function GlobalError({ error, reset }: Props) {
     <ErrorState
       className="mx-auto max-w-2xl px-6 py-16 sm:py-24 text-center"
       titleClassName="mt-3 text-4xl sm:text-5xl font-bold leading-tight text-ink"
-      eyebrow="500 — Terjadi Kesalahan"
+      eyebrow="500 · Terjadi Kesalahan"
       title="Waduh, ada yang error."
       description="Tim kami sudah dapat notifikasi. Silakan coba lagi atau kembali ke beranda."
       actions={

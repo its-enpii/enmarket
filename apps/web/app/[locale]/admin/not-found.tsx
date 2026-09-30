@@ -13,7 +13,7 @@ export default async function AdminNotFound() {
   return (
     <ErrorState
       eyebrowColor="muted"
-      eyebrow={`404 — ${t('title404')}`}
+      eyebrow={`404 · ${t('title404')}`}
       title={t('title404')}
       description={t('backToDashboard')}
       actions={

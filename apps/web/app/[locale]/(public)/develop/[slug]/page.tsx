@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     ...buildMetadata({
-      title: `${product.nama} — EnStudio`,
+      title: `${product.nama} · EnStudio`,
       description,
     }),
     keywords: [product.nama, product.category?.nama ?? '', TIPE_LABEL[product.tipe] ?? product.tipe].filter(Boolean),

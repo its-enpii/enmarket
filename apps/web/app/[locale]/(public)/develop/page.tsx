@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'develop' });
   return {
     ...buildMetadata({
-      title: `${t('title')} — EnStudio`,
+      title: `${t('title')} · EnStudio`,
       description: t('listSubtitle'),
     }),
     alternates: localeAlternates(locale, 'develop'),

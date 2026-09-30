@@ -21,7 +21,7 @@ export default function AdminError({ error, reset }: Props) {
 
   return (
     <ErrorState
-      eyebrow={`500 — ${t('title500')}`}
+      eyebrow={`500 · ${t('title500')}`}
       title={t('title500')}
       description={t('backToDashboard')}
       actions={

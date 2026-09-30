@@ -5,7 +5,7 @@ export const size = {
   height: 630,
 };
 
-export const alt = 'EnStudio — Discover · Develop · Display';
+export const alt = 'EnStudio · Discover · Develop · Display';
 
 export default function OpenGraphImage() {
   return new ImageResponse(

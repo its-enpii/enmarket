@@ -168,7 +168,7 @@ export async function Footer() {
         <div className="mt-16 pt-8 border-t border-surface/20 font-label text-label-sm uppercase text-surface/50">
           <span>
             {footerText
-              ? `${t('copyright', { year: new Date().getFullYear() })} — ${footerText}`
+              ? `${t('copyright', { year: new Date().getFullYear() })} · ${footerText}`
               : t('copyright', { year: new Date().getFullYear() })}
           </span>
         </div>

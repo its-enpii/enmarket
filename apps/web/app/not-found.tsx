@@ -12,7 +12,7 @@ export default function GlobalNotFound() {
       eyebrowColor="muted"
       titleClassName="mt-3 text-4xl sm:text-5xl font-bold leading-tight text-ink"
       descriptionClassName="mt-4 text-base sm:text-lg text-ink/70"
-      eyebrow="404 — Halaman Tidak Ditemukan"
+      eyebrow="404 · Halaman Tidak Ditemukan"
       title="Waduh, halaman ini nggak ada."
       description="Mungkin URL-nya salah ketik atau halaman sudah dihapus."
       actions={

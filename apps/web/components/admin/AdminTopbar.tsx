@@ -73,7 +73,7 @@ export function AdminTopbar() {
 
     if (parent && PATH_KEYS['/admin/' + parent]) {
       const baseKey = PATH_KEYS['/admin/' + parent];
-      title = `${tTitles(baseKey)} — ${formatSlug(last ?? '')}`;
+      title = `${tTitles(baseKey)}: ${formatSlug(last ?? '')}`;
     } else {
       title = formatSlug(last ?? tTitles('fallback'));
     }

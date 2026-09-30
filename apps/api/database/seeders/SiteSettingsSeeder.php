@@ -19,7 +19,7 @@ class SiteSettingsSeeder extends Seeder
         $defaults = [
             // Identity
             ['key' => 'studio_name', 'value' => 'enpiistudio', 'type' => 'string'],
-            ['key' => 'tagline', 'value' => 'Studio digital independen — discover, develop, display.', 'type' => 'string'],
+            ['key' => 'tagline', 'value' => 'Studio digital independen · discover, develop, display.', 'type' => 'string'],
             ['key' => 'logo_url', 'value' => null, 'type' => 'string'],
 
             // Social — stored sebagai JSON array di single key 'social_links'.

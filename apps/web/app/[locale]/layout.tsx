@@ -45,11 +45,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'EnStudio — Discover, develop, display',
+    default: 'EnStudio · Discover, develop, display',
     template: '%s',
   },
   description:
-    'Marketplace karya digital dari EnStudio — apa pun yang bisa diunduh, dipakai, atau dinikmati.',
+    'Karya dan perkakas digital dari EnStudio: source code, lisensi, dan catatan proses.',
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   ),

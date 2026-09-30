@@ -1,7 +1,7 @@
 {
   "common": {
     "site": {
-      "title": "EnStudio — Discover, Develop, Display",
+      "title": "EnStudio · Discover, Develop, Display",
       "description": "Studio solo · Showcase karya digital, riset, dan layanan custom."
     },
     "buttons": {
@@ -58,10 +58,10 @@
     }
   },
   "errors": {
-    "title500": "500 — Terjadi Kesalahan",
+    "title500": "500 · Terjadi Kesalahan",
     "subtitle500": "Waduh, terjadi kesalahan. Coba lagi sebentar, ya.",
     "body500": "Coba lagi sebentar atau kembali ke katalog.",
-    "title404": "404 — Halaman Tidak Ditemukan",
+    "title404": "404 · Halaman Tidak Ditemukan",
     "subtitle404": "Waduh, halaman ini tidak ditemukan. Mungkin sudah dipindah atau dihapus.",
     "body404": "Halaman yang kamu cari mungkin sudah dihapus atau alamatnya berubah.",
     "viewCatalog": "← Lihat Katalog",
@@ -121,17 +121,17 @@
     "heroSubtitle": "Showcase karya digital, riset teknologi, dan produk personal oleh Enpii.",
     "heroCta": "Lihat Karya Develop",
     "pillarsTitle": "Tiga Pilar",
-    "pillarsSubtitle": "Cara kami berpikir, membuat, dan berbagi.",
+    "pillarsSubtitle": "Tiga fokus kerja di studio.",
     "pillarDiscover": "Discover",
-    "pillarDiscoverBody": "Riset singkat, banyak prototype yang dibuang. Yang tersisa adalah yang paling jujur.",
+    "pillarDiscoverBody": "Eksplorasi ide dan eksperimen teknis. Hasil yang teruji dicatat di sini.",
     "pillarDevelop": "Develop",
-    "pillarDevelopBody": "Source code, lisensi, dan bundle. Ditulis dengan sengaja, bukan framework yang numpang lewat.",
+    "pillarDevelopBody": "Source code, lisensi, dan perkakas digital siap pakai untuk kebutuhan riil.",
     "pillarDisplay": "Display",
-    "pillarDisplayBody": "Jurnal pikiran dan proses. Catatan yang masih kelihatan cara bikinnya.",
+    "pillarDisplayBody": "Catatan teknis, arsitektur, dan dokumentasi langsung dari meja kerja.",
     "pillarExplore": "Explore {title}",
     "featuredTitle": "Featured Developments",
-    "featuredSubtitle": "Pilihan terbaru dari Develop, sudah jadi dan siap dipakai.",
-    "featuredFallback": "Artefak digital dari EnStudio, siap digunakan dan dikembangkan.",
+    "featuredSubtitle": "Rilis terbaru yang siap diunduh atau digunakan.",
+    "featuredFallback": "Karya digital dari EnStudio, siap pakai dan dapat dikembangkan.",
     "featuredEmpty": "Belum ada karya di-feature. Cek lagi nanti.",
     "viewAllDevelop": "Lihat Semua Develop",
     "journalTitle": "Latest / Display",
@@ -143,17 +143,17 @@
     "sponsorsSubtitle": "Website & Mitra yang Mendukung Studio",
     "visitSponsor": "Kunjungi Website",
     "becomeSponsor": "Jadi Sponsor",
-    "sponsorsEmptyCta": "Belum ada sponsor — jadilah yang pertama!"
+    "sponsorsEmptyCta": "Belum ada sponsor. Jadilah yang pertama!"
   },
   "discover": {
     "eyebrow": "Discover",
     "title": "Discover",
-    "subtitle": "Kerja yang dimulai dari rasa penasaran, bukan brief klien.",
+    "subtitle": "Eksplorasi teknis dan desain yang berakar dari kebutuhan nyata.",
     "storyTitle": "“Code is a material, not a delivery mechanism.”",
-    "storyBody1": "EnStudio dimulai sebagai ruang pribadi. Tempat menyimpan eksperimen yang terlalu spesifik untuk portofolio klien, terlalu jujur untuk disembunyikan di balik tampilan yang dipoles.",
-    "storyBody2": "Saya percaya programming dan design itu kebiasaan yang sama: memilih dengan sengaja, menolak default, dan baca dokumentasi sampai baris terakhir.",
-    "storyBody3": "Karya di sini adalah snapshot dari proses itu. Bukan produk akhir, tapi artefak yang masih kelihatan cara bikinnya.",
-    "signature": "— e° / solo studio",
+    "storyBody1": "EnStudio adalah ruang kerja pribadi untuk riset teknologi, pembuatan alat digital, dan dokumentasi arsitektur perangkat lunak.",
+    "storyBody2": "Prinsip rekayasa di sini sederhana: struktur kode yang bersih, minim dependensi yang tidak perlu, dan berpegang pada spesifikasi teknis resmi.",
+    "storyBody3": "Semua yang dirilis di sini adalah artefak yang telah diuji langsung: perkakas kerja, kode sumber, dan dokumentasi yang siap digunakan.",
+    "signature": "e° / solo studio",
     "pillarsHeading": "What we do",
     "pillarsTitle": "Tiga kata, satu alur kerja.",
     "pillarDiscoverTitle": "Discover",
@@ -198,8 +198,8 @@
     "loadMore": "Muat lebih banyak artefak",
     "end": "Akhir katalog, {count} artefak",
     "studioNote": "Catatan studio",
-    "divider1": "Dibuat dengan niat, bukan sekadar permintaan.",
-    "divider2": "Harga hanyalah angka; nilainya ada pada karya di baliknya.",
+    "divider1": "Dibuat dengan fungsi yang jelas dan kode yang rapi.",
+    "divider2": "Setiap rilis menyertakan petunjuk setup dan dokumentasi lengkap.",
     "divider3": "Sebagian karya di sini masih dalam tahap eksplorasi.",
     "fallbackDescription": "Artefak digital dari EnStudio.",
     "view": "Lihat"
@@ -630,12 +630,12 @@
       "pendingEyebrow": "Needs attention",
       "pendingTitle": "Pending Orders",
       "pendingEmpty": "Tidak ada order pending 🎉",
-      "pendingEmptyHint": "Semua pesanan sudah diproses — tinggal nunggu paid.",
+      "pendingEmptyHint": "Semua pesanan sudah diproses, menunggu pembayaran.",
       "pendingViewAll": "Lihat semua",
       "activityEyebrow": "Recent",
       "activityTitle": "Activity",
       "activityEmpty": "Belum ada aktivitas",
-      "activityEmptyHint": "Edit produk, post, atau order — log akan muncul di sini.",
+      "activityEmptyHint": "Aktivitas edit produk, post, atau pesanan akan tercatat di sini.",
       "tileStatTotalProducts": "Total Produk",
       "tileStatPendingOrders": "Pesanan Pending",
       "tileStatPaidMonth": "Paid Bulan Ini",
@@ -708,7 +708,7 @@
     },
     "footer": {
       "brand": "Admin Panel",
-      "store": "— EnStudio Store",
+      "store": "· EnStudio Store",
       "viewStore": "← Lihat Toko"
     },
     "shared": {
@@ -720,7 +720,7 @@
       "dateFrom": "Dari",
       "dateTo": "Sampai",
       "addImage": "+ Upload Baru",
-      "imagePicked": "Dipilih: {url}… — backend attach-by-URL coming soon. Untuk sekarang upload manual.",
+      "imagePicked": "Dipilih: {url}… Fitur attach-by-URL dalam pengembangan, gunakan upload manual untuk saat ini.",
       "uploadError": "Gagal upload",
       "deleteError": "Gagal hapus",
       "imageDeleted": "Image dihapus.",
@@ -777,19 +777,19 @@
       "licenseKeys": "License Keys",
       "licenseKeysSubtitle": "Pool license key untuk produk digital.",
       "media": "Media",
-      "mediaSubtitle": "Galeri upload — reusable untuk semua entity.",
-      "settings": "Settings — Site Identity",
+      "mediaSubtitle": "Galeri media terpusat untuk produk dan catatan.",
+      "settings": "Settings: Identitas Situs",
       "settingsSubtitle": "Identitas studio: nama, logo, social links.",
-      "settingsPayment": "Settings — Payment",
+      "settingsPayment": "Settings: Pembayaran",
       "settingsPaymentSubtitle": "Konfigurasi Tripay gateway.",
-      "settingsMaintenance": "Settings — Maintenance",
+      "settingsMaintenance": "Settings: Mode Pemeliharaan",
       "settingsMaintenanceSubtitle": "Toggle maintenance mode toko.",
       "fallback": "Admin",
       "coupons": "Kupon Diskon",
       "couponsSubtitle": "Kelola kode kupon dan diskon potongan harga.",
       "customRequests": "Permintaan Layanan",
       "customRequestsSubtitle": "Daftar permintaan custom build dari pembeli.",
-      "settingsNavigation": "Settings — Menu Navigasi",
+      "settingsNavigation": "Settings: Menu Navigasi",
       "settingsNavigationSubtitle": "Aktifkan atau nonaktifkan item menu navbar publik."
     },
     "categories": {
@@ -888,20 +888,20 @@
         "fieldSlug": "Slug",
         "fieldSlugHint": "URL-friendly identifier. Huruf kecil, angka, strip.",
         "fieldCategory": "Kategori",
-        "categoryPlaceholder": "— Tanpa Kategori —",
+        "categoryPlaceholder": "Tanpa Kategori",
         "fieldFree": "Produk Gratis",
         "fieldFreeHint": "Aktifkan untuk freebie / sample / materi promosi. Harga otomatis disetel ke Rp 0 dan checkout melewati payment gateway.",
         "fieldPrice": "Harga (Rp)",
         "fieldType": "Tipe",
         "typePlaceholder": "Pilih tipe…",
-        "typeDownload": "Download — hanya file",
-        "typeLicense": "License — hanya key",
-        "typeBundle": "Bundle — file + key",
-        "typeAccountManual": "Akun Manual — aktivasi admin",
+        "typeDownload": "Download (hanya berkas)",
+        "typeLicense": "Lisensi (kunci saja)",
+        "typeBundle": "Bundel (berkas dan kunci)",
+        "typeAccountManual": "Akun Manual (aktivasi admin)",
         "fieldStatus": "Status",
         "statusPlaceholder": "Pilih status…",
-        "statusDraft": "Draft — belum dijual",
-        "statusActive": "Aktif — tampil di toko",
+        "statusDraft": "Draft (belum dijual)",
+        "statusActive": "Aktif (tampil di toko)",
         "statusNotForSale": "Tidak Dijual",
         "fieldDownloadExpiry": "Download Expiry (hari)",
         "fieldDownloadExpiryHint": "Untuk tipe download/bundle. Berapa hari link download berlaku.",
@@ -937,7 +937,7 @@
         "fieldReleaseDateHint": "Buyer menerima delivery (file + license key) setelah admin klik Rilis. Tanggal hanya untuk display.",
         "fieldReleaseDatePlaceholder": "Pilih tanggal…",
         "fieldDepositPercent": "DP (%)",
-        "fieldDepositPercentHint": "1-100. Default 50. Sisa adalah display only — buyer tidak bayar kedua kali."
+        "fieldDepositPercentHint": "1-100. Default 50. Sisa hanya tampilan, pembeli tidak ditagih ulang."
       }
     },
     "preorders": {
@@ -1025,9 +1025,9 @@
         "removeThumbnail": "Hapus thumbnail saat simpan",
         "fieldStatus": "Status",
         "statusPlaceholder": "Pilih status…",
-        "statusDraft": "Draft — belum publish",
-        "statusPublished": "Published — tampil publik",
-        "statusArchived": "Diarsipkan — sembunyikan",
+        "statusDraft": "Draft (belum publish)",
+        "statusPublished": "Published (publik)",
+        "statusArchived": "Diarsipkan (tersembunyi)",
         "fieldPublishedAt": "Tanggal Publish",
         "fieldPublishedAtHintActive": "Akan otomatis terisi sekarang() kalau dikosongkan saat status Published.",
         "fieldPublishedAtHintInactive": "Hanya relevan saat status Published. Kosongkan untuk draft.",
@@ -1163,7 +1163,7 @@
         "title": "Tambah License Key Manual",
         "close": "Tutup",
         "fieldProduct": "Produk",
-        "productPlaceholder": "— Pilih produk —",
+        "productPlaceholder": "Pilih produk",
         "fieldCount": "Jumlah",
         "fieldPrefix": "Prefix (opsional)",
         "fieldPrefixHint": "Default: ADMIN. Huruf besar + angka, 2–10 char.",
@@ -1192,7 +1192,7 @@
     "accountProvisionings": {
       "eyebrow": "Aktivasi",
       "title": "Antrean Aktivasi",
-      "subtitle": "Pesanan untuk produk yang butuh aktivasi manual — akun langganan, game, kredensial API. Isi kredensial setelah setup selesai untuk mengirim notifikasi ke buyer.",
+      "subtitle": "Pesanan produk dengan aktivasi manual (akun langganan, game, kredensial API). Isi kredensial setelah setup selesai untuk mengirim notifikasi ke pembeli.",
       "sectionStats": "Status Antrian",
       "statMenungguAdmin": "Menunggu Admin",
       "statSiap": "Siap Dikirim",
@@ -1225,7 +1225,7 @@
       "_batch": "7",
       "listTitle": "Media",
       "listEyebrow": "Media Library",
-      "listSubtitle": "Galeri semua upload — produk, catatan. Pilih dari sini untuk tidak upload dua kali.",
+      "listSubtitle": "Galeri berkas produk dan catatan. Pilih berkas yang ada agar tidak perlu mengunggah ulang.",
       "pickerBadge": "◰ Picker Mode",
       "searchLabel": "Cari file",
       "searchPlaceholder": "namafile.png",
@@ -1254,7 +1254,7 @@
         "titleMatch": "Tidak ada yang cocok",
         "titleEmpty": "Belum ada media",
         "hintMatch": "Coba kata kunci lain atau reset filter.",
-        "hintEmpty": "Upload image di form produk atau catatan — akan muncul di sini."
+        "hintEmpty": "Unggah gambar dari formulir produk atau catatan untuk menampilkannya di galeri ini."
       }
     },
     "settings": {
@@ -1298,7 +1298,7 @@
       "payment": {
         "listTitle": "Payment Gateway",
         "listEyebrow": "Settings / Payment",
-        "listSubtitle": "Konfigurasi Tripay — payment gateway untuk QRIS dan virtual account. Kredensial tersimpan terenkripsi, hanya mode + channel yang aman untuk diedit tanpa khawatir bocor.",
+        "listSubtitle": "Konfigurasi payment gateway Tripay (QRIS dan Virtual Account). Kredensial tersimpan secara terenkripsi.",
         "backendDownTitle": "⚠ Backend belum merespon",
         "modeEyebrow": "Mode",
         "modeProductionTitle": "Production",
@@ -1320,8 +1320,8 @@
         "fieldMode": "Mode",
         "fieldModeHint": "Pilih sandbox untuk testing, production untuk live.",
         "modePlaceholder": "Pilih mode…",
-        "modeSandbox": "Sandbox — testing, transaksi tidak nyata",
-        "modeProduction": "Production — live, transaksi nyata",
+        "modeSandbox": "Sandbox (transaksi simulasi)",
+        "modeProduction": "Production (transaksi riil)",
         "submit": "Simpan Tripay Config",
         "submitPending": "Menyimpan…",
         "sectionChannels": "Channels",
@@ -1710,10 +1710,10 @@
     "invalid": "Kupon tidak valid atau kadaluarsa"
   },
   "customBuild": {
-    "eyebrow": "Jasa Pembuatan Software & Aplikasi",
+    "eyebrow": "Software Engineering & Custom Build",
     "title": "Layanan Custom Build",
-    "subtitle": "Punya ide produk software, SaaS, atau aplikasi bisnis khusus? Kami siap membangunnya dari nol sesuai kebutuhan spesifik Anda.",
-    "intro": "Selain produk digital siap pakai di katalog, kami juga melayani jasa konsultasi, desain arsitektur, dan pembuatan software kustom end-to-end (website modern, SaaS, aplikasi mobile, serta otomasi bisnis). Silakan lengkapi formulir di bawah ini untuk konsultasi awal dan penawaran estimasi.",
+    "subtitle": "Pengerjaan software, aplikasi web, dan sistem automasi khusus yang dirancang sesuai kebutuhan spesifik.",
+    "intro": "Di luar katalog rilis, studio ini melayani pembuatan aplikasi web, bot otomasi, dan sistem backend custom. Isi rincian proyek di bawah untuk diskusi teknis dan perkiraan pengerjaan.",
     "formTitle": "Formulir Permintaan Proyek Kustom",
     "fields": {
       "nama": "Nama Lengkap",
@@ -1752,16 +1752,16 @@
     "successTitle": "Permintaan Proyek Terkirim!",
     "successBody": "Terima kasih! Kami telah menerima detail kebutuhan Anda dan akan segera menghubungi via WhatsApp atau Email untuk tahapan diskusi teknis lebih lanjut.",
     "errorGeneric": "Terjadi kesalahan saat mengirim formulir. Silakan periksa kembali isian Anda atau coba beberapa saat lagi.",
-    "submit": "Kirim Permintaan Build ?",
-    "submitting": "Mengirim Permintaan?",
-    "viewCatalog": "Lihat Katalog Digital ?",
+    "submit": "Kirim Permintaan Build",
+    "submitting": "Mengirim Permintaan...",
+    "viewCatalog": "Lihat Katalog Digital",
     "services": {
       "fullstackTitle": "Full-Stack Development",
-      "fullstackDesc": "Membangun web app modern dengan Next.js, Laravel API, PostgreSQL, dan arsitektur scalable.",
+      "fullstackDesc": "Web app dengan Next.js, Laravel API, PostgreSQL, dan arsitektur yang terstruktur rapi.",
       "mobileTitle": "Mobile & Desktop Apps",
-      "mobileDesc": "Aplikasi cross-platform Flutter/React Native yang terintegrasi langsung dengan backend bisnis Anda.",
+      "mobileDesc": "Aplikasi mobile Flutter yang terhubung langsung ke backend dan API sistem Anda.",
       "automationTitle": "Custom Automation & Tooling",
-      "automationDesc": "Bot otomasi, integrasi API pihak ketiga (Payment, WA Gateway, n8n), dan tooling internal tim."
+      "automationDesc": "Bot alur kerja, integrasi payment gateway, WhatsApp webhook, dan perkakas CLI tim."
     }
   },
   "customer": {
@@ -1786,7 +1786,7 @@
       "success": "Berhasil masuk ke akun.",
       "welcomeBack": "Selamat datang kembali!",
       "changePhone": "Ubah",
-      "autoRegisterHint": "Belum punya akun? Tetap masuk — akun dibuat otomatis setelah verifikasi WhatsApp."
+      "autoRegisterHint": "Belum punya akun? Masuk langsung, akun baru akan dibuat otomatis setelah verifikasi WhatsApp."
     }
   },
   "account": {
@@ -1969,7 +1969,7 @@
     }
   },
   "terms": {
-    "metaTitle": "Syarat & Ketentuan — EnStudio",
+    "metaTitle": "Syarat & Ketentuan · EnStudio",
     "metaDescription": "Syarat penggunaan storefront EnStudio, produk digital, dan layanan terkait.",
     "eyebrow": "Legal",
     "title": "Syarat & Ketentuan",
@@ -2042,7 +2042,7 @@
     ]
   },
   "privacy": {
-    "metaTitle": "Kebijakan Privasi — EnStudio",
+    "metaTitle": "Kebijakan Privasi · EnStudio",
     "metaDescription": "Penjelasan pengumpulan, penggunaan, dan penyimpanan data pribadi di EnStudio.",
     "eyebrow": "Legal",
     "title": "Kebijakan Privasi",
@@ -2106,7 +2106,7 @@
     "editorEyebrow": "Blok Konten",
     "editorTitle": "Susun Catatan",
     "blockCount": "{count} blok",
-    "legacyNotice": "Catatan ini masih memakai format lama (HTML utuh). Setiap blok yang diedit akan disimpan sebagai format blok — tidak ada konten yang hilang.",
+    "legacyNotice": "Catatan ini masih memakai format lama (HTML utuh). Blok yang diedit akan disimpan dalam format blok tanpa menghilangkan konten.",
     "emptyBlock": "Blok ini kosong dan tidak ditampilkan.",
     "emptyContentError": "Konten belum diisi. Tambahkan minimal satu blok sebelum menyimpan.",
     "typeRichText": "Teks",

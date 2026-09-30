@@ -85,7 +85,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     ...buildMetadata({
-      title: `${post.title} — Display EnStudio`,
+      title: `${post.title} · Display EnStudio`,
       description,
     }),
     keywords: post.excerpt ? [post.title, post.excerpt] : [post.title],
@@ -294,7 +294,7 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
             {/* End-of-article signature mark */}
             <Eyebrow as="div" size="label-lg" color="ink-subtle" className="mt-16 flex items-center gap-3">
-              <span aria-hidden="true">— ✎ —</span>
+              <span aria-hidden="true">· ✎ ·</span>
               <span>{t('end')}</span>
             </Eyebrow>
           </div>

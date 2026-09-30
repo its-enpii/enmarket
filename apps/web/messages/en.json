@@ -1,7 +1,7 @@
 {
   "common": {
     "site": {
-      "title": "EnStudio — Discover, Develop, Display",
+      "title": "EnStudio · Discover, Develop, Display",
       "description": "Solo studio · Showcase of digital creations, research, and custom services."
     },
     "buttons": {
@@ -58,10 +58,10 @@
     }
   },
   "errors": {
-    "title500": "500 — Something Went Wrong",
+    "title500": "500 · Something Went Wrong",
     "subtitle500": "Oops, something went wrong. Please try again in a moment.",
     "body500": "Try again in a moment or return to the catalog.",
-    "title404": "404 — Page Not Found",
+    "title404": "404 · Page Not Found",
     "subtitle404": "Oops, this page could not be found. It may have been moved or removed.",
     "body404": "The page you’re looking for may have been removed or its address may have changed.",
     "viewCatalog": "← View Catalog",
@@ -121,17 +121,17 @@
     "heroSubtitle": "Showcase of digital creations, tech research, and personal products by Enpii.",
     "heroCta": "View Develop Works",
     "pillarsTitle": "Three Pillars",
-    "pillarsSubtitle": "How we think, make, and share.",
+    "pillarsSubtitle": "Three core focuses of the studio.",
     "pillarDiscover": "Discover",
-    "pillarDiscoverBody": "Short research, many prototypes discarded. What remains is the most honest.",
+    "pillarDiscoverBody": "Idea exploration and technical tests. Proven results are documented here.",
     "pillarDevelop": "Develop",
-    "pillarDevelopBody": "Source code, licenses, and bundles. Written on purpose, not frameworks passing through.",
+    "pillarDevelopBody": "Source code, licenses, and digital tooling ready for production use.",
     "pillarDisplay": "Display",
-    "pillarDisplayBody": "A journal of thoughts and process. Notes that still show how they were made.",
+    "pillarDisplayBody": "Technical notes, architecture insights, and practical build logs.",
     "pillarExplore": "Explore {title}",
     "featuredTitle": "Featured Developments",
-    "featuredSubtitle": "Latest picks from Develop, finished and ready to use.",
-    "featuredFallback": "A digital artifact from EnStudio, ready to use and build upon.",
+    "featuredSubtitle": "Latest releases ready for immediate use.",
+    "featuredFallback": "Digital tools and codebases from EnStudio, ready to extend.",
     "featuredEmpty": "No featured works yet. Check back soon.",
     "viewAllDevelop": "View All Develop",
     "journalTitle": "Latest / Display",
@@ -143,17 +143,17 @@
     "sponsorsSubtitle": "Websites & Partners Supporting the Studio",
     "visitSponsor": "Visit Website",
     "becomeSponsor": "Become a Sponsor",
-    "sponsorsEmptyCta": "No sponsors yet — be the first!"
+    "sponsorsEmptyCta": "No sponsors yet. Be the first!"
   },
   "discover": {
     "eyebrow": "Discover",
     "title": "Discover",
-    "subtitle": "Work that starts from curiosity, not a client brief.",
+    "subtitle": "Technical and design explorations built from practical needs.",
     "storyTitle": "\"Code is a material, not a delivery mechanism.\"",
-    "storyBody1": "EnStudio began as a private space. A place to keep experiments too specific for a client portfolio, too honest to hide behind false polish.",
-    "storyBody2": "I believe programming and design are the same habit: choosing on purpose, rejecting defaults, reading documentation to the last line.",
-    "storyBody3": "The work here is a snapshot of that process. Not a finished product, but artifacts that still show how they were made.",
-    "signature": "— e° / solo studio",
+    "storyBody1": "EnStudio is a personal workspace for software research, building digital tools, and documenting architecture.",
+    "storyBody2": "The engineering principle is straightforward: clean structure, minimal unnecessary dependencies, and solid technical foundations.",
+    "storyBody3": "Everything released here is battle-tested: functional tooling, clean source code, and clear documentation.",
+    "signature": "e° / solo studio",
     "pillarsHeading": "What we do",
     "pillarsTitle": "Three words, one workflow.",
     "pillarDiscoverTitle": "Discover",
@@ -198,8 +198,8 @@
     "loadMore": "Load more artifacts",
     "end": "End of catalog, {count} artifacts",
     "studioNote": "Studio note",
-    "divider1": "Made with intent, not just on request.",
-    "divider2": "Price is only a number; value lies in the work behind it.",
+    "divider1": "Built with clear purpose and maintainable code.",
+    "divider2": "Every release includes complete setup instructions and documentation.",
     "divider3": "Some pieces here are still being explored.",
     "fallbackDescription": "A digital artifact from EnStudio.",
     "view": "View"
@@ -378,7 +378,7 @@
       "description": "No analytics or comments. Just a quick reaction so I know if this note was clear.",
       "notReally": "Not really",
       "thanks": "Thanks for reading.",
-      "improve": "Okay—noted. I’ll make the next note clearer."
+      "improve": "Noted. The next entry will be more detailed."
     }
   },
   "keranjang": {
@@ -630,12 +630,12 @@
       "pendingEyebrow": "Needs attention",
       "pendingTitle": "Pending Orders",
       "pendingEmpty": "No pending orders 🎉",
-      "pendingEmptyHint": "All orders processed — just waiting for payment.",
+      "pendingEmptyHint": "All orders processed, waiting for payment.",
       "pendingViewAll": "View all",
       "activityEyebrow": "Recent",
       "activityTitle": "Activity",
       "activityEmpty": "No activity yet",
-      "activityEmptyHint": "Edit a product, post, or order — the log will appear here.",
+      "activityEmptyHint": "Edits to products, posts, or orders will appear here.",
       "tileStatTotalProducts": "Total Products",
       "tileStatPendingOrders": "Pending Orders",
       "tileStatPaidMonth": "Paid This Month",
@@ -708,7 +708,7 @@
     },
     "footer": {
       "brand": "Admin Panel",
-      "store": "— EnStudio Store",
+      "store": "· EnStudio Store",
       "viewStore": "← View Store"
     },
     "shared": {
@@ -720,7 +720,7 @@
       "dateFrom": "From",
       "dateTo": "To",
       "addImage": "+ New Upload",
-      "imagePicked": "Picked: {url}… — backend attach-by-URL coming soon. For now, upload manually.",
+      "imagePicked": "Picked: {url}… Attach-by-URL is coming soon; please upload manually for now.",
       "uploadError": "Upload failed",
       "deleteError": "Delete failed",
       "imageDeleted": "Image deleted.",
@@ -777,19 +777,19 @@
       "licenseKeys": "License Keys",
       "licenseKeysSubtitle": "License key pool for digital products.",
       "media": "Media",
-      "mediaSubtitle": "Upload gallery — reusable across entities.",
-      "settings": "Settings — Site Identity",
+      "mediaSubtitle": "Centralized media gallery for products and notes.",
+      "settings": "Settings: Site Identity",
       "settingsSubtitle": "Studio identity: name, logo, social links.",
-      "settingsPayment": "Settings — Payment",
+      "settingsPayment": "Settings: Payment",
       "settingsPaymentSubtitle": "Configure Tripay gateway.",
-      "settingsMaintenance": "Settings — Maintenance",
+      "settingsMaintenance": "Settings: Maintenance",
       "settingsMaintenanceSubtitle": "Toggle store maintenance mode.",
       "fallback": "Admin",
       "coupons": "Discount Coupons",
       "couponsSubtitle": "Manage coupon codes and checkout discount promotions.",
       "customRequests": "Custom Requests",
       "customRequestsSubtitle": "List of custom build project requests from buyers.",
-      "settingsNavigation": "Settings — Navigation",
+      "settingsNavigation": "Settings: Navigation",
       "settingsNavigationSubtitle": "Enable or disable public navbar menu items."
     },
     "categories": {
@@ -888,20 +888,20 @@
         "fieldSlug": "Slug",
         "fieldSlugHint": "URL-friendly identifier. Lowercase, numbers, dashes.",
         "fieldCategory": "Category",
-        "categoryPlaceholder": "— No Category —",
+        "categoryPlaceholder": "No Category",
         "fieldFree": "Free Product",
         "fieldFreeHint": "Enable for freebie / sample / promo material. Price auto-set to Rp 0 and checkout skips payment gateway.",
         "fieldPrice": "Price (IDR)",
         "fieldType": "Type",
         "typePlaceholder": "Pick a type…",
-        "typeDownload": "Download — file only",
-        "typeLicense": "License — key only",
-        "typeBundle": "Bundle — file + key",
-        "typeAccountManual": "Manual Account — admin activation",
+        "typeDownload": "Download (file only)",
+        "typeLicense": "License (key only)",
+        "typeBundle": "Bundle (file and key)",
+        "typeAccountManual": "Manual Account (admin activation)",
         "fieldStatus": "Status",
         "statusPlaceholder": "Pick a status…",
-        "statusDraft": "Draft — not on sale",
-        "statusActive": "Active — visible in store",
+        "statusDraft": "Draft (not on sale)",
+        "statusActive": "Active (visible in store)",
         "statusNotForSale": "Not For Sale",
         "fieldDownloadExpiry": "Download Expiry (days)",
         "fieldDownloadExpiryHint": "For download/bundle type. How many days the download link stays valid.",
@@ -937,7 +937,7 @@
         "fieldReleaseDateHint": "Buyer receives delivery (file + license key) after admin clicks Release. Date is display only.",
         "fieldReleaseDatePlaceholder": "Pick a date…",
         "fieldDepositPercent": "Deposit (%)",
-        "fieldDepositPercentHint": "1-100. Default 50. Remaining is display only — buyer does not pay a second time."
+        "fieldDepositPercentHint": "1-100. Default 50. Remaining is display only; buyer is not charged twice."
       }
     },
     "preorders": {
@@ -1025,9 +1025,9 @@
         "removeThumbnail": "Remove thumbnail on save",
         "fieldStatus": "Status",
         "statusPlaceholder": "Pick a status…",
-        "statusDraft": "Draft — not published",
-        "statusPublished": "Published — visible publicly",
-        "statusArchived": "Archived — hidden",
+        "statusDraft": "Draft (not published)",
+        "statusPublished": "Published (visible publicly)",
+        "statusArchived": "Archived (hidden)",
         "fieldPublishedAt": "Publish Date",
         "fieldPublishedAtHintActive": "Auto-filled with now() if left empty when status is Published.",
         "fieldPublishedAtHintInactive": "Only relevant when status is Published. Leave empty for drafts.",
@@ -1163,7 +1163,7 @@
         "title": "Add License Key Manually",
         "close": "Close",
         "fieldProduct": "Product",
-        "productPlaceholder": "— Pick a product —",
+        "productPlaceholder": "Pick a product",
         "fieldCount": "Count",
         "fieldPrefix": "Prefix (optional)",
         "fieldPrefixHint": "Default: ADMIN. Uppercase letters + digits, 2–10 chars.",
@@ -1192,7 +1192,7 @@
     "accountProvisionings": {
       "eyebrow": "Activation",
       "title": "Activation Queue",
-      "subtitle": "Orders for products that need manual activation — subscription accounts, game accounts, API credentials. Fill in credentials after setup completes to notify the buyer.",
+      "subtitle": "Orders requiring manual activation (subscriptions, accounts, API credentials). Enter credentials once provisioned to notify the customer.",
       "sectionStats": "Queue Status",
       "statMenungguAdmin": "Awaiting Admin",
       "statSiap": "Ready Sent",
@@ -1225,7 +1225,7 @@
       "_batch": "7",
       "listTitle": "Media",
       "listEyebrow": "Media Library",
-      "listSubtitle": "Gallery of all uploads — products, notes. Pick from here to avoid uploading twice.",
+      "listSubtitle": "Gallery of all uploaded assets. Select existing files to avoid duplicates.",
       "pickerBadge": "◰ Picker Mode",
       "searchLabel": "Search file",
       "searchPlaceholder": "filename.png",
@@ -1254,7 +1254,7 @@
         "titleMatch": "Nothing matches",
         "titleEmpty": "No media yet",
         "hintMatch": "Try a different keyword or reset filters.",
-        "hintEmpty": "Upload an image from a product or post form — it'll appear here."
+        "hintEmpty": "Upload an image from any product or post form to see it here."
       }
     },
     "settings": {
@@ -1298,7 +1298,7 @@
       "payment": {
         "listTitle": "Payment Gateway",
         "listEyebrow": "Settings / Payment",
-        "listSubtitle": "Configure Tripay — the payment gateway for QRIS and virtual accounts. Credentials are stored encrypted; only mode and channel toggles are safe to edit.",
+        "listSubtitle": "Configure Tripay payment gateway (QRIS and Virtual Accounts). Credentials are stored encrypted.",
         "backendDownTitle": "⚠ Backend did not respond",
         "modeEyebrow": "Mode",
         "modeProductionTitle": "Production",
@@ -1320,8 +1320,8 @@
         "fieldMode": "Mode",
         "fieldModeHint": "Pick sandbox for testing, production for live.",
         "modePlaceholder": "Pick a mode…",
-        "modeSandbox": "Sandbox — testing, no real transactions",
-        "modeProduction": "Production — live, real transactions",
+        "modeSandbox": "Sandbox (testing, simulated transactions)",
+        "modeProduction": "Production (live transactions)",
         "submit": "Save Tripay Config",
         "submitPending": "Saving…",
         "sectionChannels": "Channels",
@@ -1710,10 +1710,10 @@
     "invalid": "Coupon is invalid or expired"
   },
   "customBuild": {
-    "eyebrow": "Custom Software & App Services",
+    "eyebrow": "Software Engineering & Custom Build",
     "title": "Custom Build Service",
-    "subtitle": "Have an idea for custom software, SaaS, or specialized business tools? We build it from scratch to your exact specifications.",
-    "intro": "Beyond ready-to-use digital products in our catalog, we provide end-to-end custom software design and engineering (modern web apps, SaaS platforms, mobile apps, and business automations). Fill out the form below to get an initial consultation and estimation.",
+    "subtitle": "Tailored software development, web applications, and automation systems engineered for specific requirements.",
+    "intro": "Beyond catalog releases, the studio handles custom web applications, workflow automations, and backend systems. Fill out the form below for technical discussion and scope estimation.",
     "formTitle": "Custom Project Request Form",
     "fields": {
       "nama": "Full Name",
@@ -1752,16 +1752,16 @@
     "successTitle": "Project Request Sent!",
     "successBody": "Thank you! We have received your project requirements and will reach out via WhatsApp or Email shortly for technical discussions.",
     "errorGeneric": "An error occurred while submitting the form. Please check your inputs or try again shortly.",
-    "submit": "Submit Build Request ?",
-    "submitting": "Submitting Request?",
-    "viewCatalog": "Browse Digital Catalog ?",
+    "submit": "Submit Build Request",
+    "submitting": "Submitting Request...",
+    "viewCatalog": "Browse Digital Catalog",
     "services": {
       "fullstackTitle": "Full-Stack Development",
-      "fullstackDesc": "Building modern web apps with Next.js, Laravel API, PostgreSQL, and scalable architectures.",
+      "fullstackDesc": "Web applications with Next.js, Laravel API, PostgreSQL, and structured architectures.",
       "mobileTitle": "Mobile & Desktop Apps",
-      "mobileDesc": "Cross-platform Flutter/React Native apps integrated seamlessly with your business backend.",
+      "mobileDesc": "Flutter mobile applications connected directly to your system APIs.",
       "automationTitle": "Custom Automation & Tooling",
-      "automationDesc": "Automation bots, third-party API integrations (Payment, WA Gateway, n8n), and internal team tooling."
+      "automationDesc": "Workflow bots, payment gateway integrations, WhatsApp webhooks, and team CLI tooling."
     }
   },
   "customer": {
@@ -1786,7 +1786,7 @@
       "success": "Successfully logged in.",
       "welcomeBack": "Welcome back!",
       "changePhone": "Change",
-      "autoRegisterHint": "No account yet? Just sign in — your account is created automatically after WhatsApp verification."
+      "autoRegisterHint": "No account yet? Sign in directly; your account will be created automatically after WhatsApp verification."
     }
   },
   "account": {
@@ -1969,7 +1969,7 @@
     }
   },
   "terms": {
-    "metaTitle": "Terms & Conditions — EnStudio",
+    "metaTitle": "Terms & Conditions · EnStudio",
     "metaDescription": "Rules for using the EnStudio storefront, digital products, and related services.",
     "eyebrow": "Legal",
     "title": "Terms & Conditions",
@@ -2042,7 +2042,7 @@
     ]
   },
   "privacy": {
-    "metaTitle": "Privacy Policy — EnStudio",
+    "metaTitle": "Privacy Policy · EnStudio",
     "metaDescription": "How EnStudio collects, uses, and stores your personal information.",
     "eyebrow": "Legal",
     "title": "Privacy Policy",
@@ -2106,7 +2106,7 @@
     "editorEyebrow": "Content blocks",
     "editorTitle": "Compose Note",
     "blockCount": "{count, plural, one {# block} other {# blocks}}",
-    "legacyNotice": "This note still uses the legacy format (one full HTML document). Blocks you edit are saved in the block format — no content is lost.",
+    "legacyNotice": "This note uses the legacy format (single HTML document). Edited blocks are saved as block components without losing content.",
     "emptyBlock": "This block is empty and is not rendered.",
     "emptyContentError": "Content is still empty. Add at least one block before saving.",
     "typeRichText": "Text",
