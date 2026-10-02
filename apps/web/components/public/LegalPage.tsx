@@ -14,6 +14,7 @@
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
+import { LegalToc } from './LegalToc';
 
 export interface LegalSection {
   heading: string;
@@ -70,18 +71,12 @@ export function LegalPage({
               <Eyebrow size="md" color="accent" className="mb-3">
                 {tocLabel}
               </Eyebrow>
-              <ol className="list-decimal pl-5 space-y-1 font-body text-body-sm text-ink/80">
-                {sections.map((s) => (
-                  <li key={slugifyHeading(s.heading)}>
-                    <a
-                      href={`#${slugifyHeading(s.heading)}`}
-                      className="underline decoration-accent underline-offset-4 hover:decoration-ink"
-                    >
-                      {s.heading}
-                    </a>
-                  </li>
-                ))}
-              </ol>
+              <LegalToc
+                items={sections.map((s) => ({
+                  id: slugifyHeading(s.heading),
+                  label: s.heading,
+                }))}
+              />
             </Card>
           </aside>
 

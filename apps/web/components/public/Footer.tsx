@@ -14,7 +14,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { Button, Card, NLink, LINK_VARIANT_CLS } from '@/components/ui/neobrutal';
+import { Button, Card, NLink } from '@/components/ui/neobrutal';
 import { MetaLabel } from '@/components/ui/MetaLabel';
 import { Input } from '@/components/ui/Input';
 import { Icon } from '@/components/ui';
@@ -41,21 +41,22 @@ export async function Footer() {
 
   return (
     <footer className="bg-ink text-surface">
-      <SectionContainer py="py-12 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
+      <SectionContainer py="py-6 md:py-10">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-5 md:gap-10 items-start">
           {/* Left col: brand */}
-          <div className="flex flex-col gap-8">
-            <h3 className="font-display text-headline-xl font-black uppercase leading-none">
-              EN
-              <br />
+          <div className="flex flex-col gap-4">
+            <h3 className="font-display text-headline-lg-mobile md:text-headline-lg font-black uppercase leading-none">
+              EN<span className="md:hidden">
+                <br />
+              </span>
               STUDIO
             </h3>
             {tagline ? (
-              <p className="font-body text-body-lg text-surface/80 max-w-md">
+              <p className="hidden md:block font-body text-body-md text-surface/80 max-w-md">
                 {tagline}
               </p>
             ) : (
-              <p className="font-body text-body-lg text-surface/80 max-w-md">
+              <p className="hidden md:block font-body text-body-md text-surface/80 max-w-md">
                 {tCommon('description')}
               </p>
             )}
@@ -78,9 +79,9 @@ export async function Footer() {
           </div>
 
           {/* Right col: newsletter + links */}
-          <div className="flex flex-col gap-12">
-            <Card variant="surface" thick hoverable={false} className="p-8">
-              <MetaLabel as="p" tracking="normal" size="sm" weight="black" color="inherit" className="mb-4">
+          <div className="flex flex-col gap-5 md:gap-6">
+            <Card variant="surface" thick hoverable={false} className="p-5">
+              <MetaLabel as="p" tracking="normal" size="sm" weight="black" color="inherit" className="mb-3">
                 {t('subscribeTitle')}
               </MetaLabel>
               <form
@@ -93,26 +94,26 @@ export async function Footer() {
                   name="email"
                   placeholder={t('emailPlaceholder')}
                   required
-                  className="rounded-none border-0 px-4 py-4 font-label text-label-sm"
+                  className="rounded-none border-0 px-4 py-3 font-label text-label-sm"
                 />
                 <Button
                   type="submit"
                   variant="primary"
                   size="sm"
                   aria-label={t('subscribeAria')}
-                  className="h-auto px-6 py-4 border-l-4 border-ink rounded-none"
+                  className="h-auto px-6 py-3 border-l-4 border-ink rounded-none"
                 >
                   <Icon name="arrow-right" />
                 </Button>
               </form>
             </Card>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2">
               {/* Social — fully dynamic, dari admin settings.
                   Pakai <a> native (bukan NLink) supaya tidak ke-wrap locale prefix
                   dan tidak di-prefetch — sesuai pattern Button external. */}
-              <div className="flex flex-col gap-4">
-                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-2">
+              <div className="flex flex-col gap-1.5">
+                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-1">
                   {t('connectTitle')}
                 </MetaLabel>
                 {socialLinks.length === 0 ? (
@@ -134,8 +135,8 @@ export async function Footer() {
                 )}
               </div>
 
-              <div className="flex flex-col gap-4">
-                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-2">
+              <div className="flex flex-col gap-1.5">
+                <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-1">
                   {t('studioTitle')}
                 </MetaLabel>
                 <NLink href="/develop" variant="on-dark" underline="none">
@@ -150,7 +151,9 @@ export async function Footer() {
                 <NLink href="/login" variant="on-dark" underline="none">
                   {tNav('admin')}
                 </NLink>
-                <span className="mt-2 h-px bg-surface/15" aria-hidden />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
                 <MetaLabel as="h4" tracking="normal" size="sm" weight="black" color="inherit" className="mb-1">
                   {t('legalTitle')}
                 </MetaLabel>
@@ -165,7 +168,7 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-surface/20 font-label text-label-sm uppercase text-surface/50">
+        <div className="mt-4 pt-4 border-t border-surface/20 font-label text-label-sm uppercase text-surface/50">
           <span>
             {footerText
               ? `${t('copyright', { year: new Date().getFullYear() })} · ${footerText}`
