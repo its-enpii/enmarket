@@ -7,6 +7,7 @@ import { Footer } from '@/components/public/Footer';
 import { TopNav } from '@/components/public/TopNav';
 import { CartBadge } from '@/components/public/CartBadge';
 import { WishlistBadge } from '@/components/public/WishlistBadge';
+import { ViewportRegistrationOverlay } from '@/components/public/BrutalistOverlay';
 
 export default async function PublicLayout({
   children,
@@ -17,6 +18,7 @@ export default async function PublicLayout({
     // bg-transparent: biar dot-grid pattern di <body> (globals.css) kelihatan.
     // Section yang butuh solid surface pasang `bg-surface` sendiri-sendiri.
     <div className="min-h-screen flex flex-col bg-transparent">
+      <ViewportRegistrationOverlay />
       <TopNav>
         <WishlistBadge />
         <CartBadge />

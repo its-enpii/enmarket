@@ -21,6 +21,7 @@
 
 import type { ReactNode } from 'react';
 import { Eyebrow } from '@/components/ui/neobrutal';
+import { CornerCrosshairs } from './BrutalistOverlay';
 
 type Size = 'compact' | 'default' | 'tall';
 
@@ -57,8 +58,15 @@ export function PageHeader({
   size = 'tall',
 }: Props) {
   return (
-    <section className="border-b-4 border-ink">
-      <div className={`mx-auto max-w-screen-2xl px-6 md:px-12 ${PAD[size]}`}>
+    <section className="relative border-b-4 border-ink">
+      <div className={`relative mx-auto max-w-screen-2xl px-6 md:px-12 ${PAD[size]}`}>
+        <CornerCrosshairs />
+        <div
+          aria-hidden="true"
+          className="hidden md:inline-block absolute top-4 right-6 max-w-[40%] pointer-events-none font-mono text-[11px] text-ink/30 border border-ink/20 px-2 py-0.5 tracking-widest uppercase"
+        >
+          [ARCHIVE // SPEC-01]
+        </div>
         {eyebrow && (
           <Eyebrow size="md" color="accent" className="mb-6">
             ✎ {eyebrow}
