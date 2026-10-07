@@ -167,40 +167,21 @@ body {
    * ───── Background berlapis (NeoBrutalism "graph paper" + hiasan background) ─────
    *
    * Hiasan halaman ini murni LAPISAN BACKGROUND CSS (properti `background`
-   * multi-layer) di <body> — tanpa komponen React baru, tanpa elemen DOM
-   * tambahan. Urutan di bawah = urutan tumpuk: layer pertama yang ditulis
-   * menggambar PALING ATAS. Jadi urutannya (atas → bawah):
+   * multi-layer) di <body> — tanpa elemen DOM tambahan. Urutan di bawah =
+   * urutan tumpuk: layer pertama yang ditulis menggambar PALING ATAS.
    *
-   *   1. dot-grid radial  → pattern utama (yang sudah ada, TIDAK diubah)
-   *   2. lapisan B        → pita diagonal accent mustard (arah visual)
-   *   3. lapisan A        → grid garis teknikal ink (kertas milimeter)
-   *   4. var(--color-surface) → warna dasar off-white #F3F3F3
+   *   1. dot-grid radial  → pattern utama (parameter tidak diubah)
+   *   2. grid garis teknikal ink (kertas milimeter) 1px tiap 96px
+   *   3. var(--color-surface) → warna dasar off-white #F3F3F3
    *
-   * Kenapa opacity rendah / sangat samar: gaya Neobrutalism mengandalkan
-   * border ink 4px + hard shadow 6px tanpa blur sebagai elemen visual
-   * dominan. Hiasan latar harus JADI LATAR, bukan pesaing: lapisan baru
-   * WAJIB lebih samar dari dot-grid (yang di 0.08). Maka A = 0.045 dan
-   * B = 0.05 — cukup memberi tekstur & "arah", tak menyentuh kontras teks.
-   * Tidak ada gradient/blur dekoratif yang melanggar prinsip "no softness":
-   * ini garis keras (stop linear-gradient tajam), bukan fade lembut.
-   *
-   * Layer A — grid garis teknikal (blueprint grid):
-   *   Kombinasi dua linear-gradient (vertikal + horizontal) 1px, jarak 96px
-   *   = 4x dot-grid 24px (konsisten dengan gutter token). Warna ink alpha
-   *   0.045 → lebih samar dari dot-grid agar tidak bersaing.
-   *
-   * Layer B — pita diagonal accent:
-   *   135deg, blok mustard `rgba(230,175,46,0.05)` (#E6AF2E alpha rendah)
-   *   yang membentuk PITA diagonal sempit (transparent 0-46%, mustard
-   *   46-54%, transparent 54-100%) — bukan blok pekat. background-size
-   *   480px 480px bikin pita berulang halus, bukan solid menutup halaman.
+   * Catatan: pita diagonal accent mustard (135deg) sudah DIHAPUS — pola itu
+   * terbaca sebagai "zig-zag kuning" yang mengganggu, bukan latar kalem.
+   * Sisanya tetap samar (ink alpha 0.045-0.08) agar tidak menyentuh kontras.
    *
    * Kenapa background-attachment: fixed di SEMUA layer pattern: pattern
    * diam relatif viewport saat scroll (menghindari "scrolling dot" yang
-   * motion-sick triggering). Ini konsisten dengan dot-grid yang sudah ada.
-   * background-repeat: repeat untuk tiap pattern → tile penuh, tanpa seam.
-   * `overflow-x: hidden` menjaga tak ada horizontal scroll dari paint layer
-   * ini (pattern fixed tidak menambah lebar dokumen).
+   * motion-sick triggering). background-repeat: repeat untuk tiap pattern.
+   * `overflow-x: hidden` menjaga tak ada horizontal scroll dari paint layer.
    *
    * ponytail: untuk dark mode (jika di-enable nanti), swap rgba(4,3,3,…)
    * ke rgba(243,243,243,…) untuk kontras terbalik. Saat ini dark mode
@@ -209,18 +190,10 @@ body {
   background:
     /* 1. dot-grid (pattern lama — parameter TIDAK diubah, tetap paling atas) */
     radial-gradient(circle, rgba(4, 3, 3, 0.08) 1px, transparent 1.5px) 0 0 / 24px 24px fixed repeat,
-    /* 2. lapisan B — pita diagonal accent mustard (alpha 0.05) */
-    linear-gradient(
-        135deg,
-        transparent 0 46%,
-        rgba(230, 175, 46, 0.05) 46% 54%,
-        transparent 54% 100%
-      )
-      0 0 / 480px 480px fixed repeat,
-    /* 3. lapisan A — grid garis teknikal ink 1px tiap 96px (alpha 0.045) */
+    /* 2. grid garis teknikal ink 1px tiap 96px (alpha 0.045) */
     linear-gradient(90deg, rgba(4, 3, 3, 0.045) 1px, transparent 1px) 0 0 / 96px 96px fixed repeat,
     linear-gradient(0deg, rgba(4, 3, 3, 0.045) 1px, transparent 1px) 0 0 / 96px 96px fixed repeat,
-    /* 4. base paling bawah — off-white surface */
+    /* 3. base paling bawah — off-white surface */
     var(--color-surface);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;

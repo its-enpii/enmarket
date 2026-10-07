@@ -11,6 +11,8 @@ export type { ButtonProps } from './Button';
 export { Card } from './Card';
 export type { CardProps } from './Card';
 export { Disclosure } from './Disclosure';
+export { DotMatrix } from './DotMatrix';
+export type { DotMatrixProps, DotMatrixColor } from './DotMatrix';
 export { Eyebrow } from './Eyebrow';
 export type { EyebrowColor, EyebrowSize } from './Eyebrow';
 export { PageLoader, AdminListLoader, AdminTableLoader } from './PageLoader';

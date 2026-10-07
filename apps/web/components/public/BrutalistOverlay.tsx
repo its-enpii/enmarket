@@ -12,9 +12,13 @@
  *   - High-contrast impact, hard offset shadow tanpa blur, tanpa gradient
  *
  * Sub-komponen:
- *   - CornerCrosshairs          → tanda registrasi "+" di 4 sudut induk
- *   - TechnicalSticker          → stiker zine melayang (accent/surface/primary)
- *   - ViewportRegistrationOverlay → label teknis tetap di 4 sudut viewport
+ *   - CornerCrosshairs → tanda registrasi "+" di 4 sudut induk
+ *   - TechnicalSticker → stiker zine melayang (accent/surface/primary)
+ *
+ * Catatan: `ViewportRegistrationOverlay` (label `[ZINE-EDITION: 2026]` dkk.
+ * yang menempel fixed di 4 pojok viewport) SENGAJA TIDAK disertakan lagi —
+ * teks teknis fixed itu terbaca mengganggu di seluruh halaman. Karakter teknis
+ * kini dibawa oleh stiker/ribbon in-flow (Hero) dan badge PageHeader.
  */
 
 import type { ReactNode } from 'react';
@@ -28,7 +32,7 @@ interface ClassNameProps {
  * Induk HARUS punya `position: relative` (pasang `relative` pada section).
  * Offset positif kecil (`top-1 left-1` = 4px) menempatkan tanda DI DALAM
  * batas induk sehingga tidak pernah memperlebar `document.scrollWidth`
- * (menghindari horizontal overflow 10px dari offset negatif sebelumnya).
+ * (menghindari horizontal overflow dari offset negatif).
  */
 export function CornerCrosshairs({ className = '' }: ClassNameProps) {
   const cross =
@@ -86,35 +90,5 @@ export function TechnicalSticker({
       {icon}
       {text}
     </span>
-  );
-}
-
-/**
- * Overlay registrasi tetap (fixed) di 4 sudut viewport, hanya tampil pada
- * layar besar (`hidden lg:block`). Menambah karakter teknis/blueprint tanpa
- * mengganggu konten — sudut-sudut ini selalu kosong pada layout publik.
- *
- * `z-20` sengaja di bawah TopNav (`z-index-topbar` = 30) agar tidak menutupi
- * navigasi. Semua label `pointer-events-none`.
- */
-export function ViewportRegistrationOverlay() {
-  const base =
-    'fixed hidden lg:block pointer-events-none select-none z-20 font-mono text-[10px] leading-none tracking-widest uppercase text-ink/30';
-
-  return (
-    <div aria-hidden="true" className="pointer-events-none select-none">
-      <span className={`${base} top-24 left-4`}>
-        + [00°00&apos;N // EN.STUDIO]
-      </span>
-      <span className={`${base} top-24 right-4`}>
-        [● SYS_ONLINE // SPEC-01]
-      </span>
-      <span className={`${base} bottom-20 left-4`}>
-        [ZINE-EDITION: 2026]
-      </span>
-      <span className={`${base} bottom-20 right-4`}>
-        [GRID 12-COL // 24PX] +
-      </span>
-    </div>
   );
 }

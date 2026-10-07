@@ -13,7 +13,7 @@
 
 import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
-import { Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
+import { Card, NLink } from '@/components/ui/neobrutal';
 import { LegalToc } from './LegalToc';
 
 export interface LegalSection {
@@ -65,12 +65,14 @@ export function LegalPage({
           {/* Kiri — TOC sticky (lg+) */}
           <aside className="lg:sticky lg:top-28">
             <Card variant="surface" thick hoverable={false} className="p-6 md:p-8">
-              <p className="font-label text-label-sm uppercase tracking-wider text-ink/60 mb-4">
-                {updated}
-              </p>
-              <Eyebrow size="md" color="accent" className="mb-3">
-                {tocLabel}
-              </Eyebrow>
+              <div className="border-b-2 border-ink pb-3 mb-4">
+                <p className="font-display font-black text-lg uppercase tracking-tight text-ink">
+                  {tocLabel}
+                </p>
+                <p className="font-mono text-xs uppercase text-ink/60 mt-1">
+                  {updated}
+                </p>
+              </div>
               <LegalToc
                 items={sections.map((s) => ({
                   id: slugifyHeading(s.heading),

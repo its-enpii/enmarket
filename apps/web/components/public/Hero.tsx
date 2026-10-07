@@ -5,10 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
 import { SectionContainer } from './SectionContainer';
-import {
-  CornerCrosshairs,
-  TechnicalSticker,
-} from './BrutalistOverlay';
+import { CornerCrosshairs, TechnicalSticker } from './BrutalistOverlay';
 
 export function Hero() {
   const t = useTranslations('home');
@@ -16,7 +13,7 @@ export function Hero() {
     // relative: jangkar CornerCrosshairs di 4 sudut section.
     <section className="relative min-h-[52vh] sm:min-h-[68vh] flex flex-col items-center justify-center text-center border-b-4 border-ink">
       <SectionContainer py="xl">
-        {/* relative: crosshair menempel di 4 sudut area konten. */}
+        {/* relative: crosshair & stiker menempel di area konten. */}
         <div className="relative">
           <CornerCrosshairs />
 

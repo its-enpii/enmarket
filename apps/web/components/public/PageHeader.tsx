@@ -61,6 +61,7 @@ export function PageHeader({
     <section className="relative border-b-4 border-ink">
       <div className={`relative mx-auto max-w-screen-2xl px-6 md:px-12 ${PAD[size]}`}>
         <CornerCrosshairs />
+        {/* Badge teknis di pojok kanan atas header (desktop). */}
         <div
           aria-hidden="true"
           className="hidden md:inline-block absolute top-4 right-6 max-w-[40%] pointer-events-none font-mono text-[11px] text-ink/30 border border-ink/20 px-2 py-0.5 tracking-widest uppercase"
@@ -68,9 +69,11 @@ export function PageHeader({
           [ARCHIVE // SPEC-01]
         </div>
         {eyebrow && (
-          <Eyebrow size="md" color="accent" className="mb-6">
-            ✎ {eyebrow}
-          </Eyebrow>
+          <div className="flex items-center gap-3 mb-6">
+            <Eyebrow size="md" color="accent">
+              ✎ {eyebrow}
+            </Eyebrow>
+          </div>
         )}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <h1 className="font-display text-5xl sm:text-6xl md:text-headline-xl text-ink break-words">
