@@ -11,6 +11,7 @@
  * hardcoded brand wordmark dipertahankan untuk konsistensi tipografi.
  */
 
+import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 
 import { SectionContainer } from '@/components/public/SectionContainer';
@@ -45,12 +46,13 @@ export async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-5 md:gap-10 items-start">
           {/* Left col: brand */}
           <div className="flex flex-col gap-4">
-            <h3 className="font-display text-headline-lg-mobile md:text-headline-lg font-black uppercase leading-none">
-              EN<span className="md:hidden">
-                <br />
-              </span>
-              STUDIO
-            </h3>
+            <Image
+              src="/logo/enstudio-wordmark-light.png"
+              alt="EnStudio"
+              width={2172}
+              height={724}
+              className="h-14 w-auto self-start md:h-20"
+            />
             {tagline ? (
               <p className="hidden md:block font-body text-body-md text-surface/80 max-w-md">
                 {tagline}

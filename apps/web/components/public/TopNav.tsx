@@ -4,6 +4,7 @@ import { usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
@@ -78,11 +79,18 @@ export function TopNav({ children }: Props) {
       <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
         <NLink
           href="/"
-          variant="primary"
+          aria-label={siteName}
           underline="none"
-          className="font-display text-2xl md:text-3xl xl:text-2xl 2xl:text-headline-md font-black uppercase tracking-tighter min-h-touch inline-flex items-center"
+          className="min-h-touch inline-flex items-center"
         >
-          {siteName}
+          <Image
+            src="/logo/enstudio-wordmark.png"
+            alt="EnStudio"
+            width={2172}
+            height={724}
+            priority
+            className="h-9 md:h-11 w-auto"
+          />
         </NLink>
 
         {/* Desktop nav (≥xl) */}
