@@ -11,10 +11,15 @@
 
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from '@/i18n/navigation';
 import { SectionTitle } from '@/components/ui';
 import { Icon } from '@/components/ui';
+
+if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
 interface Pillar {
   icon: string;
@@ -54,6 +59,51 @@ const PILLARS: Pillar[] = [
 
 export function PillarsSection() {
   const t = useTranslations('home');
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      // ScrollTrigger Cascade — 3 kartu pilar masuk bertahap (snappy, berbobot).
+      gsap.fromTo(
+        '[data-pillar-card]',
+        { autoAlpha: 0, y: 40 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%',
+            once: true,
+          },
+        },
+      );
+
+      gsap.fromTo(
+        '[data-pillar-icon]',
+        { scale: 0.7, rotation: -12 },
+        {
+          scale: 1,
+          rotation: 0,
+          duration: 0.6,
+          stagger: 0.15,
+          ease: 'back.out(2)',
+          delay: 0.15,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%',
+            once: true,
+          },
+        },
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const iconCls = (p: Pillar) => {
     if (p.iconBg === 'primary') return 'bg-primary text-surface';
@@ -62,11 +112,15 @@ export function PillarsSection() {
   };
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 border-b-4 border-ink">
+    <section
+      ref={sectionRef}
+      className="grid grid-cols-1 md:grid-cols-2 border-b-4 border-ink"
+    >
       {PILLARS.slice(0, 2).map((p, i) => (
         <Link
           key={p.href}
           href={p.href}
+          data-pillar-card
           className={[
             'group block bg-surface border-b-4 md:border-b-0 border-ink py-12 md:py-20 transition-all hover:bg-accent',
             // Cell pertama (Discover): padding kiri mepet viewport + border
@@ -79,6 +133,7 @@ export function PillarsSection() {
         >
           <article className="flex flex-col gap-6">
             <div
+              data-pillar-icon
               className={`w-16 h-16 border-4 border-ink flex items-center justify-center text-3xl ${iconCls(p)}`}
               aria-hidden="true"
             >
@@ -101,10 +156,12 @@ export function PillarsSection() {
       {/* Display — full-width pillar */}
       <Link
         href="/display"
+        data-pillar-card
         className="md:col-span-2 block bg-surface/95 border-t-4 border-ink p-12 md:p-24 text-center transition-all hover:bg-accent"
       >
         <article className="flex flex-col items-center gap-6">
           <div
+            data-pillar-icon
             className="w-16 h-16 border-4 border-ink bg-ink text-surface flex items-center justify-center text-3xl"
             aria-hidden="true"
           >

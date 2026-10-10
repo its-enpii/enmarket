@@ -1,6 +1,9 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { Card } from '@/components/ui/neobrutal';
 import { NLink } from '@/components/ui/neobrutal';
@@ -11,6 +14,8 @@ import { SectionTitle } from '@/components/ui';
 import { formatRupiah } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { Image } from '@/components/ui/Image';
+
+if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
 interface Props {
   products: Product[];
@@ -27,6 +32,51 @@ interface Props {
 export function FeaturedSection({ products }: Props) {
   const t = useTranslations('home');
   const tProduct = useTranslations('product.card');
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      // ScrollTrigger Showcase Entrance — header masuk, lalu tiap row menampil.
+      gsap.fromTo(
+        '[data-featured-header]',
+        { autoAlpha: 0, y: 24 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 85%',
+            once: true,
+          },
+        },
+      );
+
+      const rows = gsap.utils.toArray<HTMLElement>('[data-featured-row]');
+      rows.forEach((row) => {
+        gsap.fromTo(
+          row,
+          { autoAlpha: 0, y: 44 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: row,
+              start: 'top 85%',
+              once: true,
+            },
+          },
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const data: FeaturedItem[] = products.slice(0, 4).map((p, i) => ({
     title: p.nama,
@@ -38,9 +88,9 @@ export function FeaturedSection({ products }: Props) {
   }));
 
   return (
-    <section id="featured" className="border-b-4 border-ink">
+    <section ref={sectionRef} id="featured" className="border-b-4 border-ink">
       <SectionContainer py="xl">
-        <div className="flex justify-between items-end mb-16">
+        <div data-featured-header className="flex justify-between items-end mb-16">
           <SectionTitle className="leading-none">
             {t('featuredTitle')}
           </SectionTitle>
@@ -89,7 +139,10 @@ function FeaturedRow({
   viewLabel: string;
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+    <div
+      data-featured-row
+      className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center"
+    >
       <div className={`md:col-span-8 ${flip ? 'md:order-2' : 'md:order-1'} order-1`}>
         <Card href={item.href} variant="surface" hoverable thick>
           {item.image ? (
