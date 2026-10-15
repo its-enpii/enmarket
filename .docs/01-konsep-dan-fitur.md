@@ -21,7 +21,7 @@
 | Sponsor | Band sponsor di homepage + halaman `/sponsor` dengan pengajuan bid publik & leaderboard; otomatis aktif setelah pembayaran lunas |
 | Yang bukan | Bukan agency dengan tim, bukan marketplace seller lain, bukan portofolio klien — karya di sini milik studio sendiri |
 
-**Identitas teknis vs brand publik.** `enpiistudio` masih hidup di level infrastruktur: domain `store.enpiistudio.com`, seeder `studio_name`, dan pemancar email `noreply@enpiistudio.com`. Brand yang dilihat pengunjung tetap **EnStudio**; saat mengubah `studio_name` di admin, yang berubah hanya tampilan publik, bukan hostname atau alamat email.
+**Identitas teknis vs brand publik.** `enpiistudio` masih hidup di level infrastruktur: domain `enpiistudio.com`, seeder `studio_name`, dan pemancar email `noreply@enpiistudio.com`. Brand yang dilihat pengunjung tetap **EnStudio**; saat mengubah `studio_name` di admin, yang berubah hanya tampilan publik, bukan hostname atau alamat email.
 
 **Referensi konsep serupa**: Gumroad / Lemon Squeezy untuk sisi *Develop*, personal site & digital garden untuk sisi *Discover* dan *Display* — tapi versi self-hosted dan personal, tanpa platform pihak ketiga.
 

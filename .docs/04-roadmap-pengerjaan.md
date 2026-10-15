@@ -12,7 +12,7 @@
 - [ ] Init project Laravel (API) + Next.js (frontend)
 - [ ] Setup database & jalankan migration semua tabel (`categories`, `products`, `orders`, `order_items`, `order_deliveries`, `license_keys`)
 - [ ] Setup Docker Compose (Laravel + Next.js + DB)
-- [ ] Konfigurasi Nginx Proxy Manager untuk domain store (misal `store.enpiistudio.com`)
+- [ ] Konfigurasi Nginx Proxy Manager untuk domain utama (`enpiistudio.com`)
 - [ ] Setup SSL via Certbot + Cloudflare DNS
 - [ ] Setup GitHub repo + CI/CD via GitHub Actions (reuse pola yang sudah ada di infrastruktur enpiistudio)
 - [ ] Integrasi awal EnStorage untuk upload & retrieve file

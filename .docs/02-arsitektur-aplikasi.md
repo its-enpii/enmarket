@@ -132,7 +132,7 @@ Produk dengan flag `is_free=true` di admin (harga dipaksa Rp 0 oleh backend) pun
 File produk disimpan di EnStorage (Google Drive). Pembeli **tidak** mendapat link langsung ke Google Drive — melainkan link yang di-generate Laravel, berupa signed URL dengan batas waktu:
 
 ```
-https://store.enpiistudio.com/download/{token}
+https://enpiistudio.com/download/{token}
 ```
 
 - Token di-generate saat pembayaran sukses, disimpan di database

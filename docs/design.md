@@ -262,5 +262,5 @@ Perubahan style cukup menyentuh satu file ini agar menyebar ke seluruh app.
 
 Deploy: push ke `main` memicu GHA `Web CI (Next.js)` + `Deploy Production
 (sim-sppg)` (SSH → build image → recreate container `enmarket-web`/`enmarket-api`).
-Verifikasi produksi: `https://enmarket.enpiistudio.com` → HTTP 200 + marker DOM
+Verifikasi produksi: `https://enpiistudio.com` → HTTP 200 + marker DOM
 terkonfirmasi.
