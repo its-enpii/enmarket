@@ -8,7 +8,8 @@ import { PillarsSection } from '@/components/public/PillarsSection';
 import { SponsorsSection } from '@/components/public/SponsorsSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Post } from '@/lib/types';
-import { buildMetadata, localeAlternates } from '@/lib/seo';
+import { siteMetadata } from '@/lib/seo';
+import { organizationSchema, webSiteSchema } from '@/lib/seo-schemas';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -20,13 +21,10 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common.site' });
-  return {
-    ...buildMetadata({
-      title: t('title'),
-      description: t('description'),
-    }),
-    alternates: localeAlternates(locale, ''),
-  };
+  return siteMetadata(locale, '', {
+    title: t('title'),
+    description: t('description'),
+  });
 }
 
 // Wrapper local: fetch dengan fallback aman — biar section tidak hilang
@@ -80,18 +78,16 @@ export default async function HomePage({ params }: PageProps) {
     <>
       <JsonLd
         data={[
-          {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
+          webSiteSchema({
+            baseUrl,
+            locale,
             name: t('title'),
-            url: `${baseUrl}/${locale}`,
-          },
-          {
-            '@context': 'https://schema.org',
-            '@type': 'Organization',
+            searchUrlTemplate: `${baseUrl}/${locale}/develop?q={search_term_string}`,
+          }),
+          organizationSchema(baseUrl, {
             name: organizationName,
-            url: baseUrl,
-          },
+            socialUrls: siteConfigResp.data?.social ?? [],
+          }),
         ]}
       />
       <Hero />

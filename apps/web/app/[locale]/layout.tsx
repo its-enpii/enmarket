@@ -56,7 +56,8 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: 'EnStudio',
     type: 'website',
-    locale: 'id_ID',
+    // `locale` di-set locale-aware lewat `siteMetadata()` di tiap halaman
+    // publik; default di sini hanya fallback (jangan hardcode `id_ID`).
     alternateLocale: ['en_US'],
   },
   twitter: {

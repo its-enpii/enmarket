@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { Card } from '@/components/ui/neobrutal';
 import { PageTitle, SectionIntro } from '@/components/ui';
 import { Text } from '@/components/ui';
-import { buildMetadata, localeAlternates } from '@/lib/seo';
+import { siteMetadata } from '@/lib/seo';
 import { CustomBuildForm } from './CustomBuildForm';
 
 export const dynamic = 'force-dynamic';
@@ -17,13 +17,10 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'customBuild' });
-  return {
-    ...buildMetadata({
-      title: `${t('title')} · EnStudio`,
-      description: t('subtitle'),
-    }),
-    alternates: localeAlternates(locale, 'layanan'),
-  };
+  return siteMetadata(locale, 'layanan', {
+    title: `${t('title')} · EnStudio`,
+    description: t('subtitle'),
+  });
 }
 
 export default async function LayananPage() {

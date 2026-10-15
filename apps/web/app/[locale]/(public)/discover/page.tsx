@@ -12,7 +12,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { Icon, SectionBand, SectionIntro, SectionTitle } from '@/components/ui';
 import { Badge } from '@/components/ui/Badge';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { buildMetadata, localeAlternates } from '@/lib/seo';
+import { siteMetadata } from '@/lib/seo';
 
 export async function generateMetadata({
   params,
@@ -21,13 +21,10 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'discover' });
-  return {
-    ...buildMetadata({
-      title: t('title'),
-      description: t('subtitle'),
-    }),
-    alternates: localeAlternates(locale, 'discover'),
-  };
+  return siteMetadata(locale, 'discover', {
+    title: `${t('title')} · EnStudio`,
+    description: t('subtitle'),
+  });
 }
 
 // Process stamps tetap bahasa Inggris (marka brand).

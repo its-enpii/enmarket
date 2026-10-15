@@ -43,3 +43,44 @@ export function noIndexMetadata() {
     },
   };
 }
+
+/**
+ * siteMetadata — metadata SEO untuk halaman publik (locale-aware).
+ *
+ * Mengembalikan title/description + alternates (hreflang) + openGraph
+ * (termasuk `og:url` + `og:locale` per locale) + twitter card.
+ *
+ * `url` sengaja RELATIF (`/${locale}${pathPart}`) — Next mengabsolutkan
+ * lewat `metadataBase` di `app/[locale]/layout.tsx` (pola sama seperti
+ * halaman detail develop/display).
+ *
+ * BUKAN pengganti `buildMetadata` (dipakai 34 halaman admin) — helper baru,
+ * jangan ubah signature `buildMetadata`.
+ */
+export function siteMetadata(
+  locale: string,
+  path: string,
+  opts: { title: string; description: string },
+): Metadata {
+  const cleanPath = path.replace(/^\/+/, '').replace(/\/+$/, '');
+  const pathPart = cleanPath ? `/${cleanPath}` : '';
+
+  return {
+    title: opts.title,
+    description: opts.description,
+    alternates: localeAlternates(locale, path),
+    openGraph: {
+      title: opts.title,
+      description: opts.description,
+      url: `/${locale}${pathPart}`,
+      siteName: 'EnStudio',
+      locale: locale === 'en' ? 'en_US' : 'id_ID',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: opts.title,
+      description: opts.description,
+    },
+  };
+}

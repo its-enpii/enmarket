@@ -14,10 +14,24 @@ import { routing } from './i18n/routing';
 
 const intl = createMiddleware(routing);
 
+// Alias 301: `/katalog` dan `/c/<slug>` → `/<locale>/develop`.
+// Harus jalan SEBELUM intl() supaya status 301 benar-benar terpancar
+// (di dalam segmen, loading.tsx mem-stream 200 sebelum render selesai).
+const ALIAS_RE = /^\/(?:(id|en)\/)?katalog\/?$/;
+const CATEGORY_RE = /^\/(?:(id|en)\/)?c\/([^/]+)\/?$/;
+
 export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // ── Alias 301 (dengan & tanpa prefix locale, supaya tidak ada 2-hop) ──
+  const aliasMatch = pathname.match(ALIAS_RE) ?? pathname.match(CATEGORY_RE);
+  if (aliasMatch) {
+    const locale = aliasMatch[1] ?? routing.defaultLocale;
+    return NextResponse.redirect(new URL(`/${locale}/develop`, request.url), 301);
+  }
+
   // Jalankan next-intl dulu: handle `/` → `/id`, prefix locale, dll.
   const intlResp = intl(request);
-  const pathname = request.nextUrl.pathname;
 
   // Admin auth gate — jalan SETELAH intl agar path sudah locale-prefixed.
   const isAdminPath = /^\/(id|en)\/admin(\/|$)/.test(pathname);

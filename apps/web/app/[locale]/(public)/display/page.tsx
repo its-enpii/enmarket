@@ -14,7 +14,7 @@ import { PageHeader } from '@/components/public/PageHeader';
 import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateShort } from '@/lib/format';
-import { buildMetadata, localeAlternates } from '@/lib/seo';
+import { siteMetadata } from '@/lib/seo';
 import type { PaginatedResponse, Post } from '@/lib/types';
 
 import { HoverImage } from '@/components/ui/HoverImage';
@@ -42,13 +42,10 @@ type TagLabels = {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'displayList' });
-  return {
-    ...buildMetadata({
-      title: t('title'),
-      description: t('subtitle'),
-    }),
-    alternates: localeAlternates(locale, 'display'),
-  };
+  return siteMetadata(locale, 'display', {
+    title: `${t('title')} · EnStudio`,
+    description: t('subtitle'),
+  });
 }
 
 async function fetchPosts(): Promise<PaginatedResponse<Post> | null> {

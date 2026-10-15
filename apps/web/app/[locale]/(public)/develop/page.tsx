@@ -24,7 +24,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { Button, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Icon, SectionBand, SectionIntro } from '@/components/ui';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { buildMetadata, localeAlternates } from '@/lib/seo';
+import { siteMetadata } from '@/lib/seo';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import type { PaginatedResponse, Product } from '@/lib/types';
@@ -43,13 +43,10 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'develop' });
-  return {
-    ...buildMetadata({
-      title: `${t('title')} · EnStudio`,
-      description: t('listSubtitle'),
-    }),
-    alternates: localeAlternates(locale, 'develop'),
-  };
+  return siteMetadata(locale, 'develop', {
+    title: `${t('title')} · EnStudio`,
+    description: t('listSubtitle'),
+  });
 }
 
 const FILTER_PILLS: Array<{ key: 'filterAll' | 'typeDownload' | 'typeLicense' | 'typeBundle'; value: 'all' | Tipe }> = [

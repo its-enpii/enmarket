@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { LegalPage } from '@/components/public/LegalPage';
-import { buildMetadata, localeAlternates } from '@/lib/seo';
+import { siteMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -13,10 +13,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'privacy' });
-  return {
-    ...buildMetadata({ title: t('metaTitle'), description: t('metaDescription') }),
-    alternates: localeAlternates(locale, 'privacy'),
-  };
+  return siteMetadata(locale, 'privacy', {
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+  });
 }
 
 export default async function PrivacyPage({ params }: Props) {

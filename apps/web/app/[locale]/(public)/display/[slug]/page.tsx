@@ -74,9 +74,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = await getTranslations({ locale, namespace: 'displayPost' });
   const post = await fetchPost(slug);
   if (!post) {
+    // Mitigasi noindex: status 404 tidak bisa dipaksa karena loading.tsx
+    // (leluhur) membuat segmen di-stream sebagai 200 sebelum render selesai.
     return {
       title: t('notFound'),
-      robots: { index: false },
+      robots: { index: false, follow: true },
     };
   }
 

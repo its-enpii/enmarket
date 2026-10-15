@@ -19,6 +19,13 @@ const STATIC_PATHS = [
   { path: 'display', priority: 0.7, changeFrequency: 'weekly' as const },
   { path: 'discover', priority: 0.6, changeFrequency: 'monthly' as const },
   { path: 'develop', priority: 0.9, changeFrequency: 'daily' as const },
+  // Halaman indexable yang sebelumnya tidak masuk sitemap.
+  // (URL query pencarian tidak layak masuk sitemap — endpoint-nya sudah
+  //  ditandai lewat SearchAction di webSiteSchema.)
+  { path: 'layanan', priority: 0.9, changeFrequency: 'weekly' as const },
+  { path: 'sponsor', priority: 0.6, changeFrequency: 'monthly' as const },
+  { path: 'privacy', priority: 0.3, changeFrequency: 'yearly' as const },
+  { path: 'terms', priority: 0.3, changeFrequency: 'yearly' as const },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
