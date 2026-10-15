@@ -7,6 +7,17 @@ interface BuildMetadataOptions {
   description?: string;
 }
 
+/**
+ * Base URL absolut situs (tanpa trailing slash) — sumber `siteMetadata.url`.
+ * Dipakai untuk absolutkan asset OG (mis. `/opengraph-image`).
+ */
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+).replace(/\/$/, '');
+
+/** URL gambar OG/Twitter (file-convention `opengraph-image`). */
+const ogImage = { url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630, alt: 'EnStudio' };
+
 export function buildMetadata({
   title,
   description,
@@ -14,6 +25,13 @@ export function buildMetadata({
   return {
     title,
     ...(description ? { description } : {}),
+    openGraph: {
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage],
+    },
   };
 }
 
