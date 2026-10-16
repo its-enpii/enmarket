@@ -354,4 +354,92 @@ class ProductAdminTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['tags']);
     }
+
+    // ───── 0-byte upload regression tests ─────
+
+    public function test_store_download_with_zero_byte_file_rejects_with_422(): void
+    {
+        $file = UploadedFile::fake()->create('blob', 0);
+        $preview = UploadedFile::fake()->create('blob', 0);
+
+        $response = $this->postJson('/api/admin/products', [
+            'nama' => 'Zero Byte App',
+            'deskripsi' => 'd',
+            'harga' => 100000,
+            'tipe' => 'download',
+            'status' => 'draft',
+            'file' => $file,
+            'preview_images' => [$preview],
+        ], $this->authHeaders());
+
+        $response->assertStatus(422);
+        $this->assertEquals(0, Product::where('nama', 'Zero Byte App')->count());
+    }
+
+    public function test_store_download_with_real_one_byte_file_succeeds_with_201_and_original_extension(): void
+    {
+        $file = UploadedFile::fake()->create('one.bin', 1);
+
+        $response = $this->postJson('/api/admin/products', [
+            'nama' => 'One Byte App',
+            'deskripsi' => 'd',
+            'harga' => 100000,
+            'tipe' => 'download',
+            'status' => 'draft',
+            'file' => $file,
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $product = Product::find($response->json('data.id'));
+        $this->assertNotNull($product->file_url);
+        $this->assertStringEndsWith('.bin', $product->file_url);
+    }
+
+    public function test_store_product_ignores_zero_byte_preview_images(): void
+    {
+        $zeroPreview = UploadedFile::fake()->create('blob', 0);
+
+        $response = $this->postJson('/api/admin/products', [
+            'nama' => 'License Product',
+            'deskripsi' => 'd',
+            'harga' => 50000,
+            'tipe' => 'license',
+            'status' => 'aktif',
+            'preview_images' => [$zeroPreview],
+            'preview_images_urls' => json_encode(['https://example.com/valid.jpg']),
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $product = Product::find($response->json('data.id'));
+        $this->assertEquals(['https://example.com/valid.jpg'], $product->preview_images);
+    }
+
+    public function test_update_product_with_zero_byte_file_does_not_overwrite_existing_file(): void
+    {
+        $product = Product::create([
+            'nama' => 'Keep File Product',
+            'slug' => 'keep-file-'.uniqid(),
+            'deskripsi' => 'd',
+            'harga' => 1,
+            'tipe' => 'download',
+            'status' => 'aktif',
+            'file_url' => 'enstorage/products/keepme.zip',
+        ]);
+
+        $zeroFile = UploadedFile::fake()->create('blob', 0);
+
+        $response = $this->call('PUT', '/api/admin/products/'.$product->id, [
+            'nama' => 'Keep File Product Updated',
+            'deskripsi' => 'd',
+            'harga' => 1,
+            'tipe' => 'download',
+            'status' => 'aktif',
+        ], [], ['file' => $zeroFile], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.self::TOKEN,
+            'HTTP_ACCEPT' => 'application/json',
+        ]);
+
+        $response->assertOk();
+        $this->assertEquals('enstorage/products/keepme.zip', $product->fresh()->file_url);
+    }
 }

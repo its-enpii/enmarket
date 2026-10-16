@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Services\Storage\EnStorageClient;
+use App\Support\FileUploadGuard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -143,6 +144,13 @@ class SettingsController extends Controller
         ]);
 
         $file = $request->file('file');
+        if (! FileUploadGuard::isValid($file)) {
+            return response()->json([
+                'message' => 'File logo wajib di-upload.',
+                'errors' => ['file' => ['File logo wajib di-upload.']],
+            ], 422);
+        }
+
         $ext = $file->getClientOriginalExtension() ?: 'bin';
         $filename = 'logo-'.Str::random(16).'.'.$ext;
         $url = $this->storage->upload($file, "settings/{$filename}");

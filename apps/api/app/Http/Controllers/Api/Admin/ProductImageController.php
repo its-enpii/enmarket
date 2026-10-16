@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\Storage\EnStorageClient;
+use App\Support\FileUploadGuard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -42,7 +43,7 @@ class ProductImageController extends Controller
             ], 422);
         }
 
-        if ($request->hasFile('file')) {
+        if (FileUploadGuard::isValid($request->file('file'))) {
             $file = $request->file('file');
             $ext = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = Str::random(20).'.'.$ext;

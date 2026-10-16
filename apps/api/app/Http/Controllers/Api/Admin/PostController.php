@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\NextRevalidator;
+use App\Support\FileUploadGuard;
 use App\Support\TagNormalizer;
 use App\Services\Storage\EnStorageClient;
 use Illuminate\Http\JsonResponse;
@@ -105,10 +106,11 @@ class PostController extends Controller
             $data['published_at'] = now();
         }
 
+        unset($data['thumbnail']);
         $post = Post::create($data);
 
         // Upload thumbnail kalau ada — pakai id post untuk path
-        if ($request->hasFile('thumbnail')) {
+        if (FileUploadGuard::isValid($request->file('thumbnail'))) {
             $file = $request->file('thumbnail');
             $ext = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = Str::random(20).'.'.$ext;
@@ -146,10 +148,11 @@ class PostController extends Controller
             $data['published_at'] = now();
         }
 
+        unset($data['thumbnail']);
         $post->update($data);
 
         // Handle thumbnail upload (replace)
-        if ($request->hasFile('thumbnail')) {
+        if (FileUploadGuard::isValid($request->file('thumbnail'))) {
             if ($post->thumbnail) {
                 $this->storage->delete($post->thumbnail);
             }

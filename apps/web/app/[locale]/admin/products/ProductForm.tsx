@@ -204,7 +204,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
               name="slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              pattern="[a-z0-9-]+"
+              pattern="[a-z0-9\-]+"
               className="font-mono"
             />
           </FormField>

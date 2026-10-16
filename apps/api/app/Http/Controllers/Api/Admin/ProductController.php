@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\NextRevalidator;
+use App\Support\FileUploadGuard;
 use App\Support\TagNormalizer;
 use App\Services\Storage\EnStorageClient;
 use Illuminate\Http\JsonResponse;
@@ -103,7 +104,7 @@ class ProductController extends Controller
         }
 
         // Upload file produk kalau ada
-        if ($request->hasFile('file')) {
+        if (FileUploadGuard::isValid($request->file('file'))) {
             $file = $request->file('file');
             $ext = $file->getClientOriginalExtension() ?: 'bin';
             $filename = Str::random(20).'.'.$ext;
@@ -178,7 +179,7 @@ class ProductController extends Controller
             $data['harga'] = 0;
         }
 
-        if ($request->hasFile('file')) {
+        if (FileUploadGuard::isValid($request->file('file'))) {
             // Hapus file lama kalau ada
             if ($product->file_url) {
                 $this->storage->delete($product->file_url);
@@ -299,7 +300,7 @@ class ProductController extends Controller
                 $files = [$files];
             }
             foreach ($files as $file) {
-                if ($file && $file->isValid()) {
+                if (FileUploadGuard::isValid($file)) {
                     $ext = $file->getClientOriginalExtension() ?: 'jpg';
                     $filename = Str::random(20).'.'.$ext;
                     $path = $this->storage->upload($file, "products/previews/{$filename}");

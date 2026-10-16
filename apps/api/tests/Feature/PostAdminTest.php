@@ -351,4 +351,47 @@ class PostAdminTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['tags.1']);
     }
+
+    // ───── 0-byte upload regression tests ─────
+
+    public function test_store_with_zero_byte_thumbnail_does_not_create_thumbnail(): void
+    {
+        $zeroFile = UploadedFile::fake()->create('thumb.jpg', 0, 'image/jpeg');
+
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'No Thumb Post',
+            'content' => '<p>content</p>',
+            'status' => 'draft',
+            'thumbnail' => $zeroFile,
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $post = Post::find($response->json('data.id'));
+        $this->assertNull($post->thumbnail);
+    }
+
+    public function test_update_with_zero_byte_thumbnail_does_not_overwrite_existing(): void
+    {
+        $post = Post::create([
+            'title' => 'Old Post',
+            'slug' => 'old-post-'.uniqid(),
+            'content' => '<p>old</p>',
+            'status' => 'draft',
+            'thumbnail' => 'enstorage/posts/thumbnails/1/keep.jpg',
+        ]);
+
+        $zeroFile = UploadedFile::fake()->create('thumb.jpg', 0, 'image/jpeg');
+
+        $response = $this->call('PUT', '/api/admin/posts/'.$post->id, [
+            'title' => 'Updated Post',
+            'content' => '<p>old</p>',
+            'status' => 'draft',
+        ], [], ['thumbnail' => $zeroFile], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.self::TOKEN,
+            'HTTP_ACCEPT' => 'application/json',
+        ]);
+
+        $response->assertOk();
+        $this->assertEquals('enstorage/posts/thumbnails/1/keep.jpg', $post->fresh()->thumbnail);
+    }
 }

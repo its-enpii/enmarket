@@ -75,6 +75,22 @@ class ProductImageAdminTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_store_with_zero_byte_file_rejects_with_422(): void
+    {
+        $product = $this->makeProduct();
+        $file = UploadedFile::fake()->create('preview.jpg', 0, 'image/jpeg');
+
+        $response = $this->postJson(
+            "/api/admin/products/{$product->id}/preview-images",
+            ['file' => $file],
+            $this->authHeaders(),
+        );
+
+        $response->assertStatus(422);
+        $response->assertJsonFragment(['code' => 'missing_image']);
+        $this->assertEmpty($product->fresh()->preview_images ?? []);
+    }
+
     public function test_store_appends_to_empty_preview_images(): void
     {
         $product = $this->makeProduct();
