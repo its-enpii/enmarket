@@ -172,6 +172,30 @@ class PublicCatalogTest extends TestCase
         $this->assertEquals('Active Product', $response->json('data.nama'));
     }
 
+    public function test_show_returns_rating_summary_distribution_as_object(): void
+    {
+        // Regresi: ratingSummary() harus mengirim distribution sebagai OBJEK
+        // ({"5":0,...}), bukan list. JsonResource::resolve() mereindex array
+        // ber-integer key menjadi list bila tidak di-cast, sehingga bar
+        // distribusi di frontend selalu tampil 0.
+        $product = $this->makeProduct();
+
+        $response = $this->getJson('/api/public/products/'.$product->slug);
+
+        $response->assertOk();
+        $distribution = $response->json('data.rating_summary.distribution');
+
+        $this->assertIsArray($distribution);
+        $this->assertSame(['5', '4', '3', '2', '1'], array_map('strval', array_keys($distribution)));
+        $this->assertSame([0, 0, 0, 0, 0], array_values($distribution));
+
+        // assertIsArray tidak membedakan list vs object; cek raw JSON benar objek.
+        $this->assertStringContainsString(
+            '"distribution":{"5":0,"4":0,"3":0,"2":0,"1":0}',
+            $response->getContent()
+        );
+    }
+
     // ───── products slugs ─────
 
     public function test_slugs_returns_only_active_product_slugs(): void

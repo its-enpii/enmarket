@@ -3,18 +3,9 @@
  */
 
 import { apiDelete, apiFetch, apiGet, apiPatch, apiPost } from './api';
-import type { PaginatedResponse, ProductRatingSummary, Review, ReviewStats, SingleResponse } from './types';
+import type { PaginatedResponse, ProductReviewsResponse, Review, ReviewStats, SingleResponse } from './types';
 
-export interface ProductReviewsResponse {
-  data: Review[];
-  summary: ProductRatingSummary;
-  meta: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
-}
+export type { ProductReviewsResponse } from './types';
 
 export interface SubmitReviewPayload {
   kode_order: string;

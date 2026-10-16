@@ -69,15 +69,11 @@ async function fetchProduct(slug: string): Promise<Product | null> {
 
 function RatingChip({ summary }: { summary: ProductRatingSummary }) {
   return (
-    <NLink
-      href="#reviews"
-      underline="none"
-      className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border-2 border-ink text-ink font-mono font-bold text-xs shadow-brutal-2 hover:bg-accent transition-colors"
-    >
+    <Button href="#reviews" variant="surface" size="sm" className="inline-flex items-center gap-1.5">
       <span className="text-accent">?</span>
       <span>{summary.average.toFixed(1)}</span>
       <span className="text-ink/60">({summary.count})</span>
-    </NLink>
+    </Button>
   );
 }
 
@@ -556,7 +552,10 @@ export default async function WorkDetailPage({ params }: PageProps) {
         </SectionBand>
       )}
 
-      {/* ───── 7. RELATED WORKS ───── */}
+      {/* ───── 7. REVIEWS ───── */}
+      <ProductReviewsSection productSlug={product.slug} initialSummary={product.rating_summary} />
+
+      {/* ───── 8. RELATED WORKS ───── */}
       <RelatedWorks currentSlug={product.slug} categorySlug={kategori?.slug} />
 
       {/* Final CTA — re-invoke primary action */}

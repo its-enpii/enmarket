@@ -272,7 +272,10 @@ class Product extends Model
             return [
                 'average' => 0.0,
                 'count' => 0,
-                'distribution' => [
+                // Cast ke object supaya wire format konsisten di semua endpoint:
+                // JsonResource::resolve() akan mereindex array ber-integer key,
+                // jadi distribusi harus selalu dikirim sebagai objek JSON.
+                'distribution' => (object) [
                     '5' => 0,
                     '4' => 0,
                     '3' => 0,
@@ -288,7 +291,8 @@ class Product extends Model
         return [
             'average' => (float) $avg,
             'count' => $total,
-            'distribution' => [
+            // Lihat catatan pada cabang total === 0: harus object, bukan list.
+            'distribution' => (object) [
                 '5' => (int) ($counts->get(5) ?? 0),
                 '4' => (int) ($counts->get(4) ?? 0),
                 '3' => (int) ($counts->get(3) ?? 0),

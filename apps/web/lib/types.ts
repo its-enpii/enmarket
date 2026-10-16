@@ -534,6 +534,17 @@ export interface ProductRatingSummary {
   };
 }
 
+export interface ProductReviewsResponse {
+  data: Review[];
+  summary: ProductRatingSummary;
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
 export interface Review {
   id: number;
   product_id: number;

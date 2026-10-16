@@ -181,6 +181,16 @@ class ReviewTest extends TestCase
             ->assertJsonPath('summary.average', 5)
             ->assertJsonPath('summary.count', 1)
             ->assertJsonPath('summary.distribution.5', 1);
+
+        // Regresi: distribution harus tetap OBJEK (key '5'..'1'), bukan list.
+        $distribution = $response->json('summary.distribution');
+        $this->assertIsArray($distribution);
+        $this->assertSame(['5', '4', '3', '2', '1'], array_map('strval', array_keys($distribution)));
+        $this->assertSame([1, 0, 0, 0, 0], array_values($distribution));
+        $this->assertStringContainsString(
+            '"distribution":{"5":1,"4":0,"3":0,"2":0,"1":0}',
+            $response->getContent()
+        );
     }
 
     public function test_admin_can_moderate_and_delete_reviews(): void

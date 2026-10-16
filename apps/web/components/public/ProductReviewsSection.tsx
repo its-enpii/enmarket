@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl';
 import { Button, Card } from '@/components/ui/neobrutal';
 import { SectionContainer } from './SectionContainer';
 import { Icon, SectionBand } from '@/components/ui';
-import { reviewApi, ProductReviewsResponse } from '@/lib/review-api';
+import { getClientApiBase } from '@/lib/client-api';
 import { formatDate } from '@/lib/format';
-import type { Review, ProductRatingSummary } from '@/lib/types';
+import type { ProductRatingSummary, ProductReviewsResponse, Review } from '@/lib/types';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { StatusPill } from '@/components/ui/StatusPill';
 
@@ -38,11 +38,18 @@ export function ProductReviewsSection({ productSlug, initialSummary }: Props) {
     async function fetchReviews() {
       setLoading(true);
       try {
-        const res = await reviewApi.getProductReviews(productSlug, page, filterRating);
+        const params = new URLSearchParams({ page: String(page) });
+        if (filterRating) params.set('rating', String(filterRating));
+        const res = await fetch(
+          `${getClientApiBase()}/api/public/products/${productSlug}/reviews?${params.toString()}`,
+          { cache: 'no-store' }
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = (await res.json()) as ProductReviewsResponse;
         if (!mounted) return;
-        setReviews(res.data || []);
-        if (res.summary) setSummary(res.summary);
-        if (res.meta) setLastPage(res.meta.last_page || 1);
+        setReviews(json.data || []);
+        if (json.summary) setSummary(json.summary);
+        if (json.meta) setLastPage(json.meta.last_page || 1);
       } catch {
         if (!mounted) return;
         setReviews([]);

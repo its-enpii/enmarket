@@ -5,7 +5,7 @@
 
 import { getTranslations } from 'next-intl/server';
 
-import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { Icon } from '@/components/ui';
 
@@ -142,15 +142,15 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
             {tagCounts.length > 0 ? (
               <>
                 {activeTag && (
-                  <NLink
+                  <Button
                     key="all"
+                    variant="surface"
+                    size="sm"
                     href={q ? `/display?q=${encodeURIComponent(q)}` : '/display'}
-                    variant="primary"
-                    underline="static"
-                    className="inline-flex items-center px-3 py-1.5 font-label text-label-sm uppercase font-bold border-2 border-ink bg-surface text-ink"
+                    className="inline-flex items-center"
                   >
                     {t('tagsAll')}
-                  </NLink>
+                  </Button>
                 )}
                 {tagCounts.map(({ tag }) => {
                   const isActive = activeTag === tag;
