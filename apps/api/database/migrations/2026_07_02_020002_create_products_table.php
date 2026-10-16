@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('deskripsi');
             $table->decimal('harga', 10, 2);
-            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+            if (app()->runningUnitTests() || DB::getDriverName() === 'sqlite') {
                 $table->string('tipe');
             } else {
                 $table->enum('tipe', ['download', 'license', 'bundle']);
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->integer('download_expiry_days')->default(7);
             $table->json('preview_images')->nullable(); // array URL gambar
             $table->json('fitur')->nullable(); // array fitur/isi produk
-            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+            if (app()->runningUnitTests() || DB::getDriverName() === 'sqlite') {
                 $table->string('status')->default('draft');
             } else {
                 $table->enum('status', ['aktif', 'draft', 'tidak_dijual'])->default('draft');

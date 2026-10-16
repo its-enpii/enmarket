@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,7 +15,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->string('nama_produk'); // snapshot
             $table->decimal('harga_saat_beli', 10, 2); // snapshot
-            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+            if (app()->runningUnitTests() || DB::getDriverName() === 'sqlite') {
                 $table->string('tipe_produk');
             } else {
                 $table->enum('tipe_produk', ['download', 'license', 'bundle']);

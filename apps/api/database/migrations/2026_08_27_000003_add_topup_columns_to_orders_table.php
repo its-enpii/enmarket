@@ -25,13 +25,13 @@ return new class extends Migration
             $table->string('digiflazz_trx_id', 64)->nullable()->after('topup_status');
             $table->json('digiflazz_response')->nullable()->after('digiflazz_trx_id');
 
-            if (!Schema::hasColumn('orders', 'payment_gateway')) {
+            if (! Schema::hasColumn('orders', 'payment_gateway')) {
                 $table->string('payment_gateway', 20)->nullable()->after('digiflazz_response');
             }
-            if (!Schema::hasColumn('orders', 'payment_channel')) {
+            if (! Schema::hasColumn('orders', 'payment_channel')) {
                 $table->string('payment_channel', 50)->nullable()->after('payment_gateway');
             }
-            if (!Schema::hasColumn('orders', 'paid_at')) {
+            if (! Schema::hasColumn('orders', 'paid_at')) {
                 $table->timestamp('paid_at')->nullable();
             }
         });

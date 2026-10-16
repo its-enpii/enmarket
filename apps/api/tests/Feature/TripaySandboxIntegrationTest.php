@@ -28,8 +28,11 @@ class TripaySandboxIntegrationTest extends TestCase
     private TripayClient $client;
 
     private string $baseUrl;
+
     private string $apiKey;
+
     private string $privateKey;
+
     private string $merchantCode;
 
     protected function setUp(): void

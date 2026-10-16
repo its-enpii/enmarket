@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\Api\Admin\ProductController;
 use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -64,9 +63,20 @@ class ProductAdminTest extends TestCase
                 $this->paths[] = "product:$slug";
             }
 
-            public function revalidateHome(): void { $this->paths[] = 'home'; }
-            public function revalidateCategory(string $slug): void { $this->paths[] = "category:$slug"; }
-            public function revalidatePost(string $slug): void { $this->paths[] = "post:$slug"; }
+            public function revalidateHome(): void
+            {
+                $this->paths[] = 'home';
+            }
+
+            public function revalidateCategory(string $slug): void
+            {
+                $this->paths[] = "category:$slug";
+            }
+
+            public function revalidatePost(string $slug): void
+            {
+                $this->paths[] = "post:$slug";
+            }
         });
     }
 

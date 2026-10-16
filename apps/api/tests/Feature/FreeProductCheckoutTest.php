@@ -7,10 +7,15 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDelivery;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
+use App\Services\NextRevalidator;
+use App\Services\Storage\EnStorageClient;
+use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 /**
@@ -28,12 +33,15 @@ class FreeProductCheckoutTest extends TestCase
     use RefreshDatabase;
 
     private const COOKIE = 'cart_session';
+
     private const SESSION = 'fixed-free-session';
 
     private CartService $cartService;
 
     public static bool $tripayCreateCalled = false;
+
     public static ?string $notifEvent = null;
+
     public static ?string $notifStatus = null;
 
     protected function setUp(): void
@@ -51,7 +59,7 @@ class FreeProductCheckoutTest extends TestCase
         {
             public function __construct() {}
 
-            public function createTransaction(\App\Services\Tripay\CreateTransactionDto $dto): array
+            public function createTransaction(CreateTransactionDto $dto): array
             {
                 FreeProductCheckoutTest::$tripayCreateCalled = true;
 
@@ -263,9 +271,9 @@ class FreeProductCheckoutTest extends TestCase
 
         // Stub EnStorage + NextRevalidator — sama seperti ProductAdminTest.
         // (Inline anonymous classes — lihat ProductAdminTest::setUp() untuk pattern.)
-        $this->app->bind(\App\Services\Storage\EnStorageClient::class, fn () => new class implements \App\Services\Storage\EnStorageClient
+        $this->app->bind(EnStorageClient::class, fn () => new class implements EnStorageClient
         {
-            public function upload(\Illuminate\Http\UploadedFile $file, string $destinationPath): string
+            public function upload(UploadedFile $file, string $destinationPath): string
             {
                 return 'enstorage/'.$destinationPath;
             }
@@ -286,13 +294,16 @@ class FreeProductCheckoutTest extends TestCase
             }
         });
 
-        $this->app->bind(\App\Services\NextRevalidator::class, fn () => new class extends \App\Services\NextRevalidator
+        $this->app->bind(NextRevalidator::class, fn () => new class extends NextRevalidator
         {
             public function __construct() {}
 
             public function revalidateProduct(string $slug): void {}
+
             public function revalidateHome(): void {}
+
             public function revalidateCategory(string $slug): void {}
+
             public function revalidatePost(string $slug): void {}
         });
 
@@ -306,7 +317,7 @@ class FreeProductCheckoutTest extends TestCase
         ], $headers);
 
         $response->assertStatus(201);
-        $product = \App\Models\Product::where('nama', 'Free Sample')->first();
+        $product = Product::where('nama', 'Free Sample')->first();
         $this->assertNotNull($product);
         $this->assertTrue((bool) $product->is_free);
         $this->assertEquals(0, (float) $product->harga, 'Single source of truth: is_free=true → harga=0');

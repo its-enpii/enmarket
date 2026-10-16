@@ -10,17 +10,17 @@ use App\Models\SiteSetting;
 use App\Observers\ActivityLogger;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
-use App\Services\Digiflazz\DigiflazzClient;
 use App\Services\Delivery\OrderDeliveryService;
+use App\Services\Delivery\PreorderReleaseService;
+use App\Services\Digiflazz\DigiflazzClient;
+use App\Services\Duitku\DuitkuClient;
 use App\Services\NextRevalidator;
+use App\Services\Payment\OrderPaidHandler;
 use App\Services\SiteSettings;
 use App\Services\Storage\EnStorageClient;
 use App\Services\Storage\LocalMockEnStorage;
 use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
-use App\Services\Duitku\DuitkuClient;
-use App\Services\Payment\OrderPaidHandler;
-use App\Services\WhatsApp\MessageBuilder;
 use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -120,7 +120,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OrderDeliveryService::class);
 
         // Bind PreorderReleaseService (orchestrator for manual preorder release trigger)
-        $this->app->singleton(\App\Services\Delivery\PreorderReleaseService::class);
+        $this->app->singleton(PreorderReleaseService::class);
 
         // Bind SiteSettings service (cached key/value accessor)
         $this->app->singleton(SiteSettings::class, fn () => new SiteSettings);

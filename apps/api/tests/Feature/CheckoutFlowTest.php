@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\Cart\CartService;
+use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use App\Services\Tripay\TripayException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,6 +25,7 @@ class CheckoutFlowTest extends TestCase
     use RefreshDatabase;
 
     private const COOKIE = 'cart_session';
+
     private const SESSION = 'fixed-session-1234567890';
 
     private CartService $cartService;
@@ -38,7 +40,7 @@ class CheckoutFlowTest extends TestCase
         {
             public function __construct() {}
 
-            public function createTransaction(\App\Services\Tripay\CreateTransactionDto $dto): array
+            public function createTransaction(CreateTransactionDto $dto): array
             {
                 return [
                     'reference' => 'TRX-'.uniqid(),
@@ -351,7 +353,7 @@ class CheckoutFlowTest extends TestCase
         {
             public function __construct() {}
 
-            public function createTransaction(\App\Services\Tripay\CreateTransactionDto $dto): array
+            public function createTransaction(CreateTransactionDto $dto): array
             {
                 throw new TripayException('Tripay connection timeout', 503);
             }
@@ -433,7 +435,7 @@ class CheckoutTripayStub extends TripayClient
         self::$lastCustomerPhone = null;
     }
 
-    public function createTransaction(\App\Services\Tripay\CreateTransactionDto $dto): array
+    public function createTransaction(CreateTransactionDto $dto): array
     {
         self::$lastCustomerPhone = $dto->customerPhone;
 

@@ -6,7 +6,7 @@ use App\Models\SponsorBid;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\SponsorBid>
+ * @extends Factory<SponsorBid>
  */
 class SponsorBidFactory extends Factory
 {

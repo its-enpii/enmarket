@@ -243,6 +243,7 @@ class Product extends Model
 
         return $harga - $this->depositAmount();
     }
+
     /**
      * Semua review untuk produk ini.
      */
@@ -296,5 +297,4 @@ class Product extends Model
             ],
         ];
     }
-
 }

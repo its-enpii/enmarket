@@ -6,7 +6,7 @@ use App\Models\Sponsor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Sponsor>
+ * @extends Factory<Sponsor>
  */
 class SponsorFactory extends Factory
 {
@@ -19,7 +19,7 @@ class SponsorFactory extends Factory
         return [
             'domain' => $domain,
             'name' => $this->faker->company(),
-            'url' => 'https://' . $domain,
+            'url' => 'https://'.$domain,
             'logo_url' => $this->faker->imageUrl(128, 128),
             'description' => $this->faker->sentence(),
             'fetched_description' => $this->faker->sentence(),

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class Game extends Model
 {
     use HasFactory;
+
     protected $table = 'games';
 
     protected $fillable = [
@@ -57,7 +58,7 @@ class Game extends Model
         }
 
         while ($query->exists()) {
-            $slug = $base . '-' . $counter;
+            $slug = $base.'-'.$counter;
             $query = static::query()->where('slug', $slug);
             if ($ignoreId !== null) {
                 $query->where('id', '!=', $ignoreId);

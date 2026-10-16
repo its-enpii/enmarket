@@ -3,7 +3,6 @@
 namespace Tests\Unit\Services\Digiflazz;
 
 use App\Services\Digiflazz\DigiflazzClient;
-use App\Services\Digiflazz\DigiflazzException;
 use Tests\TestCase;
 
 class DigiflazzWebhookSignatureTest extends TestCase

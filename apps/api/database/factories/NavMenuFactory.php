@@ -6,7 +6,7 @@ use App\Models\NavMenu;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\NavMenu>
+ * @extends Factory<NavMenu>
  */
 class NavMenuFactory extends Factory
 {

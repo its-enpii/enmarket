@@ -72,7 +72,7 @@ class WhatsAppClient
         }
 
         $json = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $signature = 'hmac-sha256=' . hash_hmac('sha256', $json, $this->webhookSecret);
+        $signature = 'hmac-sha256='.hash_hmac('sha256', $json, $this->webhookSecret);
 
         try {
             $response = Http::withHeaders([
@@ -112,11 +112,11 @@ class WhatsAppClient
         $cleaned = preg_replace('/[^0-9]/', '', $phone) ?? '';
 
         if (str_starts_with($cleaned, '0')) {
-            return '62' . substr($cleaned, 1);
+            return '62'.substr($cleaned, 1);
         }
 
         if (! str_starts_with($cleaned, '62')) {
-            return '62' . $cleaned;
+            return '62'.$cleaned;
         }
 
         return $cleaned;

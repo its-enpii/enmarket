@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property int $order_id
- * @property \Illuminate\Support\Carbon $release_date
- * @property \Illuminate\Support\Carbon|null $processed_at
+ * @property Carbon $release_date
+ * @property Carbon|null $processed_at
  */
 class PreorderReleaseQueue extends Model
 {

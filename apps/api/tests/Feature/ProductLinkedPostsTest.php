@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Post;
 use App\Models\Product;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -48,7 +50,7 @@ class ProductLinkedPostsTest extends TestCase
     {
         $post = new Post;
         $post->title = $title;
-        $post->slug = \Illuminate\Support\Str::slug($title).'-'.uniqid();
+        $post->slug = Str::slug($title).'-'.uniqid();
         $post->excerpt = 'Excerpt of '.$title;
         $post->content = 'Body of '.$title;
         $post->status = $status;
@@ -133,7 +135,7 @@ class ProductLinkedPostsTest extends TestCase
 
     public function test_unique_pair_constraint_prevents_duplicate_link(): void
     {
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
 
         $product = $this->makeProduct();
         $post = $this->makePost('Duplicate Test');

@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\AccountProvisioning;
 use App\Models\Order;
 use App\Models\OrderDelivery;
 use App\Models\SiteSetting;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Duitku\DuitkuClient;
 use App\Services\Payment\OrderPaidHandler;
+use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +25,7 @@ class DuitkuCallbackTest extends TestCase
     use RefreshDatabase;
 
     private const MERCHANT_CODE = 'DTEST';
+
     private const API_KEY = 'duitku-test-api-key';
 
     private array $capturedDispatches = [];
@@ -42,7 +45,7 @@ class DuitkuCallbackTest extends TestCase
         {
             public function __construct() {}
 
-            public function createTransaction(\App\Services\Tripay\CreateTransactionDto $dto): array
+            public function createTransaction(CreateTransactionDto $dto): array
             {
                 return [
                     'reference' => 'TRX-'.uniqid(),
@@ -71,12 +74,12 @@ class DuitkuCallbackTest extends TestCase
             {
                 public function __construct(public array &$captured) {}
 
-                public function dispatchOrderPaid(\App\Models\Order $order, array $deliveries): void
+                public function dispatchOrderPaid(Order $order, array $deliveries): void
                 {
                     $this->captured[] = ['event' => 'order.paid', 'order' => $order->kode_order];
                 }
 
-                public function dispatchAccountReady(\App\Models\AccountProvisioning $prov): void
+                public function dispatchAccountReady(AccountProvisioning $prov): void
                 {
                     $this->captured[] = ['event' => 'account.ready'];
                 }

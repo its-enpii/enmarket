@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AccountProvisioning;
 use App\Models\Order;
 use App\Models\OrderDelivery;
 use App\Services\Delivery\NotificationDispatcher;
@@ -22,6 +23,7 @@ class TripayCallbackTest extends TestCase
     use RefreshDatabase;
 
     private const PRIVATE_KEY = 'callback-test-private-key';
+
     private const REFERENCE = 'TRX-CALLBACK-TEST-001';
 
     private array $capturedDispatches = [];
@@ -44,12 +46,12 @@ class TripayCallbackTest extends TestCase
             {
                 public function __construct(public array &$captured) {}
 
-                public function dispatchOrderPaid(\App\Models\Order $order, array $deliveries): void
+                public function dispatchOrderPaid(Order $order, array $deliveries): void
                 {
                     $this->captured[] = ['event' => 'order.paid', 'order' => $order->kode_order, 'count' => count($deliveries)];
                 }
 
-                public function dispatchAccountReady(\App\Models\AccountProvisioning $prov): void
+                public function dispatchAccountReady(AccountProvisioning $prov): void
                 {
                     $this->captured[] = ['event' => 'account.ready', 'order_item' => $prov->order_item_id];
                 }

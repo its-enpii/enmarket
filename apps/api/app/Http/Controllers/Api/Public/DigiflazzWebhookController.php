@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Public;
 use App\Models\Order;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Digiflazz\DigiflazzClient;
-use App\Services\Digiflazz\DigiflazzException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

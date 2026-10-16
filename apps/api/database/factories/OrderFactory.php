@@ -4,19 +4,20 @@ namespace Database\Factories;
 
 use App\Models\Game;
 use App\Models\GameItem;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Order>
+ * @extends Factory<Order>
  */
 class OrderFactory extends Factory
 {
-    protected $model = \App\Models\Order::class;
+    protected $model = Order::class;
 
     public function definition(): array
     {
         return [
-            'kode_order' => 'EPS-' . now()->format('Ymd') . '-' . strtoupper($this->faker->bothify('??###')),
+            'kode_order' => 'EPS-'.now()->format('Ymd').'-'.strtoupper($this->faker->bothify('??###')),
             'nama_pembeli' => $this->faker->name(),
             'email_pembeli' => $this->faker->safeEmail(),
             'wa_pembeli' => '081234567890',

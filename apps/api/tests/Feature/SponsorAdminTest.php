@@ -24,13 +24,17 @@ class SponsorAdminTest extends TestCase
         $this->app->bind(NextRevalidator::class, fn () => new class($this->revalidatedPaths) extends NextRevalidator
         {
             public function __construct(public array &$paths) {}
-            public function revalidateHome(): void { $this->paths[] = 'home'; }
+
+            public function revalidateHome(): void
+            {
+                $this->paths[] = 'home';
+            }
         });
     }
 
     private function authHeaders(): array
     {
-        return ['Authorization' => 'Bearer ' . self::TOKEN];
+        return ['Authorization' => 'Bearer '.self::TOKEN];
     }
 
     public function test_index_lists_sponsors_ordered_by_amount_desc(): void
@@ -66,7 +70,7 @@ class SponsorAdminTest extends TestCase
 
     public function test_store_creates_sponsor_and_fetches_metadata(): void
     {
-        $html = <<<HTML
+        $html = <<<'HTML'
 <!DOCTYPE html>
 <html>
 <head>
@@ -164,7 +168,7 @@ HTML;
             'amount' => 100000,
         ]);
 
-        $html = <<<HTML
+        $html = <<<'HTML'
 <!DOCTYPE html>
 <html>
 <head>
@@ -213,7 +217,7 @@ HTML;
 
     public function test_fetch_metadata_endpoint(): void
     {
-        $html = <<<HTML
+        $html = <<<'HTML'
 <!DOCTYPE html>
 <html>
 <head>

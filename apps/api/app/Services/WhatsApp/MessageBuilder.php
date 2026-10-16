@@ -27,7 +27,7 @@ class MessageBuilder
         $lines[] = "Halo {$order->nama_pembeli}! 👋";
         $lines[] = '';
         $lines[] = "Pembayaran pesanan *{$order->kode_order}* telah dikonfirmasi. ✅";
-        $lines[] = "Total: *Rp " . number_format((int) $order->total_harga, 0, ',', '.') . "*";
+        $lines[] = 'Total: *Rp '.number_format((int) $order->total_harga, 0, ',', '.').'*';
         $lines[] = '';
         $lines[] = '📦 *Detail Produk:*';
 
@@ -41,11 +41,11 @@ class MessageBuilder
             }
 
             if ($d->download_url && $d->download_token) {
-                $downloadLink = rtrim($this->siteUrl, '/') . "/download/{$d->download_token}";
+                $downloadLink = rtrim($this->siteUrl, '/')."/download/{$d->download_token}";
                 $lines[] = "   📥 Download: {$downloadLink}";
 
                 if ($d->token_expired_at) {
-                    $lines[] = "   ⏰ Berlaku sampai: " . $d->token_expired_at->format('d M Y H:i') . ' WIB';
+                    $lines[] = '   ⏰ Berlaku sampai: '.$d->token_expired_at->format('d M Y H:i').' WIB';
                 }
             }
         }
@@ -80,17 +80,17 @@ class MessageBuilder
             }
 
             if ($d->download_url && $d->download_token) {
-                $downloadLink = rtrim($this->siteUrl, '/') . "/download/{$d->download_token}";
+                $downloadLink = rtrim($this->siteUrl, '/')."/download/{$d->download_token}";
                 $lines[] = "   📥 Download: {$downloadLink}";
 
                 if ($d->token_expired_at) {
-                    $lines[] = "   ⏰ Berlaku sampai: " . $d->token_expired_at->format('d M Y H:i') . ' WIB';
+                    $lines[] = '   ⏰ Berlaku sampai: '.$d->token_expired_at->format('d M Y H:i').' WIB';
                 }
             }
         }
 
         $lines[] = '';
-        $lines[] = "Terima kasih sudah menunggu! 🙏";
+        $lines[] = 'Terima kasih sudah menunggu! 🙏';
 
         return implode("\n", $lines);
     }

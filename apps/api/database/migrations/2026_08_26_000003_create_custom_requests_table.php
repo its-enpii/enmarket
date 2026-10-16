@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,7 +14,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email');
             $table->string('wa', 20);
-            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+            if (app()->runningUnitTests() || DB::getDriverName() === 'sqlite') {
                 $table->string('jenis_proyek');
                 $table->string('budget_range');
                 $table->string('timeline');

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class GameItem extends Model
 {
     use HasFactory;
+
     protected $table = 'game_items';
 
     protected $fillable = [

@@ -35,6 +35,7 @@ class MetadataFetcher
 
         if (! $this->isSafeUrl($targetUrl)) {
             Log::warning("MetadataFetcher: SSRF guard blocked URL: {$targetUrl}");
+
             return $this->fallback($domain, $targetUrl);
         }
 
@@ -45,6 +46,7 @@ class MetadataFetcher
 
             if (! $response->successful()) {
                 Log::info("MetadataFetcher: Request to {$targetUrl} failed with status {$response->status()}");
+
                 return $this->fallback($domain, $targetUrl);
             }
 
@@ -55,7 +57,8 @@ class MetadataFetcher
 
             return $this->parseHtml($html, $targetUrl, $domain);
         } catch (Throwable $e) {
-            Log::info("MetadataFetcher: Failed fetching {$targetUrl}: " . $e->getMessage());
+            Log::info("MetadataFetcher: Failed fetching {$targetUrl}: ".$e->getMessage());
+
             return $this->fallback($domain, $targetUrl);
         }
     }
@@ -66,7 +69,7 @@ class MetadataFetcher
             return $input;
         }
 
-        return 'https://' . ltrim($input, '/');
+        return 'https://'.ltrim($input, '/');
     }
 
     private function extractDomain(string $url): string
@@ -78,6 +81,7 @@ class MetadataFetcher
 
         $clean = preg_replace('#^https?://#i', '', $url);
         $parts = explode('/', $clean);
+
         return $parts[0] ?? $clean;
     }
 
@@ -149,9 +153,9 @@ class MetadataFetcher
 
     private function parseHtml(string $html, string $baseUrl, string $domain): array
     {
-        $dom = new DOMDocument();
+        $dom = new DOMDocument;
         // Suppress warnings from invalid HTML5 entities
-        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_NOERROR | LIBXML_NOWARNING);
+        @$dom->loadHTML('<?xml encoding="UTF-8">'.$html, LIBXML_NOERROR | LIBXML_NOWARNING);
         $xpath = new DOMXPath($dom);
 
         // 1. Title / Name
@@ -187,7 +191,7 @@ class MetadataFetcher
             $parsed = parse_url($baseUrl);
             $scheme = $parsed['scheme'] ?? 'https';
             $host = $parsed['host'] ?? $domain;
-            $port = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+            $port = isset($parsed['port']) ? ':'.$parsed['port'] : '';
             $logoUrl = "{$scheme}://{$host}{$port}/favicon.ico";
         }
 
@@ -251,18 +255,19 @@ class MetadataFetcher
         // Protocol-relative //example.com/logo.png
         if (str_starts_with($rel, '//')) {
             $baseScheme = parse_url($baseUrl, PHP_URL_SCHEME) ?: 'https';
-            return $baseScheme . ':' . $rel;
+
+            return $baseScheme.':'.$rel;
         }
 
         $baseParts = parse_url($baseUrl);
         $scheme = $baseParts['scheme'] ?? 'https';
         $host = $baseParts['host'] ?? '';
-        $port = isset($baseParts['port']) ? ':' . $baseParts['port'] : '';
+        $port = isset($baseParts['port']) ? ':'.$baseParts['port'] : '';
         $origin = "{$scheme}://{$host}{$port}";
 
         // Root-relative /images/logo.png
         if (str_starts_with($rel, '/')) {
-            return $origin . $rel;
+            return $origin.$rel;
         }
 
         // Relative path foo/bar.png against base path
@@ -272,12 +277,13 @@ class MetadataFetcher
             $dir = '';
         }
 
-        return $origin . rtrim($dir, '/') . '/' . ltrim($rel, '/');
+        return $origin.rtrim($dir, '/').'/'.ltrim($rel, '/');
     }
 
     private function isValidImageScheme(string $url): bool
     {
         $scheme = parse_url($url, PHP_URL_SCHEME);
+
         return in_array(strtolower($scheme ?: ''), ['http', 'https'], true);
     }
 

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Post;
 use App\Models\Product;
 use App\Services\NextRevalidator;
+use App\Services\Storage\EnStorageClient;
 use App\Support\FileUploadGuard;
 use App\Support\TagNormalizer;
-use App\Services\Storage\EnStorageClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -393,7 +394,7 @@ class ProductController extends Controller
 
             // Skip invalid post_id — tidak crash kalau admin input post_id
             // yang sudah dihapus.
-            if ($postId <= 0 || ! \App\Models\Post::where('id', $postId)->exists()) {
+            if ($postId <= 0 || ! Post::where('id', $postId)->exists()) {
                 continue;
             }
 

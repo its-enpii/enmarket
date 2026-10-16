@@ -15,7 +15,7 @@ class WhatsappSender
         $message = "[enpiistudio] Kode verifikasi Anda: {$code}\n"
             ."Berlaku selama 5 menit. Jangan berikan kode ini kepada siapapun.\n\n"
             ."[enpiistudio] Your verification code: {$code}\n"
-            ."Valid for 5 minutes. Do not share this code with anyone.";
+            .'Valid for 5 minutes. Do not share this code with anyone.';
 
         $apiUrl = config('services.evolution.url');
         $apiKey = config('services.evolution.api_key');
@@ -24,6 +24,7 @@ class WhatsappSender
         // Mode development / log jika URL belum dikonfigurasi
         if (empty($apiUrl)) {
             Log::info("WhatsApp OTP to {$phone}: {$code}");
+
             return true;
         }
 

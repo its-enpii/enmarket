@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\ActivityLog;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ActivityLogTest extends TestCase
@@ -24,7 +24,7 @@ class ActivityLogTest extends TestCase
         return ['Authorization' => 'Bearer '.self::TOKEN];
     }
 
-    private function makeLog(string $subjectType = 'product', ?\Carbon\Carbon $createdAt = null): ActivityLog
+    private function makeLog(string $subjectType = 'product', ?Carbon $createdAt = null): ActivityLog
     {
         return ActivityLog::create([
             'action' => 'created',

@@ -72,7 +72,7 @@ class SiteConfigTest extends TestCase
                 ['label' => 'instagram', 'url' => 'https://ig.com/x'],
                 ['label' => 'github', 'url' => 'https://gh.com/x'],
             ]),
-            'type' => 'json'
+            'type' => 'json',
         ]);
 
         $response = $this->getJson('/api/public/site-config');
@@ -210,7 +210,7 @@ class SiteConfigTest extends TestCase
         // Mock storage client — supaya upload return predictable URL
         $this->app->bind(EnStorageClient::class, fn () => new class implements EnStorageClient
         {
-            public function upload(\Illuminate\Http\UploadedFile $file, string $destinationPath): string
+            public function upload(UploadedFile $file, string $destinationPath): string
             {
                 return 'enstorage/settings/uploaded-logo.png';
             }

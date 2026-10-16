@@ -21,7 +21,7 @@ class GameAdminTest extends TestCase
 
     private function authHeaders(): array
     {
-        return ['Authorization' => 'Bearer ' . self::TOKEN];
+        return ['Authorization' => 'Bearer '.self::TOKEN];
     }
 
     public function test_admin_can_create_game_with_items(): void

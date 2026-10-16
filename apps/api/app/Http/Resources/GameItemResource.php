@@ -14,7 +14,7 @@ class GameItemResource extends JsonResource
             'game_id' => $this->game_id,
             'nama' => $this->nama,
             'harga' => (string) $this->harga,
-            'harga_formatted' => 'Rp ' . number_format((float) $this->harga, 0, ',', '.'),
+            'harga_formatted' => 'Rp '.number_format((float) $this->harga, 0, ',', '.'),
             'digiflazz_sku' => $this->digiflazz_sku,
             'digiflazz_category' => $this->digiflazz_category,
             'sort_order' => $this->sort_order,

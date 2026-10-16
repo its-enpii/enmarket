@@ -8,11 +8,8 @@ use App\Models\GameItem;
 use App\Models\Order;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Digiflazz\DigiflazzClient;
-use App\Services\Digiflazz\DigiflazzException;
 use App\Services\Digiflazz\TopupService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class DigiflazzCallbackTest extends TestCase
@@ -36,7 +33,7 @@ class DigiflazzCallbackTest extends TestCase
         ]);
 
         return Order::create([
-            'kode_order' => 'EPS-TEST-' . uniqid(),
+            'kode_order' => 'EPS-TEST-'.uniqid(),
             'nama_pembeli' => 'Topup Buyer',
             'total_harga' => 25000,
             'status' => 'paid',

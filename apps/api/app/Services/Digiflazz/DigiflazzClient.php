@@ -36,11 +36,11 @@ class DigiflazzClient
                 'status' => 'Sukses',
                 'message' => 'Sandbox mode — no API key configured',
                 'ref_id' => $refId,
-                'sn' => 'SN-SANDBOX-' . strtoupper(substr(md5($refId), 0, 8)),
+                'sn' => 'SN-SANDBOX-'.strtoupper(substr(md5($refId), 0, 8)),
             ];
         }
 
-        $sign = md5($this->username . $this->apiKey . $refId);
+        $sign = md5($this->username.$this->apiKey.$refId);
 
         $payload = [
             'commands' => 'topup',
@@ -55,13 +55,13 @@ class DigiflazzClient
             $response = Http::timeout($this->timeout)
                 ->acceptJson()
                 ->asJson()
-                ->post($this->baseUrl . '/v1/transaction', $payload);
+                ->post($this->baseUrl.'/v1/transaction', $payload);
 
             $data = $response->json('data', []);
 
             if (empty($data)) {
                 throw new DigiflazzException(
-                    'Digiflazz returned empty data. HTTP ' . $response->status()
+                    'Digiflazz returned empty data. HTTP '.$response->status()
                 );
             }
 
@@ -73,7 +73,7 @@ class DigiflazzClient
                 'rc' => $data['rc'] ?? null,
             ];
         } catch (ConnectionException $e) {
-            throw new DigiflazzException('Digiflazz connection failed: ' . $e->getMessage(), 0, $e);
+            throw new DigiflazzException('Digiflazz connection failed: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -88,7 +88,7 @@ class DigiflazzClient
             return ['deposit' => 0];
         }
 
-        $sign = md5($this->username . $this->apiKey . 'depo');
+        $sign = md5($this->username.$this->apiKey.'depo');
 
         $payload = [
             'cmd' => 'deposit',
@@ -100,13 +100,13 @@ class DigiflazzClient
             $response = Http::timeout($this->timeout)
                 ->acceptJson()
                 ->asJson()
-                ->post($this->baseUrl . '/v1/cek-saldo', $payload);
+                ->post($this->baseUrl.'/v1/cek-saldo', $payload);
 
             return [
                 'deposit' => (int) ($response->json('data.deposit') ?? 0),
             ];
         } catch (ConnectionException $e) {
-            throw new DigiflazzException('Digiflazz balance check failed: ' . $e->getMessage(), 0, $e);
+            throw new DigiflazzException('Digiflazz balance check failed: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -116,7 +116,7 @@ class DigiflazzClient
      * Format header (per docs): `x-digiflazz-signature` containing
      * hex HMAC-SHA256(rawBody, webhookSecret).
      *
-     * @return bool  true jika signature cocok, false jika tidak (atau secret belum di-set)
+     * @return bool true jika signature cocok, false jika tidak (atau secret belum di-set)
      */
     public function verifyWebhookSignature(string $rawBody, ?string $incomingSignature): bool
     {

@@ -11,7 +11,9 @@ use App\Models\Product;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\WhatsApp\MessageBuilder;
 use App\Services\WhatsApp\WhatsAppClient;
+use Illuminate\Database\Connection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -269,7 +271,7 @@ class NotificationDispatcherTest extends TestCase
 /**
  * Helper — global DB facade.
  */
-function DB(): \Illuminate\Database\Connection
+function DB(): Connection
 {
-    return \Illuminate\Support\Facades\DB::connection();
+    return DB::connection();
 }

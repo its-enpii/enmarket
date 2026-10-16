@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\AccountProvisioning;
 use App\Models\Order;
 use App\Models\OrderDelivery;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Services\Delivery\NotificationDispatcher;
-use App\Services\Delivery\OrderDeliveryService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -36,7 +37,7 @@ class AdminOrderAndResendTest extends TestCase
         {
             public function __construct(public array &$captured) {}
 
-            public function dispatchOrderPaid(\App\Models\Order $order, array $deliveries): void
+            public function dispatchOrderPaid(Order $order, array $deliveries): void
             {
                 $this->captured[] = ['event' => 'order.paid', 'order' => $order->kode_order];
                 foreach ($deliveries as $d) {
@@ -44,7 +45,7 @@ class AdminOrderAndResendTest extends TestCase
                 }
             }
 
-            public function dispatchAccountReady(\App\Models\AccountProvisioning $prov): void
+            public function dispatchAccountReady(AccountProvisioning $prov): void
             {
                 $this->captured[] = ['event' => 'account.ready'];
             }
@@ -56,7 +57,7 @@ class AdminOrderAndResendTest extends TestCase
         return ['Authorization' => 'Bearer '.self::TOKEN];
     }
 
-    private function makeOrder(string $status, ?\Carbon\Carbon $paidAt = null): Order
+    private function makeOrder(string $status, ?Carbon $paidAt = null): Order
     {
         $kode = 'EPS-'.now()->format('Ymd').'-'.strtoupper(uniqid());
         $orderId = DB::table('orders')->insertGetId([

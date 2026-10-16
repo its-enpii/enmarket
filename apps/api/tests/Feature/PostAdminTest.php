@@ -49,10 +49,25 @@ class PostAdminTest extends TestCase
         {
             public function __construct(public array &$paths) {}
 
-            public function revalidateProduct(string $slug): void { $this->paths[] = "product:$slug"; }
-            public function revalidateHome(): void { $this->paths[] = 'home'; }
-            public function revalidateCategory(string $slug): void { $this->paths[] = "category:$slug"; }
-            public function revalidatePost(string $slug): void { $this->paths[] = "post:$slug"; }
+            public function revalidateProduct(string $slug): void
+            {
+                $this->paths[] = "product:$slug";
+            }
+
+            public function revalidateHome(): void
+            {
+                $this->paths[] = 'home';
+            }
+
+            public function revalidateCategory(string $slug): void
+            {
+                $this->paths[] = "category:$slug";
+            }
+
+            public function revalidatePost(string $slug): void
+            {
+                $this->paths[] = "post:$slug";
+            }
         });
     }
 

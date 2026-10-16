@@ -32,7 +32,7 @@ class DigiflazzWebhookTest extends TestCase
         $game = Game::factory()->create();
         $item = GameItem::factory()->create(['game_id' => $game->id]);
         $order = Order::factory()->create([
-            'kode_order' => 'EPS-WEBHOOK-' . uniqid(),
+            'kode_order' => 'EPS-WEBHOOK-'.uniqid(),
             'game_id' => $game->id,
             'game_item_id' => $item->id,
             'topup_status' => 'processing',
@@ -40,7 +40,7 @@ class DigiflazzWebhookTest extends TestCase
 
         $body = json_encode([
             'data' => [
-                'trx_id' => 'DF-' . uniqid(),
+                'trx_id' => 'DF-'.uniqid(),
                 'ref_id' => $order->kode_order,
                 'status' => 'Sukses',
                 'sn' => 'SN-TEST-001',

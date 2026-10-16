@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,7 +26,7 @@ class CouponTest extends TestCase
         {
             public function __construct() {}
 
-            public function createTransaction(\App\Services\Tripay\CreateTransactionDto $dto): array
+            public function createTransaction(CreateTransactionDto $dto): array
             {
                 return [
                     'reference' => 'TRX-'.uniqid(),

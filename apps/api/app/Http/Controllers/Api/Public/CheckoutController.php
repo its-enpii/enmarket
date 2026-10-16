@@ -479,6 +479,7 @@ class CheckoutController extends Controller
         if (str_starts_with($cleaned, '628')) {
             return '0'.substr($cleaned, 2);
         }
+
         return $cleaned;
     }
 

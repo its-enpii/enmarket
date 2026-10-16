@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->string('email_pembeli');
             $table->string('wa_pembeli');
             $table->decimal('total_harga', 10, 2);
-            if (app()->runningUnitTests() || \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite') {
+            if (app()->runningUnitTests() || DB::getDriverName() === 'sqlite') {
                 $table->string('status')->default('pending');
             } else {
                 $table->enum('status', ['pending', 'paid', 'failed', 'expired', 'refunded'])->default('pending');

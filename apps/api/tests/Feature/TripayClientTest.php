@@ -17,8 +17,11 @@ use Tests\TestCase;
 class TripayClientTest extends TestCase
 {
     private const API_KEY = 'test-api-key';
+
     private const PRIVATE_KEY = 'test-private-key-secret';
+
     private const MERCHANT = 'TEST-MERCHANT';
+
     private const BASE_URL = 'https://tripay-staging-api.orbit-access.dev/api-sandbox/v2';
 
     private function makeClient(): TripayClient

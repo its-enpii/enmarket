@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Models\Game>
+ * @extends Factory<Game>
  */
 class GameFactory extends Factory
 {
@@ -19,7 +19,7 @@ class GameFactory extends Factory
 
         return [
             'nama' => ucwords($nama),
-            'slug' => Str::slug($nama) . '-' . $this->faker->unique()->numberBetween(1, 9999),
+            'slug' => Str::slug($nama).'-'.$this->faker->unique()->numberBetween(1, 9999),
             'brand' => $this->faker->randomElement(['miHoYo', 'Moonton', 'Garena', 'Riot']),
             'icon_url' => null,
             'banner_url' => null,

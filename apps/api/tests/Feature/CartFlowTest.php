@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Services\Cart\CartService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -224,7 +225,7 @@ class CartFlowTest extends TestCase
         $this->assertCount(1, $carts, 'Expired row harus dihapus, hanya 1 cart tersisa');
         // expires_at harus di masa depan (raw DB read bisa return raw datetime string,
         // bukan Carbon — re-parse untuk konsistensi assertion)
-        $expiry = \Carbon\Carbon::parse($carts->first()->expires_at);
+        $expiry = Carbon::parse($carts->first()->expires_at);
         $this->assertTrue($expiry->isFuture(), 'Expiry baru harus di masa depan');
     }
 

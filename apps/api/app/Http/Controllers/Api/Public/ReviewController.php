@@ -168,6 +168,7 @@ class ReviewController extends Controller
         if (str_starts_with($cleaned, '62')) {
             return '0'.substr($cleaned, 2);
         }
+
         return $cleaned;
     }
 }

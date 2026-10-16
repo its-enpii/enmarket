@@ -2,12 +2,14 @@
 
 namespace App\Services\Payment;
 
+use App\Models\AccountProvisioning;
 use App\Models\Order;
+use App\Models\OrderDelivery;
 use App\Models\PreorderReleaseQueue;
 use App\Models\Sponsor;
 use App\Models\SponsorBid;
-use App\Services\Sponsor\MetadataFetcher;
 use App\Services\Delivery\OrderDeliveryService;
+use App\Services\Sponsor\MetadataFetcher;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -69,8 +71,8 @@ class OrderPaidHandler
 
         try {
             $rows = $this->deliveryService->generateForOrder($order);
-            $deliveries = collect($rows)->whereInstanceOf(\App\Models\OrderDelivery::class);
-            $provisionings = collect($rows)->whereInstanceOf(\App\Models\AccountProvisioning::class);
+            $deliveries = collect($rows)->whereInstanceOf(OrderDelivery::class);
+            $provisionings = collect($rows)->whereInstanceOf(AccountProvisioning::class);
             Log::info("Order {$order->kode_order} paid — {$deliveries->count()} deliveries, {$provisionings->count()} awaiting admin activation");
         } catch (\Throwable $e) {
             Log::error("Order {$order->kode_order} paid but delivery failed", [

@@ -108,6 +108,7 @@ class LoginController extends Controller
 
         if (! $userCart) {
             $guestCart->update(['user_id' => $userId]);
+
             return;
         }
 
@@ -151,7 +152,7 @@ class LoginController extends Controller
         Order::whereNull('user_id')
             ->where(function ($q) use ($user, $normalizedPhone) {
                 $q->where('wa_pembeli', $user->phone)
-                  ->orWhere('wa_pembeli', $normalizedPhone);
+                    ->orWhere('wa_pembeli', $normalizedPhone);
             })
             ->update(['user_id' => $user->id]);
     }

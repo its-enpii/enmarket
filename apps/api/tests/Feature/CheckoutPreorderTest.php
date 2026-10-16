@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Order;
-use App\Models\PreorderReleaseQueue;
 use App\Models\Product;
 use App\Services\Cart\CartService;
 use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 /**
@@ -70,13 +70,14 @@ class CheckoutPreorderTest extends TestCase
         ], $overrides));
     }
 
-    private function postCheckout(string $sessionId): \Illuminate\Testing\TestResponse
+    private function postCheckout(string $sessionId): TestResponse
     {
         $payload = json_encode([
             'nama' => 'Test Buyer',
             'email' => 'buyer@test.id',
             'wa' => '08123456789',
         ]);
+
         return $this->call(
             'POST',
             '/api/checkout',

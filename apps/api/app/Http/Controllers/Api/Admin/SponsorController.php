@@ -101,7 +101,7 @@ class SponsorController extends Controller
     public function update(Request $request, Sponsor $sponsor, MetadataFetcher $fetcher, NextRevalidator $revalidator): JsonResponse
     {
         $data = $request->validate([
-            'domain' => ['sometimes', 'required', 'string', 'max:255', 'unique:sponsors,domain,' . $sponsor->id],
+            'domain' => ['sometimes', 'required', 'string', 'max:255', 'unique:sponsors,domain,'.$sponsor->id],
             'name' => ['nullable', 'string', 'max:255'],
             'url' => ['nullable', 'string', 'max:2000'],
             'logo_url' => ['nullable', 'string', 'max:2000'],

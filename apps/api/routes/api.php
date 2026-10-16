@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\CouponController;
 use App\Http\Controllers\Api\Admin\CustomRequestController as AdminCustomRequestController;
+use App\Http\Controllers\Api\Admin\GameController as AdminGameController;
+use App\Http\Controllers\Api\Admin\GameItemController as AdminGameItemController;
 use App\Http\Controllers\Api\Admin\LicenseKeyController;
 use App\Http\Controllers\Api\Admin\MaintenanceController;
 use App\Http\Controllers\Api\Admin\NavMenuController;
@@ -14,16 +16,16 @@ use App\Http\Controllers\Api\Admin\OrderResendController;
 use App\Http\Controllers\Api\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Api\Admin\PreorderController;
 use App\Http\Controllers\Api\Admin\ProductController;
-use App\Http\Controllers\Api\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\Admin\ProductImageController;
+use App\Http\Controllers\Api\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\Admin\SponsorController as AdminSponsorController;
-
 use App\Http\Controllers\Api\Customer\Auth\LoginController as CustomerLoginController;
 use App\Http\Controllers\Api\Customer\Auth\LogoutController as CustomerLogoutController;
 use App\Http\Controllers\Api\Customer\Auth\MeController as CustomerMeController;
 use App\Http\Controllers\Api\Customer\Auth\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
+use App\Http\Controllers\Api\Customer\TopupHistoryController;
 use App\Http\Controllers\Api\Customer\WishlistController as CustomerWishlistController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Public\CartController;
@@ -32,6 +34,7 @@ use App\Http\Controllers\Api\Public\CheckoutController;
 use App\Http\Controllers\Api\Public\CustomRequestController;
 use App\Http\Controllers\Api\Public\DigiflazzWebhookController;
 use App\Http\Controllers\Api\Public\DownloadController;
+use App\Http\Controllers\Api\Public\DuitkuCallbackController;
 use App\Http\Controllers\Api\Public\OrderController;
 use App\Http\Controllers\Api\Public\PostController as PublicPostController;
 use App\Http\Controllers\Api\Public\ProductController as PublicProductController;
@@ -39,14 +42,10 @@ use App\Http\Controllers\Api\Public\ReviewController as PublicReviewController;
 use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\SponsorBidController;
 use App\Http\Controllers\Api\Public\TagController as PublicTagController;
+use App\Http\Controllers\Api\Public\TopupController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
-use App\Http\Controllers\Api\Public\DuitkuCallbackController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Admin\GameController as AdminGameController;
-use App\Http\Controllers\Api\Admin\GameItemController as AdminGameItemController;
-use App\Http\Controllers\Api\Customer\TopupHistoryController;
-use App\Http\Controllers\Api\Public\TopupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -249,9 +248,9 @@ Route::prefix('admin')->group(function () {
         Route::get('preorders/{order}', [PreorderController::class, 'show']);
         Route::get('preorders', [PreorderController::class, 'index']);
 
-                // Sponsors management
-        Route::post("sponsors/fetch-metadata", [AdminSponsorController::class, "fetchMetadata"]);
-        Route::apiResource("sponsors", AdminSponsorController::class);
+        // Sponsors management
+        Route::post('sponsors/fetch-metadata', [AdminSponsorController::class, 'fetchMetadata']);
+        Route::apiResource('sponsors', AdminSponsorController::class);
 
         // Customer Reviews Moderation (stats HARUS sebelum apiResource)
         Route::get('reviews/stats', [AdminReviewController::class, 'stats']);

@@ -6,8 +6,6 @@ use App\Models\AccountProvisioning;
 use App\Models\LicenseKey;
 use App\Models\Order;
 use App\Models\OrderDelivery;
-use App\Models\OrderItem;
-use App\Services\Delivery\AccountProvisioningService;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Delivery\OrderDeliveryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,12 +35,12 @@ class OrderDeliveryServiceTest extends TestCase
         {
             public function __construct() {}
 
-            public function dispatchOrderPaid(\App\Models\Order $order, array $deliveries): void
+            public function dispatchOrderPaid(Order $order, array $deliveries): void
             {
                 // no-op — test verifikasi behavior service, bukan dispatcher
             }
 
-            public function dispatchAccountReady(\App\Models\AccountProvisioning $prov): void {}
+            public function dispatchAccountReady(AccountProvisioning $prov): void {}
         });
     }
 

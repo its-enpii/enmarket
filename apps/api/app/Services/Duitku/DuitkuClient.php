@@ -80,7 +80,7 @@ class DuitkuClient
      * Duitku mengirim form-encoded POST dengan field `signature`.
      * Signature = md5(merchantCode + amount + merchantOrderId + apiKey).
      *
-     * @return array<string,mixed>|null  parsed payload kalau valid, null kalau signature tidak cocok
+     * @return array<string,mixed>|null parsed payload kalau valid, null kalau signature tidak cocok
      */
     public function verifyCallback(string $merchantOrderId, string $amount, string $incomingSignature): ?array
     {

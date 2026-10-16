@@ -28,12 +28,14 @@ class CustomerAuthTest extends TestCase
 
         // Fake WhatsApp sender agar tidak melakukan network call saat testing
         $this->app->bind(WhatsappSender::class, function () {
-            return new class extends WhatsappSender {
+            return new class extends WhatsappSender
+            {
                 public array $sent = [];
 
                 public function sendOtp(string $phone, string $code): bool
                 {
                     $this->sent[] = ['phone' => $phone, 'code' => $code];
+
                     return true;
                 }
             };

@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Hash;
 class WhatsappOtpService
 {
     public const MAX_REQUESTS_PER_WINDOW = 3;
+
     public const WINDOW_MINUTES = 10;
+
     public const OTP_EXPIRY_MINUTES = 5;
+
     public const MAX_ATTEMPTS = 5;
 
     public function __construct(

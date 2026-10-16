@@ -16,8 +16,11 @@ class ReviewTest extends TestCase
     use RefreshDatabase;
 
     private string $adminToken = 'test-admin-secret-token';
+
     private Product $product;
+
     private Order $order;
+
     private User $user;
 
     protected function setUp(): void

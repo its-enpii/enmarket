@@ -85,7 +85,7 @@ class TopupController extends Controller
                 'game' => $game->nama,
                 'item' => $item->nama,
                 'harga' => (string) $item->harga,
-                'harga_formatted' => 'Rp ' . number_format((float) $item->harga, 0, ',', '.'),
+                'harga_formatted' => 'Rp '.number_format((float) $item->harga, 0, ',', '.'),
                 'total' => (int) $item->harga,
                 'contact_type' => $request->contact_type,
                 'contact_value' => $request->contact_value,
@@ -141,7 +141,7 @@ class TopupController extends Controller
         $kodeOrder = $this->generateKodeOrder();
 
         $contactName = $request->contact_type === 'phone'
-            ? 'Topup ' . $game->nama
+            ? 'Topup '.$game->nama
             : $request->contact_value;
 
         try {
@@ -171,6 +171,7 @@ class TopupController extends Controller
             // Dispatch ke payment gateway sesuai setting admin
             if ($gateway === 'duitku') {
                 $res = $this->createDuitkuTransaction($order, $game, $item, $total, $contactName, $request, $paymentMethod);
+
                 return response()->json([
                     'data' => [
                         'kode_order' => $kodeOrder,
@@ -186,6 +187,7 @@ class TopupController extends Controller
 
             // Default: Tripay
             $res = $this->createTripayTransaction($order, $game, $item, $total, $contactName, $request);
+
             return response()->json([
                 'data' => [
                     'kode_order' => $kodeOrder,
@@ -201,14 +203,17 @@ class TopupController extends Controller
             ], 201);
         } catch (TripayException $e) {
             Log::error('Topup checkout Tripay error', ['err' => $e->getMessage(), 'order' => $kodeOrder]);
+
             return $this->gatewayErrorResponse('tripay', $e, $kodeOrder);
         } catch (DuitkuException $e) {
             Log::error('Topup checkout Duitku error', ['err' => $e->getMessage(), 'order' => $kodeOrder]);
+
             return $this->gatewayErrorResponse('duitku', $e, $kodeOrder);
         } catch (\Throwable $e) {
             Log::error('Topup checkout error', ['err' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
             return response()->json([
-                'message' => 'Checkout gagal: ' . $e->getMessage(),
+                'message' => 'Checkout gagal: '.$e->getMessage(),
                 'code' => 'checkout_error',
             ], 500);
         }
@@ -236,7 +241,7 @@ class TopupController extends Controller
             customerPhone: $request->contact_type === 'phone' ? $this->sanitizePhone($request->contact_value) : '08000000000',
             orderItems: [[
                 'sku' => $item->digiflazz_sku,
-                'name' => $game->nama . ' - ' . $item->nama,
+                'name' => $game->nama.' - '.$item->nama,
                 'price' => $total,
                 'quantity' => 1,
             ]],
@@ -281,7 +286,7 @@ class TopupController extends Controller
             paymentMethod: $paymentMethod,
             merchantOrderId: $order->kode_order,
             amount: $total,
-            productDetails: $game->nama . ' - ' . $item->nama,
+            productDetails: $game->nama.' - '.$item->nama,
             customerEmail: $request->contact_type === 'email' ? $request->contact_value : 'topup@enpiistudio.com',
             customerName: $contactName,
             callbackUrl: config('services.duitku.callback_url') ?: null,
@@ -307,7 +312,7 @@ class TopupController extends Controller
     /**
      * Ambil daftar payment gateway yang diaktifkan admin via SiteSetting.
      *
-     * @return array<int, string>  e.g. ['tripay', 'duitku']
+     * @return array<int, string> e.g. ['tripay', 'duitku']
      */
     private function enabledPaymentGateways(): array
     {
@@ -348,7 +353,7 @@ class TopupController extends Controller
         ]);
 
         return response()->json([
-            'message' => "Gagal membuat transaksi pembayaran ({$gateway}): " . $e->getMessage(),
+            'message' => "Gagal membuat transaksi pembayaran ({$gateway}): ".$e->getMessage(),
             'code' => "{$gateway}_error",
         ], 502);
     }

@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\SiteSetting;
 use App\Services\NextRevalidator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -25,7 +26,7 @@ class MaintenanceAndRevalidatorTest extends TestCase
     {
         // Reset maintenance mode supaya test lain tidak kena 503
         if (app()->isDownForMaintenance()) {
-            \Illuminate\Support\Facades\Artisan::call('up');
+            Artisan::call('up');
         }
         parent::tearDown();
     }
@@ -88,12 +89,12 @@ class MaintenanceAndRevalidatorTest extends TestCase
 
     public function test_toggle_disabled_calls_artisan_up(): void
     {
-        \Illuminate\Support\Facades\Artisan::call('down');
+        Artisan::call('down');
 
         // Patch bug: PreventRequestsDuringMaintenance middleware block ALL
         // requests selama down — tidak bisa bypass dengan token. Test cuma
         // verify Artisan::up() effect langsung tanpa via HTTP endpoint.
-        \Illuminate\Support\Facades\Artisan::call('up');
+        Artisan::call('up');
 
         $this->assertFalse(app()->isDownForMaintenance(), 'Artisan::up harus clear maintenance flag');
     }

@@ -30,7 +30,7 @@ class CouponController extends Controller
         }
 
         if ($q = trim((string) $request->input('q', ''))) {
-            $query->where('code', 'like', "%".strtoupper($q)."%");
+            $query->where('code', 'like', '%'.strtoupper($q).'%');
         }
 
         $paginator = $query->paginate($perPage);

@@ -6,8 +6,6 @@ use App\Models\Game;
 use App\Models\GameItem;
 use App\Models\Order;
 use App\Models\SiteSetting;
-use App\Services\Duitku\CreateTransactionDto as DuitkuDto;
-use App\Services\Duitku\DuitkuClient;
 use App\Services\Tripay\CreateTransactionDto;
 use App\Services\Tripay\TripayClient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +27,7 @@ class TopupCheckoutTest extends TestCase
             public function createTransaction(CreateTransactionDto $dto): array
             {
                 return [
-                    'reference' => 'TRX-' . uniqid(),
+                    'reference' => 'TRX-'.uniqid(),
                     'merchant_ref' => $dto->merchantRef,
                     'qr_string' => 'QRIS_MOCK_STRING',
                     'qr_url' => 'https://tripay.co.id/qr/mock.png',

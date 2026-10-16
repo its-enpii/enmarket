@@ -70,6 +70,7 @@ class SiteConfigController extends Controller
                     if (! is_array($decoded)) {
                         return ['tripay' => ['enabled' => true], 'duitku' => ['enabled' => false]];
                     }
+
                     return array_map(fn ($g) => ['enabled' => $g['enabled'] ?? false], $decoded);
                 })(),
                 'nav_menus' => NavMenu::query()
