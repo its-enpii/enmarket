@@ -41,6 +41,8 @@ export interface Product {
   download_expiry_days: number | null;
   preview_images: string[];
   fitur: string[];
+  /** Multi-tag bebas (maks 10, tiap tag maks 40 char). Dinormalisasi backend. */
+  tags: string[];
   status: StatusProduct;
   is_featured: boolean;
   // Produk gratis: badge "Gratis" menggantikan price display. harga selalu '0'
@@ -61,6 +63,12 @@ export interface Product {
   linked_posts?: LinkedPost[];
   created_at: string | null;
   updated_at: string | null;
+}
+
+/** Jumlah tag unik pada satu tipe resource (untuk list filter publik). */
+export interface TagCount {
+  tag: string;
+  count: number;
 }
 
 /** Snapshot ringkas post yang di-link dari produk — buyer-facing. */
@@ -397,6 +405,8 @@ export interface Post {
   excerpt: string | null;
   /** Label editorial bebas (Design, DevLog, Research, Process, Notes). Opsional. */
   category?: string | null;
+  /** Multi-tag bebas (maks 10, tiap tag maks 40 char). Dinormalisasi backend. */
+  tags?: string[];
   /** HTML dari Tiptap editor. Disertakan admin-only via flag, publik dapat via `post(slug)`. */
   content?: string;
   thumbnail: string | null;

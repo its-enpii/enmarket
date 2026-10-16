@@ -25,6 +25,7 @@ class Post extends Model
         'slug',
         'excerpt',
         'category',
+        'tags',
         'content',
         'thumbnail',
         'status',
@@ -32,6 +33,7 @@ class Post extends Model
     ];
 
     protected $casts = [
+        'tags' => 'array',
         'published_at' => 'datetime',
     ];
 

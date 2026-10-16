@@ -124,12 +124,14 @@ export default async function DisplayDetailPage({ params }: PageProps) {
 
   const date = post.published_at ? formatDateLong(post.published_at, locale) : '';
   const primaryTag = post.category ?? (post.excerpt ? pickTag(post.excerpt, tagLabels) : tagLabels.note);
-  const tags = deriveTags(post, primaryTag, {
-    studioNotes: t('tagStudioNotes'),
-    tools: t('tagTools'),
-    typography: t('tagTypography'),
-    experiment: t('tagExperiment'),
-  });
+  const tags = post.tags && post.tags.length > 0
+    ? post.tags
+    : deriveTags(post, primaryTag, {
+        studioNotes: t('tagStudioNotes'),
+        tools: t('tagTools'),
+        typography: t('tagTypography'),
+        experiment: t('tagExperiment'),
+      });
 
   // Fetch related — fallback to latest, exclude current
   const related = await fetchRelated(slug);

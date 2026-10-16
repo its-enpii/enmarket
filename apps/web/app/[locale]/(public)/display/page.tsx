@@ -5,7 +5,7 @@
 
 import { getTranslations } from 'next-intl/server';
 
-import { Button, Card, Eyebrow } from '@/components/ui/neobrutal';
+import { Button, Card, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Badge } from '@/components/ui/Badge';
 import { Icon } from '@/components/ui';
 
@@ -15,7 +15,7 @@ import { SectionContainer } from '@/components/public/SectionContainer';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { formatDateShort } from '@/lib/format';
 import { siteMetadata } from '@/lib/seo';
-import type { PaginatedResponse, Post } from '@/lib/types';
+import type { PaginatedResponse, Post, TagCount } from '@/lib/types';
 
 import { HoverImage } from '@/components/ui/HoverImage';
 import { MetaLabel, SectionBand, SectionTitle } from '@/components/ui';
@@ -48,9 +48,21 @@ export async function generateMetadata({ params }: PageProps) {
   });
 }
 
-async function fetchPosts(): Promise<PaginatedResponse<Post> | null> {
+async function fetchTags(): Promise<TagCount[]> {
   try {
-    return await publicApi.posts({ page: 1, per_page: 12 });
+    const res = await publicApi.tags('post');
+    return res.data ?? [];
+  } catch (err) {
+    if (err instanceof PublicFetchError) {
+      return [];
+    }
+    throw err;
+  }
+}
+
+async function fetchPosts(tag?: string): Promise<PaginatedResponse<Post> | null> {
+  try {
+    return await publicApi.posts({ page: 1, per_page: 12, tag });
   } catch (err) {
     if (err instanceof PublicFetchError) {
       return {
@@ -66,6 +78,7 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
   const sp = await searchParams;
   const q = typeof sp.q === 'string' && sp.q.trim() ? sp.q.trim() : undefined;
+  const activeTag = typeof sp.tag === 'string' && sp.tag.trim() ? sp.tag.trim().toLowerCase() : undefined;
 
   const t = await getTranslations('displayList');
   const tPost = await getTranslations('displayPost');
@@ -78,9 +91,10 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
     note: t('tags.note'),
   };
 
-  const postsData = await fetchPosts();
+  const postsData = await fetchPosts(activeTag);
   const posts = postsData?.data ?? [];
   const total = postsData?.meta?.total ?? 0;
+  const tagCounts = await fetchTags();
 
   const featured = posts[0] ?? null;
   const rest = posts.slice(1);
@@ -125,22 +139,59 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
                 <Icon name="arrow-right" size={14} />
               </span>
             </Eyebrow>
-            {TAG_KEYS.map((tag) => {
-              const tone = tag === 'devLog' || tag === 'process' ? 'primary' : 'accent';
-              return (
-                <span
-                  key={tag}
-                  className={[
-                    'inline-flex items-center px-3 py-1.5 font-label text-label-sm uppercase font-bold border-2 border-ink cursor-default',
-                    tone === 'accent'
-                      ? 'bg-accent text-ink'
-                      : 'bg-primary text-surface',
-                  ].join(' ')}
-                >
-                  {t(`tags.${tag}`)}
-                </span>
-              );
-            })}
+            {tagCounts.length > 0 ? (
+              <>
+                {activeTag && (
+                  <NLink
+                    key="all"
+                    href={q ? `/display?q=${encodeURIComponent(q)}` : '/display'}
+                    variant="primary"
+                    underline="static"
+                    className="inline-flex items-center px-3 py-1.5 font-label text-label-sm uppercase font-bold border-2 border-ink bg-surface text-ink"
+                  >
+                    {t('tagsAll')}
+                  </NLink>
+                )}
+                {tagCounts.map(({ tag }) => {
+                  const isActive = activeTag === tag;
+                  const params = new URLSearchParams();
+                  if (!isActive) params.set('tag', tag);
+                  if (q) params.set('q', q);
+                  const href = params.toString()
+                    ? `/display?${params.toString()}`
+                    : '/display';
+                  return (
+                    <Button
+                      key={tag}
+                      variant={isActive ? 'ink' : 'surface'}
+                      size="sm"
+                      href={href}
+                      aria-current={isActive ? 'page' : undefined}
+                      className="inline-flex items-center"
+                    >
+                      {tag}
+                    </Button>
+                  );
+                })}
+              </>
+            ) : (
+              TAG_KEYS.map((tag) => {
+                const tone = tag === 'devLog' || tag === 'process' ? 'primary' : 'accent';
+                return (
+                  <span
+                    key={tag}
+                    className={[
+                      'inline-flex items-center px-3 py-1.5 font-label text-label-sm uppercase font-bold border-2 border-ink cursor-default',
+                      tone === 'accent'
+                        ? 'bg-accent text-ink'
+                        : 'bg-primary text-surface',
+                    ].join(' ')}
+                  >
+                    {t(`tags.${tag}`)}
+                  </span>
+                );
+              })
+            )}
             <Eyebrow as="span" size="label-sm" color="ink-muted" className="ml-2">
               {total} {t('itemsSuffix')}
             </Eyebrow>
@@ -180,12 +231,16 @@ export default async function DisplayPage({ params, searchParams }: PageProps) {
             <p className="font-display text-headline-md uppercase text-ink/60 mb-6">
               {q
                 ? `${t('noResultsFor')} "${q}"`
-                : t('empty')}
+                : activeTag
+                  ? `${t('noResultsFor')} "${activeTag}"`
+                  : t('empty')}
             </p>
             <p className="font-body text-body-md text-ink/60 max-w-md mx-auto">
               {q
                 ? t('hintNoResults')
-                : t('hintEmpty')}
+                : activeTag
+                  ? t('hintNoResults')
+                  : t('hintEmpty')}
             </p>
           </SectionContainer>
         </SectionBand>

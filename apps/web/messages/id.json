@@ -202,7 +202,9 @@
     "divider2": "Setiap rilis menyertakan petunjuk setup dan dokumentasi lengkap.",
     "divider3": "Sebagian karya di sini masih dalam tahap eksplorasi.",
     "fallbackDescription": "Artefak digital dari EnStudio.",
-    "view": "Lihat"
+    "view": "Lihat",
+    "tagsLabel": "Tag",
+    "tagsAll": "Semua"
   },
   "developDetail": {
     "addToCart": "Tambah ke Keranjang",
@@ -268,7 +270,8 @@
     "dpLabel": "DP ({percent}%)",
     "remainingLabel": "Sisa",
     "release": "Rilis",
-    "releaseDateLong": "{date}"
+    "releaseDateLong": "{date}",
+    "tags": "Tag"
   },
   "display": {
     "listTitle": "Display",
@@ -302,7 +305,8 @@
     "footerTitleHighlight": "setiap kali",
     "footerTitle2": "ada yang worth ditulis.",
     "footerBody": "Tidak ada jadwal tetap. Tidak ada kalender editorial. Kalau ada proses yang menarik, ditulis di sini. Kalau tidak, ya tidak.",
-    "footerCta": "← Lihat karya di Develop"
+    "footerCta": "← Lihat karya di Develop",
+    "tagsAll": "Semua"
   },
   "displayPost": {
     "backToJournal": "← Kembali ke Jurnal",
@@ -937,7 +941,12 @@
         "fieldReleaseDateHint": "Buyer menerima delivery (file + license key) setelah admin klik Rilis. Tanggal hanya untuk display.",
         "fieldReleaseDatePlaceholder": "Pilih tanggal…",
         "fieldDepositPercent": "DP (%)",
-        "fieldDepositPercentHint": "1-100. Default 50. Sisa hanya tampilan, pembeli tidak ditagih ulang."
+        "fieldDepositPercentHint": "1-100. Default 50. Sisa hanya tampilan, pembeli tidak ditagih ulang.",
+        "fieldTags": "Tag",
+        "fieldTagsHint": "Maks 10 tag, tiap tag maks 40 karakter. Tekan Enter untuk menambah.",
+        "tagsPlaceholder": "mis. laravel, nextjs",
+        "tagsAdd": "Tambah tag",
+        "tagsRemove": "Hapus tag {tag}"
       }
     },
     "preorders": {
@@ -1033,7 +1042,12 @@
         "fieldPublishedAtHintInactive": "Hanya relevan saat status Published. Kosongkan untuk draft.",
         "submitCreate": "Buat Catatan",
         "submitSave": "Simpan Perubahan",
-        "submitPending": "Menyimpan…"
+        "submitPending": "Menyimpan…",
+        "fieldTags": "Tag",
+        "fieldTagsHint": "Maks 10 tag, tiap tag maks 40 karakter. Tekan Enter untuk menambah.",
+        "tagsPlaceholder": "mis. laravel, nextjs",
+        "tagsAdd": "Tambah tag",
+        "tagsRemove": "Hapus tag {tag}"
       }
     },
     "orders": {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Support\TagNormalizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,6 +40,11 @@ class PostController extends Controller
                 $sub->where('title', 'like', "%{$q}%")
                     ->orWhere('excerpt', 'like', "%{$q}%");
             });
+        }
+
+        // Filter tag: cek elemen array JSON `tags` (portabel via whereJsonContains).
+        if ($tag = trim((string) $request->input('tag', ''))) {
+            $query->whereJsonContains('tags', TagNormalizer::normalizeOne($tag));
         }
 
         $paginator = $query->orderBy('published_at', 'desc')->paginate($perPage);

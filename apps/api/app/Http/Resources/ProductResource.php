@@ -27,6 +27,7 @@ class ProductResource extends JsonResource
             'download_expiry_days' => $this->download_expiry_days,
             'preview_images' => is_array($this->preview_images) ? array_values(array_filter($this->preview_images, fn ($item) => is_string($item) && trim($item) !== '')) : [],
             'fitur' => $this->fitur ?? [],
+            'tags' => $this->tags ?? [],
             'status' => $this->status,
             'is_featured' => (bool) $this->is_featured,
             'rating_summary' => $this->ratingSummary(),

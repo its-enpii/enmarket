@@ -58,7 +58,7 @@ import {
 import type { Post, PostStatus } from '@/lib/types';
 
 import { createPost, updatePost, ActionResult } from './actions';
-import { FormFooter, FormSection } from '@/components/ui';
+import { FormFooter, FormSection, TagInput } from '@/components/ui';
 
 interface Props {
   initial?: Post;
@@ -118,6 +118,7 @@ export function PostForm({ initial }: Props) {
   const [category, setCategory] = useState(initial?.category ?? '');
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '');
   const [status, setStatus] = useState<PostStatus>(initial?.status ?? 'draft');
+  const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
 
   /**
    * Accordion state. `true` = blok ciut. Default semua bentang supaya blok
@@ -302,6 +303,9 @@ export function PostForm({ initial }: Props) {
   const allCollapsed = blocks.length > 0 && blocks.every((block) => collapsedBlocks[block.id]);
 
   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
+  const tagsError =
+    state.fieldErrors?.['tags']?.[0] ??
+    Object.entries(state.fieldErrors ?? {}).find(([k]) => k.startsWith('tags.'))?.[1]?.[0];
 
   return (
     <form action={submitAction} className="space-y-8">
@@ -353,6 +357,17 @@ export function PostForm({ initial }: Props) {
               creatable
               clearable
               maxLength={100}
+            />
+          </FormField>
+
+          <FormField label={t('fieldTags')} htmlFor="tags-input" hint={t('fieldTagsHint')} error={tagsError}>
+            <TagInput
+              id="tags-input"
+              value={tags}
+              onChange={setTags}
+              placeholder={t('tagsPlaceholder')}
+              addLabel={t('tagsAdd')}
+              removeLabel={(tag) => t('tagsRemove', { tag })}
             />
           </FormField>
         </div>

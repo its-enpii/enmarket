@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\Public\ProductController as PublicProductController
 use App\Http\Controllers\Api\Public\ReviewController as PublicReviewController;
 use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\Public\SponsorBidController;
+use App\Http\Controllers\Api\Public\TagController as PublicTagController;
 use App\Http\Controllers\Api\Public\TripayCallbackController;
 use App\Http\Controllers\Api\Public\WishlistController;
 use App\Http\Controllers\Api\Public\DuitkuCallbackController;
@@ -74,6 +75,9 @@ Route::prefix('public')->group(function () {
     // Kategori publik (untuk filter katalog & sitemap)
     Route::get('categories', [PublicCategoryController::class, 'index']);
     Route::get('categories/slugs', [PublicCategoryController::class, 'slugs']);
+
+    // Tag publik (multi-tags posts + products)
+    Route::get('tags', [PublicTagController::class, 'index']);
 
     // Blog post publik — published only
     Route::get('posts/latest', [PublicPostController::class, 'latest']);

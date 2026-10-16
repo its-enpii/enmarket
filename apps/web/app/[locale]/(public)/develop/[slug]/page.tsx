@@ -389,6 +389,17 @@ export default async function WorkDetailPage({ params }: PageProps) {
                       </NLink>
                   </FactRow>
                 )}
+                {product.tags && product.tags.length > 0 && (
+                  <FactRow label={t('tags')}>
+                    <span className="flex flex-wrap gap-2">
+                      {product.tags.map((tag) => (
+                        <NLink key={tag} href={`/develop?tag=${encodeURIComponent(tag)}`} variant="primary" underline="static">
+                          {tag}
+                        </NLink>
+                      ))}
+                    </span>
+                  </FactRow>
+                )}
                 {product.fitur && product.fitur.length > 0 && (
                   <FactRow label={t('features')}>
                     {t('items', { count: product.fitur.length })}

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\NextRevalidator;
+use App\Support\TagNormalizer;
 use App\Services\Storage\EnStorageClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -116,6 +117,8 @@ class ProductController extends Controller
 
         $data['preview_images'] = $this->processPreviewImages($request);
 
+        $data['tags'] = TagNormalizer::normalize($data['tags'] ?? []);
+
         if (isset($data['fitur']) && is_string($data['fitur'])) {
             $decoded = json_decode($data['fitur'], true);
             $data['fitur'] = is_array($decoded) ? $decoded : [];
@@ -199,6 +202,8 @@ class ProductController extends Controller
         }
 
         $data['preview_images'] = $this->processPreviewImages($request, $product->preview_images ?? []);
+
+        $data['tags'] = TagNormalizer::normalize($data['tags'] ?? []);
 
         if (isset($data['fitur']) && is_string($data['fitur'])) {
             $decoded = json_decode($data['fitur'], true);
@@ -323,6 +328,8 @@ class ProductController extends Controller
             'download_expiry_days' => ['nullable', 'integer', 'min:1', 'max:365'],
             'preview_images' => ['nullable'],
             'fitur' => ['nullable'],
+            'tags' => ['nullable', 'array', 'max:10'],
+            'tags.*' => ['string', 'max:40', 'distinct:ignore_case', 'regex:/^[\p{L}\p{N}][\p{L}\p{N} ._-]*$/u'],
             'status' => ['required', 'in:aktif,draft,tidak_dijual'],
             'is_featured' => ['nullable', 'boolean'],
             // Produk gratis: auto-set harga=0 di store()/update(). Mutex dengan

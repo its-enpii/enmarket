@@ -27,7 +27,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { siteMetadata } from '@/lib/seo';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { VALID_TIPE, type Tipe } from '@/lib/constants';
-import type { PaginatedResponse, Product } from '@/lib/types';
+import type { PaginatedResponse, Product, TagCount } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -37,7 +37,13 @@ export const revalidate = 0;
 
 interface PageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ tipe?: string; page?: string; q?: string }>;
+  searchParams: Promise<{
+    tipe?: string;
+    page?: string;
+    q?: string;
+    tag?: string;
+    category?: string;
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -62,15 +68,29 @@ async function fetchCatalog(
   tipe: Tipe | undefined,
   pageNum: number,
   q: string | undefined,
+  tag?: string,
+  category?: string,
 ): Promise<PaginatedResponse<Product> | null> {
   try {
-    return await publicApi.catalog({ tipe, page: pageNum, per_page: 9, q });
+    return await publicApi.catalog({ tipe, page: pageNum, per_page: 9, q, tag, category });
   } catch (err) {
     if (err instanceof PublicFetchError) {
       return {
         data: [],
         meta: { current_page: 1, last_page: 1, per_page: 9, total: 0 },
       };
+    }
+    throw err;
+  }
+}
+
+async function filterTagCounts(): Promise<TagCount[]> {
+  try {
+    const res = await publicApi.tags('product');
+    return res.data ?? [];
+  } catch (err) {
+    if (err instanceof PublicFetchError) {
+      return [];
     }
     throw err;
   }
@@ -87,13 +107,19 @@ export default async function DevelopPage({ params, searchParams }: PageProps) {
       ? (sp.tipe as Tipe)
       : 'all';
   const q = typeof sp.q === 'string' && sp.q.trim() ? sp.q.trim() : undefined;
+  const activeTag = typeof sp.tag === 'string' && sp.tag.trim() ? sp.tag.trim().toLowerCase() : undefined;
+  const activeCategory =
+    typeof sp.category === 'string' && sp.category.trim() ? sp.category.trim() : undefined;
 
   const catalog = await fetchCatalog(
     activeTipe === 'all' ? undefined : activeTipe,
     1, // Always fetch page 1 — infinite scroll handles subsequent pages.
     q,
+    activeTag,
+    activeCategory,
   );
 
+  const tagCounts = await filterTagCounts();
   const products = catalog?.data ?? [];
   const meta = catalog?.meta ?? {
     current_page: 1,
@@ -107,6 +133,8 @@ export default async function DevelopPage({ params, searchParams }: PageProps) {
   const filterKeyParams = new URLSearchParams();
   if (activeTipe !== 'all') filterKeyParams.set('tipe', activeTipe);
   if (q) filterKeyParams.set('q', q);
+  if (activeTag) filterKeyParams.set('tag', activeTag);
+  if (activeCategory) filterKeyParams.set('category', activeCategory);
   const filterKey = filterKeyParams.toString();
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
@@ -155,6 +183,7 @@ export default async function DevelopPage({ params, searchParams }: PageProps) {
               const params = new URLSearchParams();
               if (pill.value !== 'all') params.set('tipe', pill.value);
               if (q) params.set('q', q);
+              if (activeTag) params.set('tag', activeTag);
               const href = params.toString()
                 ? `/develop?${params.toString()}`
                 : '/develop';
@@ -171,6 +200,53 @@ export default async function DevelopPage({ params, searchParams }: PageProps) {
                 </Button>
               );
             })}
+            {tagCounts.length > 0 && (
+              <>
+                <Eyebrow as="span" size="label-sm" color="ink-muted" className="mr-2 ml-2">
+                  <span className="inline-flex items-center gap-1.5">
+                    {t('tagsLabel')}
+                    <Icon name="arrow-right" size={14} />
+                  </span>
+                </Eyebrow>
+                {activeTag && (
+                  <Button
+                    variant="surface"
+                    size="sm"
+                    href={(() => {
+                      const params = new URLSearchParams();
+                      if (activeTipe !== 'all') params.set('tipe', activeTipe);
+                      if (q) params.set('q', q);
+                      return params.toString() ? `/develop?${params.toString()}` : '/develop';
+                    })()}
+                    className="inline-flex items-center"
+                  >
+                    {t('tagsAll')}
+                  </Button>
+                )}
+                {tagCounts.map(({ tag }) => {
+                  const isActive = activeTag === tag;
+                  const params = new URLSearchParams();
+                  if (activeTipe !== 'all') params.set('tipe', activeTipe);
+                  if (q) params.set('q', q);
+                  if (!isActive) params.set('tag', tag);
+                  const href = params.toString()
+                    ? `/develop?${params.toString()}`
+                    : '/develop';
+                  return (
+                    <Button
+                      key={tag}
+                      variant={isActive ? 'ink' : 'surface'}
+                      size="sm"
+                      href={href}
+                      aria-current={isActive ? 'page' : undefined}
+                      className="inline-flex items-center"
+                    >
+                      {tag}
+                    </Button>
+                  );
+                })}
+              </>
+            )}
             <Eyebrow as="span" size="label-sm" color="ink-muted" className="ml-2">
               {t('items', { count: meta.total })}
             </Eyebrow>

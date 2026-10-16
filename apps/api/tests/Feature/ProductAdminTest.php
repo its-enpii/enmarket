@@ -298,4 +298,60 @@ class ProductAdminTest extends TestCase
         $response->assertOk();
         $this->assertNull(Product::find($product->id));
     }
+
+    // ───── tags (multi-tags) ─────
+
+    public function test_store_persists_and_normalizes_tags(): void
+    {
+        $response = $this->postJson('/api/admin/products', [
+            'nama' => 'Tagged Product',
+            'deskripsi' => 'd',
+            'harga' => 100000,
+            'tipe' => 'license',
+            'status' => 'aktif',
+            'tags' => ['Laravel', '  Vue   JS  '],
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $response->assertJsonPath('data.tags', ['laravel', 'vue js']);
+        $this->assertEquals(['laravel', 'vue js'], Product::find($response->json('data.id'))->tags);
+    }
+
+    public function test_update_replaces_tags(): void
+    {
+        $product = Product::create([
+            'nama' => 'P', 'slug' => 'tags-'.uniqid(), 'deskripsi' => 'd',
+            'harga' => 1, 'tipe' => 'license', 'status' => 'aktif', 'tags' => ['lama'],
+        ]);
+
+        $response = $this->putJson('/api/admin/products/'.$product->id, [
+            'nama' => 'P',
+            'deskripsi' => 'd',
+            'harga' => 1,
+            'tipe' => 'license',
+            'status' => 'aktif',
+            'tags' => ['Baru'],
+        ], $this->authHeaders());
+
+        $response->assertOk();
+        $response->assertJsonPath('data.tags', ['baru']);
+        $this->assertEquals(['baru'], $product->fresh()->tags);
+    }
+
+    public function test_store_rejects_more_than_10_tags(): void
+    {
+        $tags = array_map(fn ($i) => 'tag'.$i, range(1, 11));
+
+        $response = $this->postJson('/api/admin/products', [
+            'nama' => 'Too Many',
+            'deskripsi' => 'd',
+            'harga' => 1,
+            'tipe' => 'license',
+            'status' => 'aktif',
+            'tags' => $tags,
+        ], $this->authHeaders());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['tags']);
+    }
 }

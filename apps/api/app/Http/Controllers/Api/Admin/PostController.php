@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\NextRevalidator;
+use App\Support\TagNormalizer;
 use App\Services\Storage\EnStorageClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -96,6 +97,9 @@ class PostController extends Controller
     {
         $data = $this->validatePost($request);
 
+        // Normalisasi tags (array multipart tags[]) — trim/lowercase/dedupe/max 10.
+        $data['tags'] = TagNormalizer::normalize($data['tags'] ?? []);
+
         // Status published tapi published_at kosong → set ke now()
         if ($data['status'] === 'published' && empty($data['published_at'])) {
             $data['published_at'] = now();
@@ -133,6 +137,9 @@ class PostController extends Controller
         $oldSlug = $post->slug;
 
         $data = $this->validatePost($request, $post);
+
+        // Normalisasi tags (array multipart tags[]) — trim/lowercase/dedupe/max 10.
+        $data['tags'] = TagNormalizer::normalize($data['tags'] ?? []);
 
         // Auto-set published_at saat transisi draft → published
         if ($data['status'] === 'published' && empty($data['published_at'])) {
@@ -218,6 +225,8 @@ class PostController extends Controller
             'slug' => ['nullable', 'string', 'max:220', 'regex:/^[a-z0-9-]+$/', $uniqueSlugRule],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'category' => ['nullable', 'string', 'max:100'],
+            'tags' => ['nullable', 'array', 'max:10'],
+            'tags.*' => ['string', 'max:40', 'distinct:ignore_case', 'regex:/^[\p{L}\p{N}][\p{L}\p{N} ._-]*$/u'],
             'content' => ['required', 'string'],
             'status' => ['required', 'in:draft,published,archived'],
             'published_at' => ['nullable', 'date'],

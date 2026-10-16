@@ -13,6 +13,7 @@ import type {
   Post,
   Product,
   PublicSiteConfig,
+  TagCount,
 } from './types';
 
 import { getApiBase } from './api-base';
@@ -81,6 +82,7 @@ export const publicApi = {
   catalog: (params: {
     category?: string;
     q?: string;
+    tag?: string;
     tipe?: 'download' | 'license' | 'bundle' | 'account_manual';
     page?: number;
     per_page?: number;
@@ -88,6 +90,7 @@ export const publicApi = {
     publicFetch<PaginatedResponse<Product>>('/api/public/products', {
       category: params.category,
       q: params.q,
+      tag: params.tag,
       tipe: params.tipe,
       page: params.page,
       per_page: params.per_page,
@@ -120,12 +123,13 @@ export const publicApi = {
   // ───── Blog post (Catatan) ─────
 
   /** List post published, paginated. Untuk /display. */
-  posts: (params?: { q?: string; page?: number; per_page?: number; category?: string }) =>
+  posts: (params?: { q?: string; page?: number; per_page?: number; category?: string; tag?: string }) =>
     publicFetch<PaginatedResponse<Post>>('/api/public/posts', {
       q: params?.q,
       page: params?.page,
       per_page: params?.per_page,
       category: params?.category,
+      tag: params?.tag,
     }),
 
   /** Post published terbaru, tanpa pagination. Untuk homepage Discover. */
@@ -139,6 +143,10 @@ export const publicApi = {
   /** Untuk sitemap: list slug semua post published. */
   postSlugs: () =>
     publicFetch<{ data: string[] }>('/api/public/posts/slugs'),
+
+  /** Daftar tag populer per tipe resource (count desc, maks 50). */
+  tags: (type: 'post' | 'product') =>
+    publicFetch<{ data: TagCount[] }>('/api/public/tags', { type }),
 
   /** Public site config (identity + social + footer) — aman untuk storefront. */
   siteConfig: () =>

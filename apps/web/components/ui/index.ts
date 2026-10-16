@@ -40,3 +40,5 @@ export { Spinner } from './Spinner';
 export type { SpinnerProps } from './Spinner';
 export { Icon } from './Icon';
 export type { IconName } from './Icon';
+export { TagInput } from './TagInput';
+export type { TagInputProps } from './TagInput';

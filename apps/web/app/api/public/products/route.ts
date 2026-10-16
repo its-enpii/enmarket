@@ -22,6 +22,8 @@ export async function GET(req: NextRequest) {
 
   const pageNum = Math.max(1, parseInt(sp.get('page') ?? '1', 10) || 1);
   const q = sp.get('q')?.trim() || undefined;
+  const tag = sp.get('tag')?.trim() || undefined;
+  const category = sp.get('category')?.trim() || undefined;
   const tipeRaw = sp.get('tipe');
   const tipe: Tipe | undefined =
     tipeRaw && VALID_TIPE.includes(tipeRaw as Tipe) ? (tipeRaw as Tipe) : undefined;
@@ -33,6 +35,8 @@ export async function GET(req: NextRequest) {
       per_page: perPage,
       tipe,
       q,
+      tag,
+      category,
     });
     return NextResponse.json(result, {
       headers: { 'Cache-Control': 'no-store' },

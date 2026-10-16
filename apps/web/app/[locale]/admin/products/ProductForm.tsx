@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 
 import { AlertBanner } from '@/components/ui/AlertBanner';
 import { Button } from '@/components/ui/neobrutal';
-import { FormFooter } from '@/components/ui';
+import { FormFooter, TagInput } from '@/components/ui';
 import { Text } from '@/components/ui';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
@@ -66,6 +66,7 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
   });
   const [tipe, setTipe] = useState(initial?.tipe ?? 'download');
   const [status, setStatus] = useState(initial?.status ?? 'draft');
+  const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
   const [downloadExpiry, setDownloadExpiry] = useState<string>(
     initial?.download_expiry_days != null ? String(initial.download_expiry_days) : '7',
   );
@@ -160,6 +161,9 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
   }
 
   const fieldErr = (k: string) => state.fieldErrors?.[k]?.[0];
+  const tagsError =
+    state.fieldErrors?.['tags']?.[0] ??
+    Object.entries(state.fieldErrors ?? {}).find(([k]) => k.startsWith('tags.'))?.[1]?.[0];
 
   // Serialize fitur as JSON for the hidden input
   const fiturJson = JSON.stringify(fitur);
@@ -432,6 +436,17 @@ export function ProductForm({ categories, initial, availablePosts = [] }: Props)
               </Button>
             </div>
           </div>
+        </FormField>
+
+        <FormField label={t('fieldTags')} htmlFor="tags-input" hint={t('fieldTagsHint')} error={tagsError}>
+          <TagInput
+            id="tags-input"
+            value={tags}
+            onChange={setTags}
+            placeholder={t('tagsPlaceholder')}
+            addLabel={t('tagsAdd')}
+            removeLabel={(tag) => t('tagsRemove', { tag })}
+          />
         </FormField>
       </section>
 

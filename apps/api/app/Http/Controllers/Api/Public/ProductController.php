@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Support\TagNormalizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -109,6 +110,11 @@ class ProductController extends Controller
                 $sub->where('nama', 'like', "%{$q}%")
                     ->orWhere('deskripsi', 'like', "%{$q}%");
             });
+        }
+
+        // Filter tag: cek elemen array JSON `tags` (portabel via whereJsonContains).
+        if ($tag = trim((string) $request->input('tag', ''))) {
+            $query->whereJsonContains('tags', TagNormalizer::normalizeOne($tag));
         }
 
         $paginator = $query->latest('updated_at')->paginate($perPage);

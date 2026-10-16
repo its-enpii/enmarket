@@ -275,4 +275,80 @@ class PostAdminTest extends TestCase
         $response->assertOk();
         $this->assertEmpty(array_filter($this->revalidatedPaths, fn ($p) => str_starts_with($p, 'post:')));
     }
+
+    // ───── tags (multi-tags) ─────
+
+    public function test_store_normalizes_tags_lowercase_and_collapses_spaces(): void
+    {
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Tagged Post',
+            'content' => '<p>x</p>',
+            'status' => 'draft',
+            'tags' => ['Laravel', '  Vue   JS  ', 'Machine-Learning'],
+        ], $this->authHeaders());
+
+        $response->assertStatus(201);
+        $response->assertJsonPath('data.tags', ['laravel', 'vue js', 'machine-learning']);
+        $this->assertEquals(['laravel', 'vue js', 'machine-learning'], Post::find($response->json('data.id'))->tags);
+    }
+
+    public function test_update_replaces_tags(): void
+    {
+        $post = Post::create([
+            'title' => 'Old', 'slug' => 'tags-'.uniqid(), 'content' => 'x',
+            'status' => 'draft', 'tags' => ['lama'],
+        ]);
+
+        $response = $this->putJson('/api/admin/posts/'.$post->id, [
+            'title' => 'Old',
+            'content' => 'x',
+            'status' => 'draft',
+            'tags' => ['Baru', 'Kedua'],
+        ], $this->authHeaders());
+
+        $response->assertOk();
+        $response->assertJsonPath('data.tags', ['baru', 'kedua']);
+        $this->assertEquals(['baru', 'kedua'], $post->fresh()->tags);
+    }
+
+    public function test_store_rejects_more_than_10_tags(): void
+    {
+        $tags = array_map(fn ($i) => 'tag'.$i, range(1, 11));
+
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Too Many',
+            'content' => 'x',
+            'status' => 'draft',
+            'tags' => $tags,
+        ], $this->authHeaders());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['tags']);
+    }
+
+    public function test_store_rejects_tag_longer_than_40_chars(): void
+    {
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Long Tag',
+            'content' => 'x',
+            'status' => 'draft',
+            'tags' => [str_repeat('a', 41)],
+        ], $this->authHeaders());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['tags.0']);
+    }
+
+    public function test_store_rejects_case_insensitive_duplicate_tags(): void
+    {
+        $response = $this->postJson('/api/admin/posts', [
+            'title' => 'Dup',
+            'content' => 'x',
+            'status' => 'draft',
+            'tags' => ['Laravel', 'LARAVEL'],
+        ], $this->authHeaders());
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['tags.1']);
+    }
 }

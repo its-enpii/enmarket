@@ -202,7 +202,9 @@
     "divider2": "Every release includes complete setup instructions and documentation.",
     "divider3": "Some pieces here are still being explored.",
     "fallbackDescription": "A digital artifact from EnStudio.",
-    "view": "View"
+    "view": "View",
+    "tagsLabel": "Tags",
+    "tagsAll": "All"
   },
   "developDetail": {
     "addToCart": "Add to Cart",
@@ -268,7 +270,8 @@
     "dpLabel": "Deposit ({percent}%)",
     "remainingLabel": "Remaining",
     "release": "Release",
-    "releaseDateLong": "{date}"
+    "releaseDateLong": "{date}",
+    "tags": "Tags"
   },
   "display": {
     "listTitle": "Display",
@@ -302,7 +305,8 @@
     "footerTitleHighlight": "whenever",
     "footerTitle2": "something is worth writing about.",
     "footerBody": "No fixed schedule. No editorial calendar. When there's an interesting process, it gets written here. When there isn't, it doesn't.",
-    "footerCta": "← Browse Develop works"
+    "footerCta": "← Browse Develop works",
+    "tagsAll": "All"
   },
   "displayPost": {
     "backToJournal": "← Back to Journal",
@@ -937,7 +941,12 @@
         "fieldReleaseDateHint": "Buyer receives delivery (file + license key) after admin clicks Release. Date is display only.",
         "fieldReleaseDatePlaceholder": "Pick a date…",
         "fieldDepositPercent": "Deposit (%)",
-        "fieldDepositPercentHint": "1-100. Default 50. Remaining is display only; buyer is not charged twice."
+        "fieldDepositPercentHint": "1-100. Default 50. Remaining is display only; buyer is not charged twice.",
+        "fieldTags": "Tags",
+        "fieldTagsHint": "Up to 10 tags, 40 characters each. Press Enter to add.",
+        "tagsPlaceholder": "e.g. laravel, nextjs",
+        "tagsAdd": "Add tag",
+        "tagsRemove": "Remove tag {tag}"
       }
     },
     "preorders": {
@@ -1033,7 +1042,12 @@
         "fieldPublishedAtHintInactive": "Only relevant when status is Published. Leave empty for drafts.",
         "submitCreate": "Create Post",
         "submitSave": "Save Changes",
-        "submitPending": "Saving…"
+        "submitPending": "Saving…",
+        "fieldTags": "Tags",
+        "fieldTagsHint": "Up to 10 tags, 40 characters each. Press Enter to add.",
+        "tagsPlaceholder": "e.g. laravel, nextjs",
+        "tagsAdd": "Add tag",
+        "tagsRemove": "Remove tag {tag}"
       }
     },
     "orders": {
