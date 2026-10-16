@@ -6,10 +6,14 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-import { Button, NLink } from '@/components/ui/neobrutal';
+import { Button, DotMatrix, Eyebrow, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
+import { LocaleSwitcher } from '@/components/public/LocaleSwitcher';
 import { DEFAULT_NAV_ITEMS, normalizeNavMenus } from '@/lib/nav-menus';
 import type { NavMenuItem } from '@/lib/nav-menus';
+
+// id stabil untuk aria-controls (Drawer panel). Const lokal, bukan crypto.randomUUID.
+const MOBILE_PANEL_ID = 'mobile-nav-panel';
 
 interface Props {
   children?: ReactNode;
@@ -50,6 +54,18 @@ export function TopNav({ children }: Props) {
     };
   }, [open]);
 
+  // Tutup drawer dengan Escape (pola sama dengan scroll-lock di atas).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -76,7 +92,7 @@ export function TopNav({ children }: Props) {
 
   return (
     <header className="sticky top-0 z-nav bg-surface border-b-4 border-ink shadow-brutal-6 relative">
-      <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-4">
+      <div className="flex items-center justify-between gap-3 sm:gap-4 px-6 md:px-12 xl:px-8 2xl:px-12 py-2.5">
         <NLink
           href="/"
           aria-label={siteName}
@@ -133,21 +149,40 @@ export function TopNav({ children }: Props) {
             type="button"
             onClick={() => setOpen(!open)}
             variant="surface"
-            size="sm"
-            className="w-11 h-11 px-0 py-0 text-lg"
+            size="icon"
             aria-label={t('menu')}
             aria-expanded={open}
+            aria-controls={MOBILE_PANEL_ID}
           >
             <Icon name={open ? 'close' : 'menu'} size={18} />
           </Button>
         </div>
       </div>
 
-      {/* Mobile menu panel (<xl) */}
+      {/* Mobile drawer (<xl): backdrop + panel overlay, tidak mendorong <main> */}
       {open && (
-        <nav className="xl:hidden border-t-4 border-ink bg-surface">
-          <div className="px-6 py-4 space-y-2">
-            {navItems.map((item) => {
+        <div
+          aria-hidden="true"
+          onClick={() => setOpen(false)}
+          className="fixed inset-x-0 top-[68px] bottom-0 z-backdrop bg-ink/40"
+        />
+      )}
+      {open && (
+        <nav
+          id={MOBILE_PANEL_ID}
+          className="absolute inset-x-0 top-full z-nav xl:hidden border-b-4 border-ink bg-surface shadow-brutal-6 animate-pop-in max-h-[calc(100dvh-68px)] overflow-y-auto"
+        >
+          {/* Header panel */}
+          <div className="flex items-center justify-between border-b-2 border-ink px-6 py-3">
+            <Eyebrow size="sm" color="ink-muted">
+              {t('quickMenu')}
+            </Eyebrow>
+            <DotMatrix rows={2} cols={8} />
+          </div>
+
+          {/* Zona 1 — Navigasi */}
+          <div className="flex flex-col gap-2 px-6 py-4">
+            {navItems.map((item, index) => {
               const active = isActive(pathname, item.href);
               return (
                 <Button
@@ -157,31 +192,42 @@ export function TopNav({ children }: Props) {
                   aria-current={active ? 'page' : undefined}
                   variant="surface"
                   size="md"
-                  className={`relative flex items-center justify-between w-full ${
+                  fullWidth
+                  className={`min-h-[48px] justify-start gap-3 ${
                     active
                       ? 'border-l-4 border-primary bg-surface font-bold text-ink pl-4 pr-3 shadow-brutal-2'
                       : ''
                   }`}
                 >
-                  <span>{item.label ?? t(item.key)}</span>
-                  {active ? (
-                    <Icon name="arrow-right" size={16} className="shrink-0" />
-                  ) : null}
+                  <Eyebrow size="micro" color="ink-subtle" className="shrink-0">
+                    {String(index + 1).padStart(2, '0')}
+                  </Eyebrow>
+                  <span className="flex-1 text-left">{item.label ?? t(item.key)}</span>
+                  <Icon name="arrow-right" size={16} className="shrink-0" />
                 </Button>
               );
             })}
+          </div>
 
-            <NLink
+          {/* Divider */}
+          <div className="border-t-2 border-ink" />
+
+          {/* Zona 2 — Preferensi */}
+          <div className="flex items-center justify-between px-6 py-4">
+            <LocaleSwitcher />
+          </div>
+
+          {/* Zona 3 — CTA */}
+          <div className="px-6 pb-6">
+            <Button
               href="/login"
               onClick={() => setOpen(false)}
-              className="block text-center w-full font-label text-micro uppercase tracking-wider text-ink/60 hover:text-ink underline-offset-4 hover:underline"
+              variant="ink"
+              size="md"
+              fullWidth
             >
               {t('admin')}
-            </NLink>
-
-            <p className="font-label text-micro uppercase tracking-wider text-ink/40">
-              {t('quickMenu')}
-            </p>
+            </Button>
           </div>
         </nav>
       )}

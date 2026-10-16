@@ -40,7 +40,7 @@ export function LocaleSwitcher() {
             hrefLang={l}
             aria-pressed={active}
             aria-current={active ? 'true' : undefined}
-            className={`font-label text-label-sm font-bold uppercase px-2 py-1 min-h-[28px] inline-flex items-center transition-colors no-underline ${
+            className={`font-label text-label-sm font-bold uppercase px-2 py-1 min-h-touch inline-flex items-center transition-colors no-underline ${
               active
                 ? 'bg-primary text-surface'
                 : 'bg-surface text-ink hover:bg-accent'

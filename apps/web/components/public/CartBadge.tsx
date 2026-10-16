@@ -23,7 +23,7 @@ export async function CartBadge() {
   return (
     <Button
       variant="surface"
-      size="md"
+      size="icon"
       href="/keranjang"
       aria-label={t('viewCart')}
     >

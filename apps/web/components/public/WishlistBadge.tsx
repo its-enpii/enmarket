@@ -25,7 +25,7 @@ export async function WishlistBadge() {
   return (
     <Button
       variant="surface"
-      size="md"
+      size="icon"
       href="/wishlist"
       aria-label={t('wishlist')}
     >
