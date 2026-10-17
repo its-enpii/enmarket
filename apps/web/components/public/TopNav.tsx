@@ -172,52 +172,73 @@ export function TopNav({ children }: Props) {
           id={MOBILE_PANEL_ID}
           className="absolute inset-x-0 top-full z-nav xl:hidden border-b-4 border-ink bg-surface shadow-brutal-6 animate-pop-in max-h-[calc(100dvh-68px)] overflow-y-auto"
         >
-          {/* Header panel */}
+          {/* Header panel — label boxed (Nighthawks) + dot-matrix ornamen #1 */}
           <div className="flex items-center justify-between border-b-2 border-ink px-6 py-3">
-            <Eyebrow size="sm" color="ink-muted">
-              {t('quickMenu')}
-            </Eyebrow>
-            <DotMatrix rows={2} cols={8} />
+            <div className="inline-flex border-2 border-ink bg-surface px-2 py-1">
+              <Eyebrow size="sm" color="ink-muted">
+                {t('quickMenu')}
+              </Eyebrow>
+            </div>
+            <DotMatrix rows={2} cols={8} color="accent" />
           </div>
 
-          {/* Zona 1 — Navigasi */}
-          <div className="flex flex-col gap-2 px-6 py-4">
-            {navItems.map((item, index) => {
-              const active = isActive(pathname, item.href);
-              return (
-                <Button
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={active ? 'page' : undefined}
-                  variant="surface"
-                  size="md"
-                  fullWidth
-                  className={`min-h-[48px] justify-start gap-3 ${
-                    active
-                      ? 'border-l-4 border-primary bg-surface font-bold text-ink pl-4 pr-3 shadow-brutal-2'
-                      : ''
-                  }`}
-                >
-                  <Eyebrow size="micro" color="ink-subtle" className="shrink-0">
-                    {String(index + 1).padStart(2, '0')}
-                  </Eyebrow>
-                  <span className="flex-1 text-left">{item.label ?? t(item.key)}</span>
-                  <Icon name="arrow-right" size={16} className="shrink-0" />
-                </Button>
-              );
-            })}
+          {/* Zona navigasi — tipografi display raksasa, garis putus-putus (FC88).
+              Watermark di belakangnya = ornamen #2 (murni tekstur). */}
+          <div className="relative overflow-hidden px-6 pt-4">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none select-none absolute inset-0 grid place-items-center font-display text-headline-xl uppercase leading-none text-ink/[0.06]"
+            >
+              MENU
+            </span>
+            <div className="relative flex flex-col pb-4">
+              {navItems.map((item) => {
+                const active = isActive(pathname, item.href);
+                return (
+                  <div
+                    key={item.href}
+                    className="border-b-2 border-dashed border-ink last:border-b-0"
+                  >
+                    <Button
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={active ? 'page' : undefined}
+                      variant={active ? 'accent' : 'surface'}
+                      size="md"
+                      fullWidth
+                      className={`min-h-[64px] !border-0 justify-start gap-4 px-4 text-left ${
+                        active
+                          ? '!shadow-brutal-2 translate-x-1'
+                          : '!bg-transparent !shadow-none hover:bg-ink/5 hover:shadow-brutal-2'
+                      }`}
+                    >
+                      <span className="flex-1 font-display text-headline-lg-mobile uppercase leading-none text-ink">
+                        {item.label ?? t(item.key)}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className={`w-11 h-11 grid place-items-center shrink-0 border-2 border-ink ${
+                          active ? 'bg-ink text-surface' : 'bg-surface text-ink'
+                        }`}
+                      >
+                        <Icon name="arrow-right" size={18} />
+                      </span>
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Divider */}
+          {/* Divider solid */}
           <div className="border-t-2 border-ink" />
 
-          {/* Zona 2 — Preferensi */}
+          {/* Zona bawah — preferensi + CTA, tetap putih */}
           <div className="flex items-center justify-between px-6 py-4">
             <LocaleSwitcher />
+            <DotMatrix rows={1} cols={6} color="ink" />
           </div>
 
-          {/* Zona 3 — CTA */}
           <div className="px-6 pb-6">
             <Button
               href="/login"
