@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { getClientApiBase } from '@/lib/client-api';
 import { CART_EVENT } from '@/lib/cart-events';
-import type { Cart, SingleResponse } from '@/lib/types';
+import { fetchCartCount, hasBadgeIdentity } from '@/lib/badge-count';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 
@@ -18,16 +17,16 @@ export function CartBadge() {
   const t = useTranslations('cart.badge');
   const [count, setCount] = useState(0);
 
-  const loadCount = useCallback(() => {
+  const loadCount = useCallback((skipWithoutIdentity = false) => {
     let cancelled = false;
-    fetch(`${getClientApiBase()}/api/cart`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      credentials: 'same-origin',
-    })
-      .then((res) => (res.ok ? (res.json() as Promise<SingleResponse<Cart>>) : null))
-      .then((res) => {
-        if (!cancelled && res) setCount(res.data.item_count ?? 0);
+    if (skipWithoutIdentity && !hasBadgeIdentity('cart')) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    fetchCartCount()
+      .then((value) => {
+        if (!cancelled) setCount(value);
       })
       .catch((err) => {
         console.warn('CartBadge fetch failed:', err);
@@ -37,7 +36,7 @@ export function CartBadge() {
     };
   }, []);
 
-  useEffect(() => loadCount(), [loadCount]);
+  useEffect(() => loadCount(true), [loadCount]);
 
   // Re-fetch saat ada mutasi cart di tempat lain (add/update/remove).
   useEffect(() => {

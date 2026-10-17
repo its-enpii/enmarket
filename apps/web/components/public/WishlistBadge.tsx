@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { getClientApiBase } from '@/lib/client-api';
 import { CART_EVENT } from '@/lib/cart-events';
-import type { WishlistResponse } from '@/lib/types';
+import { fetchWishlistCount, hasBadgeIdentity } from '@/lib/badge-count';
 
 import { Badge } from '@/components/ui/Badge';
 import { Icon } from '@/components/ui';
@@ -20,16 +19,16 @@ export function WishlistBadge() {
   const t = useTranslations('nav');
   const [count, setCount] = useState(0);
 
-  const loadCount = useCallback(() => {
+  const loadCount = useCallback((skipWithoutIdentity = false) => {
     let cancelled = false;
-    fetch(`${getClientApiBase()}/api/wishlist`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      credentials: 'same-origin',
-    })
-      .then((res) => (res.ok ? (res.json() as Promise<WishlistResponse>) : null))
-      .then((res) => {
-        if (!cancelled && res) setCount(res.count ?? res.data?.length ?? 0);
+    if (skipWithoutIdentity && !hasBadgeIdentity('wishlist')) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    fetchWishlistCount()
+      .then((value) => {
+        if (!cancelled) setCount(value);
       })
       .catch((err) => {
         console.warn('WishlistBadge fetch failed:', err);
@@ -39,7 +38,7 @@ export function WishlistBadge() {
     };
   }, []);
 
-  useEffect(() => loadCount(), [loadCount]);
+  useEffect(() => loadCount(true), [loadCount]);
 
   // Re-fetch saat wishlist berubah (toggle/unlike dari mana pun).
   useEffect(() => {
