@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
 import { SectionContainer } from './SectionContainer';
 import { CornerCrosshairs, TechnicalSticker } from './BrutalistOverlay';
-import { DraftingCompass, DraftingPencil, TriangleRuler } from './DraftingTools';
 
 export function Hero() {
   const t = useTranslations('home');
@@ -69,24 +68,6 @@ export function Hero() {
           '-=0.2',
         )
         .fromTo(
-          '[data-hero-tools-compass]',
-          { autoAlpha: 0, scale: 0.7, rotation: -8 },
-          { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.5, ease: 'power2.out' },
-          '-=0.3',
-        )
-        .fromTo(
-          '[data-hero-tools-pencil]',
-          { autoAlpha: 0, y: -20, rotation: -6 },
-          { autoAlpha: 1, y: 0, rotation: 0, duration: 0.55, ease: 'power2.out' },
-          '-=0.4',
-        )
-        .fromTo(
-          '[data-hero-tools-ruler]',
-          { autoAlpha: 0, scale: 0.7, rotation: -8 },
-          { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.5, ease: 'power2.out' },
-          '-=0.4',
-        )
-        .fromTo(
           '[data-hero-cta]',
           { autoAlpha: 0, y: 12 },
           { autoAlpha: 1, y: 0, duration: 0.4 },
@@ -109,24 +90,6 @@ export function Hero() {
           <span data-hero-crosshairs className="contents">
             <CornerCrosshairs />
           </span>
-
-          {/*
-           * Ornamen drafting tools disebar di ruang kosong hero — kiri, kanan,
-           * dan sisi bawah (dekat Technical Ribbon). Kontras tonal monokrom
-           * seragam text-ink/25 (watermark kanvas). Reveal halus via timeline
-           * GSAP (stagger).
-           * 100% pointer-events-none select-none.
-           */}
-          <DraftingCompass
-            data-hero-tools-compass
-            size={44}
-            className="hidden md:block absolute top-1/3 -left-4 lg:-left-12 text-ink/25 -rotate-12 pointer-events-none select-none"
-          />
-          <DraftingPencil
-            data-hero-tools-pencil
-            size={44}
-            className="hidden md:block absolute top-1/4 -right-4 lg:-right-12 text-ink/25 rotate-12 pointer-events-none select-none"
-          />
 
           {/*
            * Stiker zine — mobile: tersusun rapi sebagai baris badge di atas
@@ -170,22 +133,14 @@ export function Hero() {
             {t('heroSubtitle')}
           </p>
 
-          {/* Technical tag ribbon — metadata teknis ala blueprint, ditemani
-              ornamen penggaris segitiga neobrutal (reveal via timeline Hero). */}
-          <div className="relative mb-12 flex justify-center">
+          {/* Technical tag ribbon — metadata teknis ala blueprint. */}
+          <div className="mb-12 flex justify-center">
             <span
               data-hero-ribbon
               className="font-mono text-xs tracking-wider text-ink/60 uppercase py-1 px-3 border border-ink/20 inline-flex flex-wrap items-center justify-center gap-3 bg-surface/50 pointer-events-none"
             >
               [REF: 04.34.8B] · [GRID 12-COL] · [LAT: -7.4705°] · [ZINE ISSUE: 01]
             </span>
-            {/* Penggaris segitiga aksen — absolut di kanan ribbon, di dalam
-                alur konten agar tidak memicu horizontal overflow. */}
-            <TriangleRuler
-              data-hero-tools-ruler
-              size={40}
-              className="hidden md:block absolute top-0 md:left-[calc(50%+15rem)] text-ink/25 rotate-6 pointer-events-none select-none"
-            />
           </div>
 
           <div data-hero-cta className="flex flex-col md:flex-row gap-6 justify-center">

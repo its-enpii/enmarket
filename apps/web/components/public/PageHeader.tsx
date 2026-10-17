@@ -22,12 +22,6 @@
 import type { ReactNode } from 'react';
 import { Eyebrow } from '@/components/ui/neobrutal';
 import { CornerCrosshairs } from './BrutalistOverlay';
-import {
-  DraftingCompass,
-  DraftingPencil,
-  StraightRuler,
-  TriangleRuler,
-} from './DraftingTools';
 
 type Size = 'compact' | 'default' | 'tall';
 
@@ -74,16 +68,6 @@ export function PageHeader({
         >
           [ARCHIVE // SPEC-01]
         </div>
-        {/*
-         * Ornamen drafting tools (watermark kanvas Layer 3) disebar mandiri di
-         * 4 sudut/tepi header — bukan klaster menumpuk. Kontras tonal monokrom
-         * seragam text-ink/20–text-ink/25 agar tenang & tidak mengaburkan headline.
-         * 100% pointer-events-none select-none (aman dari interaksi).
-         */}
-        <DraftingPencil size={36} className="hidden lg:block absolute top-6 right-28 text-ink/25 -rotate-12" />
-        <TriangleRuler size={44} className="hidden md:block absolute bottom-6 right-8 text-ink/20 rotate-6" />
-        <DraftingCompass size={36} className="hidden sm:block absolute bottom-4 left-6 md:left-12 text-ink/20 -rotate-6" />
-        <StraightRuler size={40} className="hidden xl:block absolute top-1/2 right-40 -translate-y-1/2 text-ink/20" />
         {eyebrow && (
           <div className="flex items-center gap-3 mb-6">
             <Eyebrow size="md" color="accent">

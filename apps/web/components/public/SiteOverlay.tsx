@@ -145,11 +145,11 @@ export function SiteOverlay() {
 
         {/* Kuadran kiri-bawah (layer mid) — penggaris segitiga besar.
             Kontras tonal seragam text-ink/20 (menyatu dengan kanvas). */}
-        <TriangleRuler size={48} className="hidden sm:block absolute bottom-24 left-8 text-ink/20 rotate-12" />
+        <TriangleRuler size={44} className="hidden sm:block absolute bottom-24 left-6 md:left-8 text-ink/20 rotate-12" />
 
         {/* Kuadran kanan-tengah (layer mid) — penggaris lurus teknis miring.
             Kontras tonal seragam text-ink/20. */}
-        <StraightRuler size={40} className="hidden md:block absolute top-[58%] right-8 text-ink/20 rotate-12" />
+        <StraightRuler size={36} className="hidden md:block absolute top-[58%] right-6 md:right-8 text-ink/20 rotate-12" />
 
         {/* Faint precision crosses & diamond outline di kanan tengah. */}
         <div className="hidden sm:flex flex-col items-center gap-2 absolute top-1/2 right-6 md:right-8 text-ink/25 font-mono select-none pointer-events-none">
@@ -171,15 +171,15 @@ export function SiteOverlay() {
 
         {/* Kuadran kiri-atas (layer fore) — jangka sedang, dekat koordinat
             + [CANVAS // 100VW]. Kontras tonal monokrom text-ink/20. */}
-        <DraftingCompass size={40} className="hidden sm:block absolute top-14 left-10 text-ink/20 -rotate-12" />
+        <DraftingCompass size={36} className="hidden lg:block absolute top-[24%] left-6 md:left-8 text-ink/20 -rotate-12" />
 
         {/* Kuadran kanan-atas (layer fore) — pensil drafting miring,
             dekat [WORKSPACE // CORE] +. Kontras tonal text-ink/25. */}
-        <DraftingPencil size={40} className="hidden sm:block absolute top-12 right-12 text-ink/25 -rotate-45" />
+        <DraftingPencil size={36} className="hidden lg:block absolute top-[26%] right-6 md:right-8 text-ink/25 -rotate-45" />
 
         {/* Kuadran kanan-bawah (layer fore) — kompas studio di atas rotating
             seal. Kontras tonal monokrom text-ink/25. */}
-        <StudioCompass size={32} className="hidden sm:block absolute bottom-36 right-10 text-ink/25" />
+        <StudioCompass size={32} className="hidden sm:block absolute bottom-36 right-8 md:right-10 text-ink/25" />
 
         {/* Tonal etched rotating seal kanan bawah (desktop). */}
         <div className="hidden sm:block absolute bottom-16 right-8 w-16 h-16 pointer-events-none">
