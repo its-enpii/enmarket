@@ -39,8 +39,7 @@ import { buildMetadata, localeAlternates } from '@/lib/seo';
 import { publicApi, PublicFetchError } from '@/lib/public-api';
 import type { Product, ProductRatingSummary } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;

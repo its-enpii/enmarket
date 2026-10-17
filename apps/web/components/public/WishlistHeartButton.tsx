@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
 import { toast } from '@/components/ui/toast-store';
+import { notifyCartChanged } from '@/lib/cart-events';
 import { toggleWishlistAction } from '@/app/[locale]/(public)/wishlist/actions';
 
 interface Props {
@@ -39,6 +40,7 @@ export function WishlistHeartButton({
         toast.error(res.error || 'Error');
       } else {
         toast.success(res.added ? t('add') : t('remove'));
+        notifyCartChanged('wishlist');
       }
     });
   };

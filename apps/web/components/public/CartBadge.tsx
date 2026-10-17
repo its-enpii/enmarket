@@ -1,24 +1,55 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
 
-import { cartApi, PublicFetchError } from '@/lib/cart-api';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+
+import { getClientApiBase } from '@/lib/client-api';
+import { CART_EVENT } from '@/lib/cart-events';
+import type { Cart, SingleResponse } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/neobrutal';
 
 /**
  * Cart badge di TopNav ? tampilkan jumlah item di cart.
- * Server Component, fetch cart count. Auto-handle cookie-less state.
+ * Client Component, fetch cart count di sisi klien. Auto-handle cookie-less state.
+ * (Fetch client-side agar route tree tidak bergantung pada session server → bisa ISR.)
  */
-export async function CartBadge() {
-  const t = await getTranslations('cart.badge');
-  let count = 0;
-  try {
-    const res = await cartApi.get();
-    count = res.data.item_count ?? 0;
-  } catch (err) {
-    if (!(err instanceof PublicFetchError)) {
-      console.warn('CartBadge fetch failed:', err);
-    }
-  }
+export function CartBadge() {
+  const t = useTranslations('cart.badge');
+  const [count, setCount] = useState(0);
+
+  const loadCount = useCallback(() => {
+    let cancelled = false;
+    fetch(`${getClientApiBase()}/api/cart`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin',
+    })
+      .then((res) => (res.ok ? (res.json() as Promise<SingleResponse<Cart>>) : null))
+      .then((res) => {
+        if (!cancelled && res) setCount(res.data.item_count ?? 0);
+      })
+      .catch((err) => {
+        console.warn('CartBadge fetch failed:', err);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => loadCount(), [loadCount]);
+
+  // Re-fetch saat ada mutasi cart di tempat lain (add/update/remove).
+  useEffect(() => {
+    const onCartChanged = (event: Event) => {
+      if (!(event instanceof CustomEvent)) return;
+      const detail = event.detail as { kind?: string } | undefined;
+      if (detail?.kind && detail.kind !== 'cart') return;
+      loadCount();
+    };
+    window.addEventListener(CART_EVENT, onCartChanged);
+    return () => window.removeEventListener(CART_EVENT, onCartChanged);
+  }, [loadCount]);
 
   return (
     <Button

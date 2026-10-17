@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Support\PublicCache;
+use App\Support\PublicHttpCache;
 use App\Support\TagNormalizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Public endpoint untuk blog post.
@@ -65,20 +68,26 @@ class PostController extends Controller
      * Query: ?limit=3
      * Return: N post published terbaru (tanpa pagination).
      * Untuk homepage section Discover.
+     *
+     * Payload di-cache (public:posts:latest:{limit}:{menit}, TTL 300) — kunci
+     * memuat limit ternormalisasi + menit berjalan karena scope published
+     * bergantung pada now().
      */
     public function latest(Request $request): JsonResponse
     {
         $limit = min(max((int) $request->input('limit', 3), 1), 12);
 
-        $posts = Post::query()
-            ->published()
-            ->orderBy('published_at', 'desc')
-            ->limit($limit)
-            ->get();
+        $payload = Cache::remember(PublicCache::postsLatestKey($limit), PublicCache::TTL, function () use ($limit) {
+            $posts = Post::query()
+                ->published()
+                ->orderBy('published_at', 'desc')
+                ->limit($limit)
+                ->get();
 
-        return response()->json([
-            'data' => PostResource::collection($posts),
-        ]);
+            return ['data' => PostResource::collection($posts)->resolve()];
+        });
+
+        return PublicHttpCache::json($request, $payload);
     }
 
     /**
@@ -105,15 +114,16 @@ class PostController extends Controller
      * GET /api/public/posts/slugs
      * Untuk sitemap generator.
      */
-    public function slugs(): JsonResponse
+    public function slugs(Request $request): JsonResponse
     {
-        $slugs = Post::query()
-            ->published()
-            ->orderBy('id')
-            ->pluck('slug');
-
-        return response()->json([
-            'data' => $slugs,
+        $payload = Cache::remember(PublicCache::POSTS_SLUGS, PublicCache::TTL, fn () => [
+            'data' => Post::query()
+                ->published()
+                ->orderBy('id')
+                ->pluck('slug')
+                ->all(),
         ]);
+
+        return PublicHttpCache::json($request, $payload);
     }
 }

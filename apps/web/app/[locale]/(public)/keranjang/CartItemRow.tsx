@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, Card } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
+import { notifyCartChanged } from '@/lib/cart-events';
 
 import { removeCartItemAction, updateCartItemAction } from './actions';
 
@@ -26,15 +27,25 @@ export function CartItemRow({ productId, qty, disabled }: Props) {
 
   function setQty(next: number) {
     if (disabled || pending) return;
-    startTransition(() => {
-      void updateCartItemAction(productId, next);
+    startTransition(async () => {
+      try {
+        await updateCartItemAction(productId, next);
+        notifyCartChanged('cart');
+      } catch (err) {
+        console.warn('CartItemRow update failed:', err);
+      }
     });
   }
 
   function remove() {
     if (disabled || pending) return;
-    startTransition(() => {
-      void removeCartItemAction(productId);
+    startTransition(async () => {
+      try {
+        await removeCartItemAction(productId);
+        notifyCartChanged('cart');
+      } catch (err) {
+        console.warn('CartItemRow remove failed:', err);
+      }
     });
   }
 

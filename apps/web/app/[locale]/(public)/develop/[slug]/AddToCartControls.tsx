@@ -6,6 +6,7 @@ import { useTransition } from 'react';
 import { Button, NLink } from '@/components/ui/neobrutal';
 import { Icon } from '@/components/ui';
 import { toast } from '@/components/ui/toast-store';
+import { notifyCartChanged } from '@/lib/cart-events';
 
 import { addToCartAction, addToCartAndGoAction } from './actions';
 
@@ -35,6 +36,7 @@ export function AddToCartControls({ productId, isPreOrder = false, isFree = fals
             ? t('preorderAdded')
             : t('added');
         toast.success(successMsg);
+        notifyCartChanged('cart');
       }
     });
   }
@@ -43,6 +45,7 @@ export function AddToCartControls({ productId, isPreOrder = false, isFree = fals
     startTransition(async () => {
       try {
         await addToCartAndGoAction(productId, 1);
+        notifyCartChanged('cart');
       } catch (err) {
         if (err instanceof Error && err.message === 'NEXT_REDIRECT') throw err;
         toast.error(err instanceof Error ? err.message : t('addError'));

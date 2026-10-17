@@ -46,11 +46,14 @@ export async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-5 md:gap-10 items-start">
           {/* Left col: brand */}
           <div className="flex flex-col gap-4">
+            {/* Lebar render terukur: 168px (<md) / 240px (≥md). Sumber 768px
+                cukup untuk DPR 2× (480px) tanpa mengunduh varian 3840px. */}
             <Image
               src="/logo/enstudio-wordmark-light.png"
               alt="EnStudio"
-              width={2172}
-              height={724}
+              width={768}
+              height={256}
+              sizes="(max-width: 767px) 168px, 240px"
               className="h-14 w-auto self-start md:h-20"
             />
             {tagline ? (

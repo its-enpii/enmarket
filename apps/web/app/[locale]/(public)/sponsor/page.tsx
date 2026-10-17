@@ -6,8 +6,7 @@ import { siteMetadata } from '@/lib/seo';
 
 import { SponsorWorkspace } from './SponsorWorkspace';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

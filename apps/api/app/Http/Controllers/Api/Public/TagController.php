@@ -5,14 +5,20 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Product;
+use App\Support\PublicCache;
+use App\Support\PublicHttpCache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Daftar tag publik — agregasi frekuensi dari posts atau products.
  *
  * Agregasi dilakukan di PHP (bukan SQL JSON aggregate) agar portabel antara
  * MySQL 8 dan sqlite :memory: yang dipakai test.
+ *
+ * Payload di-cache per `type` (public:tags:post|product, TTL 300) dan
+ * di-invalidate oleh PublicCacheInvalidator saat Post/Product berubah.
  */
 class TagController extends Controller
 {
@@ -25,6 +31,20 @@ class TagController extends Controller
     {
         $type = $request->input('type', 'post') === 'product' ? 'product' : 'post';
 
+        $cacheKey = $type === 'product' ? PublicCache::TAGS_PRODUCT : PublicCache::TAGS_POST;
+
+        $payload = Cache::remember($cacheKey, PublicCache::TTL, fn () => [
+            'data' => $this->aggregate($type),
+        ]);
+
+        return PublicHttpCache::json($request, $payload);
+    }
+
+    /**
+     * @return array<int, array{tag: string, count: int}>
+     */
+    private function aggregate(string $type): array
+    {
         $query = $type === 'product'
             ? Product::query()->active()
             : Post::query()->published();
@@ -59,6 +79,6 @@ class TagController extends Controller
             }
         }
 
-        return response()->json(['data' => $data]);
+        return $data;
     }
 }

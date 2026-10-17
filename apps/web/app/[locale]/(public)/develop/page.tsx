@@ -29,8 +29,7 @@ import { publicApi, PublicFetchError } from '@/lib/public-api';
 import { VALID_TIPE, type Tipe } from '@/lib/constants';
 import type { PaginatedResponse, Product, TagCount } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 
 // ───── Constants ─────

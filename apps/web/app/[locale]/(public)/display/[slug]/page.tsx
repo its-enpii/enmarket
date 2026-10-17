@@ -43,8 +43,7 @@ import { CornerAccent } from '@/components/ui/CornerAccent';
 import { HoverImage } from '@/components/ui/HoverImage';
 import { Image } from '@/components/ui/Image';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{ slug: string; locale: 'id' | 'en' }>;

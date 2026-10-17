@@ -11,8 +11,7 @@ import type { Post } from '@/lib/types';
 import { siteMetadata } from '@/lib/seo';
 import { organizationSchema, webSiteSchema } from '@/lib/seo-schemas';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{ locale: string }>;

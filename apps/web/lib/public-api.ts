@@ -2,8 +2,9 @@
  * Server-side fetch helper untuk endpoint publik Laravel.
  *
  * - Tidak butuh auth — endpoint publik.
- * - Pakai `cache: 'no-store'` (SSR) + page-level `dynamic = 'force-dynamic'`.
- *   ISR diaktifkan via webhook revalidate (revalidatePath) saat admin CRUD.
+ * - Pakai Next Data Cache dengan `next: { revalidate, tags }` (ISR-friendly).
+ *   Default revalidate 300 detik; `noStore: true` memaksa bypass cache.
+ *   ISR juga diaktifkan via webhook revalidate (revalidatePath) saat admin CRUD.
  * - Throw pada error agar Server Component bisa fallback ke notFound().
  */
 
@@ -31,7 +32,7 @@ class PublicFetchError extends Error {
 async function publicFetch<T>(
   path: string,
   query?: Record<string, string | number | undefined | null>,
-  options?: { revalidate?: number },
+  options?: { revalidate?: number; tags?: string[]; noStore?: boolean },
 ): Promise<T> {
   let url = API_URL + (path.startsWith('/') ? path : `/${path}`);
 
@@ -46,13 +47,13 @@ async function publicFetch<T>(
     if (qs) url += `?${qs}`;
   }
 
-  const revalidate = options?.revalidate ?? 0;
+  const revalidate = options?.revalidate ?? 300;
+  const tags = options?.tags ?? ['public'];
   const res = await fetch(url, {
-    cache: 'no-store',
-    // revalidate tersedia via opsi kalau page-level tidak force-dynamic
-    ...(revalidate > 0
-      ? { next: { revalidate } }
-      : {}),
+    method: 'GET',
+    ...(options?.noStore
+      ? { cache: 'no-store' as const }
+      : { next: { revalidate, tags } }),
   });
 
   if (!res.ok) {
@@ -65,18 +66,24 @@ async function publicFetch<T>(
 export const publicApi = {
   /** Halaman utama: hingga 6 produk unggulan aktif. */
   featuredProducts: () =>
-    publicFetch<{ data: Product[] }>('/api/public/products/featured'),
+    publicFetch<{ data: Product[] }>('/api/public/products/featured', undefined, {
+      tags: ['products'],
+    }),
 
   /** Halaman utama: 8 produk aktif terbaru. */
   latestProducts: () =>
-    publicFetch<{ data: Product[] }>('/api/public/products/latest'),
+    publicFetch<{ data: Product[] }>('/api/public/products/latest', undefined, {
+      tags: ['products'],
+    }),
 
   /**
    * Homepage: featured + latest digabung TANPA duplikat (server-side dedup).
    * Single round-trip — ganti 2 call (featured + latest) di homepage.
    */
   homepageProducts: (perPage = 6) =>
-    publicFetch<{ data: Product[] }>('/api/public/products/homepage', { per_page: perPage }),
+    publicFetch<{ data: Product[] }>('/api/public/products/homepage', { per_page: perPage }, {
+      tags: ['products'],
+    }),
 
   /** Katalog publik dengan filter + pagination. */
   catalog: (params: {
@@ -94,7 +101,7 @@ export const publicApi = {
       tipe: params.tipe,
       page: params.page,
       per_page: params.per_page,
-    }),
+    }, { tags: ['products'] }),
 
   /** Homepage: produk berdasarkan tipe (download = source code, license/bundle = karya jadi). */
   productsByType: (params: { tipe: 'download' | 'license' | 'bundle' | 'account_manual'; per_page?: number }) =>
@@ -102,23 +109,31 @@ export const publicApi = {
       tipe: params.tipe,
       per_page: params.per_page ?? 3,
       page: 1,
-    }),
+    }, { tags: ['products'] }),
 
   /** Detail produk by slug. 404 → throw PublicFetchError dengan status 404. */
   product: (slug: string) =>
-    publicFetch<{ data: Product }>(`/api/public/products/${slug}`),
+    publicFetch<{ data: Product }>(`/api/public/products/${slug}`, undefined, {
+      tags: ['products', `product:${slug}`],
+    }),
 
   /** Daftar kategori yang punya minimal 1 produk aktif. */
   categories: () =>
-    publicFetch<{ data: Category[] }>('/api/public/categories'),
+    publicFetch<{ data: Category[] }>('/api/public/categories', undefined, {
+      tags: ['categories'],
+    }),
 
   /** Untuk sitemap: list slug semua produk aktif. */
   productSlugs: () =>
-    publicFetch<{ data: string[] }>('/api/public/products/slugs'),
+    publicFetch<{ data: string[] }>('/api/public/products/slugs', undefined, {
+      tags: ['products'],
+    }),
 
   /** Untuk sitemap: list slug semua kategori aktif. */
   categorySlugs: () =>
-    publicFetch<{ data: string[] }>('/api/public/categories/slugs'),
+    publicFetch<{ data: string[] }>('/api/public/categories/slugs', undefined, {
+      tags: ['categories'],
+    }),
 
   // ───── Blog post (Catatan) ─────
 
@@ -130,28 +145,35 @@ export const publicApi = {
       per_page: params?.per_page,
       category: params?.category,
       tag: params?.tag,
-    }),
+    }, { tags: ['posts'] }),
 
   /** Post published terbaru, tanpa pagination. Untuk homepage Discover. */
   latestPosts: (limit = 3) =>
-    publicFetch<{ data: Post[] }>('/api/public/posts/latest', { limit }),
+    publicFetch<{ data: Post[] }>('/api/public/posts/latest', { limit }, {
+      tags: ['posts'],
+    }),
 
   /** Detail post by slug. 404 → throw PublicFetchError. */
   post: (slug: string) =>
-    publicFetch<{ data: Post }>(`/api/public/posts/${slug}`),
+    publicFetch<{ data: Post }>(`/api/public/posts/${slug}`, undefined, {
+      tags: ['posts', `post:${slug}`],
+    }),
 
   /** Untuk sitemap: list slug semua post published. */
   postSlugs: () =>
-    publicFetch<{ data: string[] }>('/api/public/posts/slugs'),
+    publicFetch<{ data: string[] }>('/api/public/posts/slugs', undefined, {
+      tags: ['posts'],
+    }),
 
   /** Daftar tag populer per tipe resource (count desc, maks 50). */
   tags: (type: 'post' | 'product') =>
-    publicFetch<{ data: TagCount[] }>('/api/public/tags', { type }),
+    publicFetch<{ data: TagCount[] }>('/api/public/tags', { type }, { tags: ['tags'] }),
 
   /** Public site config (identity + social + footer) — aman untuk storefront. */
   siteConfig: () =>
     publicFetch<{ data: PublicSiteConfig }>('/api/public/site-config', undefined, {
       revalidate: REVALIDATE_SECONDS,
+      tags: ['site-config'],
     }),
 };
 

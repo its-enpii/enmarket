@@ -5,45 +5,58 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Support\PublicCache;
+use App\Support\PublicHttpCache;
 use App\Support\TagNormalizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
     /**
      * GET /api/public/products/featured
      * Halaman utama: hingga 6 produk unggulan (is_featured + aktif).
+     *
+     * Payload di-cache (public:products:featured, TTL 300).
      */
-    public function featured(): JsonResponse
+    public function featured(Request $request): JsonResponse
     {
-        $products = Product::active()
-            ->featured()
-            ->with('category:id,nama,slug')
-            ->latest('updated_at')
-            ->limit(6)
-            ->get();
+        $payload = Cache::remember(PublicCache::PRODUCTS_FEATURED, PublicCache::TTL, function () {
+            $products = Product::active()
+                ->featured()
+                ->with('category:id,nama,slug')
+                ->withCount('publishedReviews')
+                ->latest('updated_at')
+                ->limit(6)
+                ->get();
 
-        return response()->json([
-            'data' => ProductResource::collection($products),
-        ]);
+            return ['data' => ProductResource::collection($products)->resolve()];
+        });
+
+        return PublicHttpCache::json($request, $payload);
     }
 
     /**
      * GET /api/public/products/latest
      * Halaman utama: 8 produk aktif terbaru.
+     *
+     * Payload di-cache (public:products:latest, TTL 300).
      */
-    public function latest(): JsonResponse
+    public function latest(Request $request): JsonResponse
     {
-        $products = Product::active()
-            ->with('category:id,nama,slug')
-            ->latest('updated_at')
-            ->limit(8)
-            ->get();
+        $payload = Cache::remember(PublicCache::PRODUCTS_LATEST, PublicCache::TTL, function () {
+            $products = Product::active()
+                ->with('category:id,nama,slug')
+                ->withCount('publishedReviews')
+                ->latest('updated_at')
+                ->limit(8)
+                ->get();
 
-        return response()->json([
-            'data' => ProductResource::collection($products),
-        ]);
+            return ['data' => ProductResource::collection($products)->resolve()];
+        });
+
+        return PublicHttpCache::json($request, $payload);
     }
 
     /**
@@ -61,28 +74,34 @@ class ProductController extends Controller
     {
         $limit = min(max((int) $request->input('per_page', 6), 1), 12);
 
-        $featured = Product::active()
-            ->featured()
-            ->with('category:id,nama,slug')
-            ->latest('updated_at')
-            ->limit($limit) // upper bound — fill dari featured dulu
-            ->get();
+        // Kunci memuat per_page ternormalisasi; kunci generik ikut di-forget
+        // oleh observer (PublicCache::PRODUCTS_HOMEPAGE).
+        $payload = Cache::remember(PublicCache::homepageKey($limit), PublicCache::TTL, function () use ($limit) {
+            $featured = Product::active()
+                ->featured()
+                ->with('category:id,nama,slug')
+                ->withCount('publishedReviews')
+                ->latest('updated_at')
+                ->limit($limit) // upper bound — fill dari featured dulu
+                ->get();
 
-        // Ambil 'latest' yang BELUM ada di featured (keyBy → O(1) lookup).
-        $featuredIds = $featured->pluck('id')->all();
-        $latestExtra = Product::active()
-            ->whereNotIn('id', $featuredIds)
-            ->with('category:id,nama,slug')
-            ->latest('updated_at')
-            ->limit($limit) // ambil max $limit extra
-            ->get();
+            // Ambil 'latest' yang BELUM ada di featured (keyBy → O(1) lookup).
+            $featuredIds = $featured->pluck('id')->all();
+            $latestExtra = Product::active()
+                ->whereNotIn('id', $featuredIds)
+                ->with('category:id,nama,slug')
+                ->withCount('publishedReviews')
+                ->latest('updated_at')
+                ->limit($limit) // ambil max $limit extra
+                ->get();
 
-        // featured di depan, latest di belakangnya — preserve featured-first sort.
-        $merged = $featured->concat($latestExtra)->take($limit);
+            // featured di depan, latest di belakangnya — preserve featured-first sort.
+            $merged = $featured->concat($latestExtra)->take($limit);
 
-        return response()->json([
-            'data' => ProductResource::collection($merged),
-        ]);
+            return ['data' => ProductResource::collection($merged)->resolve()];
+        });
+
+        return PublicHttpCache::json($request, $payload);
     }
 
     /**
@@ -93,7 +112,7 @@ class ProductController extends Controller
     {
         $perPage = min(max((int) $request->input('per_page', 12), 1), 60);
 
-        $query = Product::active()->with('category:id,nama,slug');
+        $query = Product::active()->with('category:id,nama,slug')->withCount('publishedReviews');
 
         if ($categorySlug = $request->input('category')) {
             $query->whereHas('category', fn ($q) => $q->where('slug', $categorySlug));
@@ -157,10 +176,12 @@ class ProductController extends Controller
      * GET /api/public/products-slugs
      * Untuk sitemap: ambil slug semua produk aktif.
      */
-    public function slugs(): JsonResponse
+    public function slugs(Request $request): JsonResponse
     {
-        return response()->json([
-            'data' => Product::active()->orderBy('id')->pluck('slug'),
+        $payload = Cache::remember(PublicCache::PRODUCTS_SLUGS, PublicCache::TTL, fn () => [
+            'data' => Product::active()->orderBy('id')->pluck('slug')->all(),
         ]);
+
+        return PublicHttpCache::json($request, $payload);
     }
 }

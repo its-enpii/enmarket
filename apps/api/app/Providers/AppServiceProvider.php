@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use App\Models\LicenseKey;
+use App\Models\NavMenu;
 use App\Models\Order;
 use App\Models\Post;
 use App\Models\Product;
 use App\Models\SiteSetting;
+use App\Models\Sponsor;
 use App\Observers\ActivityLogger;
+use App\Observers\PublicCacheInvalidator;
 use App\Services\Cart\CartService;
 use App\Services\Delivery\NotificationDispatcher;
 use App\Services\Delivery\OrderDeliveryService;
@@ -23,6 +27,7 @@ use App\Services\Storage\RemoteEnStorage;
 use App\Services\Tripay\TripayClient;
 use App\Services\WhatsApp\WhatsAppClient;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -141,6 +146,21 @@ class AppServiceProvider extends ServiceProvider
         Order::observe($observer);
         LicenseKey::observe($observer);
         SiteSetting::observe($observer);
+
+        // Observer invalidasi cache endpoint publik (Lane D). Product/Category/Post
+        // punya event saved+deleted; SiteSetting/NavMenu/Sponsor meng-invalidate
+        // cache site-config.
+        $publicCacheObserver = new PublicCacheInvalidator;
+        Product::observe($publicCacheObserver);
+        Category::observe($publicCacheObserver);
+        Post::observe($publicCacheObserver);
+        SiteSetting::observe($publicCacheObserver);
+        NavMenu::observe($publicCacheObserver);
+        Sponsor::observe($publicCacheObserver);
+
+        // Deteksi N+1 di non-produksi (test/dev). JANGAN dimatikan untuk
+        // membuat test hijau — perbaiki query-nya.
+        Model::preventLazyLoading(! app()->isProduction());
     }
 
     /**

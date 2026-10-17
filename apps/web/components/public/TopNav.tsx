@@ -99,12 +99,15 @@ export function TopNav({ children }: Props) {
           underline="none"
           className="min-h-touch inline-flex items-center"
         >
+          {/* Lebar render terukur: 108px (<md) / 132px (≥md). Sumber 768px
+              cukup untuk DPR 2× (264px) tanpa mengunduh varian 3840px. */}
           <Image
             src="/logo/enstudio-wordmark.png"
             alt="EnStudio"
-            width={2172}
-            height={724}
+            width={768}
+            height={256}
             priority
+            sizes="(max-width: 767px) 108px, 132px"
             className="h-9 md:h-11 w-auto"
           />
         </NLink>

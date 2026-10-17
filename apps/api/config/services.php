@@ -56,6 +56,13 @@ return [
         'public_url' => env('NEXT_PUBLIC_SITE_URL'),
         'internal_url' => env('APP_NEXT_INTERNAL_URL') ?: env('NEXT_PUBLIC_SITE_URL', 'http://web:3000'),
         'webhook_secret' => env('REVALIDATE_SECRET'),
+        // Locale ber-prefiks URL Next (next-intl `routing.locales`,
+        // apps/web/i18n/routing.ts). Semua path revalidate wajib berprefiks
+        // salah satu locale ini agar cocok dengan rute nyata.
+        'locales' => array_values(array_filter(array_map(
+            'trim',
+            explode(',', (string) env('NEXT_LOCALES', 'id,en')),
+        ))),
     ],
 
     /*

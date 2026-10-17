@@ -30,7 +30,7 @@ class ProductResource extends JsonResource
             'tags' => $this->tags ?? [],
             'status' => $this->status,
             'is_featured' => (bool) $this->is_featured,
-            'rating_summary' => $this->ratingSummary(),
+            'rating_summary' => $this->publicRatingSummary(),
             // Produk gratis: label "Gratis" di-render frontend (via translation key
             // product.price.free) ketika flag ini true. harga selalu 0 di DB
             // (auto-set di ProductController). Backend TIDAK localize di sini —
@@ -72,5 +72,37 @@ class ProductResource extends JsonResource
                 'urutan' => (int) ($p->pivot->urutan ?? 0),
             ])->all()),
         ];
+    }
+
+    /**
+     * Rating summary untuk listing endpoint: pakai `published_reviews_count`
+     * hasil withCount() kalau dimuat (hindari N+1). Distribusi bintang hanya
+     * dihitung (query per produk) ketika total > 0.
+     *
+     * @return array<string, mixed>
+     */
+    private function publicRatingSummary(): array
+    {
+        if (! array_key_exists('published_reviews_count', $this->resource->getAttributes())) {
+            return $this->ratingSummary();
+        }
+
+        $total = (int) $this->resource->getAttribute('published_reviews_count');
+
+        if ($total === 0) {
+            return [
+                'average' => 0.0,
+                'count' => 0,
+                'distribution' => (object) [
+                    '5' => 0,
+                    '4' => 0,
+                    '3' => 0,
+                    '2' => 0,
+                    '1' => 0,
+                ],
+            ];
+        }
+
+        return $this->ratingSummary();
     }
 }

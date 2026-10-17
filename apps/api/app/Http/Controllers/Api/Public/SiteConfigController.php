@@ -6,20 +6,37 @@ use App\Http\Controllers\Controller;
 use App\Models\NavMenu;
 use App\Models\SiteSetting;
 use App\Models\Sponsor;
+use App\Support\PublicCache;
+use App\Support\PublicHttpCache;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * SiteConfigController — public read-only site config.
  *
  * Return settings yang AMAN di-expose ke public storefront (identity,
  * social, footer, sponsors). Payment credentials & maintenance secret TIDAK ikut.
+ *
+ * Payload di-cache (PublicCache::SITE_CONFIG, TTL 300) sebagai array polos dan
+ * di-invalidate oleh PublicCacheInvalidator saat SiteSetting/NavMenu/Sponsor berubah.
  */
 class SiteConfigController extends Controller
 {
     /**
      * GET /api/public/site-config
      */
-    public function show(): JsonResponse
+    public function show(Request $request): JsonResponse
+    {
+        $payload = Cache::remember(PublicCache::SITE_CONFIG, PublicCache::TTL, fn () => $this->buildPayload());
+
+        return PublicHttpCache::json($request, $payload);
+    }
+
+    /**
+     * @return array{data: array<string, mixed>}
+     */
+    private function buildPayload(): array
     {
         $flat = SiteSetting::all()->keyBy('key');
         $raw = fn (string $key) => $flat[$key]->value ?? null;
@@ -55,7 +72,7 @@ class SiteConfigController extends Controller
             ->values()
             ->all();
 
-        return response()->json([
+        return [
             'data' => [
                 'studio_name' => $raw('studio_name'),
                 'tagline' => $raw('tagline'),
@@ -87,6 +104,6 @@ class SiteConfigController extends Controller
                     ->all(),
                 'sponsors' => $sponsors,
             ],
-        ]);
+        ];
     }
 }

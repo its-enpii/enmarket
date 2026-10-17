@@ -144,7 +144,8 @@ class MaintenanceAndRevalidatorTest extends TestCase
         Http::assertSent(function ($request) {
             $body = json_decode($request->body(), true);
             $hasSecret = $request->hasHeader('X-Webhook-Secret', 'my-secret');
-            $hasPaths = in_array('/develop/adobe-photoshop', $body['paths'] ?? [], true);
+            $hasPaths = in_array('/id/develop/adobe-photoshop', $body['paths'] ?? [], true)
+                && in_array('/en/develop/adobe-photoshop', $body['paths'] ?? [], true);
 
             return $hasSecret && $hasPaths;
         });
@@ -160,7 +161,8 @@ class MaintenanceAndRevalidatorTest extends TestCase
         Http::assertSent(function ($request) {
             $body = json_decode($request->body(), true);
 
-            return in_array('/c/tutorial', $body['paths'] ?? [], true);
+            return in_array('/id/c/tutorial', $body['paths'] ?? [], true)
+                && in_array('/en/c/tutorial', $body['paths'] ?? [], true);
         });
     }
 
@@ -174,7 +176,8 @@ class MaintenanceAndRevalidatorTest extends TestCase
         Http::assertSent(function ($request) {
             $body = json_decode($request->body(), true);
 
-            return in_array('/display/belajar-laravel', $body['paths'] ?? [], true);
+            return in_array('/id/display/belajar-laravel', $body['paths'] ?? [], true)
+                && in_array('/en/display/belajar-laravel', $body['paths'] ?? [], true);
         });
     }
 

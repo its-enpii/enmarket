@@ -22,8 +22,7 @@ import { MetaLabel, SectionBand, SectionTitle } from '@/components/ui';
 import { ImagePlaceholder } from '@/components/ui';
 import { JsonLd } from '@/components/seo/JsonLd';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{ locale: 'id' | 'en' }>;

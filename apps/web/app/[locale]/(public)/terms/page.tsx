@@ -3,8 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { LegalPage } from '@/components/public/LegalPage';
 import { siteMetadata } from '@/lib/seo';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ locale: string }>;

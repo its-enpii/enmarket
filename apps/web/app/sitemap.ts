@@ -3,8 +3,7 @@ import type { MetadataRoute } from 'next';
 import { publicApi } from '@/lib/public-api';
 import { routing } from '@/i18n/routing';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600;
 
 /**
  * sitemap.xml — emit per locale.

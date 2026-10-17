@@ -1,6 +1,11 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
 
-import { wishlistApi, PublicFetchError } from '@/lib/wishlist-api';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+
+import { getClientApiBase } from '@/lib/client-api';
+import { CART_EVENT } from '@/lib/cart-events';
+import type { WishlistResponse } from '@/lib/types';
 
 import { Badge } from '@/components/ui/Badge';
 import { Icon } from '@/components/ui';
@@ -8,19 +13,45 @@ import { Button } from '@/components/ui/neobrutal';
 
 /**
  * Wishlist badge di TopNav — tampilkan jumlah item di wishlist.
- * Server Component, fetch wishlist count. Auto-handle cookie-less state.
+ * Client Component, fetch wishlist count di sisi klien. Auto-handle cookie-less state.
+ * (Fetch client-side agar route tree tidak bergantung pada session server → bisa ISR.)
  */
-export async function WishlistBadge() {
-  const t = await getTranslations('nav');
-  let count = 0;
-  try {
-    const res = await wishlistApi.get();
-    count = res.count ?? res.data?.length ?? 0;
-  } catch (err) {
-    if (!(err instanceof PublicFetchError)) {
-      console.warn('WishlistBadge fetch failed:', err);
-    }
-  }
+export function WishlistBadge() {
+  const t = useTranslations('nav');
+  const [count, setCount] = useState(0);
+
+  const loadCount = useCallback(() => {
+    let cancelled = false;
+    fetch(`${getClientApiBase()}/api/wishlist`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin',
+    })
+      .then((res) => (res.ok ? (res.json() as Promise<WishlistResponse>) : null))
+      .then((res) => {
+        if (!cancelled && res) setCount(res.count ?? res.data?.length ?? 0);
+      })
+      .catch((err) => {
+        console.warn('WishlistBadge fetch failed:', err);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => loadCount(), [loadCount]);
+
+  // Re-fetch saat wishlist berubah (toggle/unlike dari mana pun).
+  useEffect(() => {
+    const onCartChanged = (event: Event) => {
+      if (!(event instanceof CustomEvent)) return;
+      const detail = event.detail as { kind?: string } | undefined;
+      if (detail?.kind && detail.kind !== 'wishlist') return;
+      loadCount();
+    };
+    window.addEventListener(CART_EVENT, onCartChanged);
+    return () => window.removeEventListener(CART_EVENT, onCartChanged);
+  }, [loadCount]);
 
   return (
     <Button
