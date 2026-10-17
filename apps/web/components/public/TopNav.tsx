@@ -209,7 +209,7 @@ export function TopNav({ children }: Props) {
                       className={`min-h-[64px] !border-0 justify-start gap-4 px-4 text-left ${
                         active
                           ? '!shadow-brutal-2 translate-x-1'
-                          : '!bg-transparent !shadow-none hover:bg-ink/5 hover:shadow-brutal-2'
+                          : '!bg-transparent !shadow-none hover:!bg-ink/5 hover:!shadow-brutal-2'
                       }`}
                     >
                       <span className="flex-1 font-display text-headline-lg-mobile uppercase leading-none text-ink">
